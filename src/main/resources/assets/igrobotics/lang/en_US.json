@@ -42,11 +42,11 @@
   "item.igrobotics.plate_gold": "Gold Plating",
   "item.igrobotics.plate_constantan": "Constantan Plating",
 
-  "tile.igrobotics.assembler": "Assembler",
-  "tile.igrobotics.wire_cutter": "Wire Cutter",
-  "tile.igrobotics.compressor": "Compressor",
-  "tile.igrobotics.robot_factory": "Robot Factory",
-  "tile.igrobotics.robot_storage": "Robot Storage",
+  "block.igrobotics.assembler": "Assembler",
+  "block.igrobotics.wire_cutter": "Wire Cutter",
+  "block.igrobotics.compressor": "Compressor",
+  "block.igrobotics.robot_factory": "Robot Factory",
+  "block.igrobotics.robot_storage": "Robot Storage",
 
   "entity.igrobotics.robot": "Robot",
 
