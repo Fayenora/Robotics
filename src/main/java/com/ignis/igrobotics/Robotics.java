@@ -41,6 +41,8 @@ public class Robotics {
 
         ModItems.ITEMS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
+        ModMachines.BLOCK_ENTITIES.register(modEventBus);
+        ModMachines.RECIPE_TYPES.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
     }
