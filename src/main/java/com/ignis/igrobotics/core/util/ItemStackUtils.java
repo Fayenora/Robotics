@@ -142,11 +142,6 @@ public class ItemStackUtils {
 		return ingr.getItems()[0].getCount();
 	}
 	
-	public static boolean isEmpty(Ingredient ingr) {
-		if (ingr.getItems().length == 0) return true;
-		return ingr.isSimple() ? ingr.getItems()[0].isEmpty() : ItemStackUtils.areEmpty(ingr.getItems());
-	}
-	
 	public static Ingredient getIngredient(Item item, int amount) {
 		return Ingredient.of(new ItemStack(item, amount));
 	}
