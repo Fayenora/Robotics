@@ -1,5 +1,6 @@
 package com.ignis.igrobotics;
 
+import com.ignis.igrobotics.common.items.ItemCommander;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -29,9 +30,10 @@ public class ModItems {
 
     public static final RegistryObject<Item> MODULE_BATTERY = registerBasicItem("battery");
 
-    /*
-    public static final RegistryObject<Item> commander = new ItemCommander("commander");
 
+    public static final RegistryObject<Item> commander = ITEMS.register("commander", () -> new ItemCommander());
+
+    /*
     public static final RegistryObject<Item>[] WIRES = new Item[Reference.WIRE_METALS.length];
     public static final RegistryObject<Item>[] PLATES = new Item[EnumRobotMaterial.values().length];
     public static final RegistryObject<Item>[] MATERIALS = new Item[EnumRobotMaterial.values().length];

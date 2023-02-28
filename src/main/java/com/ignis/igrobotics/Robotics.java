@@ -1,5 +1,6 @@
 package com.ignis.igrobotics;
 
+import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.*;
@@ -27,7 +28,7 @@ import org.slf4j.Logger;
 @Mod(Robotics.MODID)
 public class Robotics {
     public static final String MODID = "igrobotics";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final CreativeModeTab TAB_ROBOTICS = new CreativeModeTab(MODID) {
         @Override
@@ -48,7 +49,7 @@ public class Robotics {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        NetworkHandler.registerMessages();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
