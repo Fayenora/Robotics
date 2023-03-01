@@ -53,6 +53,8 @@
   "itemGroup.igrobotics": "Robotics",
   "itemGroup.igroboticsmaterials": "Robotic Materials",
 
+  "container.assembler": "Assembler",
+
   "death.attack.perkImpact": "%s experienced the impact of a robotic fist accelerated to 100 m/s",
 
   "commandGroup.robot.add": "Added Robot to command group",
