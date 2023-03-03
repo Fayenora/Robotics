@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -100,19 +101,22 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
         if(runTime == 0) {
             this.currentRunTime = 0;
         }
-
-        inventory.setLevel(level);
         //Apply config to existing machines
         storage.setMaxEnergyStored(machine.getEnergyCapacity());
     }
 
     @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
+    public void setLevel(Level p_155231_) {
+        inventory.setLevel(level);
+        super.setLevel(p_155231_);
         onEnteredWorld();
     }
 
     protected void onEnteredWorld() {}
+
+    public void dropInventory() {
+        Containers.dropContents(level, getBlockPos(), this);
+    }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntityMachine machine) {
         boolean flag1 = false;

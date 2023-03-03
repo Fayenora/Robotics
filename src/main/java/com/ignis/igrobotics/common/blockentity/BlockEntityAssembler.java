@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.ModMachines;
+import com.ignis.igrobotics.client.menu.AssemblerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -56,8 +57,8 @@ public class BlockEntityAssembler extends BlockEntityMachine {
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int p_58627_, Inventory p_58628_) {
-        return null;
+    protected AbstractContainerMenu createMenu(int id, Inventory inv) {
+        return new AssemblerMenu(id, inv, this, this.dataAccess);
     }
 
     @Override
