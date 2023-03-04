@@ -9,6 +9,9 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -18,24 +21,40 @@ public class AssemblerMenu extends AbstractContainerMenu {
     private final Level level;
     private final ContainerData data;
 
+    public static final Point slot_top = new Point(80, 11);
+    public static final Point slot_right = new Point(128, 59);
+    public static final Point slot_bot = new Point(80, 107);
+    public static final Point slot_left = new Point(32, 59);
+    public static final Point slot_out = new Point(80, 59);
+
     public AssemblerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
     }
 
-    public AssemblerMenu(int id, Inventory inv, BlockEntity blockEntity, ContainerData data) {
+    public AssemblerMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.ASSEMBLER_MENU.get(), id);
-        checkContainerSize(inv, 5);
         this.blockEntity = (BlockEntityAssembler) blockEntity;
-        this.level = inv.player.level;
+        this.level = playerInv.player.level;
         this.data = data;
 
-        addPlayerInv(inv, new Dimension(166, 216));
-        //TODO Add Slots
+        addPlayerInv(playerInv, new Dimension(166, 216));
+        addDataSlots(data);
+
+        blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+            //Input-Slots
+            this.addSlot(new SlotItemHandler(handler, 0, slot_top.x, slot_top.y));
+            this.addSlot(new SlotItemHandler(handler, 1, slot_right.x, slot_right.y));
+            this.addSlot(new SlotItemHandler(handler, 2, slot_bot.x, slot_bot.y));
+            this.addSlot(new SlotItemHandler(handler, 3, slot_left.x, slot_left.y));
+
+            //Output-Slot
+            this.addSlot(new SlotItemHandler(handler, 4, slot_out.x, slot_out.y));
+        });
     }
 
     protected void addPlayerInv(Inventory playerInv, Dimension size) {
-        int offsetX = size.width / 2 - (9 * 18 / 2);
-        int offsetY = size.height - 140;
+        int offsetX = size.width / 2 - (9 * 17 / 2) + 1;
+        int offsetY = size.height - 82;
         //Inventory
         for(int x = 0; x < 9; x++) {
             for(int y = 0; y < 3; y++) {

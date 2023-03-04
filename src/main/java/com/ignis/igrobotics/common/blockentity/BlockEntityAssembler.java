@@ -2,12 +2,13 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.ModMachines;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
+import com.ignis.igrobotics.core.util.ContainerDataUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockEntityAssembler extends BlockEntityMachine {
@@ -22,6 +23,24 @@ public class BlockEntityAssembler extends BlockEntityMachine {
         inventory.setValidSlotsForFace(Direction.WEST, 1, 4);
         inventory.setValidSlotsForFace(Direction.DOWN, 2, 4);
         inventory.setValidSlotsForFace(Direction.EAST, 3, 4);
+
+        dataAccess = ContainerDataUtil.merge(dataAccess, new ContainerData() {
+            @Override
+            public int get(int key) {
+                if(key == 0) return activeArrows;
+                return 0;
+            }
+
+            @Override
+            public void set(int key, int value) {
+                if(key == 0) activeArrows = value;
+            }
+
+            @Override
+            public int getCount() {
+                return 1;
+            }
+        });
     }
 
     @Override
@@ -44,11 +63,6 @@ public class BlockEntityAssembler extends BlockEntityMachine {
                 }
             }
         }
-    }
-
-    @Override
-    public int[] getSlotsForFace(Direction direction) {
-        return inventory.getSlotsForFace(direction);
     }
 
     @Override

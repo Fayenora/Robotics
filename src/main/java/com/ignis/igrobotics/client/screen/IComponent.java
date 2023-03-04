@@ -9,6 +9,7 @@ import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
 /**
@@ -17,7 +18,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
  * @author Ignis
  */
 @Deprecated //
-public interface IComponent extends GuiEventListener, Widget {
+public interface IComponent extends ContainerEventHandler, Widget {
 	
 	void setX(int x);
 	void setY(int y);

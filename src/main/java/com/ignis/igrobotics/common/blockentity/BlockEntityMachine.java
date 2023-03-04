@@ -10,8 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
@@ -22,16 +20,14 @@ import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +49,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
 
     private final MachineRecipe[] RECIPES;
 
-    protected final ContainerData dataAccess = new ContainerData() {
+    protected ContainerData dataAccess = new ContainerData() {
         @Override
         public int get(int id) {
             switch(id) {
@@ -249,31 +245,34 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
     }
 
     @Override
+    public int[] getSlotsForFace(Direction direction) {
+        return inventory.getSlotsForFace(direction);
+    }
+
+    @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction face) {
-        return IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
+        return inventory.canPlaceItemThroughFace(slot, stack, face);
     }
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction face) {
-        return IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
+        return inventory.canTakeItemThroughFace(slot, stack, face);
     }
 
     //////////////////////////
     // Capabilities
     //////////////////////////
 
-    LazyOptional<? extends IItemHandler>[] inventory_cap = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+    LazyOptional<? extends IItemHandlerModifiable> inventory_cap = LazyOptional.of(() -> inventory);
+    LazyOptional<? extends IItemHandlerModifiable>[] inventory_caps = SidedInvWrapper.create(this, Direction.values());
     LazyOptional<? extends IEnergyStorage> energy_cap = LazyOptional.of(() -> storage);
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if(remove) return super.getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            switch(side) {
-                case UP: return inventory_cap[0].cast();
-                case DOWN: return inventory_cap[1].cast();
-                default: return inventory_cap[2].cast();
-            }
+            if(side == null) return inventory_cap.cast();
+            return inventory_caps[side.ordinal()].cast();
         }
         if(cap == CapabilityEnergy.ENERGY) {
             return energy_cap.cast();
@@ -285,7 +284,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
     public void invalidateCaps() {
         super.invalidateCaps();
         energy_cap.invalidate();
-        for(LazyOptional cap : inventory_cap) {
+        for(LazyOptional cap : inventory_caps) {
             cap.invalidate();
         }
     }
@@ -293,7 +292,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        inventory_cap = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+        inventory_caps = SidedInvWrapper.create(this, Direction.values());
         energy_cap = LazyOptional.of(() -> storage);
     }
 

@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class MachineInventory extends BaseInventory {
 
@@ -39,6 +40,17 @@ public class MachineInventory extends BaseInventory {
             defaultSlots.addAll(outputSlots);
         }
         return Ints.toArray(accessibleSlotPerFace.getOrDefault(side, defaultSlots));
+    }
+
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction face) {
+        if(face != null && outputSlots.contains(slot)) {
+            return false;
+        }
+        return IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
+    }
+
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction face) {
+        return IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
     }
 
     public void setOutputSlots(int... outputs) {
