@@ -19,7 +19,7 @@ import java.awt.*;
 public class AssemblerMenu extends AbstractContainerMenu {
     public final BlockEntityAssembler blockEntity;
     private final Level level;
-    private final ContainerData data;
+    public final ContainerData data;
 
     public static final Point slot_top = new Point(80, 11);
     public static final Point slot_right = new Point(128, 59);
@@ -28,7 +28,7 @@ public class AssemblerMenu extends AbstractContainerMenu {
     public static final Point slot_out = new Point(80, 59);
 
     public AssemblerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
+        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public AssemblerMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
