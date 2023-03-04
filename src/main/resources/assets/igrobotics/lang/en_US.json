@@ -70,8 +70,6 @@
   "igrobotics.selected_robot": "Selected Entity",
   "igrobotics.selected_pos": "Selected Position",
   "igrobotics.pick_with_jei": "Press [ENTER] on any JEI Item",
-  "igrobotics.RF": "RF",
-  "igrobotics.ID": "ID",
 
   "igrobotics.found_no_selection": "No command unit in inventory has selected an entity!",
   "igrobotics.max_commands": "This robot cannot handle more tasks!",
