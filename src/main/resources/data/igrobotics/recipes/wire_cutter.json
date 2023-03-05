@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ipi",
+        "btb",
+        "ipi"
+    ],
+    "key": {
+        "i": {
+            "item": "minecraft:iron_block"
+        },
+        "p": {
+            "item": "minecraft:piston"
+        },
+		"b": {
+            "item": "minecraft:iron_bars"
+        },
+		"t": {
+            "item": "minecraft:iron_trapdoor"
+        }
+    },
+    "result": {
+        "item": "igrobotics:wire_cutter"
+    }
+}

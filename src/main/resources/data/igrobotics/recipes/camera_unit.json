@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ncn",
+        "gdg",
+        "ngn"
+    ],
+    "key": {
+        "n": {
+            "type": "forge:ore_dict",
+			"ore": "nuggetIron"
+        },
+		"d": {
+            "item": "minecraft:daylight_detector"
+        }, 
+		"g": {
+            "item": "minecraft:glass_pane"
+        },
+		"c": {
+            "item": "igrobotics:circuit"
+        }
+    },
+    "result": {
+        "item": "igrobotics:camera_unit"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "pcp",
+        "p p",
+        "pbp"
+    ],
+    "key": {
+        "b": {
+            "type": "forge:ore_dict",
+			"ore": "blockIron"
+        },
+		"p": {
+            "item": "igrobotics:plate_iron"
+        }, 
+		"c": {
+            "item": "igrobotics:circuit"
+        }
+    },
+    "result": {
+        "item": "igrobotics:robot_storage"
+    }
+}

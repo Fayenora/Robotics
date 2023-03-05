@@ -1,0 +1,7 @@
+{
+  "_comment": "This is just a dummy file to prevent unneccesary errors on startup",
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "igrobotics:block/machine_top"
+  }
+}

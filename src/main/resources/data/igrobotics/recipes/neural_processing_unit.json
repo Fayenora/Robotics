@@ -1,0 +1,21 @@
+{
+    "type": "igrobotics:assembler",
+	"pattern": "wcpc",
+    "key": {
+        "c": {
+            "item": "igrobotics:complex_circuit"
+        }, 
+		"w": {
+            "item": "igrobotics:complex_wiring"
+        }, 
+		"p": {
+            "item": "igrobotics:perceptron_layer", 
+			"amount": 8
+        }
+    }, 
+	"energy": 1000000,
+	"processing_time": 1000,
+    "result": {
+        "item": "igrobotics:neural_processing_unit"
+    }
+}

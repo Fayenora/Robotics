@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "igrobotics:commander"
+  },
+  "pattern": [
+    "   ",
+    "cii",
+    "iwi"
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "c": {
+      "item": "igrobotics:copper_wire"
+    },
+    "w": {
+      "item": "igrobotics:wiring"
+    }
+  }
+}

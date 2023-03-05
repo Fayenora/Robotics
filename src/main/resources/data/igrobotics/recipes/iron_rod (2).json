@@ -1,0 +1,14 @@
+{
+    "type": "igrobotics:assembler",
+	"pattern": " i i",
+    "key": {
+        "i": {
+            "tag": "ingots/iron"
+        }
+    }, 
+	"energy": 10000,
+	"processing_time": 50,
+    "result": {
+        "item": "igrobotics:iron_rod"
+    }
+}

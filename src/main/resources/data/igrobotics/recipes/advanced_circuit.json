@@ -1,0 +1,26 @@
+{
+    "type": "igrobotics:assembler",
+	"pattern": "rwiv",
+    "key": {
+        "r": {
+            "type": "forge:ore_dict",
+			"ore": "dustRedstone", 
+			"amount": 3
+        }, 
+		"w": {
+            "item": "igrobotics:advanced_wiring"
+        },
+		"i": {
+            "type": "forge:ore_dict",
+			"ore": "ingotIron"
+        }, 
+		"v": {
+			"item": "igrobotics:circuit"
+		}
+    }, 
+	"energy": 10000,
+	"processing_time": 200,
+    "result": {
+        "item": "igrobotics:advanced_circuit"
+    }
+}

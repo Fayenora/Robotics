@@ -1,0 +1,23 @@
+{
+	"type": "igrobotics:robot_part", 
+	"pattern": [
+		"mp ", 
+		"pwp", 
+		" pm"
+	], 
+	"key": {
+		"m": {
+			"item": "igrobotics:servo_motor"
+		}, 
+		"p": {
+			"item": "igrobotics:plate_iron"
+		}, 
+		"w": {
+			"item": "igrobotics:wiring"
+		}
+	}, 
+	"result": {
+		"item": "igrobotics:material_iron",
+		"data": 2
+	}
+}

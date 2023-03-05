@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "igrobotics:complex_wiring"
+  },
+  "pattern": [
+    " w ",
+    "wgw",
+    " w "
+  ],
+  "key": {
+    "g": {
+      "item": "igrobotics:gold_wire"
+    },
+	"w": {
+      "item": "igrobotics:advanced_wiring"
+    }
+  }
+}

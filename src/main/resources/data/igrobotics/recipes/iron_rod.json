@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " i ",
+        " i ",
+        " i "
+    ],
+    "key": {
+        "i": {
+            "type": "forge:ore_dict",
+			"ore": "ingotIron"
+        }
+    },
+    "result": {
+        "item": "igrobotics:iron_rod"
+    }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "igrobotics:advanced_wiring"
+  },
+  "pattern": [
+    " s ",
+    "wrw",
+    " s "
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:comparator"
+    },
+    "s": {
+      "item": "igrobotics:silver_wire"
+    },
+	"w": {
+      "item": "igrobotics:wiring"
+    }
+  }
+}

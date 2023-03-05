@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "igrobotics:wiring"
+  },
+  "pattern": [
+    " c ",
+    "crc",
+    " c "
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:repeater"
+    },
+    "c": {
+      "item": "igrobotics:copper_wire"
+    }
+  }
+}

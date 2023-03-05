@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " t ",
+        "ili",
+        "ibi"
+    ],
+    "key": {
+        "i": {
+            "type": "forge:ore_dict",
+			"ore": "ingotIron"
+        },
+		"t": {
+            "type": "forge:ore_dict",
+			"ore": "ingotTin"
+        },
+		"l": {
+            "type": "forge:ore_dict",
+			"ore": "dustLead"
+        },
+		"b": {
+            "item": "minecraft:blaze_powder"
+        }
+    },
+    "result": {
+        "item": "igrobotics:battery"
+    }
+}

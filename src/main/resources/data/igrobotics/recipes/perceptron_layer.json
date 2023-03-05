@@ -1,0 +1,18 @@
+{
+    "type": "igrobotics:assembler",
+	"pattern": "cici",
+    "key": {
+        "c": {
+            "item": "igrobotics:circuit"
+        }, 
+		"i": {
+            "type": "forge:ore_dict",
+			"ore": "nuggetIron"
+        }
+    }, 
+	"energy": 100000,
+	"processing_time": 500,
+    "result": {
+        "item": "igrobotics:perceptron_layer"
+    }
+}
