@@ -8,4 +8,8 @@ public class Lang {
     public static Component localise(String s, Object... args) {
         return Component.translatable(Robotics.MODID + "." + s, args);
     }
+
+    public static Component localiseExisting(String s, Object... args) {
+        return Component.translatable(s, args);
+    }
 }
