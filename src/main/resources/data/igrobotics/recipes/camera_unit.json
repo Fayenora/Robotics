@@ -7,15 +7,15 @@
     ],
     "key": {
         "n": {
-            "type": "forge:ore_dict",
-			"ore": "nuggetIron"
+            "tag": "forge:nuggets/iron"
         },
 		"d": {
             "item": "minecraft:daylight_detector"
         }, 
 		"g": {
-            "item": "minecraft:glass_pane"
+            "tag": "forge:glass_panes"
         },
+
 		"c": {
             "item": "igrobotics:circuit"
         }

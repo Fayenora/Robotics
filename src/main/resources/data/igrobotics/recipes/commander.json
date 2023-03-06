@@ -10,11 +10,10 @@
   ],
   "key": {
     "i": {
-      "type": "forge:ore_dict",
-      "ore": "ingotIron"
+      "tag": "forge:ingots/iron"
     },
     "c": {
-      "item": "igrobotics:copper_wire"
+      "tag": "forge:wires/copper"
     },
     "w": {
       "item": "igrobotics:wiring"

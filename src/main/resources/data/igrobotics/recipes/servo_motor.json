@@ -3,11 +3,10 @@
 	"pattern": "siei",
     "key": {
         "i": {
-            "item": "igrobotics:iron_rod"
+            "tag": "forge:rods/iron"
         }, 
 		"s": {
-            "type": "forge:ore_dict",
-			"ore": "ingotSteel"
+            "tag": "forge:ingots/steel"
         },
 		"e": {
             "item": "igrobotics:electro_magnet", 

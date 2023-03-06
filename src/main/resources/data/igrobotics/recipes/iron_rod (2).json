@@ -3,7 +3,7 @@
 	"pattern": " i i",
     "key": {
         "i": {
-            "tag": "ingots/iron"
+            "tag": "forge:ingots/iron"
         }
     }, 
 	"energy": 10000,

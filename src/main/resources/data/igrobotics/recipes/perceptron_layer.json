@@ -6,8 +6,7 @@
             "item": "igrobotics:circuit"
         }, 
 		"i": {
-            "type": "forge:ore_dict",
-			"ore": "nuggetIron"
+            "tag": "forge:nuggets/iron"
         }
     }, 
 	"energy": 100000,

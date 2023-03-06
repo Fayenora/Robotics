@@ -7,8 +7,7 @@
     ],
     "key": {
         "b": {
-            "type": "forge:ore_dict",
-			"ore": "blockIron"
+            "tag": "forge:storage_blocks/iron"
         },
 		"a": {
             "item": "minecraft:anvil", 

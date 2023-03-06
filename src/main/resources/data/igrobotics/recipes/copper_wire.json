@@ -1,8 +1,7 @@
 {
     "type": "igrobotics:wire_cutter",
     "ingredient": {
-		"type": "forge:ore_dict",
-		"ore": "ingotCopper"
+		"tag": "forge:ingots/copper"
 	}, 
 	"energy": 10000,
 	"processing_time": 100,

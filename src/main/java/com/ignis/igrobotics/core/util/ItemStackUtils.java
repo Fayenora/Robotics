@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.util;
 
+import com.google.gson.JsonElement;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -7,6 +8,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
+import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 

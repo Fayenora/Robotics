@@ -3,10 +3,10 @@
 	"pattern": "iw w",
     "key": {
         "i": {
-            "item": "igrobotics:iron_rod"
+            "tag": "forge:rods/iron"
         }, 
 		"w": {
-            "item": "igrobotics:copper_wire"
+            "tag": "forge:wires/copper"
         }
     }, 
 	"energy": 10000,

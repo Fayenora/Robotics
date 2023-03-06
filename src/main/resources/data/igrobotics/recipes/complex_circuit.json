@@ -3,16 +3,14 @@
 	"pattern": "rwiv",
     "key": {
         "r": {
-            "type": "forge:ore_dict",
-			"ore": "dustRedstone", 
+            "tag": "forge:dusts/redstone",
 			"amount": 3
         }, 
 		"w": {
             "item": "igrobotics:complex_wiring"
         },
 		"i": {
-            "type": "forge:ore_dict",
-			"ore": "ingotIron"
+            "tag": "forge:ingots/iron"
         }, 
 		"v": {
 			"item": "igrobotics:advanced_circuit"
