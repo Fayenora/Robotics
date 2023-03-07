@@ -2,6 +2,7 @@ package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.client.menu.ModMenuTypes;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -17,7 +19,9 @@ import org.slf4j.Logger;
 
 @Mod(Robotics.MODID)
 public class Robotics {
+
     public static final String MODID = "igrobotics";
+    public static final String MODNAME = "Robotics";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public Robotics() {
@@ -29,18 +33,22 @@ public class Robotics {
         ModMachines.RECIPE_TYPES.register(modEventBus);
         ModMachines.RECIPE_SERIALIZERS.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
+
+        RoboticsConfig.registerConfigs(ModLoadingContext.get());
+
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(RoboticsCreativeTab::register);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
+    @SubscribeEvent
+    public void commonSetup(final FMLCommonSetupEvent event) {
         NetworkHandler.registerMessages();
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void serverSetup(ServerStartingEvent event) {
 
     }
 
