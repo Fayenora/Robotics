@@ -1,0 +1,25 @@
+[
+{
+	"items": {
+		"item": "igrobotics:battery"
+	},
+	"perks": [
+	{
+		"level": 2, 
+		"name": "perk.battery", 
+		"maxLevel": 3,
+		"attributes": [
+		{
+			"name": "robot.energy_capacity", 
+			"modifiers": [
+			{
+				"value": 200000, 
+				"operation": 0
+			}
+			]
+		}
+		]
+	}
+	]
+}
+]

@@ -2,6 +2,7 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.annotation.Nullable;
@@ -11,7 +12,7 @@ public class ConfigUtils {
 
     public static void copyFromDefault(String defaultConfigFile, File to) {
         try {
-            String path = "assets/" + Robotics.MODID + "/configs/" + defaultConfigFile;
+            String path = "data/" + Robotics.MODID + "/configs/" + defaultConfigFile;
             InputStream in = Robotics.class.getClassLoader().getResourceAsStream(path);
             FileOutputStream out = new FileOutputStream(to);
             IOUtils.copy(in, out);

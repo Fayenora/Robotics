@@ -1,0 +1,152 @@
+[
+	{
+		"name": "perk.health", 
+		"visible": false, 
+		"attributes": [
+		{
+			"name": "generic.maxHealth", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 1
+			}
+			]
+		}
+		]
+	},
+	{
+		"name": "perk.movementSpeed", 
+		"visible": false,
+		"attributes": [
+		{
+			"name": "generic.movementSpeed", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 0.15
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.durable", 
+		"visible": false,
+		"maxLevel": 10, 
+		"attributes": [
+		{
+			"name": "generic.armor", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 1
+			}
+			]
+		}
+		]
+	},
+	{
+		"name": "perk.persistent", 
+		"visible": false, 
+		"maxLevel": 5, 
+		"attributes": [
+		{
+			"name": "generic.armorToughness", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 1
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.steady", 
+		"visible": false,
+		"maxLevel": 5, 
+		"attributes": [
+		{
+			"name": "generic.knockbackResistance", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0,
+				"scalar": 0.2
+			}
+			]
+		}
+		]
+	},
+	{
+		"name": "perk.speedy", 
+		"visible": false,
+		"maxLevel": 3, 
+		"attributes": [
+		{
+			"name": "generic.movementSpeed", 
+			"modifiers": [
+			{
+				"value": [0.15, 0.25, 0.30], 
+				"operation": 1
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.efficient", 
+		"visible": false, 
+		"maxLevel": 3, 
+		"attributes": [
+		{
+			"name": "robot.energy_consumption", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 1, 
+				"scalar": -0.20
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.destructive", 
+		"visible": false, 
+		"maxLevel": 5, 
+		"attributes": [
+		{
+			"name": "generic.attackDamage", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 0.5
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.modular", 
+		"visible": true, 
+		"displayColor": "white",
+		"maxLevel": 1, 
+		"attributes": [
+		{
+			"name": "robot.module_slots", 
+			"modifiers": [
+			{
+				"value": 1, 
+				"operation": 0
+			}
+			]
+		}
+		]
+	}
+]

@@ -51,7 +51,7 @@ public class Robotics {
 
     @SubscribeEvent
     public void serverSetup(ServerStartingEvent event) {
-
+        RoboticsConfig.local().loadJsonConfigs();
     }
 
     @SubscribeEvent
