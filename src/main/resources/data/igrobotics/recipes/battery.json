@@ -7,16 +7,13 @@
     ],
     "key": {
         "i": {
-            "type": "forge:ore_dict",
-			"ore": "ingotIron"
+            "tag": "forge:ingots/iron"
         },
 		"t": {
-            "type": "forge:ore_dict",
-			"ore": "ingotTin"
+            "tag": "forge:ingots/tin"
         },
 		"l": {
-            "type": "forge:ore_dict",
-			"ore": "dustLead"
+            "tag": "forge:dusts/lead"
         },
 		"b": {
             "item": "minecraft:blaze_powder"
