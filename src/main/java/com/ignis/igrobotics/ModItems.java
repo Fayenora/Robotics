@@ -1,6 +1,8 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.common.items.ItemCommander;
+import com.ignis.igrobotics.core.RobotPart;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,13 +32,24 @@ public class ModItems {
     public static final RegistryObject<Item> MODULE_BATTERY = registerBasicItem("battery");
 
 
-    public static final RegistryObject<Item> commander = ITEMS.register("commander", () -> new ItemCommander());
+    public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", () -> new ItemCommander());
 
-    /*
-    public static final RegistryObject<Item>[] WIRES = new Item[Reference.WIRE_METALS.length];
-    public static final RegistryObject<Item>[] PLATES = new Item[EnumRobotMaterial.values().length];
-    public static final RegistryObject<Item>[] MATERIALS = new Item[EnumRobotMaterial.values().length];
-     */
+    public static final RegistryObject<Item>[] WIRES = new RegistryObject[Reference.WIRE_METALS.length];
+    public static final RegistryObject<Item>[] PLATES = new RegistryObject[RobotPart.EnumRobotMaterial.valuesWithoutEmpty().length];
+    public static final RegistryObject<Item>[][] MATERIALS = new RegistryObject[RobotPart.EnumRobotMaterial.valuesWithoutEmpty().length][];
+
+    static {
+        for(int i = 0; i < Reference.WIRE_METALS.length; i++) {
+            WIRES[i] = registerBasicItem(Reference.WIRE_METALS[i] + "_wire");
+        }
+        for(RobotPart.EnumRobotMaterial material : RobotPart.EnumRobotMaterial.valuesWithoutEmpty()) {
+            PLATES[material.getID() - 1] = registerBasicItem("plate_" + material.getName());
+            MATERIALS[material.getID() - 1] = new RegistryObject[RobotPart.EnumRobotPart.values().length];
+            for(RobotPart.EnumRobotPart part : RobotPart.EnumRobotPart.values()) {
+                MATERIALS[material.getID() - 1][part.getID()] = registerBasicItem(material.getName() + "_" + part.getName());
+            }
+        }
+    }
 
     private static RegistryObject<Item> registerBasicItem(String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));
