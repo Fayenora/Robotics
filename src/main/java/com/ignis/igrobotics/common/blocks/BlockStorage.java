@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.blocks;
 
+import com.ignis.igrobotics.common.blockentity.BlockEntityStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,7 +14,7 @@ public class BlockStorage extends BlockMachine {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return null;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BlockEntityStorage(pos, state);
     }
 }

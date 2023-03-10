@@ -1,6 +1,8 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.common.blockentity.BlockEntityAssembler;
+import com.ignis.igrobotics.common.blockentity.BlockEntityFactory;
+import com.ignis.igrobotics.common.blockentity.BlockEntityStorage;
 import com.ignis.igrobotics.common.blockentity.BlockEntityWireCutter;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
@@ -26,9 +28,12 @@ public class ModMachines {
 
     public static final Machine ASSEMBLER = registerMachine("assembler", BlockEntityAssembler::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
     public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", BlockEntityWireCutter::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
+    public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", BlockEntityFactory::new, ModBlocks.ROBOT_FACTORY, null);
+    public static final RegistryObject<BlockEntityType<?>> ROBOT_STORAGE = BLOCK_ENTITIES.register("robot_storage", () -> BlockEntityType.Builder.of(BlockEntityStorage::new, ModBlocks.ROBOT_STORAGE.get()).build(null));
 
     private static <T extends BlockEntity> Machine registerMachine(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block, Supplier<? extends IRecipeSerializer<?>> recipeSerializer) {
         RegistryObject<BlockEntityType<T>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));
+        if(recipeSerializer == null) return new Machine(null, null, blockEntityType);
         RegistryObject<RecipeType<?>> recipeType = RECIPE_TYPES.register(name, () -> RecipeType.simple(new ResourceLocation(Robotics.MODID, name)));
         RegistryObject<IRecipeSerializer<?>> serializer = RECIPE_SERIALIZERS.register(name, recipeSerializer);
         return new Machine(recipeType, serializer, blockEntityType);

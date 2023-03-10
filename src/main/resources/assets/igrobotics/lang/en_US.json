@@ -55,6 +55,8 @@
 
   "container.assembler": "Assembler",
   "container.wire_cutter": "Wire Cutter",
+  "container.robot_factory": "Robot Factory",
+  "container.robot_storage": "Robot Storage",
 
   "death.attack.perkImpact": "%s experienced the impact of a robotic fist accelerated to 100 m/s",
 
