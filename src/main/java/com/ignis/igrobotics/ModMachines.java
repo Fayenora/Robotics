@@ -1,7 +1,9 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.common.blockentity.BlockEntityAssembler;
+import com.ignis.igrobotics.common.blockentity.BlockEntityWireCutter;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
+import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.IRecipeSerializer;
 import com.ignis.igrobotics.core.Machine;
 import net.minecraft.resources.ResourceLocation;
@@ -22,12 +24,13 @@ public class ModMachines {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, Robotics.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Robotics.MODID);
 
-    public static final Machine ASSEMBLER = registerMachine("assembler", BlockEntityAssembler::new, ModBlocks.ASSEMBLER);
+    public static final Machine ASSEMBLER = registerMachine("assembler", BlockEntityAssembler::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
+    public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", BlockEntityWireCutter::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
 
-    private static <T extends BlockEntity> Machine registerMachine(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block) {
+    private static <T extends BlockEntity> Machine registerMachine(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block, Supplier<? extends IRecipeSerializer<?>> recipeSerializer) {
         RegistryObject<BlockEntityType<T>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));
         RegistryObject<RecipeType<?>> recipeType = RECIPE_TYPES.register(name, () -> RecipeType.simple(new ResourceLocation(Robotics.MODID, name)));
-        RegistryObject<IRecipeSerializer<?>> serializer = RECIPE_SERIALIZERS.register(name, AssemblerRecipes::new);
+        RegistryObject<IRecipeSerializer<?>> serializer = RECIPE_SERIALIZERS.register(name, recipeSerializer);
         return new Machine(recipeType, serializer, blockEntityType);
     }
 

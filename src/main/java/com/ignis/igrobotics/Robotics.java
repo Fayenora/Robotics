@@ -1,7 +1,9 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.client.menu.ModMenuTypes;
+import com.ignis.igrobotics.client.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
+import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
@@ -57,6 +59,7 @@ public class Robotics {
     @SubscribeEvent
     public void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            MenuScreens.register(ModMenuTypes.WIRECUTTER_MENU.get(), WireCutterScreen::new);
             MenuScreens.register(ModMenuTypes.ASSEMBLER_MENU.get(), AssemblerScreen::new);
         });
     }

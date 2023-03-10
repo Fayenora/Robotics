@@ -54,6 +54,7 @@
   "item_group.igrobotics.materials": "Robotic Materials",
 
   "container.assembler": "Assembler",
+  "container.wire_cutter": "Wire Cutter",
 
   "death.attack.perkImpact": "%s experienced the impact of a robotic fist accelerated to 100 m/s",
 

@@ -96,6 +96,9 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 			recipe.outputs = outputs;
 			return this;
 		}
+		public Builder setOutput(ItemStack output) {
+			return this.setOutputs(new ItemStack[] {output});
+		}
 		public Builder setInputs(Ingredient[] inputs) {
 			recipe.inputs = inputs;
 			return this;
