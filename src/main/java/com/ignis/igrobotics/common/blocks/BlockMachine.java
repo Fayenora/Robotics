@@ -57,13 +57,6 @@ public abstract class BlockMachine extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if(level.isClientSide()) return null;
-        return createTickerHelper(type, ModMachines.ASSEMBLER.getBlockEntityType(), BlockEntityMachine::serverTick);
-    }
-
-    @Nullable
-    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(RUNNING, false);
     }
