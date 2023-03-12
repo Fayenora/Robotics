@@ -18,11 +18,11 @@ import java.util.Stack;
  * Supports holding a stack of opened windows
  * @param <T>
  */
-public abstract class BaseScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IElement {
+public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IElement {
 
     Stack<IElement> subGuis = new Stack<>();
 
-    public BaseScreen(T menu, Inventory playerInv, Component title) {
+    public BaseContainerScreen(T menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
     }
 

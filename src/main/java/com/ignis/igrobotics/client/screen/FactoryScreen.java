@@ -3,7 +3,7 @@ package com.ignis.igrobotics.client.screen;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.FactoryMenu;
-import com.ignis.igrobotics.client.screen.elements.BaseScreen;
+import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FactoryScreen extends BaseScreen<FactoryMenu> {
+public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_factory.png");
 

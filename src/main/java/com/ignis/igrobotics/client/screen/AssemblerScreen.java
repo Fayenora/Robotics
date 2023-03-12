@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
-import com.ignis.igrobotics.client.screen.elements.BaseScreen;
+import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AssemblerScreen extends BaseScreen<AssemblerMenu> {
+public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/assembler.png");
 
