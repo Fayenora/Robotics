@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.ModBlocks;
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.BlockEntityWireCutter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,7 +35,7 @@ public class WireCutterMenu extends AbstractContainerMenu {
         this.level = playerInv.player.level;
         this.data = data;
 
-        addPlayerInv(playerInv, new Dimension(166, 176));
+        addPlayerInv(playerInv, Reference.GUI_DEFAULT_DIMENSIONS);
         addDataSlots(data);
 
         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
