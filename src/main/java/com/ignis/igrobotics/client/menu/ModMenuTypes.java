@@ -15,6 +15,7 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<AssemblerMenu>> ASSEMBLER_MENU = registerMenuType(AssemblerMenu::new, "assembler_menu");
     public static final RegistryObject<MenuType<WireCutterMenu>> WIRECUTTER_MENU = registerMenuType(WireCutterMenu::new, "wire_cutter_menu");
+    public static final RegistryObject<MenuType<FactoryMenu>> FACTORY_MENU = registerMenuType(FactoryMenu::new, "factory_menu");
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));

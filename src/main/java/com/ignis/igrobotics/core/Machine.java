@@ -48,6 +48,7 @@ public class Machine<T extends BlockEntity, R extends Recipe<?>> {
     }
 
     public List<R> getRecipes() {
+        if(recipeSerializer == null) return List.of();
         return recipeSerializer.get().getRecipes();
     }
 }
