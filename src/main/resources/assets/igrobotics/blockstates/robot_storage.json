@@ -1,63 +1,63 @@
 {
 	"variants": {
 		"facing=north,half=lower,running=false": {
-            "model": "igrobotics:block/generic_machine"
+            "model": "igrobotics:block/robot_storage"
         },
         "facing=south,half=lower,running=false": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 180
         },
         "facing=west,half=lower,running=false": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 270
         },
         "facing=east,half=lower,running=false": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 90
         },
 		"facing=north,half=lower,running=true": {
-            "model": "igrobotics:block/generic_machine"
+            "model": "igrobotics:block/robot_storage"
         },
         "facing=south,half=lower,running=true": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 180
         },
         "facing=west,half=lower,running=true": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 270
         },
         "facing=east,half=lower,running=true": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 90
         },
 		"facing=north,half=upper,running=false": {
-            "model": "igrobotics:block/generic_machine"
+            "model": "igrobotics:block/robot_storage"
         },
         "facing=south,half=upper,running=false": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 180
         },
         "facing=west,half=upper,running=false": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 270
         },
         "facing=east,half=upper,running=false": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 90
         },
 		"facing=north,half=upper,running=true": {
-            "model": "igrobotics:block/generic_machine"
+            "model": "igrobotics:block/robot_storage"
         },
         "facing=south,half=upper,running=true": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 180
         },
         "facing=west,half=upper,running=true": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 270
         },
         "facing=east,half=upper,running=true": {
-            "model": "igrobotics:block/generic_machine",
+            "model": "igrobotics:block/robot_storage",
             "y": 90
         }
 	}

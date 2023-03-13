@@ -9,6 +9,7 @@ import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,7 +43,9 @@ public class Robotics {
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::serverSetup);
         modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::registerRenderers);
         modEventBus.addListener(RoboticsCreativeTab::register);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -64,5 +67,10 @@ public class Robotics {
             MenuScreens.register(ModMenuTypes.ASSEMBLER_MENU.get(), AssemblerScreen::new);
             MenuScreens.register(ModMenuTypes.FACTORY_MENU.get(), FactoryScreen::new);
         });
+    }
+
+    @SubscribeEvent
+    public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), );
     }
 }

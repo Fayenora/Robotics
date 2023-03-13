@@ -1,3 +1,3 @@
 {
-   "parent": "igrobotics:block/generic_machine"
+   "parent": "igrobotics:block/robot_storage"
 }
