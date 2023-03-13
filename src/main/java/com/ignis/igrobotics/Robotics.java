@@ -1,15 +1,24 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.client.menu.ModMenuTypes;
-import com.ignis.igrobotics.client.menu.WireCutterMenu;
+import com.ignis.igrobotics.client.renderer.RenderRobotStorage;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.client.screen.FactoryScreen;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
+import com.ignis.igrobotics.common.blockentity.BlockEntityStorage;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.client.RenderTypeGroup;
+import net.minecraftforge.client.RenderTypeHelper;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.model.renderable.ITextureRenderTypeLookup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,7 +52,6 @@ public class Robotics {
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::serverSetup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::registerRenderers);
         modEventBus.addListener(RoboticsCreativeTab::register);
@@ -71,6 +79,6 @@ public class Robotics {
 
     @SubscribeEvent
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), );
+        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), RenderRobotStorage::new);
     }
 }
