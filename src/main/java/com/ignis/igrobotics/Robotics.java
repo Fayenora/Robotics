@@ -6,6 +6,7 @@ import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.client.screen.FactoryScreen;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.common.blockentity.BlockEntityStorage;
+import com.ignis.igrobotics.common.entity.ModEntityTypes;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import software.bernie.geckolib.GeckoLib;
 
 @Mod(Robotics.MODID)
 public class Robotics {
@@ -48,12 +50,13 @@ public class Robotics {
         ModMachines.RECIPE_TYPES.register(modEventBus);
         ModMachines.RECIPE_SERIALIZERS.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
+        ModEntityTypes.ENTITY_TYPES.register(modEventBus);
 
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 
+        GeckoLib.initialize();
+
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener(this::registerRenderers);
         modEventBus.addListener(RoboticsCreativeTab::register);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -68,17 +71,4 @@ public class Robotics {
         RoboticsConfig.local().loadJsonConfigs();
     }
 
-    @SubscribeEvent
-    public void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(ModMenuTypes.WIRECUTTER_MENU.get(), WireCutterScreen::new);
-            MenuScreens.register(ModMenuTypes.ASSEMBLER_MENU.get(), AssemblerScreen::new);
-            MenuScreens.register(ModMenuTypes.FACTORY_MENU.get(), FactoryScreen::new);
-        });
-    }
-
-    @SubscribeEvent
-    public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), RenderRobotStorage::new);
-    }
 }

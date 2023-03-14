@@ -1,10 +1,12 @@
 package com.ignis.igrobotics;
 
+import com.ignis.igrobotics.common.entity.ModEntityTypes;
 import com.ignis.igrobotics.common.items.ItemCommander;
 import com.ignis.igrobotics.core.RobotPart;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -31,6 +33,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> MODULE_BATTERY = registerBasicItem("battery");
 
+    public static final RegistryObject<Item> ROBOT_SPAWN_EGG = ITEMS.register("robot_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.ROBOT, 0x000000, 0xffa500, new Item.Properties()));
 
     public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", () -> new ItemCommander());
 
