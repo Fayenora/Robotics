@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blocks.BlockMachine;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.MachineRecipe;
@@ -413,9 +414,13 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
     }
 
     @Override
-    public boolean stillValid(Player p_18946_) {
-        return true;
-    } //TODO Only players in a certain range are still valid
+    public boolean stillValid(Player player) {
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        } else {
+            return player.distanceToSqr(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+        }
+    }
 
     @Override
     public void clearContent() {
