@@ -1,11 +1,13 @@
 package com.ignis.igrobotics.core;
 
+import com.ignis.igrobotics.ModItems;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 
@@ -51,6 +53,10 @@ public class RobotPart {
 			return robot_part;
 		}
 		return RoboticsConfig.current().parts.PARTS.get(part).get(material);
+	}
+
+	public ItemStack getItemStack(int count) {
+		return new ItemStack(ModItems.MATERIALS[material.getID() - 1][part.getID()].get(), count);
 	}
 
 	/*

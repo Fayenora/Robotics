@@ -1,11 +1,15 @@
 package com.ignis.igrobotics.core.util;
 
 import com.google.gson.JsonElement;
+import com.ignis.igrobotics.Robotics;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
+import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
 
 import javax.annotation.Nullable;
 import javax.json.JsonObject;
@@ -13,6 +17,17 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class ItemStackUtils {
+
+	public static void dropItem(Level level, double x, double y, double z, ItemStack stack) {
+		ItemEntity item = new ItemEntity(level, x, y, z, stack);
+		item.setDefaultPickUpDelay();
+
+		float f = Robotics.RANDOM.nextFloat() * 0.3F;
+		float f1 = Robotics.RANDOM.nextFloat() * ((float)Math.PI * 2F);
+		item.setDeltaMovement(-Math.sin(f1) * f, 0.25, Math.cos(f1) * f);
+
+		level.addFreshEntity(item);
+	}
 	
 	/**
 	 * Try to insert the given itemstack in the inventory
