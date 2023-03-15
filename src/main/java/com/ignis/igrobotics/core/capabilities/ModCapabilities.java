@@ -54,7 +54,7 @@ class AlwaysProvide<C> implements ICapabilityProvider {
         if(this.cap.equals(cap)) {
             return optional.cast();
         }
-        return null;
+        return LazyOptional.empty();
     }
 }
 
@@ -85,6 +85,6 @@ class AlwaysProvideAndSave<C extends INBTSerializer> implements ICapabilitySeria
         if(this.cap.equals(cap)) {
             return optional.cast();
         }
-        return null;
+        return LazyOptional.empty();
     }
 }
