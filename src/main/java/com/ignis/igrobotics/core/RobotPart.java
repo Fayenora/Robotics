@@ -87,7 +87,12 @@ public class RobotPart {
 	public ResourceLocation getColorResourceLocation(DyeColor color) {
 		return new ResourceLocation(COLORS_PATH + color.getName() + "/" + part.getName() + ".png");
 	}
-	
+
+	@Override
+	public String toString() {
+		return material + " " + part;
+	}
+
 	/*
 	 * Possible Values
 	 */

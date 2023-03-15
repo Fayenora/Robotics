@@ -1,5 +1,8 @@
 package com.ignis.igrobotics.common.entity;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -14,6 +17,17 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class RobotEntity extends PathfinderMob implements GeoEntity {
+
+    public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer>[] BODY_PARTS = new EntityDataAccessor[] {
+            SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT),
+            SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT)
+    };
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public RobotEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
