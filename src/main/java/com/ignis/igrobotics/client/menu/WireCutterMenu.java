@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.ModBlocks;
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.common.blockentity.BlockEntityWireCutter;
+import com.ignis.igrobotics.common.blockentity.WireCutterBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +21,7 @@ public class WireCutterMenu extends AbstractContainerMenu {
     public static final Point slot_main = new Point(62, 36);
     public static final Point slot_out = new Point(118, 36);
 
-    public final BlockEntityWireCutter blockEntity;
+    public final WireCutterBlockEntity blockEntity;
     private final Level level;
     public final ContainerData data;
 
@@ -31,7 +31,7 @@ public class WireCutterMenu extends AbstractContainerMenu {
 
     public WireCutterMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.WIRECUTTER_MENU.get(), id);
-        this.blockEntity = (BlockEntityWireCutter) blockEntity;
+        this.blockEntity = (WireCutterBlockEntity) blockEntity;
         this.level = playerInv.player.level;
         this.data = data;
 

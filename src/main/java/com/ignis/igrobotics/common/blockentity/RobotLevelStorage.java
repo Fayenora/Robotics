@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.common.blocks.BlockMachine;
+import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.EnumRobotMaterial;
 import com.ignis.igrobotics.core.EnumRobotPart;
@@ -70,7 +70,7 @@ public class RobotLevelStorage {
         robot.deserializeNBT(this.storedRobot.serializeNBT());
 
         //Determine spawn location
-        Direction facing = level.getBlockState(pos.get()).getValue(BlockMachine.FACING);
+        Direction facing = level.getBlockState(pos.get()).getValue(MachineBlock.FACING);
         switch(facing) {
             case NORTH:
                 robot.setPos(Vec3.atCenterOf(pos.get().north()));

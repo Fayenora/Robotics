@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
 import com.google.common.primitives.Ints;
-import com.ignis.igrobotics.common.blockentity.BlockEntityMachine;
+import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -14,11 +14,11 @@ import java.util.stream.IntStream;
 
 public class MachineInventory extends BaseInventory {
 
-    protected BlockEntityMachine machine;
+    protected MachineBlockEntity machine;
     List<Integer> outputSlots = new LinkedList<>();
     Map<Direction, List<Integer>> accessibleSlotPerFace = new HashMap<>();
 
-    public MachineInventory(BlockEntityMachine machine, int size) {
+    public MachineInventory(MachineBlockEntity machine, int size) {
         super(() -> machine.getBlockPos(), size);
         this.machine = machine;
     }

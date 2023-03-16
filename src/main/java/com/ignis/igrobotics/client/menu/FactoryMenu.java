@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.ModBlocks;
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.common.blockentity.BlockEntityFactory;
+import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,10 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
-import java.awt.*;
-
 public class FactoryMenu extends AbstractContainerMenu {
-    public final BlockEntityFactory blockEntity;
+    public final FactoryBlockEntity blockEntity;
     private final Level level;
     public final ContainerData data;
 
@@ -26,7 +24,7 @@ public class FactoryMenu extends AbstractContainerMenu {
 
     public FactoryMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.FACTORY_MENU.get(), id);
-        this.blockEntity = (BlockEntityFactory) blockEntity;
+        this.blockEntity = (FactoryBlockEntity) blockEntity;
         this.level = playerInv.player.level;
         this.data = data;
 

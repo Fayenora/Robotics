@@ -1,9 +1,9 @@
 package com.ignis.igrobotics;
 
-import com.ignis.igrobotics.common.blockentity.BlockEntityAssembler;
-import com.ignis.igrobotics.common.blockentity.BlockEntityFactory;
-import com.ignis.igrobotics.common.blockentity.BlockEntityStorage;
-import com.ignis.igrobotics.common.blockentity.BlockEntityWireCutter;
+import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
+import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.blockentity.WireCutterBlockEntity;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.IRecipeSerializer;
@@ -26,10 +26,10 @@ public class ModMachines {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, Robotics.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Robotics.MODID);
 
-    public static final Machine ASSEMBLER = registerMachine("assembler", BlockEntityAssembler::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
-    public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", BlockEntityWireCutter::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
-    public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", BlockEntityFactory::new, ModBlocks.ROBOT_FACTORY, null);
-    public static final RegistryObject<BlockEntityType<BlockEntityStorage>> ROBOT_STORAGE = BLOCK_ENTITIES.register("robot_storage", () -> BlockEntityType.Builder.of(BlockEntityStorage::new, ModBlocks.ROBOT_STORAGE.get()).build(null));
+    public static final Machine ASSEMBLER = registerMachine("assembler", AssemblerBlockEntity::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
+    public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", WireCutterBlockEntity::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
+    public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", FactoryBlockEntity::new, ModBlocks.ROBOT_FACTORY, null);
+    public static final RegistryObject<BlockEntityType<StorageBlockEntity>> ROBOT_STORAGE = BLOCK_ENTITIES.register("robot_storage", () -> BlockEntityType.Builder.of(StorageBlockEntity::new, ModBlocks.ROBOT_STORAGE.get()).build(null));
 
     private static <T extends BlockEntity> Machine registerMachine(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block, Supplier<? extends IRecipeSerializer<?>> recipeSerializer) {
         RegistryObject<BlockEntityType<T>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));

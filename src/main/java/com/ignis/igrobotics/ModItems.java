@@ -1,7 +1,7 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.common.entity.ModEntityTypes;
-import com.ignis.igrobotics.common.items.ItemCommander;
+import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.core.EnumRobotMaterial;
 import com.ignis.igrobotics.core.EnumRobotPart;
 import net.minecraft.world.item.Item;
@@ -34,7 +34,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> ROBOT_SPAWN_EGG = ITEMS.register("robot_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.ROBOT, 0x000000, 0xffa500, new Item.Properties()));
 
-    public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", () -> new ItemCommander());
+    public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", () -> new CommanderItem());
 
     public static final RegistryObject<Item>[] WIRES = new RegistryObject[Reference.WIRE_METALS.length];
     public static final RegistryObject<Item>[] PLATES = new RegistryObject[EnumRobotMaterial.valuesWithoutEmpty().length];
