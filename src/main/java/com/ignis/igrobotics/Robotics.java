@@ -28,7 +28,7 @@ public class Robotics {
     public static final String MODNAME = "Robotics";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String VERSION = "1.0";
-    public static final String ACCEPTED_VERSIONS = "[1.12.2]";
+    public static final String ACCEPTED_VERSIONS = "[1.19.3]";
     public static final Random RANDOM = new Random();
 
     public Robotics() {
@@ -47,7 +47,6 @@ public class Robotics {
         GeckoLib.initialize();
 
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(RoboticsCreativeTab::register);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
