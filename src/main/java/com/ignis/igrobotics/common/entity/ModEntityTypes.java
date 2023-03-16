@@ -8,12 +8,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Function;
+
 public class ModEntityTypes {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Robotics.MODID);
 
     public static final RegistryObject<EntityType<RobotEntity>> ROBOT = ENTITY_TYPES.register("robot",
-            () -> EntityType.Builder.of(RobotEntity::new, MobCategory.MISC)
+            () -> EntityType.Builder.of((EntityType.EntityFactory<RobotEntity>) (type, level) -> new RobotEntity(level), MobCategory.MISC)
                     .sized(0.4f, 2)
                     .build(new ResourceLocation(Robotics.MODID, "robot").toString()));
 }

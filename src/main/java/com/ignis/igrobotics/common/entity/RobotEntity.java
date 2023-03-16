@@ -37,10 +37,6 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     }
 
     public RobotEntity(Level pLevel, DyeColor color) {
-        this(ModEntityTypes.ROBOT.get(), pLevel);
-    }
-
-    public RobotEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(ModEntityTypes.ROBOT.get(), pLevel);
     }
 
