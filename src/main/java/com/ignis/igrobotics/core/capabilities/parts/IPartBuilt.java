@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.parts;
 
-import com.ignis.igrobotics.core.IEntityHook;
-import com.ignis.igrobotics.core.INBTSerializer;
-import com.ignis.igrobotics.core.RobotPart;
+import com.ignis.igrobotics.core.*;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
@@ -11,18 +9,18 @@ public interface IPartBuilt extends INBTSerializer, IEntityHook {
 	
 	public RobotPart[] getBodyParts();
 	
-	public RobotPart getBodyPart(RobotPart.EnumRobotPart part);
+	public RobotPart getBodyPart(EnumRobotPart part);
 	
 	public void setBodyPart(RobotPart part);
 	
-	public void destroyBodyPart(RobotPart.EnumRobotPart part);
+	public void destroyBodyPart(EnumRobotPart part);
 	
-	public default void setBodyPart(RobotPart.EnumRobotPart part, RobotPart.EnumRobotMaterial material) {
+	public default void setBodyPart(EnumRobotPart part, EnumRobotMaterial material) {
 		setBodyPart(RobotPart.get(part, material));
 	}
 	
-	public default boolean hasBodyPart(RobotPart.EnumRobotPart part) {
-		return getBodyPart(part).getMaterial() != RobotPart.EnumRobotMaterial.NONE;
+	public default boolean hasBodyPart(EnumRobotPart part) {
+		return getBodyPart(part).getMaterial() != EnumRobotMaterial.NONE;
 	}
 	
 	public default boolean hasAnyBodyPart() {
@@ -34,7 +32,7 @@ public interface IPartBuilt extends INBTSerializer, IEntityHook {
 	
 	public default void clear() {
 		for(RobotPart part : getBodyParts()) {
-			RobotPart newPart = RobotPart.get(part.getPart(), RobotPart.EnumRobotMaterial.NONE);
+			RobotPart newPart = RobotPart.get(part.getPart(), EnumRobotMaterial.NONE);
 			setBodyPart(newPart);
 		}
 	}

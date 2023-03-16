@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.*;
+import com.ignis.igrobotics.core.EnumRobotMaterial;
+import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.RobotModule;
 import com.ignis.igrobotics.core.RobotPart;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
@@ -81,35 +83,35 @@ public class ConfigJsonSerializer {
 		public RobotPart deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject obj = json.getAsJsonObject();
 			
-			RobotPart.EnumRobotMaterial[] materials = null;
-			RobotPart.EnumRobotPart[] parts = null;
+			EnumRobotMaterial[] materials = null;
+			EnumRobotPart[] parts = null;
 			
 			if(obj.has("material")) {
-				materials = new RobotPart.EnumRobotMaterial[1];
-				materials[0] = RobotPart.EnumRobotMaterial.valueOf(obj.get("material").getAsString().toUpperCase());
+				materials = new EnumRobotMaterial[1];
+				materials[0] = EnumRobotMaterial.valueOf(obj.get("material").getAsString().toUpperCase());
 			}
 			if(obj.has("part")) {
 				String val = obj.get("part").getAsString().toUpperCase();
 				if(val.equals("ARM") || val.equals("LEG")) {
-					parts = new RobotPart.EnumRobotPart[2];
-					parts[0] = RobotPart.EnumRobotPart.valueOf("LEFT_" + val);
-					parts[1] = RobotPart.EnumRobotPart.valueOf("RIGHT_" + val);
+					parts = new EnumRobotPart[2];
+					parts[0] = EnumRobotPart.valueOf("LEFT_" + val);
+					parts[1] = EnumRobotPart.valueOf("RIGHT_" + val);
 				} else {
-					parts = new RobotPart.EnumRobotPart[1];
-					parts[0] = RobotPart.EnumRobotPart.valueOf(val);
+					parts = new EnumRobotPart[1];
+					parts[0] = EnumRobotPart.valueOf(val);
 				}
 			}
 			IPerkMap perks = PerkMap.deserialize(obj.get("perks"));
 			
 			if(parts == null) {
-				parts = RobotPart.EnumRobotPart.values();
+				parts = EnumRobotPart.values();
 			}
 			if(materials == null) {
-				materials = RobotPart.EnumRobotMaterial.valuesWithoutEmpty();
+				materials = EnumRobotMaterial.valuesWithoutEmpty();
 			}
 			
-			for(RobotPart.EnumRobotPart part : parts) {
-				for(RobotPart.EnumRobotMaterial material : materials) {
+			for(EnumRobotPart part : parts) {
+				for(EnumRobotMaterial material : materials) {
 					RobotPart.registerPerks(part, material, perks);
 				}
 			}

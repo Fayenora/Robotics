@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
+import com.ignis.igrobotics.core.EnumRobotMaterial;
+import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.RobotPart;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -9,7 +11,7 @@ import java.util.HashMap;
 
 public class PartConfig implements IJsonConfig {
 	
-	public final HashMap<RobotPart.EnumRobotPart, HashMap<RobotPart.EnumRobotMaterial, RobotPart>> PARTS = new HashMap<>();
+	public final HashMap<EnumRobotPart, HashMap<EnumRobotMaterial, RobotPart>> PARTS = new HashMap<>();
 	
 	@Override
 	public void load(File file) {
@@ -31,12 +33,12 @@ public class PartConfig implements IJsonConfig {
 	
 	public RobotPart[] getDefaultParts() {
 		return new RobotPart[] {
-			RobotPart.get(RobotPart.EnumRobotPart.HEAD, RobotPart.EnumRobotMaterial.IRON),
-			RobotPart.get(RobotPart.EnumRobotPart.BODY, RobotPart.EnumRobotMaterial.IRON),
-			RobotPart.get(RobotPart.EnumRobotPart.LEFT_ARM, RobotPart.EnumRobotMaterial.IRON),
-			RobotPart.get(RobotPart.EnumRobotPart.RIGHT_ARM, RobotPart.EnumRobotMaterial.IRON),
-			RobotPart.get(RobotPart.EnumRobotPart.LEFT_LEG, RobotPart.EnumRobotMaterial.IRON),
-			RobotPart.get(RobotPart.EnumRobotPart.RIGHT_LEG, RobotPart.EnumRobotMaterial.IRON)
+			RobotPart.get(EnumRobotPart.HEAD, EnumRobotMaterial.IRON),
+			RobotPart.get(EnumRobotPart.BODY, EnumRobotMaterial.IRON),
+			RobotPart.get(EnumRobotPart.LEFT_ARM, EnumRobotMaterial.IRON),
+			RobotPart.get(EnumRobotPart.RIGHT_ARM, EnumRobotMaterial.IRON),
+			RobotPart.get(EnumRobotPart.LEFT_LEG, EnumRobotMaterial.IRON),
+			RobotPart.get(EnumRobotPart.RIGHT_LEG, EnumRobotMaterial.IRON)
 		};
 	}
 

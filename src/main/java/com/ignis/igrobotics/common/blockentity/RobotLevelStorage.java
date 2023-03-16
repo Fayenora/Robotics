@@ -2,6 +2,8 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.common.blocks.BlockMachine;
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.EnumRobotMaterial;
+import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.RobotPart;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
@@ -9,7 +11,6 @@ import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -33,7 +34,7 @@ public class RobotLevelStorage {
         this.pos = pos;
     }
 
-    public void setRobotPart(RobotPart.EnumRobotPart part, RobotPart.EnumRobotMaterial material) {
+    public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
         parts.setBodyPart(RobotPart.get(part, material));
     }
 

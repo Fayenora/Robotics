@@ -4,34 +4,23 @@ import com.ignis.igrobotics.ModMachines;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.FactoryMenu;
-import com.ignis.igrobotics.common.blocks.BlockMachine;
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.EnumRobotMaterial;
+import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.MachineRecipe;
-import com.ignis.igrobotics.core.RobotPart;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
-import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
-import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
 
 import java.util.UUID;
-import java.util.function.Predicate;
 
 public class BlockEntityFactory extends BlockEntityMachine {
 
@@ -107,7 +96,7 @@ public class BlockEntityFactory extends BlockEntityMachine {
     // Robot Logic
     ////////////////////
 
-    public void setRobotPart(RobotPart.EnumRobotPart part, RobotPart.EnumRobotMaterial material) {
+    public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
         storedRobot.setRobotPart(part, material);
     }
 

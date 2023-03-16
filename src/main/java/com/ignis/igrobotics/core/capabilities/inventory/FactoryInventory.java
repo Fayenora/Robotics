@@ -1,7 +1,8 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
 import com.ignis.igrobotics.common.blockentity.BlockEntityFactory;
-import com.ignis.igrobotics.common.blockentity.BlockEntityMachine;
+import com.ignis.igrobotics.core.EnumRobotMaterial;
+import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.RobotPart;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -24,12 +25,12 @@ public class FactoryInventory extends MachineInventory {
         if(factory.getLevel().isClientSide()) return;
 
         if(index < 6) {
-            RobotPart.EnumRobotPart part = RobotPart.EnumRobotPart.getByID(index);
+            EnumRobotPart part = EnumRobotPart.getByID(index);
             if(!getStackInSlot(index).isEmpty()) {
-                RobotPart.EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(index).getItem()).getMaterial();
+                EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(index).getItem()).getMaterial();
                 factory.setRobotPart(part, material);
             } else {
-                factory.setRobotPart(part, RobotPart.EnumRobotMaterial.NONE);
+                factory.setRobotPart(part, EnumRobotMaterial.NONE);
             }
         } else {
             //TODO factory.getRobot().setModules(inventory.subList(6, getSizeInventory()));

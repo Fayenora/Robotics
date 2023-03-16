@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.core.capabilities.parts;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.EnumRobotMaterial;
+import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.RobotPart;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
@@ -27,7 +29,7 @@ public class PartsCapability implements IPartBuilt {
 	private static final EntityDataAccessor<Integer> COLOR = RobotEntity.COLOR;
 	private static final EntityDataAccessor<Integer>[] BODY_PARTS = RobotEntity.BODY_PARTS;
 	
-	public static final RobotPart.EnumRobotPart[] PARTS = RobotPart.EnumRobotPart.values();
+	public static final EnumRobotPart[] PARTS = EnumRobotPart.values();
 	
 	public PartsCapability() {}
 	
@@ -76,8 +78,8 @@ public class PartsCapability implements IPartBuilt {
 	}
 
 	@Override
-	public RobotPart getBodyPart(RobotPart.EnumRobotPart part) {
-		return RobotPart.get(part, RobotPart.EnumRobotMaterial.getByID(this.dataManager.get(BODY_PARTS[part.getID()])));
+	public RobotPart getBodyPart(EnumRobotPart part) {
+		return RobotPart.get(part, EnumRobotMaterial.getByID(this.dataManager.get(BODY_PARTS[part.getID()])));
 	}
 
 	@Override
@@ -103,16 +105,16 @@ public class PartsCapability implements IPartBuilt {
 	}
 
 	@Override
-	public void destroyBodyPart(RobotPart.EnumRobotPart part) {
+	public void destroyBodyPart(EnumRobotPart part) {
 		if(!RoboticsConfig.current().general.limbDestruction.get()) return;
 		RobotPart robotPart = getBodyPart(part);
 		ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
 		entity.playSound(SoundEvents.ANVIL_FALL, 1, 1);
-		setBodyPart(part, RobotPart.EnumRobotMaterial.NONE);
+		setBodyPart(part, EnumRobotMaterial.NONE);
 
 		//Drop any held items, if the arm got destroyed
-		if(part == RobotPart.EnumRobotPart.RIGHT_ARM || part == RobotPart.EnumRobotPart.LEFT_ARM) {
-			EquipmentSlot slot = (part == RobotPart.EnumRobotPart.RIGHT_ARM) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+		if(part == EnumRobotPart.RIGHT_ARM || part == EnumRobotPart.LEFT_ARM) {
+			EquipmentSlot slot = (part == EnumRobotPart.RIGHT_ARM) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
 			ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
 			entity.setItemSlot(slot, ItemStack.EMPTY);
 		}
@@ -120,7 +122,7 @@ public class PartsCapability implements IPartBuilt {
 	
 	private void setMaterials(int[] materials) {
 		for(int i = 0; i < materials.length; i++) {
-			setBodyPart(PARTS[i], RobotPart.EnumRobotMaterial.getByID(materials[i]));
+			setBodyPart(PARTS[i], EnumRobotMaterial.getByID(materials[i]));
 		}
 	}
 	
