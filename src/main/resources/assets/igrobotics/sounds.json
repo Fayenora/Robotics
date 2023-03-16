@@ -1,0 +1,33 @@
+{
+	"entity.robot.hurt":{
+		"category": "entity",
+		"subtitle": "entity.robot.hurt",
+		"sounds": [ "igrobotics:entity/robot/hurt" ]
+	},
+	"entity.robot.death":{
+		"category": "entity",
+		"subtitle": "entity.robot.death",
+		"sounds": [ "igrobotics:entity/robot/death" ]
+	}, 
+	"entity.robot.death_active":{
+        "category": "entity",
+        "subtitle": "entity.robot.death",
+        "sounds": [ "igrobotics:entity/robot/death_active" ]
+    }, 
+	"entity.robot.kill_command":{
+        "category": "entity",
+        "subtitle": "entity.robot.kill_command",
+        "sounds": [ "igrobotics:entity/robot/kill_command" ]
+    }, 
+    
+    "machine.assembler.running":{
+        "category": "block",
+        "subtitle": "machine.assembler.running",
+        "sounds": [{"name": "igrobotics:machine/assembler", "stream": true}]
+    }, 
+    "machine.wire_cutter.running":{
+        "category": "block",
+        "subtitle": "machine.wire_cutter.running",
+        "sounds": [{"name": "igrobotics:machine/wire_cutter", "stream": true}]
+    }
+}

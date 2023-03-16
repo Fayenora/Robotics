@@ -1,10 +1,6 @@
 package com.ignis.igrobotics;
 
-import com.ignis.igrobotics.definitions.ModMenuTypes;
-import com.ignis.igrobotics.definitions.ModEntityTypes;
-import com.ignis.igrobotics.definitions.ModBlocks;
-import com.ignis.igrobotics.definitions.ModItems;
-import com.ignis.igrobotics.definitions.ModMachines;
+import com.ignis.igrobotics.definitions.*;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;
@@ -41,6 +37,7 @@ public class Robotics {
         ModMachines.RECIPE_SERIALIZERS.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);
+        ModSounds.SOUNDS.register(modEventBus);
 
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 

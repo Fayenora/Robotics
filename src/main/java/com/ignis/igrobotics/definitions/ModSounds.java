@@ -1,0 +1,24 @@
+package com.ignis.igrobotics.definitions;
+
+import com.ignis.igrobotics.Robotics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+public class ModSounds {
+
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Robotics.MODID);
+
+    public static final RegistryObject<SoundEvent> ROBOT_HURT = register("entity.robot.hurt");
+    public static final RegistryObject<SoundEvent> ROBOT_DEATH = register("entity.robot.death");
+    public static final RegistryObject<SoundEvent> ROBOT_DEATH_ACTIVE = register("entity.robot.death_active");
+    public static final RegistryObject<SoundEvent> ROBOT_KILL_COMMAND = register("entity.robot.kill_command");
+    public static final RegistryObject<SoundEvent> ASSEMBLER = register("machine.assembler");
+    public static final RegistryObject<SoundEvent> WIRE_CUTTER = register("machine.wire_cutter");
+
+    private static RegistryObject<SoundEvent> register(String name) {
+        return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Robotics.MODID, name)));
+    }
+}
