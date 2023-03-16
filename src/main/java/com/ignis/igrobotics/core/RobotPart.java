@@ -7,6 +7,7 @@ import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
@@ -53,6 +54,17 @@ public class RobotPart {
 			return robot_part;
 		}
 		return RoboticsConfig.current().parts.PARTS.get(part).get(material);
+	}
+
+	public static RobotPart getFromItem(Item item) {
+		for(int i = 1; i < EnumRobotMaterial.values().length; i++) {
+			for(int j = 0; j < EnumRobotPart.values().length; j++) {
+				if(ModItems.MATERIALS[i][j].equals(item)) {
+					return RobotPart.get(EnumRobotPart.getByID(j), EnumRobotMaterial.getByID(i));
+				}
+			}
+		}
+		return RobotPart.get(EnumRobotPart.BODY, EnumRobotMaterial.NONE);
 	}
 
 	public ItemStack getItemStack(int count) {

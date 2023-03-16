@@ -60,4 +60,12 @@ public class MachineInventory extends BaseInventory {
     public void setDefaultAccessibleSlots(int... slots) {
         setValidSlotsForFace(null, slots);
     }
+
+    public void setAllSlotsAccessibleByDefault() {
+        int[] allSlots = new int[getMaxInventorySize()];
+        for(int i = 0; i < allSlots.length; i++) {
+            allSlots[i] = i;
+        }
+        setDefaultAccessibleSlots(allSlots);
+    }
 }

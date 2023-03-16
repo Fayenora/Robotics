@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity;
 
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -29,6 +31,14 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     };
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    public RobotEntity(Level level) {
+        this(level, RoboticsConfig.general.startColor.get());
+    }
+
+    public RobotEntity(Level pLevel, DyeColor color) {
+        this(ModEntityTypes.ROBOT.get(), pLevel);
+    }
 
     public RobotEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(ModEntityTypes.ROBOT.get(), pLevel);

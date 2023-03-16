@@ -114,6 +114,10 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
         Containers.dropContents(level, getBlockPos(), this);
     }
 
+    public void sync() {
+        level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), level.getBlockState(getBlockPos()), 2);
+    }
+
     public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntityMachine machine) {
         boolean flag1 = false;
         boolean flag2 = machine.isRunning();
@@ -189,6 +193,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
         if(!level.isClientSide() && !isRunning()) {
             currentRecipe = getRecipe();
             runTime = hasRecipe() ? currentRecipe.getProcessingTime() : 0;
+            sync();
         }
         setChanged();
     }
