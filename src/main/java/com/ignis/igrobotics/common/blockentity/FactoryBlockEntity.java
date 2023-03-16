@@ -32,7 +32,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
             .setProcessingTime(WORK_TIME)
             .build();
 
-    private RobotLevelStorage storedRobot;
+    private final RobotLevelStorage storedRobot;
 
     /** Whether the contruction time is over */
     private boolean builtRobot;
@@ -41,6 +41,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     public FactoryBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES, new int[] {}, new int[] {});
+        storedRobot = new RobotLevelStorage(level, null, this::getBlockPos);
         inventory = new FactoryInventory(this, getContainerSize());
         inventory.setAllSlotsAccessibleByDefault();
     }
