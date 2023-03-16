@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.ModMachines;
+import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.client.menu.WireCutterMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

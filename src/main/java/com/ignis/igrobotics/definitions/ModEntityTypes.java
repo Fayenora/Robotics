@@ -1,6 +1,7 @@
-package com.ignis.igrobotics.common.entity;
+package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.entity.RobotEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

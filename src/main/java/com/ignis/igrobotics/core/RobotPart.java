@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.core;
 
-import com.ignis.igrobotics.ModItems;
+import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;

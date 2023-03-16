@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.blocks;
 
-import com.ignis.igrobotics.ModMachines;
+import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;

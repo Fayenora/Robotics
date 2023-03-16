@@ -1,6 +1,7 @@
-package com.ignis.igrobotics;
+package com.ignis.igrobotics.definitions;
 
-import com.ignis.igrobotics.common.entity.ModEntityTypes;
+import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.core.EnumRobotMaterial;
 import com.ignis.igrobotics.core.EnumRobotPart;

@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.common.recipes;
 
 import com.google.gson.JsonObject;
-import com.ignis.igrobotics.ModItems;
-import com.ignis.igrobotics.ModMachines;
+import com.ignis.igrobotics.definitions.ModItems;
+import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.core.IRecipeSerializer;
 import com.ignis.igrobotics.core.MachineRecipe;
 import net.minecraft.network.FriendlyByteBuf;

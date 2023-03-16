@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.ModMachines;
+import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.FactoryMenu;

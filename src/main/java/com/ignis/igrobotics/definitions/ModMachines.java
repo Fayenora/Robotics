@@ -1,5 +1,6 @@
-package com.ignis.igrobotics;
+package com.ignis.igrobotics.definitions;
 
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;

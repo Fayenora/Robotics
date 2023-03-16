@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.entity;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.definitions.ModEntityTypes;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

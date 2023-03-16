@@ -1,8 +1,9 @@
 package com.ignis.igrobotics.client.menu;
 
-import com.ignis.igrobotics.ModBlocks;
+import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

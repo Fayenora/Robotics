@@ -1,7 +1,10 @@
 package com.ignis.igrobotics;
 
-import com.ignis.igrobotics.client.menu.ModMenuTypes;
-import com.ignis.igrobotics.common.entity.ModEntityTypes;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.definitions.ModEntityTypes;
+import com.ignis.igrobotics.definitions.ModBlocks;
+import com.ignis.igrobotics.definitions.ModItems;
+import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.mojang.logging.LogUtils;

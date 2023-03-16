@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.renderer;
+package com.ignis.igrobotics.client.rendering;
 
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;

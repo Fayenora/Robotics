@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.entity;
+package com.ignis.igrobotics.client.rendering;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.EnumRobotPart;
