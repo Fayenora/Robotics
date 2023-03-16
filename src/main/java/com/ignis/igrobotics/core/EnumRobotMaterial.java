@@ -70,7 +70,7 @@ public enum EnumRobotMaterial {
         return "ingot" + name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
-    public static EnumRobotMaterial getByID(int id) {
+    public static EnumRobotMaterial byId(int id) {
         return EnumRobotMaterial.values()[id];
     }
 

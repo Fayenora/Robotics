@@ -20,7 +20,7 @@ public enum EnumRobotPart {
         return id;
     }
 
-    public static EnumRobotPart getByID(int id) {
+    public static EnumRobotPart byId(int id) {
         return values()[id];
     }
 

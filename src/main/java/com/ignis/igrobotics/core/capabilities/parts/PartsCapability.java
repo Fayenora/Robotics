@@ -79,7 +79,7 @@ public class PartsCapability implements IPartBuilt {
 
 	@Override
 	public RobotPart getBodyPart(EnumRobotPart part) {
-		return RobotPart.get(part, EnumRobotMaterial.getByID(this.dataManager.get(BODY_PARTS[part.getID()])));
+		return RobotPart.get(part, EnumRobotMaterial.byId(this.dataManager.get(BODY_PARTS[part.getID()])));
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class PartsCapability implements IPartBuilt {
 	
 	private void setMaterials(int[] materials) {
 		for(int i = 0; i < materials.length; i++) {
-			setBodyPart(PARTS[i], EnumRobotMaterial.getByID(materials[i]));
+			setBodyPart(PARTS[i], EnumRobotMaterial.byId(materials[i]));
 		}
 	}
 	

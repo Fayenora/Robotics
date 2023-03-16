@@ -60,7 +60,7 @@ public class RobotPart {
 		for(int i = 1; i < EnumRobotMaterial.values().length; i++) {
 			for(int j = 0; j < EnumRobotPart.values().length; j++) {
 				if(ModItems.MATERIALS[i][j].equals(item)) {
-					return RobotPart.get(EnumRobotPart.getByID(j), EnumRobotMaterial.getByID(i));
+					return RobotPart.get(EnumRobotPart.byId(j), EnumRobotMaterial.byId(i));
 				}
 			}
 		}
