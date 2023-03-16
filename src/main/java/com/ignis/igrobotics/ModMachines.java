@@ -29,7 +29,7 @@ public class ModMachines {
     public static final Machine ASSEMBLER = registerMachine("assembler", AssemblerBlockEntity::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
     public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", WireCutterBlockEntity::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
     public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", FactoryBlockEntity::new, ModBlocks.ROBOT_FACTORY, null);
-    public static final RegistryObject<BlockEntityType<StorageBlockEntity>> ROBOT_STORAGE = BLOCK_ENTITIES.register("robot_storage", () -> BlockEntityType.Builder.of(StorageBlockEntity::new, ModBlocks.ROBOT_STORAGE.get()).build(null));
+    public static final Machine ROBOT_STORAGE = registerMachine("robot_storage", StorageBlockEntity::new, ModBlocks.ROBOT_STORAGE, null);
 
     private static <T extends BlockEntity> Machine registerMachine(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block, Supplier<? extends IRecipeSerializer<?>> recipeSerializer) {
         RegistryObject<BlockEntityType<T>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));

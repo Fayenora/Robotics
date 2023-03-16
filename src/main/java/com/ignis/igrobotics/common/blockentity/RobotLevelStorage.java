@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
@@ -34,37 +35,13 @@ public class RobotLevelStorage {
         this.pos = pos;
     }
 
-    public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
-        parts.setBodyPart(RobotPart.get(part, material));
-    }
-
-    public void clearRobot() {
-        if(parts == null) return;
-        RobotEntity robot = new RobotEntity(level);
-        parts.clear();
+    public void enterStorage(RobotEntity robot) {
+        if(containsRobot()) exitStorage(); //Make the previous robot exit
         setRobot(robot);
+        robot.remove(Entity.RemovalReason.CHANGED_DIMENSION);
     }
 
-    public void setRobot(RobotEntity robot) {
-        storedRobot = robot;
-        storedRobot.setXRot(0);
-        storedRobot.setYRot(0);
-        storedRobot.setYBodyRot(0);
-        storedRobot.setYHeadRot(0);
-        parts = storedRobot.getCapability(ModCapabilities.PART_BUILT_CAPABILITY, null).orElse(null);
-    }
-
-    public RobotEntity createNewRobot(UUID owner) {
-        if(!parts.hasAnyBodyPart() || level.isClientSide) return null;
-
-        //Limit amount of robots
-        int ownedRobots = 0; //TODO: level.getEntities(RobotEntity.class, (robot) -> owner.equals(robot.getOwner())).size();
-        if(ownedRobots >= RoboticsConfig.current().general.robotAmountPerPlayerOnServer.get()) {
-            Component warnMessage = Component.translatable("igrobotics.too_many_robots").setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW)));
-            level.getPlayerByUUID(owner).sendSystemMessage(warnMessage);
-            return null;
-        }
-
+    public RobotEntity exitStorage() {
         //Clone entity
         RobotEntity robot = new RobotEntity(level);
         robot.deserializeNBT(this.storedRobot.serializeNBT());
@@ -102,11 +79,51 @@ public class RobotLevelStorage {
         level.addFreshEntity(robot);
         clearRobot();
 
-        //robot.setOwner(owner); TODO
         return robot;
+    }
+
+    public RobotEntity createNewRobot(UUID owner) {
+        if(!parts.hasAnyBodyPart() || level.isClientSide) return null;
+
+        //Limit amount of robots
+        int ownedRobots = 0; //TODO: level.getEntities(RobotEntity.class, (robot) -> owner.equals(robot.getOwner())).size();
+        if(ownedRobots >= RoboticsConfig.current().general.robotAmountPerPlayerOnServer.get()) {
+            Component warnMessage = Component.translatable("igrobotics.too_many_robots").setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW)));
+            level.getPlayerByUUID(owner).sendSystemMessage(warnMessage);
+            return null;
+        }
+
+        RobotEntity robot = exitStorage();
+        //robot.setOwner(owner); TODO
+
+        return robot;
+    }
+
+    public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
+        parts.setBodyPart(RobotPart.get(part, material));
+    }
+
+    public void clearRobot() {
+        if(parts == null) return;
+        RobotEntity robot = new RobotEntity(level);
+        parts.clear();
+        setRobot(robot);
+    }
+
+    public void setRobot(RobotEntity robot) {
+        storedRobot = robot;
+        storedRobot.setXRot(0);
+        storedRobot.setYRot(0);
+        storedRobot.setYBodyRot(0);
+        storedRobot.setYHeadRot(0);
+        parts = storedRobot.getCapability(ModCapabilities.PART_BUILT_CAPABILITY, null).orElse(null);
     }
 
     public RobotEntity getRobot() {
         return storedRobot;
+    }
+
+    public boolean containsRobot() {
+        return parts.hasAnyBodyPart();
     }
 }
