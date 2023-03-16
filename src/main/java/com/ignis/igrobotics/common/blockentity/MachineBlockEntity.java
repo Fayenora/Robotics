@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.common.blocks.BlockMachine;
+import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
@@ -34,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public abstract class BlockEntityMachine extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible {
+public abstract class MachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible {
 
     protected EnergyStorage storage;
     protected MachineInventory inventory;
@@ -79,7 +78,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
         }
     };
 
-    protected BlockEntityMachine(Machine machine, BlockPos pos, BlockState state, int inventorySize, int[] inputs, int[] outputs) {
+    protected MachineBlockEntity(Machine machine, BlockPos pos, BlockState state, int inventorySize, int[] inputs, int[] outputs) {
         super(machine.getBlockEntityType(), pos, state);
         this.machine = machine;
         storage = new EnergyStorage(machine.getEnergyCapacity(), machine.getEnergyTransfer());
@@ -118,7 +117,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
         level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), level.getBlockState(getBlockPos()), 2);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntityMachine machine) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, MachineBlockEntity machine) {
         boolean flag1 = false;
         boolean flag2 = machine.isRunning();
 
@@ -150,7 +149,7 @@ public abstract class BlockEntityMachine extends BaseContainerBlockEntity implem
 
         if (flag2 != machine.isRunning()) {
             flag1 = true;
-            state = state.setValue(BlockMachine.RUNNING, machine.isRunning());
+            state = state.setValue(MachineBlock.RUNNING, machine.isRunning());
             level.setBlock(pos, state, 3);
         }
 

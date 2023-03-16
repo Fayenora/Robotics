@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.blocks;
 
-import com.ignis.igrobotics.common.blockentity.BlockEntityStorage;
+import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,21 +27,21 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockStorage extends BlockMachine {
+public class StorageBlock extends MachineBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
     public static final VoxelShape TOP = Block.box(0, -16, 0, 16, 16, 16);
     public static final VoxelShape BOTTOM = Block.box(0, 0, 0, 16, 32, 16);
 
-    public BlockStorage() {
+    public StorageBlock() {
         super(Properties.of(Material.HEAVY_METAL).strength(5f));
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new BlockEntityStorage(pos, state) : null;
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new StorageBlockEntity(pos, state) : null;
     }
 
     @Override

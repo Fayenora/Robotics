@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.common.blocks;
 
-import com.ignis.igrobotics.common.blockentity.BlockEntityMachine;
-import com.ignis.igrobotics.ModMachines;
+import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -13,8 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -23,12 +20,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BlockMachine extends BaseEntityBlock {
+public abstract class MachineBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty RUNNING = BooleanProperty.create("running");
 
-    public BlockMachine(Properties properties) {
+    public MachineBlock(Properties properties) {
         super(properties);
     }
 
@@ -36,7 +33,7 @@ public abstract class BlockMachine extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.isClientSide()) return InteractionResult.SUCCESS;
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if(blockEntity instanceof BlockEntityMachine) {
+        if(blockEntity instanceof MachineBlockEntity) {
             NetworkHooks.openScreen((ServerPlayer) player, (MenuProvider) blockEntity, pos);
         }
         return InteractionResult.CONSUME;
@@ -45,8 +42,8 @@ public abstract class BlockMachine extends BaseEntityBlock {
     @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if(blockEntity instanceof BlockEntityMachine) {
-            ((BlockEntityMachine) blockEntity).dropInventory();
+        if(blockEntity instanceof MachineBlockEntity) {
+            ((MachineBlockEntity) blockEntity).dropInventory();
         }
     }
 

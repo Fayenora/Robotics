@@ -11,11 +11,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockEntityAssembler extends BlockEntityMachine {
+public class AssemblerBlockEntity extends MachineBlockEntity {
 
     private int activeArrows = 0;
 
-    public BlockEntityAssembler(BlockPos pos, BlockState state) {
+    public AssemblerBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.ASSEMBLER, pos, state, 5, new int[]{0, 1, 2, 3}, new int[]{4});
         inventory.setOutputSlots(4);
         inventory.setDefaultAccessibleSlots(4);

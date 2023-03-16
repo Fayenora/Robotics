@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
-import com.ignis.igrobotics.common.blockentity.BlockEntityFactory;
+import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.core.EnumRobotMaterial;
 import com.ignis.igrobotics.core.EnumRobotPart;
 import com.ignis.igrobotics.core.RobotPart;
@@ -11,9 +11,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class FactoryInventory extends MachineInventory {
 
-    private final BlockEntityFactory factory;
+    private final FactoryBlockEntity factory;
 
-    public FactoryInventory(BlockEntityFactory factory, int size) {
+    public FactoryInventory(FactoryBlockEntity factory, int size) {
         super(factory, size);
         this.factory = factory;
     }

@@ -1,11 +1,10 @@
 package com.ignis.igrobotics.common.items;
 
-import com.ignis.igrobotics.Robotics;
 import net.minecraft.world.item.Item;
 
-public class ItemCommander extends Item {
+public class CommanderItem extends Item {
 
-    public ItemCommander() {
+    public CommanderItem() {
         super(new Properties());
     }
 }

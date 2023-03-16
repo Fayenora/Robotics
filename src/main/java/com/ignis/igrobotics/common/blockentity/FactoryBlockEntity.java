@@ -22,12 +22,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.UUID;
 
-public class BlockEntityFactory extends BlockEntityMachine {
+public class FactoryBlockEntity extends MachineBlockEntity {
 
     public static final int ENERGY_COST = 500000;
     public static final int WORK_TIME = 60;
 
-    public static final MachineRecipe<BlockEntityFactory> DEFAULT_RECIPE = new MachineRecipe.Builder(ModMachines.ROBOT_FACTORY, new ResourceLocation(Robotics.MODID, "robot_construction"))
+    public static final MachineRecipe<FactoryBlockEntity> DEFAULT_RECIPE = new MachineRecipe.Builder(ModMachines.ROBOT_FACTORY, new ResourceLocation(Robotics.MODID, "robot_construction"))
             .setEnergyRequirement(ENERGY_COST)
             .setProcessingTime(WORK_TIME)
             .build();
@@ -39,7 +39,7 @@ public class BlockEntityFactory extends BlockEntityMachine {
     /** Tells the client whether it can press the start button */
     private boolean canStart = false;
 
-    public BlockEntityFactory(BlockPos pos, BlockState state) {
+    public FactoryBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES, new int[] {}, new int[] {});
         inventory = new FactoryInventory(this, getContainerSize());
         inventory.setAllSlotsAccessibleByDefault();

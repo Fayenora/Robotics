@@ -4,7 +4,7 @@ import com.ignis.igrobotics.ModMachines;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.entity.RobotRenderer;
 import com.ignis.igrobotics.client.menu.ModMenuTypes;
-import com.ignis.igrobotics.client.renderer.RenderRobotStorage;
+import com.ignis.igrobotics.client.renderer.RobotStorageRenderer;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.client.screen.FactoryScreen;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
@@ -32,6 +32,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         EntityRenderers.register(ModEntityTypes.ROBOT.get(), RobotRenderer::new);
-        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), RenderRobotStorage::new);
+        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), RobotStorageRenderer::new);
     }
 }
