@@ -32,6 +32,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         EntityRenderers.register(ModEntityTypes.ROBOT.get(), RobotRenderer::new);
-        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.get(), RobotStorageRenderer::new);
+        event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
     }
 }
