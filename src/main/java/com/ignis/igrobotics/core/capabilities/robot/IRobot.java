@@ -23,6 +23,10 @@ public interface IRobot extends INBTSerializer {
 
     void setModules(List<ItemStack> items);
 
+    void setMaxModules(int amount);
+
+    boolean hasRenderLayer(int id);
+
     //////////////////////
     // Configuration Data
     //////////////////////

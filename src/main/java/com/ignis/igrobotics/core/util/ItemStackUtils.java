@@ -1,7 +1,10 @@
 package com.ignis.igrobotics.core.util;
 
-import com.google.gson.JsonElement;
 import com.ignis.igrobotics.Robotics;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -9,10 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
-import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
 
 import javax.annotation.Nullable;
-import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -98,6 +99,35 @@ public class ItemStackUtils {
 			}
 		}
 		return true;
+	}
+
+	public static CompoundTag saveAllItems(CompoundTag tag, NonNullList<ItemStack> list, String key) {
+		ListTag nbtList = new ListTag();
+
+		for (int i = 0; i < list.size(); ++i) {
+			ItemStack itemstack = list.get(i);
+
+			if (!itemstack.isEmpty()) {
+				CompoundTag compound = itemstack.serializeNBT();
+				compound.putByte("Slot", (byte)i);
+				nbtList.add(compound);
+			}
+		}
+		tag.put(key, nbtList);
+		return tag;
+	}
+
+	public static void loadAllItems(CompoundTag tag, NonNullList<ItemStack> list, String key) {
+		ListTag nbtList = tag.getList(key, Tag.TAG_COMPOUND);
+
+		for (int i = 0; i < nbtList.size(); ++i) {
+			CompoundTag compound = nbtList.getCompound(i);
+			int j = compound.getByte("Slot") & 255;
+
+			if (j >= 0 && j < nbtList.size()) {
+				list.set(j, ItemStack.of(compound));
+			}
+		}
 	}
 	
 	/**

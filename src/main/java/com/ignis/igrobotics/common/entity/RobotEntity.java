@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity;
 
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
@@ -33,6 +34,12 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
             SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT),
             SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT)
     };
+    public static final EntityDataAccessor<Integer> RENDER_OVERLAYS = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> ACTIVATED = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> MUTED = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> LOAD_CHUNK = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> PICKUPSTATE = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> COMMAND_GROUP = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -42,6 +49,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     public RobotEntity(Level pLevel, DyeColor color) {
         super(ModEntityTypes.ROBOT.get(), pLevel);
+        getCapability(ModCapabilities.PART_BUILT_CAPABILITY).ifPresent(part -> part.setColor(color));
     }
 
     public static AttributeSupplier defaultRobotAttributes() {
