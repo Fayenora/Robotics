@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.commands;
 
 import com.ignis.igrobotics.core.INBTSerializer;
-import com.ignis.igrobotics.core.RobotCommand;
+import com.ignis.igrobotics.core.robot.RobotCommand;
 
 import java.util.List;
 

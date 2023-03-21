@@ -1,10 +1,10 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.*;
-import com.ignis.igrobotics.core.EnumRobotMaterial;
-import com.ignis.igrobotics.core.EnumRobotPart;
-import com.ignis.igrobotics.core.RobotModule;
-import com.ignis.igrobotics.core.RobotPart;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotModule;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;

@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.core.INBTSerializer;
-import com.ignis.igrobotics.core.RobotModule;
+import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 

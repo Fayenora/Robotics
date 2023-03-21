@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.core.robot;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

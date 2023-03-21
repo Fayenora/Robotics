@@ -1,6 +1,9 @@
 package com.ignis.igrobotics.core.capabilities.parts;
 
 import com.ignis.igrobotics.core.*;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 

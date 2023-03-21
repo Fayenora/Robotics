@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.core.robot;
 
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.Robotics;

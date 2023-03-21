@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.core.robot;
 
 public enum EnumRobotMaterial {
     NONE(0, "none", 0),

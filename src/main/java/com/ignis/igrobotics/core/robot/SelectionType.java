@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.core.robot;
 
 import com.ignis.igrobotics.Reference;
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public record SelectionType<T>(String identifier, Class<T> type, T defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Class gui) {

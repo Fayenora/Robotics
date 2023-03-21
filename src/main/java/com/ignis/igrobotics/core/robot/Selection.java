@@ -1,15 +1,7 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.core.robot;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import java.util.UUID;
 
 public class Selection<A> implements INBTSerializable<CompoundTag> {
 	
