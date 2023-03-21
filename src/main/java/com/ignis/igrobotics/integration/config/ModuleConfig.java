@@ -2,7 +2,7 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.RobotModule;
+import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
-import com.ignis.igrobotics.core.EnumRobotMaterial;
-import com.ignis.igrobotics.core.EnumRobotPart;
-import com.ignis.igrobotics.core.RobotPart;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.io.File;

@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.rendering;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
-import com.ignis.igrobotics.core.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

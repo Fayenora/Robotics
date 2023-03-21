@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.core.EnumRobotMaterial;
-import com.ignis.igrobotics.core.EnumRobotPart;
-import com.ignis.igrobotics.core.RobotPart;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;

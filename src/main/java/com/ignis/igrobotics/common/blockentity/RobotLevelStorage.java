@@ -2,9 +2,9 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.common.entity.RobotEntity;
-import com.ignis.igrobotics.core.EnumRobotMaterial;
-import com.ignis.igrobotics.core.EnumRobotPart;
-import com.ignis.igrobotics.core.RobotPart;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
