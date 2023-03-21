@@ -84,12 +84,12 @@ public class PartsCapability implements IPartBuilt {
 
 	@Override
 	public void setBodyPart(RobotPart part) {
-		if(!entity.getCapability(ModCapabilities.PERK_MAP_CAPABILITY, null).isPresent()) {
+		if(!entity.getCapability(ModCapabilities.PERKS, null).isPresent()) {
 			this.dataManager.set(BODY_PARTS[part.getPart().getID()], part.getMaterial().getID());
 			return;
 		}
 		
-		IPerkMapCap perkMap = entity.getCapability(ModCapabilities.PERK_MAP_CAPABILITY, null).orElse(null);
+		IPerkMapCap perkMap = entity.getCapability(ModCapabilities.PERKS, null).orElse(null);
 		
 		//Remove perks from previous part
 		RobotPart current = getBodyPart(part.getPart());

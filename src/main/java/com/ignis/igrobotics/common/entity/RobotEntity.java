@@ -49,7 +49,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     public RobotEntity(Level pLevel, DyeColor color) {
         super(ModEntityTypes.ROBOT.get(), pLevel);
-        getCapability(ModCapabilities.PART_BUILT_CAPABILITY).ifPresent(part -> part.setColor(color));
+        getCapability(ModCapabilities.PARTS).ifPresent(part -> part.setColor(color));
     }
 
     public static AttributeSupplier defaultRobotAttributes() {

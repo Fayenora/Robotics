@@ -116,7 +116,7 @@ public class RobotLevelStorage {
         storedRobot.setYRot(0);
         storedRobot.setYBodyRot(0);
         storedRobot.setYHeadRot(0);
-        parts = storedRobot.getCapability(ModCapabilities.PART_BUILT_CAPABILITY, null).orElse(null);
+        parts = storedRobot.getCapability(ModCapabilities.PARTS, null).orElse(null);
     }
 
     public RobotEntity getRobot() {

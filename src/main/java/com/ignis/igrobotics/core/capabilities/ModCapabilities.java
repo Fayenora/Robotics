@@ -25,25 +25,27 @@ import org.jetbrains.annotations.Nullable;
 @Mod.EventBusSubscriber(modid = Robotics.MODID)
 public class ModCapabilities {
 
-    public static final Capability<IPartBuilt> PART_BUILT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IPerkMapCap> PERK_MAP_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IChunkLoader> CHUNK_LOADER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IRobot> ROBOT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IRobot> ROBOT = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IPerkMapCap> PERKS = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IPartBuilt> PARTS = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IPartBuilt> COMMANDS = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IChunkLoader> CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>(){});
 
-    public static final ResourceLocation LOC_LOADER = new ResourceLocation(Robotics.MODID, "chunk_loader");
-    public static final ResourceLocation LOC_PARTS = new ResourceLocation(Robotics.MODID, "parts");
-    public static final ResourceLocation LOC_PERKS = new ResourceLocation(Robotics.MODID, "perks");
     public static final ResourceLocation LOC_ROBOT = new ResourceLocation(Robotics.MODID, "robot");
+    public static final ResourceLocation LOC_PERKS = new ResourceLocation(Robotics.MODID, "perks");
+    public static final ResourceLocation LOC_PARTS = new ResourceLocation(Robotics.MODID, "parts");
+    public static final ResourceLocation LOC_COMMANDS = new ResourceLocation(Robotics.MODID, "commands");
+    public static final ResourceLocation LOC_LOADER = new ResourceLocation(Robotics.MODID, "chunk_loader");
 
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if(!(event.getObject() instanceof RobotEntity robot)) return;
 
         PartsCapability partsCapability = new PartsCapability(robot);
-        event.addCapability(LOC_PARTS, new AlwaysProvideAndSave<>(PART_BUILT_CAPABILITY, partsCapability));
+        event.addCapability(LOC_PARTS, new AlwaysProvideAndSave<>(PARTS, partsCapability));
 
         RobotCapability robotCapability = new RobotCapability(robot);
-        event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT_CAPABILITY, robotCapability));
+        event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
     }
 }
 

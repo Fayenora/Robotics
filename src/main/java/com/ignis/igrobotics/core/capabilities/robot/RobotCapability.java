@@ -104,7 +104,7 @@ public class RobotCapability implements IRobot {
                 robot.commands.removeAllTasks();
                 entity.tasks.addTask(0, TASK_LOOK_DOWN);
          */
-        IPartBuilt parts = entity.getCapability(ModCapabilities.PART_BUILT_CAPABILITY).orElse(null);
+        IPartBuilt parts = entity.getCapability(ModCapabilities.PARTS).orElse(null);
         if(parts == null) return;
         if(activation) {
             parts.setTemporaryColor(parts.getColor());
@@ -133,7 +133,7 @@ public class RobotCapability implements IRobot {
         for(int i = 0; i < Math.min(items.size(), modules.size()); i++) {
             setModule(items.get(i), i);
         }
-        entity.getCapability(ModCapabilities.PERK_MAP_CAPABILITY).ifPresent(IPerkMapCap::updateAttributeModifiers);
+        entity.getCapability(ModCapabilities.PERKS).ifPresent(IPerkMapCap::updateAttributeModifiers);
     }
 
     private void setModule(ItemStack item, int slot) {
@@ -178,11 +178,11 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void setChunkLoading(int state) {
-        entity.getCapability(ModCapabilities.CHUNK_LOADER_CAPABILITY).ifPresent(loader -> {
+        entity.getCapability(ModCapabilities.CHUNK_LOADER).ifPresent(loader -> {
             loader.unloadChunks(new ChunkPos(entity.getOnPos()));
         });
         dataManager.set(LOAD_CHUNK, state);
-        entity.getCapability(ModCapabilities.CHUNK_LOADER_CAPABILITY).ifPresent(loader -> {
+        entity.getCapability(ModCapabilities.CHUNK_LOADER).ifPresent(loader -> {
             loader.loadChunks(new ChunkPos(entity.getOnPos()));
         });
     }

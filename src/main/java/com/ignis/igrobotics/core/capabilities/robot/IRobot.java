@@ -4,6 +4,7 @@ import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * Main Capability for identifying a robot
  */
 // No pun intended
+@AutoRegisterCapability
 public interface IRobot extends INBTSerializer {
 
     boolean isActive();
