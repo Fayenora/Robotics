@@ -4,6 +4,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
 
+/**
+ * About to be replaced with event hooks
+ */
+@Deprecated
 public interface IEntityHook {
 	
 	public default void applyEntityAttributes() {}
