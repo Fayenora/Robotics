@@ -4,15 +4,20 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +48,8 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    private AttributeMap attributeMap;
+
     public RobotEntity(Level level) {
         this(level, RoboticsConfig.general.startColor.get());
     }
@@ -52,13 +59,23 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         getCapability(ModCapabilities.PARTS).ifPresent(part -> part.setColor(color));
     }
 
-    public static AttributeSupplier defaultRobotAttributes() {
-        return Monster.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 1.0f)
-                .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6));
     }
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand pHand) {
+        if(level.isClientSide()) return InteractionResult.SUCCESS;
+        for(AttributeInstance attr : this.getAttributes().getSyncableAttributes()) {
+            player.sendSystemMessage(Component.literal(attr.getAttribute().getDescriptionId() + " " + attr.getValue()));
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    /////////////////
+    // Animations
+    /////////////////
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -69,6 +86,10 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }
+
+    ////////////////
+    // Sounds
+    ////////////////
 
     @Nullable
     @Override

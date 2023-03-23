@@ -27,6 +27,7 @@ public class Reference {
 	
 	/** Absolute maximum for module count. Needs to be present at compile time */
 	public static final int MAX_MODULES = 8;
+	public static final int MAX_INVENTORY_SIZE = 36;
 	public static final int MAX_COMMANDS = 50;
 
 	public static final String[] WIRE_METALS = new String[] {
