@@ -37,71 +37,44 @@ public class ModAttributes {
     }
 
     public static AttributeSupplier createRobotAttributes() {
-        return createMobAttributes()
+        return LivingEntity.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
     }
 
-    public static Builder createMobAttributes() {
-        return new Builder()
-                .add(Attributes.MAX_HEALTH)
-                .add(Attributes.KNOCKBACK_RESISTANCE)
-                .add(Attributes.MOVEMENT_SPEED)
-                .add(Attributes.ARMOR)
-                .add(Attributes.ARMOR_TOUGHNESS)
-                .add(ForgeMod.SWIM_SPEED.get())
-                .add(ForgeMod.NAMETAG_DISTANCE.get())
-                .add(ForgeMod.ENTITY_GRAVITY.get())
-                .add(ForgeMod.STEP_HEIGHT_ADDITION.get())
-                .add(Attributes.FOLLOW_RANGE, 16.0D)
-                .add(Attributes.ATTACK_KNOCKBACK);
-    }
-
-    public static void onAttributeChanged(AttributeInstance attributeInstance) {
-
-    }
-
-    public static class Builder {
-        private final Map<Attribute, AttributeInstance> builder = Maps.newHashMap();
-        private boolean instanceFrozen;
-        private final java.util.List<AttributeSupplier.Builder> others = new java.util.ArrayList<>();
-
-        public boolean hasAttribute(Attribute attribute) {
-            return this.builder.containsKey(attribute);
+    @EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    class ModAttributeChanges {
+        @SubscribeEvent
+        public static void onEquipmentChanged(LivingEquipmentChangeEvent event) {
+            for(String attribute : event.getTo().getAttributeModifiers().keySet()) {
+                onAttributeChanged(event.getEntity(), attribute);
+            }
         }
+    }
 
-        private AttributeInstance create(Attribute pAttribute) {
-            AttributeInstance attributeinstance = new AttributeInstance(pAttribute, (p_258260_) -> {
-                if (this.instanceFrozen) {
-                    throw new UnsupportedOperationException("Tried to change value for default attribute instance: " + BuiltInRegistries.ATTRIBUTE.getKey(pAttribute));
-                }
+    public static void onAttributeChanged(LivingEntity entity, AttributeInstance attributeInstance) {
+		//Common attributes
+		if(instance.getAttribute().equals(ENERGY_CAPACITY)) {
+            entity.getCapability(ForgeCapability.ENERGY_CAPABILITY).ifPresent(storage -> {
+                    storage.setMaxEnergyStored(instance.getAttributeValue());
             });
-            this.builder.put(pAttribute, attributeinstance);
-            return attributeinstance;
-        }
+		}
 
-        public Builder add(Attribute pAttribute) {
-            this.create(pAttribute);
-            return this;
-        }
+		if(instance.getAttribute().equals(INVENTORY_SLOTS)) {
+            entity.getCapability(ForgeCapability.INVENTORY_CAPABILITY).ifPresent(inventory -> {
+                    inventory.setInventorySize((int) instance.getAttributeValue());
+            });
+		}
 
-        public Builder add(Attribute pAttribute, double pValue) {
-            AttributeInstance attributeinstance = this.create(pAttribute);
-            attributeinstance.setBaseValue(pValue);
-            return this;
-        }
+		//Server side attributes
+		if(entity.level.isClientSide()) return;
 
-        public AttributeSupplier build() {
-            this.instanceFrozen = true;
-            return new AttributeSupplier(this.builder) {
-                @Nullable
-                @Override
-                public AttributeInstance createInstance(Consumer<AttributeInstance> pOnChangedCallback, Attribute pAttribute) {
-                    return super.createInstance(pOnChangedCallback.andThen(ModAttributes::onAttributeChanged), pAttribute);
-                }
-            };
-        }
+		if(instance.getAttribute().equals(MODIFIER_SLOTS)) {
+            entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                    robot.setMaxModules((int) instance.getAttributeValue());
+            });
+		}
     }
 }
