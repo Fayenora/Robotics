@@ -44,16 +44,15 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         renderEffects(pPoseStack, entity.getActiveEffects(), pMouseX, pMouseY);
     }
 
+    private static final int WIDTH_SMALL = 32;
+    private static final int WIDTH_LARGE = 120;
+
     private void renderEffects(PoseStack pPoseStack, Collection<MobEffectInstance> effects, int pMouseX, int pMouseY) {
-        int i = this.leftPos + this.imageWidth + 2;
-        int j = this.width - i;
-        if (!effects.isEmpty() && j >= 32) {
+        int i = this.leftPos - WIDTH_LARGE - 2;
+        boolean compact = i >= 0;
+        if(!compact) i = this.leftPos - WIDTH_SMALL - 2;
+        if (!effects.isEmpty() && i >= 0) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            boolean flag = j >= 120;
-            var event = ForgeHooksClient.onScreenPotionSize(this, j, !flag, i);
-            if (event.isCanceled()) return;
-            flag = !event.isCompact();
-            i = event.getHorizontalOffset();
             int k = 33;
             if (effects.size() > 5) {
                 k = 132 / (effects.size() - 1);
@@ -61,9 +60,9 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
 
 
             Iterable<MobEffectInstance> iterable = effects.stream().filter(ForgeHooksClient::shouldRenderEffect).sorted().collect(Collectors.toList());
-            this.renderBackgrounds(pPoseStack, i, k, iterable, flag);
-            this.renderIcons(pPoseStack, i, k, iterable, flag);
-            if (flag) {
+            this.renderBackgrounds(pPoseStack, i, k, iterable, compact);
+            this.renderIcons(pPoseStack, i, k, iterable, compact);
+            if (compact) {
                 this.renderLabels(pPoseStack, i, k, iterable);
             } else if (pMouseX >= i && pMouseX <= i + 33) {
                 int l = this.topPos;
@@ -86,13 +85,13 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         }
     }
 
-    private void renderBackgrounds(PoseStack pPoseStack, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean p_194007_) {
+    private void renderBackgrounds(PoseStack pPoseStack, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean compact) {
         RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
         int i = this.topPos;
 
         for(MobEffectInstance ignored : pEffects) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            if (p_194007_) {
+            if (compact) {
                 this.blit(pPoseStack, pRenderX, i, 0, 166, 120, 32);
             } else {
                 this.blit(pPoseStack, pRenderX, i, 0, 198, 32, 32);
