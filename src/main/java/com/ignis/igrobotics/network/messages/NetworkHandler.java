@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.network.messages;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;
+import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,7 +34,8 @@ public class NetworkHandler {
     private static int id = 0;
 
     public static void registerMessages() {
-
+        registerMessage(PacketSetEntityEffects.class, NetworkDirection.PLAY_TO_CLIENT);
+        registerMessage(PacketSetWatched.class, NetworkDirection.PLAY_TO_SERVER);
     }
 
     private static <MSG extends IMessage> void registerMessage(Class<MSG> clazz, NetworkDirection direction) {

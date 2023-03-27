@@ -66,9 +66,9 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    protected void onEffectAdded(MobEffectInstance instance, @Nullable Entity pEntity) {
-        if(instance.getEffect().equals(MobEffects.POISON) && RoboticsConfig.general.poisonImmunity.get()) return;
-        super.onEffectAdded(instance, pEntity);
+    public boolean canBeAffected(MobEffectInstance instance) {
+        if(instance.getEffect().equals(MobEffects.POISON) && RoboticsConfig.general.poisonImmunity.get()) return false;
+        return super.canBeAffected(instance);
     }
 
     /////////////////

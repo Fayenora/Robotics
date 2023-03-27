@@ -3,7 +3,6 @@ package com.ignis.igrobotics.client.screen;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotMenu;
-import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
@@ -16,14 +15,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 
-public class RobotScreen extends BaseContainerScreen<RobotMenu> {
+public class RobotScreen extends EffectRenderingRobotScreenAlt<RobotMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot.png");
 
 	private final LivingEntity entity;
 
     public RobotScreen(RobotMenu menu, Inventory inv, Component comp) {
-        super(menu, inv, comp);
+        super(menu, inv, menu.robot, comp);
         this.entity = menu.robot;
         imageHeight = Reference.GUI_ROBOT_DIMENSIONS.height;
     }
@@ -32,13 +31,6 @@ public class RobotScreen extends BaseContainerScreen<RobotMenu> {
     protected void init() {
         super.init();
         addRenderableWidget(new EnergyBarElement(leftPos + 155, topPos + 7, 71, () -> menu.data.get(0), () -> menu.data.get(1)));
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-        //TODO
-        //NetworkHandler.sendToServer(new PacketSetWatched(robot, false));
     }
 
     @Override
