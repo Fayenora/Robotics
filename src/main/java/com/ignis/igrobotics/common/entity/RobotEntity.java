@@ -64,15 +64,6 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6));
     }
 
-    @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand pHand) {
-        if(level.isClientSide()) return InteractionResult.SUCCESS;
-        for(AttributeInstance attr : this.getAttributes().getSyncableAttributes()) {
-            player.sendSystemMessage(Component.literal(attr.getAttribute().getDescriptionId() + " " + attr.getValue()));
-        }
-        return InteractionResult.CONSUME;
-    }
-
     /////////////////
     // Animations
     /////////////////

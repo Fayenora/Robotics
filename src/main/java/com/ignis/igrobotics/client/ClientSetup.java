@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client;
 
+import com.ignis.igrobotics.client.screen.RobotScreen;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.rendering.RobotRenderer;
@@ -26,6 +27,7 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.WIRECUTTER_MENU.get(), WireCutterScreen::new);
             MenuScreens.register(ModMenuTypes.ASSEMBLER_MENU.get(), AssemblerScreen::new);
             MenuScreens.register(ModMenuTypes.FACTORY_MENU.get(), FactoryScreen::new);
+            MenuScreens.register(ModMenuTypes.ROBOT_MENU.get(), RobotScreen::new);
         });
     }
 

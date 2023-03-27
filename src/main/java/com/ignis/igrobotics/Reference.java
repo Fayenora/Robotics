@@ -1,6 +1,6 @@
 package com.ignis.igrobotics;
 
-import com.google.common.primitives.Ints;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class Reference {
@@ -43,35 +42,16 @@ public class Reference {
 		ATTRIBUTE_COLORS.put(Attributes.ARMOR_TOUGHNESS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
 		ATTRIBUTE_COLORS.put(Attributes.MOVEMENT_SPEED.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.WHITE));
 		ATTRIBUTE_COLORS.put(Attributes.KNOCKBACK_RESISTANCE.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
-		//ATTRIBUTE_COLORS.put(EntityRobot.ENERGY_CAPACITY.getName(), TextFormatting.GOLD);
-		//ATTRIBUTE_COLORS.put(EntityRobot.ENERGY_CONSUMPTION.getName(), TextFormatting.YELLOW);
-		//ATTRIBUTE_COLORS.put(EntityRobot.MODIFIER_SLOTS.getName(), TextFormatting.WHITE);
-		//ATTRIBUTE_COLORS.put(EntityRobot.INVENTORY_SLOTS.getName(), TextFormatting.RED);
+		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CAPACITY.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.GOLD));
+		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CONSUMPTION.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+		ATTRIBUTE_COLORS.put(ModAttributes.MODIFIER_SLOTS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		ATTRIBUTE_COLORS.put(ModAttributes.INVENTORY_SLOTS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.RED));
 	}
 	
 	/**
 	 * List of basic instances of most living entities, excluding special ones like lightning. Only contains elements once a world is loaded
 	 */
 	public static HashMap<String, LivingEntity> allLivingEntities = new HashMap<String, LivingEntity>();
-	
-	public static final int GUI_ASSEMBLER = 0;
-	public static final int GUI_COMPRESSOR = 1;
-	public static final int GUI_WIRECUTTER = 2;
-	public static final int GUI_ROBOTFACTORY = 3;
-	public static final int GUI_ROBOTSTORAGE = 4;
-	public static final int GUI_COMMANDER = 5;
-	public static final int GUI_ROBOT = 6;
-	public static final int GUI_ROBOT_INFO = 7;
-	public static final int GUI_ROBOT_CONTAINER = 8;
-	public static final int GUI_ROBOT_COMMANDS = 9;
-	
-	/** List of all possible robot guis, sorted in order of appearance from top to bottom */
-	public static final List<Integer> ROBOT_GUIS = Ints.asList(new int[] {
-			Reference.GUI_ROBOT, 
-			Reference.GUI_ROBOT_INFO, 
-			Reference.GUI_ROBOT_CONTAINER, 
-			Reference.GUI_ROBOT_COMMANDS
-	});
 	
 	public static final Dimension GUI_DEFAULT_DIMENSIONS = new Dimension(176, 166);
 	public static final Dimension GUI_COMMANDER_DIMENSIONS = new Dimension(176, 182);

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-public class BaseInventory extends ItemStackHandler {
+public class BaseInventory extends ItemStackHandler implements ModifiableInventory {
 
 	private Level world;
 	private Supplier<BlockPos> pos;

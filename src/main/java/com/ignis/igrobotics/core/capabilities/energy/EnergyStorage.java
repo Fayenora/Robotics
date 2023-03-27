@@ -3,7 +3,7 @@ package com.ignis.igrobotics.core.capabilities.energy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
-public class EnergyStorage extends net.minecraftforge.energy.EnergyStorage {
+public class EnergyStorage extends net.minecraftforge.energy.EnergyStorage implements ModifiableEnergyStorage {
 	
 	public EnergyStorage(int capacity) {
         super(capacity, capacity, capacity, 0);
@@ -32,11 +32,13 @@ public class EnergyStorage extends net.minecraftforge.energy.EnergyStorage {
 		this.maxExtract = nbt.getInt("MaxExtract");
 		setEnergy(nbt.getInt("Energy"));
 	}
-    
+
+	@Override
     public void setEnergy(int value) {
     	this.energy = Math.max(0, Math.min(value, getMaxEnergyStored()));
     }
-    
+
+	@Override
     public void setMaxEnergyStored(int value) {
     	this.capacity = value;
     	this.energy = Math.min(energy, getMaxEnergyStored());

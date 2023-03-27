@@ -1,19 +1,39 @@
+package com.ignis.igrobotics.client.menu;
+
+import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.SlotItemHandler;
+
+import java.awt.*;
+
 public class RobotMenu extends AbstractContainerMenu {
-    public final RobotEntity robot;
+    public final LivingEntity robot;
     private final Level level;
     public final ContainerData data;
 
     public RobotMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getEntity(extraData.readInt()), new SimpleContainerData(3))
+        this(id, inv, inv.player.level.getEntity(extraData.readInt()), new SimpleContainerData(2));
     }
 
     public RobotMenu(int id, Inventory playerInv, Entity entity, ContainerData data) {
         super(ModMenuTypes.ROBOT_MENU.get(), id);
-        this.robot = (RobotEntity) entity;
+        this.robot = (LivingEntity) entity;
         this.level = playerInv.player.level;
         this.data = data;
 
-        addPlayerInv(playerInv, Reference.GUI_DEFAULT_DIMENSIONS);
+        addPlayerInv(playerInv, Reference.GUI_ROBOT_DIMENSIONS);
         addDataSlots(data);
 
         //TODO: Enable/Disable Arms
@@ -34,7 +54,7 @@ public class RobotMenu extends AbstractContainerMenu {
     }
 
     protected void addPlayerInv(Inventory playerInv, Dimension size) {
-        int offsetX = size.width / 2 - (9 * 17 / 2) + 1;
+        int offsetX = size.width / 2 - (9 * 18 / 2) + 1;
         int offsetY = size.height - 82;
         //Inventory
         for(int x = 0; x < 9; x++) {
@@ -51,7 +71,7 @@ public class RobotMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return !robot.isDead();
+        return !robot.isDeadOrDying();
     }
 
     @Override

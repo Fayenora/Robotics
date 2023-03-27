@@ -3,6 +3,7 @@ package com.ignis.igrobotics.definitions;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
 import com.ignis.igrobotics.client.menu.FactoryMenu;
+import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.client.menu.WireCutterMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

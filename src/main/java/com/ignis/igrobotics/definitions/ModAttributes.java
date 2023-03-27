@@ -3,13 +3,23 @@ package com.ignis.igrobotics.definitions;
 import com.google.common.collect.Maps;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
+import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
+import com.ignis.igrobotics.core.capabilities.inventory.BaseInventory;
+import com.ignis.igrobotics.core.capabilities.inventory.ModifiableInventory;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -37,34 +47,39 @@ public class ModAttributes {
     }
 
     public static AttributeSupplier createRobotAttributes() {
-        return LivingEntity.createMobAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
     }
 
-    @EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     class ModAttributeChanges {
         @SubscribeEvent
         public static void onEquipmentChanged(LivingEquipmentChangeEvent event) {
-            for(String attribute : event.getTo().getAttributeModifiers().keySet()) {
-                onAttributeChanged(event.getEntity(), attribute);
+            for(Attribute attribute : event.getTo().getAttributeModifiers(event.getSlot()).keys()) {
+                onAttributeChanged(event.getEntity(), event.getEntity().getAttribute(attribute));
             }
         }
     }
 
-    public static void onAttributeChanged(LivingEntity entity, AttributeInstance attributeInstance) {
+    public static void onAttributeChanged(LivingEntity entity, @Nullable AttributeInstance instance) {
+        if(instance == null) return;
 		//Common attributes
 		if(instance.getAttribute().equals(ENERGY_CAPACITY)) {
-            entity.getCapability(ForgeCapability.ENERGY_CAPABILITY).ifPresent(storage -> {
-                    storage.setMaxEnergyStored(instance.getAttributeValue());
+            entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> {
+                if(storage instanceof ModifiableEnergyStorage energy) {
+                    energy.setMaxEnergyStored((int) instance.getValue());
+                }
             });
 		}
 
 		if(instance.getAttribute().equals(INVENTORY_SLOTS)) {
-            entity.getCapability(ForgeCapability.INVENTORY_CAPABILITY).ifPresent(inventory -> {
-                    inventory.setInventorySize((int) instance.getAttributeValue());
+            entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
+                    if(inventory instanceof ModifiableInventory modifiable) {
+                        modifiable.setSize((int) instance.getValue());
+                    }
             });
 		}
 
@@ -73,7 +88,7 @@ public class ModAttributes {
 
 		if(instance.getAttribute().equals(MODIFIER_SLOTS)) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                    robot.setMaxModules((int) instance.getAttributeValue());
+                    robot.setMaxModules((int) instance.getValue());
             });
 		}
     }
