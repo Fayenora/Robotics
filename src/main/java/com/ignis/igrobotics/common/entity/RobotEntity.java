@@ -12,6 +12,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -48,8 +51,6 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private AttributeMap attributeMap;
-
     public RobotEntity(Level level) {
         this(level, RoboticsConfig.general.startColor.get());
     }
@@ -62,6 +63,12 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6));
+    }
+
+    @Override
+    protected void onEffectAdded(MobEffectInstance instance, @Nullable Entity pEntity) {
+        if(instance.getEffect().equals(MobEffects.POISON) && RoboticsConfig.general.poisonImmunity.get()) return;
+        super.onEffectAdded(instance, pEntity);
     }
 
     /////////////////
