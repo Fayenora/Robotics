@@ -23,7 +23,14 @@ public class EffectSynchronizer {
 
     private static final HashMultimap<Integer, UUID> entitiesToSynchronize = HashMultimap.create();
 
-    public static void onEffectChanged(LivingEntity entity, Collection<MobEffectInstance> effectInstances) {
+    public static void onEffectChanged(LivingEntity entity, MobEffectInstance instance, boolean toAdd) {
+        if(entity.level.isClientSide()) return;
+        if(!entitiesToSynchronize.containsKey(entity.getId())) return;
+        Collection<MobEffectInstance> effectInstances = new ArrayList(entity.getActiveEffects());
+        if(toAdd) {
+            effectInstances.add(instance);
+        } else effectInstances.remove(instance);
+
         for(UUID uuid : entitiesToSynchronize.get(entity.getId())) {
             ServerPlayer player = (ServerPlayer) entity.level.getPlayerByUUID(uuid);
             NetworkHandler.sendToPlayer(new PacketSetEntityEffects(entity.getId(), effectInstances), player);
@@ -32,29 +39,17 @@ public class EffectSynchronizer {
 
     @SubscribeEvent
     public static void onEffectAdded(MobEffectEvent.Added event) {
-        if(event.getEntity().level.isClientSide()) return;
-        if(!entitiesToSynchronize.containsKey(event.getEntity().getId())) return;
-        Collection<MobEffectInstance> instances = new ArrayList(event.getEntity().getActiveEffects());
-        instances.add(event.getEffectInstance());
-        onEffectChanged(event.getEntity(), instances);
+        onEffectChanged(event.getEntity(), event.getEffectInstance(), true);
     }
 
     @SubscribeEvent
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
-        if(event.getEntity().level.isClientSide()) return;
-        if(!entitiesToSynchronize.containsKey(event.getEntity().getId())) return;
-        Collection<MobEffectInstance> instances = new ArrayList(event.getEntity().getActiveEffects());
-        instances.remove(event.getEffectInstance());
-        onEffectChanged(event.getEntity(), instances);
+        onEffectChanged(event.getEntity(), event.getEffectInstance(), false);
     }
 
     @SubscribeEvent
     public static void onEffectExpired(MobEffectEvent.Expired event) {
-        if(event.getEntity().level.isClientSide()) return;
-        if(!entitiesToSynchronize.containsKey(event.getEntity().getId())) return;
-        Collection<MobEffectInstance> instances = new ArrayList(event.getEntity().getActiveEffects());
-        instances.remove(event.getEffectInstance());
-        onEffectChanged(event.getEntity(), instances);
+        onEffectChanged(event.getEntity(), event.getEffectInstance(), false);
     }
 
     public static void addWatcher(Entity entity, ServerPlayer watcher) {

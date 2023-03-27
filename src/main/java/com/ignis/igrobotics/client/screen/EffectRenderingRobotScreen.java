@@ -1,47 +1,30 @@
 package com.ignis.igrobotics.client.screen;
 
-import com.ignis.igrobotics.client.screen.elements.IElement;
+import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-//If Mojang just added one parameter, this whole class would be obsolete...
-public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu> extends EffectRenderingInventoryScreen<T> implements IElement {
+public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu> extends BaseContainerScreen<T> {
 
-    private int x, y;
-    private boolean visible, enabled;
-    private IElement parentElement;
-    private LivingEntity entity;
+    private final LivingEntity entity;
 
     public EffectRenderingRobotScreen(T menu, Inventory playerInv, LivingEntity entity, Component title) {
         super(menu, playerInv, title);
@@ -107,7 +90,7 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
         int i = this.topPos;
 
-        for(MobEffectInstance mobeffectinstance : pEffects) {
+        for(MobEffectInstance ignored : pEffects) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             if (p_194007_) {
                 this.blit(pPoseStack, pRenderX, i, 0, 166, 120, 32);
@@ -125,11 +108,6 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         int i = this.topPos;
 
         for(MobEffectInstance mobeffectinstance : pEffects) {
-            var renderer = net.minecraftforge.client.extensions.common.IClientMobEffectExtensions.of(mobeffectinstance);
-            if (renderer.renderInventoryIcon(mobeffectinstance, this, pPoseStack, pRenderX + (p_194013_ ? 6 : 7), i, this.getBlitOffset())) {
-                i += pYOffset;
-                continue;
-            }
             MobEffect mobeffect = mobeffectinstance.getEffect();
             TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(mobeffect);
             RenderSystem.setShaderTexture(0, textureatlassprite.atlasLocation());
@@ -143,11 +121,6 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         int i = this.topPos;
 
         for(MobEffectInstance mobeffectinstance : pEffects) {
-            var renderer = net.minecraftforge.client.extensions.common.IClientMobEffectExtensions.of(mobeffectinstance);
-            if (renderer.renderInventoryText(mobeffectinstance, this, pPoseStack, pRenderX, i, this.getBlitOffset())) {
-                i += pYOffset;
-                continue;
-            }
             Component component = this.getEffectName(mobeffectinstance);
             this.font.drawShadow(pPoseStack, component, (float)(pRenderX + 10 + 18), (float)(i + 6), 16777215);
             String s = MobEffectUtil.formatDuration(mobeffectinstance, 1.0F);
@@ -164,74 +137,5 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         }
 
         return mutablecomponent;
-    }
-
-    /////////////////////////////
-    // IElement implementation
-    /////////////////////////////
-
-    @Override
-    public void setX(int x) {
-        for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setX(element.getShape().x + x - this.x);
-        }
-        this.x = x;
-    }
-
-    @Override
-    public void setY(int y) {
-        for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setY(element.getShape().y + y - this.y);
-        }
-        this.y = y;
-    }
-
-    @Override
-    public Rectangle getShape() {
-        return new Rectangle(x, y, width, height);
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public void setParentComponent(IElement comp) {
-        this.parentElement = comp;
-    }
-
-    @Override
-    public @Nullable IElement getParentComponent() {
-        return parentElement;
-    }
-
-    @Override
-    public NarrationPriority narrationPriority() {
-        return NarrationPriority.NONE;
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-
     }
 }
