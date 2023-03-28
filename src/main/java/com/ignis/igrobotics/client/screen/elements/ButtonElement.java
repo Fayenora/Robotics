@@ -28,7 +28,7 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     protected Point[][] icons;
     private int state = 0;
     private int maxStates = 1;
-    private List<Component>[] tooltips = new ArrayList[1];
+    private List<Component>[] tooltips = new List[1];
     private Supplier<IMessage> networkAction;
 
     private boolean dragging;
@@ -40,7 +40,7 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
         this(x, y, widthIn, heightIn);
         this.state = currentState;
         this.maxStates = maxStates;
-        tooltips = new ArrayList[getMaxStates()];
+        tooltips = new List[getMaxStates()];
     }
 
     public ButtonElement(int pX, int pY, int pWidth, int pHeight) {
@@ -61,7 +61,9 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
         nextState();
         onPress.onPress(this);
         //Server stuff
-        NetworkHandler.sendToServer(networkAction.get());
+        if(networkAction != null) {
+            NetworkHandler.sendToServer(networkAction.get());
+        }
     }
 
     @Override

@@ -20,11 +20,18 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.RegistryObject;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RobotBehavior {
 
     public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
+    public static final RegistryObject<MenuType<?>>[] ALL_ROBOT_MENUS = new RegistryObject[]{
+            ModMenuTypes.ROBOT,
+            ModMenuTypes.ROBOT_INFO
+    };
 
     @SubscribeEvent
     public static void onRobotRightClick(PlayerInteractEvent.EntityInteractSpecific event) {
@@ -44,6 +51,10 @@ public class RobotBehavior {
                     new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
                     buf -> buf.writeInt(target.getId()));
         }
+    }
+
+    public static List<MenuType> possibleMenus(Entity entity) {
+        return List.of(ModMenuTypes.ROBOT.get(), ModMenuTypes.ROBOT_INFO.get());
     }
 
     private static ContainerData constructContainerData(Entity entity) {

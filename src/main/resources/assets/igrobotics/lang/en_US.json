@@ -1,4 +1,6 @@
 {
+  "owner": "Owner",
+
   "item.igrobotics.circuit": "Circuitry",
 
   "item.igrobotics.complex_circuit": "Complex Circuitry",
@@ -60,6 +62,16 @@
   "container.robot_storage": "Robot Storage",
 
   "death.attack.perkImpact": "%s experienced the impact of a robotic fist accelerated to 100 m/s",
+
+  "igrobotics.button.pickup.default": "Currently picking up items",
+  "igrobotics.button.pickup.area": "Currently picking up items in the area",
+  "igrobotics.button.pickup.none": "Currently ignoring items",
+  "igrobotics.button.chunks.none": "Not loading current chunk",
+  "igrobotics.button.chunks.default": "Loading current chunk",
+  "igrobotics.button.chunks.area": "Loading all adjacent chunks",
+  "igrobotics.button.power.up": "Power up",
+  "igrobotics.button.power.down": "Power down",
+  "igrobotics.button.claim": "Claim",
 
   "commandGroup.robot.add": "Added Robot to command group",
   "commandGroup.robot.remove": "Removed Robot from command group",

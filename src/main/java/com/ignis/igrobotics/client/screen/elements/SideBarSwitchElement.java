@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
@@ -14,10 +15,7 @@ import java.util.List;
 public class SideBarSwitchElement extends GuiElement {
 
     public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/sidebar.png");
-    public static final RegistryObject<MenuType<?>>[] POSSIBLE_TYPES = new RegistryObject[]{
-            ModMenuTypes.ROBOT,
-            ModMenuTypes.ROBOT_INFO
-    };
+    private static final RegistryObject<MenuType<?>>[] POSSIBLE_TYPES = RobotBehavior.ALL_ROBOT_MENUS;
 
     /** Index of current menu inside all possible menus */
     int currentGuiIndex = 0;
@@ -28,6 +26,8 @@ public class SideBarSwitchElement extends GuiElement {
 
     public SideBarSwitchElement(MenuType currentMenu, List<MenuType> possibleMenus, int x, int y, int width, int height, int entityId) {
         super(x, y, width, height);
+
+
         for(int i = 0; i < POSSIBLE_TYPES.length; i++) {
             if(currentMenu.equals(POSSIBLE_TYPES[i].get())) {
                 currentGuiIndex = i;

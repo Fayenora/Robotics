@@ -156,6 +156,10 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         return storedRobot.getRobot();
     }
 
+    public boolean containsRobot() {
+        return storedRobot.containsRobot();
+    }
+
     public boolean hasCraftedRobotReady() {
         return builtRobot;
     }
