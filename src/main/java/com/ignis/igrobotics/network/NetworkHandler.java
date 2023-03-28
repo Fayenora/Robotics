@@ -1,6 +1,7 @@
-package com.ignis.igrobotics.network.messages;
+package com.ignis.igrobotics.network;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;

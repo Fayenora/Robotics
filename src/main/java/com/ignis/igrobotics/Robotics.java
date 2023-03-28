@@ -2,7 +2,7 @@ package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.definitions.*;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
-import com.ignis.igrobotics.network.messages.NetworkHandler;
+import com.ignis.igrobotics.network.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;

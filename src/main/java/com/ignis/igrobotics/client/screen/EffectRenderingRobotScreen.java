@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
-import com.ignis.igrobotics.network.messages.NetworkHandler;
+import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

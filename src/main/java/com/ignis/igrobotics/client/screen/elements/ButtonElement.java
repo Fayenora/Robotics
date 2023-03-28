@@ -1,9 +1,7 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.network.messages.IMessage;
-import com.ignis.igrobotics.network.messages.NetworkHandler;
-import com.ignis.igrobotics.network.messages.NetworkInfo;
-import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
+import com.ignis.igrobotics.network.NetworkHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -17,7 +15,6 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;

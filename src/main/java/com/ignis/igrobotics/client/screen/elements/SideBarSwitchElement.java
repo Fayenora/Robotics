@@ -2,8 +2,7 @@ package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.RobotBehavior;
-import com.ignis.igrobotics.definitions.ModMenuTypes;
-import com.ignis.igrobotics.network.messages.NetworkHandler;
+import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
