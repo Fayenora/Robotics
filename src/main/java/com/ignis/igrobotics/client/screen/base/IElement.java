@@ -67,4 +67,12 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 		return path.toArray(new IElement[path.size()]);
 	}
 
+	default IBaseGui getBaseGui() {
+		IElement[] parentPath = getParentGuiPath();
+		IElement baseGui = parentPath[parentPath.length - 1];
+		if(!(baseGui instanceof IBaseGui))
+			throw new RuntimeException("Did not find currently opened Gui"); //TODO Barely recoverable -> close the gui here
+		return (IBaseGui) baseGui;
+	}
+
 }

@@ -20,7 +20,7 @@ import java.util.Stack;
  * Supports holding a stack of opened windows
  * @param <T>
  */
-public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IElement {
+public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IElement, IBaseGui {
 
     private Stack<IElement> subGuis = new Stack<>();
 
@@ -135,6 +135,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     // Implementations
     /////////////////
 
+    @Override
     public void addSubGui(IElement subGui) {
         //Add the next subGui
         subGuis.push(subGui);
@@ -143,16 +144,19 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
         addElement(subGui);
     }
 
+    @Override
     public void removeSubGui() {
         IElement toRemove = subGuis.pop();
         toRemove.onClose();
         removeWidget(toRemove);
     }
 
+    @Override
     public boolean hasSubGui() {
         return subGuis.size() > 0;
     }
 
+    @Override
     public IElement getSubGui() {
         if(subGuis.size() == 0) return this;
         return subGuis.peek();
