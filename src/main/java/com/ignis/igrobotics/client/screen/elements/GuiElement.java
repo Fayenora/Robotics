@@ -102,11 +102,6 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
         return parentComponent;
     }
 
-    public void addComponent(IElement comp) {
-        children.add(comp);
-        comp.setParentComponent(this);
-    }
-
     public void initTextureLocation(ResourceLocation texture) {
         initTextureLocation(texture, null);
     }
@@ -127,6 +122,12 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
         } else {
             this.blit(poseStack, getX(), getY(), 0, 0, getShape().width, getShape().height);
         }
+    }
+
+    @Override
+    public void addElement(IElement element) {
+        children.add(element);
+        element.setParentComponent(this);
     }
 
     @Override

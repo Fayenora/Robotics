@@ -29,6 +29,8 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 	boolean isEnabled();
 	boolean isVisible();
 
+	void addElement(IElement element);
+
 	void setParentComponent(IElement comp);
 	@Nullable IElement getParentComponent();
 

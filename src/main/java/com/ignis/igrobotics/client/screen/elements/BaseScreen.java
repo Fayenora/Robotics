@@ -65,6 +65,11 @@ public class BaseScreen extends Screen implements IElement {
     }
 
     @Override
+    public void addElement(IElement element) {
+        //NO-OP
+    }
+
+    @Override
     public void setParentComponent(IElement comp) {
         this.parentElement = comp;
     }

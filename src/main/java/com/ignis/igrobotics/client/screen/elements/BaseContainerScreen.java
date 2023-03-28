@@ -1,7 +1,9 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -24,6 +26,32 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
 
     public BaseContainerScreen(T menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
+    }
+
+    @Override
+    public void addElement(IElement element) {
+        if(element instanceof Renderable) {
+            addRenderableWidget(element);
+        }
+        if(element instanceof GuiEventListener && element instanceof NarratableEntry) {
+            addWidget(element);
+        }
+    }
+
+    @Override
+    protected <T extends Renderable> T addRenderableOnly(T renderable) {
+        if(renderable instanceof IElement element) {
+            element.setParentComponent(this);
+        }
+        return super.addRenderableOnly(renderable);
+    }
+
+    @Override
+    protected <T extends GuiEventListener & NarratableEntry> T addWidget(T widget) {
+        if(widget instanceof IElement element) {
+            element.setParentComponent(this);
+        }
+        return super.addWidget(widget);
     }
 
     @Override
