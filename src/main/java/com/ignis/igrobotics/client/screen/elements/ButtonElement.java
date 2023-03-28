@@ -1,5 +1,7 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.client.screen.base.IElement;
+import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.mojang.blaze3d.systems.RenderSystem;

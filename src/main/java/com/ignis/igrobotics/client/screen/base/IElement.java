@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.screen.elements;
+package com.ignis.igrobotics.client.screen.base;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.Renderable;

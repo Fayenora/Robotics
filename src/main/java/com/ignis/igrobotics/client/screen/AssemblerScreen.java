@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
-import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
+import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

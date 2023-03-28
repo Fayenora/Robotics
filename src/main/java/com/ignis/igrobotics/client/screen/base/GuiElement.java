@@ -1,5 +1,7 @@
-package com.ignis.igrobotics.client.screen.elements;
+package com.ignis.igrobotics.client.screen.base;
 
+import com.ignis.igrobotics.client.screen.base.IElement;
+import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Renderable;

@@ -3,7 +3,7 @@ package com.ignis.igrobotics.client.screen;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.FactoryMenu;
-import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
+import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;

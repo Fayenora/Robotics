@@ -3,7 +3,7 @@ package com.ignis.igrobotics.client.screen;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
-import com.ignis.igrobotics.client.screen.elements.BaseContainerScreen;
+import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.definitions.ModMenuTypes;

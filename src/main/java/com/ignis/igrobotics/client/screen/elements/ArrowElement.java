@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.Direction;
 

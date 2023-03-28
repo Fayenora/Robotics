@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.screen.base.GuiElement;
+import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
