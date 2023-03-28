@@ -7,6 +7,7 @@ import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +58,7 @@ public class StorageBlockEntity extends BlockEntity {
         storedRobot.enterStorage(robot);
     }
 
-    public RobotEntity exitStorage() {
+    public LivingEntity exitStorage() {
         return storedRobot.exitStorage();
     }
 

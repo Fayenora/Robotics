@@ -111,8 +111,8 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         storedRobot.setRobot(robot);
     }
 
-    public RobotEntity createNewRobot(UUID owner) {
-        RobotEntity robot = storedRobot.createNewRobot(owner);
+    public LivingEntity createNewRobot(UUID owner) {
+        LivingEntity robot = storedRobot.createNewRobot(owner);
         builtRobot = false;
         this.inventory.clear();
         return robot;
