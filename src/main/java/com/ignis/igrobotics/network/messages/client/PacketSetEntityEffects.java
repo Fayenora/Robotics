@@ -12,7 +12,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class PacketSetEntityEffects implements IMessage<PacketSetEntityEffects> {
+public class PacketSetEntityEffects implements IMessage {
 
     private int entityId;
     private byte[] effectIds;

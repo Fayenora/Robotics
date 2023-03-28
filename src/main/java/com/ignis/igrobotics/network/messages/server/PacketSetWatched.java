@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 
-public class PacketSetWatched implements IMessage<PacketSetWatched> {
+public class PacketSetWatched implements IMessage {
 
     private int entityId;
     private boolean watch;
