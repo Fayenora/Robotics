@@ -2,6 +2,7 @@ package com.ignis.igrobotics.client.screen.elements;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -115,6 +116,11 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, resource);
         this.blit(poseStack, getX(), getY(), textureLoc.x, textureLoc.y, getShape().width, getShape().height);
+        for(var child : children()) {
+            if(child instanceof Renderable renderable) {
+                renderable.render(poseStack, mouseX, mouseY, delta);
+            }
+        }
     }
 
     @Override

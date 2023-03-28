@@ -1,14 +1,11 @@
 package com.ignis.igrobotics.client;
 
-import com.ignis.igrobotics.client.screen.RobotScreen;
+import com.ignis.igrobotics.client.screen.*;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.rendering.RobotRenderer;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.client.rendering.RobotStorageRenderer;
-import com.ignis.igrobotics.client.screen.AssemblerScreen;
-import com.ignis.igrobotics.client.screen.FactoryScreen;
-import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -28,6 +25,7 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.ASSEMBLER.get(), AssemblerScreen::new);
             MenuScreens.register(ModMenuTypes.FACTORY.get(), FactoryScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT.get(), RobotScreen::new);
+            MenuScreens.register(ModMenuTypes.ROBOT_INFO.get(), RobotInfoScreen::new);
         });
     }
 

@@ -4,9 +4,11 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
+import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
@@ -14,10 +16,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
+import java.util.List;
 
 public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot.png");
+    public static final List<MenuType> POSSIBLE_MENUS = List.of(ModMenuTypes.ROBOT.get(), ModMenuTypes.ROBOT_INFO.get());
 
 	private final LivingEntity entity;
 
@@ -31,6 +37,9 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
     protected void init() {
         super.init();
         addRenderableWidget(new EnergyBarElement(leftPos + 155, topPos + 7, 71, () -> menu.data.get(0), () -> menu.data.get(1)));
+        SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.ROBOT.get(), POSSIBLE_MENUS, leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
+        sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
+        addRenderableWidget(sidebar);
     }
 
     @Override

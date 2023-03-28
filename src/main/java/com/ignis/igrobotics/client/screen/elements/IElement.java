@@ -47,7 +47,7 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 				return element.getTooltip(mouseX, mouseY);
 			}
 		}
-		return null;
+		return List.of();
 	}
 
 	default void onClose() {

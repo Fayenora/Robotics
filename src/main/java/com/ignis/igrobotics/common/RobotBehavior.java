@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
@@ -33,9 +34,14 @@ public class RobotBehavior {
     public static void openRobotMenu(Player player, MenuType type, Entity target) {
         if(!(player instanceof ServerPlayer serverPlayer)) return;
         if(!target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
-        if(type.equals(ModMenuTypes.ROBOT.get())) {
+        if(type == ModMenuTypes.ROBOT.get()) {
             NetworkHooks.openScreen(serverPlayer,
-                    new SimpleMenuProvider((id, playerInv, ignored) -> new RobotMenu(id, playerInv, target, constructContainerData(target)), Lang.localise("container.robot")),
+                    new SimpleMenuProvider((id, playerInv, f3) -> new RobotMenu(id, playerInv, target, constructContainerData(target)), Lang.localise("container.robot")),
+                    buf -> buf.writeInt(target.getId()));
+        }
+        if(type == ModMenuTypes.ROBOT_INFO.get()) {
+            NetworkHooks.openScreen(serverPlayer,
+                    new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
                     buf -> buf.writeInt(target.getId()));
         }
     }

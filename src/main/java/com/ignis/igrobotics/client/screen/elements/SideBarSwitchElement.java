@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.network.messages.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
@@ -12,19 +13,20 @@ import java.util.List;
 
 public class SideBarSwitchElement extends GuiElement {
 
+    public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/sidebar.png");
     public static final RegistryObject<MenuType<?>>[] POSSIBLE_TYPES = new RegistryObject[]{
-            ModMenuTypes.ROBOT
+            ModMenuTypes.ROBOT,
+            ModMenuTypes.ROBOT_INFO
     };
 
     /** Index of current menu inside all possible menus */
     int currentGuiIndex = 0;
     /** Index of current menu inside the currently active menus */
     int subsetGuiIndex = 0;
-    int buttonHeight;
     /** For each button, saves at which row the designated texture is */
     int[] textureRows;
 
-    public SideBarSwitchElement(MenuType currentMenu, List<MenuType> possibleMenus, int x, int y, int width, int height) {
+    public SideBarSwitchElement(MenuType currentMenu, List<MenuType> possibleMenus, int x, int y, int width, int height, int entityId) {
         super(x, y, width, height);
         for(int i = 0; i < POSSIBLE_TYPES.length; i++) {
             if(currentMenu.equals(POSSIBLE_TYPES[i].get())) {
@@ -41,19 +43,15 @@ public class SideBarSwitchElement extends GuiElement {
             ButtonElement button = new ButtonElement(x, y + i * height, width, height) {
                 @Override
                 public void onPress() {
-                    NetworkHandler.sendToServer(new PacketOpenRobotMenu(possibleMenus.get(Math.floorDiv(getY() - y, height)), 0));
+                    NetworkHandler.sendToServer(new PacketOpenRobotMenu(possibleMenus.get(Math.floorDiv(getY() - y, height)), entityId));
                 }
             };
 
             addElement(button);
         }
 
-        buttonHeight = height;
-        this.height *= possibleMenus.size();
-
         //Find out on which row the texture is and save it in textureRows
-        ArrayList<MenuType> buttonGuiIds = new ArrayList<>();
-        buttonGuiIds.addAll(possibleMenus);
+        ArrayList<MenuType> buttonGuiIds = new ArrayList<>(possibleMenus);
         buttonGuiIds.remove(currentMenu);
         this.textureRows = new int[buttonGuiIds.size()];
         int i = 0, j = 0;
@@ -69,11 +67,11 @@ public class SideBarSwitchElement extends GuiElement {
     @Override
     public void initTextureLocation(ResourceLocation texture, int textureX, int textureY) {
         //Assumes inactive icons are in the 4th column
-        super.initTextureLocation(texture, textureX + width * 4, textureY + currentGuiIndex * buttonHeight);
+        super.initTextureLocation(texture, textureX + width * 4, textureY + currentGuiIndex * height);
         int i = 0;
         for(var child : children()) {
             if(!(child instanceof IGuiTexturable texturable)) continue;
-            texturable.initTextureLocation(texture, textureX, textureY + textureRows[i] * buttonHeight);
+            texturable.initTextureLocation(texture, textureX, textureY + textureRows[i] * height);
             i++;
         }
     }
