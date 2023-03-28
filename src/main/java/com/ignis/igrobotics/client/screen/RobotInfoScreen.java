@@ -177,7 +177,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
     private void renameRobot() {
         if(entity.isDeadOrDying()) return;
-        if(!nameBar.getValue().equals(entity.getDisplayName())) {
+        if(!nameBar.getValue().equals(entity.getDisplayName().getString())) {
             NetworkHandler.sendToServer(new PacketSetEntityName(entity.getId(), nameBar.getValue()));
         }
     }
