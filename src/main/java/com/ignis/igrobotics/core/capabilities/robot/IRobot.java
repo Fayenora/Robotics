@@ -1,12 +1,15 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Main Capability for identifying a robot
@@ -28,6 +31,15 @@ public interface IRobot extends INBTSerializer {
     void setMaxModules(int amount);
 
     boolean hasRenderLayer(int id);
+
+    void setOwner(UUID newOwner);
+
+    @NonNull
+    UUID getOwner();
+
+    default boolean hasOwner() {
+        return getOwner().equals(Reference.DEFAULT_UUID);
+    }
 
     //////////////////////
     // Configuration Data

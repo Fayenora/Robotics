@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
@@ -17,8 +18,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RobotCapability implements IRobot {
 
@@ -27,6 +30,7 @@ public class RobotCapability implements IRobot {
     protected IPerkMapCap perkMap;
 
     private NonNullList<ItemStack> modules;
+    private UUID owner = Reference.DEFAULT_UUID;
 
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
@@ -57,6 +61,7 @@ public class RobotCapability implements IRobot {
         compound.putInt("load_chunks", getChunkLoadingState());
         compound.putInt("pickup_state", getPickUpState());
         compound.putInt("command_group", getCommandGroup());
+        compound.putUUID("owner", getOwner());
     }
 
     @Override
@@ -70,6 +75,7 @@ public class RobotCapability implements IRobot {
         setChunkLoading(compound.getInt("load_chunks"));
         setPickUpState(compound.getInt("pickup_state"));
         setCommandGroup(compound.getInt("command_group"));
+        setOwner(compound.getUUID("owner"));
     }
 
     private void applyPickupTask() {
@@ -239,5 +245,15 @@ public class RobotCapability implements IRobot {
     public boolean hasRenderLayer(int id) {
         if(id >= Integer.BYTES || id < 0) return false;
         return ((dataManager.get(RENDER_OVERLAYS) >> id) & 1) == 1;
+    }
+
+    @Override
+    public void setOwner(UUID newOwner) {
+        owner = newOwner;
+    }
+
+    @Override
+    public @NonNull UUID getOwner() {
+        return owner;
     }
 }
