@@ -82,6 +82,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
      * @return whether the machine could start right now
      */
     protected boolean canStart() {
+        if(level == null) return false;
         if(level.isClientSide()) return canStart;
         return
                 storedRobot != null &&
