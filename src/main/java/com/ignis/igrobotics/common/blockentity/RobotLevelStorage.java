@@ -31,7 +31,7 @@ public class RobotLevelStorage {
 
     public RobotLevelStorage(Level level, RobotEntity storedRobot, Supplier<BlockPos> pos) {
         this.level = level;
-        this.storedRobot = storedRobot;
+        setRobot(storedRobot);
         this.pos = pos;
     }
 
@@ -111,6 +111,7 @@ public class RobotLevelStorage {
     }
 
     public void setRobot(RobotEntity robot) {
+        if(robot == null) return;
         storedRobot = robot;
         storedRobot.setXRot(0);
         storedRobot.setYRot(0);
