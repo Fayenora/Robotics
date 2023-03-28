@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +30,6 @@ public class RobotMenu extends BaseMenu {
         addPlayerInv(playerInv, Reference.GUI_ROBOT_DIMENSIONS);
         addDataSlots(data);
 
-        //TODO: Enable/Disable Arms
         //TODO: Armor slots should only accept valid items
         robot.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             for(int i = 0; i < 4; i++) {
@@ -40,8 +41,14 @@ public class RobotMenu extends BaseMenu {
                 }
             }
 
-            this.addSlot(new SlotItemHandler(handler, 0, 77, 44)); //Mainhand
-            this.addSlot(new SlotItemHandler(handler, 1, 77, 62)); //Offhand
+            robot.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
+                    this.addSlot(new SlotItemHandler(handler, 0, 77, 44)); //Mainhand
+                }
+                if(parts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
+                    this.addSlot(new SlotItemHandler(handler, 1, 77, 62)); //Offhand
+                }
+            });
         });
     }
 

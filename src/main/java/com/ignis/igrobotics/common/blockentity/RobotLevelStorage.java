@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
@@ -25,13 +26,13 @@ import java.util.function.Supplier;
 public class RobotLevelStorage {
 
     private final Level level;
-    private RobotEntity storedRobot;
+    private LivingEntity stored;
     private IPartBuilt parts;
-    private Supplier<BlockPos> pos;
+    private final Supplier<BlockPos> pos;
 
-    public RobotLevelStorage(Level level, RobotEntity storedRobot, Supplier<BlockPos> pos) {
+    public RobotLevelStorage(Level level, LivingEntity stored, Supplier<BlockPos> pos) {
         this.level = level;
-        setRobot(storedRobot);
+        setRobot(stored);
         this.pos = pos;
     }
 
@@ -41,38 +42,38 @@ public class RobotLevelStorage {
         robot.remove(Entity.RemovalReason.CHANGED_DIMENSION);
     }
 
-    public RobotEntity exitStorage() {
+    public LivingEntity exitStorage() {
         //Clone entity
         RobotEntity robot = new RobotEntity(level);
-        robot.deserializeNBT(this.storedRobot.serializeNBT());
+        robot.deserializeNBT(this.stored.serializeNBT());
 
         //Determine spawn location
         Direction facing = level.getBlockState(pos.get()).getValue(MachineBlock.FACING);
-        switch(facing) {
-            case NORTH:
+        switch (facing) {
+            case NORTH -> {
                 robot.setPos(Vec3.atCenterOf(pos.get().north()));
                 robot.lerpHeadTo(MathHelper.wrapDegrees(180.0F), 0);
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 robot.setPos(Vec3.atCenterOf(pos.get().west()));
                 robot.lerpHeadTo(MathHelper.wrapDegrees(90.0F), 0);
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 robot.setPos(Vec3.atCenterOf(pos.get().east()));
                 robot.lerpHeadTo(MathHelper.wrapDegrees(-90.0F), 0);
-                break;
-            case SOUTH:
+            }
+            case SOUTH -> {
                 robot.setPos(Vec3.atCenterOf(pos.get().south()));
                 robot.lerpHeadTo(0, 0);
-                break;
-            default:
+            }
+            default -> {
                 robot.setPos(Vec3.atCenterOf(pos.get()));
                 robot.lerpHeadTo(0, 0);
-                break;
+            }
         }
 
         //Prepare Spawning
-        robot.setUUID(UUID.randomUUID()); //Give the robot a new UUID to prevent a bug when str-middleclicking the block in creative mode (those entities would have the same UUID and consequently wont spawn)
+        robot.setUUID(UUID.randomUUID()); //Give the robot a new UUID to prevent a bug when str-middle clicking the block in creative mode (those entities would have the same UUID and consequently won't spawn)
         robot.level = level;
 
         //Spawn
@@ -82,21 +83,21 @@ public class RobotLevelStorage {
         return robot;
     }
 
-    public RobotEntity createNewRobot(UUID owner) {
+    public LivingEntity createNewRobot(UUID owner) {
         if(!parts.hasAnyBodyPart() || level.isClientSide) return null;
 
         //Limit amount of robots
         int ownedRobots = 0; //TODO: level.getEntities(RobotEntity.class, (robot) -> owner.equals(robot.getOwner())).size();
-        if(ownedRobots >= RoboticsConfig.current().general.robotAmountPerPlayerOnServer.get()) {
+        if(ownedRobots >= RoboticsConfig.general.robotAmountPerPlayerOnServer.get()) {
             Component warnMessage = Component.translatable("igrobotics.too_many_robots").setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW)));
             level.getPlayerByUUID(owner).sendSystemMessage(warnMessage);
             return null;
         }
 
-        RobotEntity robot = exitStorage();
-        //robot.setOwner(owner); TODO
+        LivingEntity entity = exitStorage();
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setOwner(owner));
 
-        return robot;
+        return entity;
     }
 
     public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
@@ -110,18 +111,18 @@ public class RobotLevelStorage {
         setRobot(robot);
     }
 
-    public void setRobot(RobotEntity robot) {
+    public void setRobot(LivingEntity robot) {
         if(robot == null) return;
-        storedRobot = robot;
-        storedRobot.setXRot(0);
-        storedRobot.setYRot(0);
-        storedRobot.setYBodyRot(0);
-        storedRobot.setYHeadRot(0);
-        parts = storedRobot.getCapability(ModCapabilities.PARTS, null).orElse(null);
+        stored = robot;
+        stored.setXRot(0);
+        stored.setYRot(0);
+        stored.setYBodyRot(0);
+        stored.setYHeadRot(0);
+        parts = stored.getCapability(ModCapabilities.PARTS, null).orElse(null);
     }
 
-    public RobotEntity getRobot() {
-        return storedRobot;
+    public LivingEntity getRobot() {
+        return stored;
     }
 
     public boolean containsRobot() {
