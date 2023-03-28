@@ -3,10 +3,9 @@ package com.ignis.igrobotics.client.screen.elements;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ButtonElement extends AbstractButton implements IElement {
+public class ButtonElement extends Button implements IElement, IGuiTexturable {
 
     protected ResourceLocation resource;
     protected Point[][] icons;
@@ -27,13 +26,9 @@ public class ButtonElement extends AbstractButton implements IElement {
     private List<Component>[] tooltips = new ArrayList[1];
 
     private boolean dragging;
-    private List<IElement> components = new CopyOnWriteArrayList<IElement>();
+    private final List<IElement> components = new CopyOnWriteArrayList<>();
     private IElement parentComponent;
     private GuiEventListener focused;
-
-    public ButtonElement(int pX, int pY, int pWidth, int pHeight) {
-        this(pX, pY, pWidth, pHeight, Component.empty());
-    }
 
     public ButtonElement(int x, int y, int widthIn, int heightIn, int currentState, int maxStates) {
         this(x, y, widthIn, heightIn);
@@ -42,12 +37,21 @@ public class ButtonElement extends AbstractButton implements IElement {
         tooltips = new ArrayList[getMaxStates()];
     }
 
-    public ButtonElement(int pX, int pY, int pWidth, int pHeight, Component pMessage) {
-        super(pX, pY, pWidth, pHeight, pMessage);
+    public ButtonElement(int pX, int pY, int pWidth, int pHeight) {
+        this(pX, pY, pWidth, pHeight, button -> {});
+    }
+
+    public ButtonElement(int pX, int pY, int pWidth, int pHeight, Button.OnPress onPress) {
+        this(pX, pY, pWidth, pHeight, Component.empty(), onPress);
+    }
+
+    public ButtonElement(int pX, int pY, int pWidth, int pHeight, Component pMessage, Button.OnPress onPress) {
+        super(pX, pY, pWidth, pHeight, pMessage, onPress, DEFAULT_NARRATION);
     }
 
     @Override
     public void onPress() {
+        onPress.onPress(this);
         nextState();
     }
 
@@ -113,7 +117,8 @@ public class ButtonElement extends AbstractButton implements IElement {
         }
     }
 
-    public void initTextureLocations(ResourceLocation resource, int x, int y) {
+    @Override
+    public void initTextureLocation(ResourceLocation resource, int x, int y) {
         this.resource = resource;
         this.icons = new Point[getMaxStates()][];
         for(int i = 0; i < getMaxStates(); i++) {
@@ -200,9 +205,6 @@ public class ButtonElement extends AbstractButton implements IElement {
     public @Nullable IElement getParentComponent() {
         return parentComponent;
     }
-
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     @Override
     public List<? extends GuiEventListener> children() {

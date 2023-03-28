@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class GuiElement extends AbstractContainerEventHandler implements IElement {
+public class GuiElement extends AbstractContainerEventHandler implements IElement, IGuiTexturable {
 
     private int x, y;
     public int width, height;
@@ -102,13 +102,10 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
         return parentComponent;
     }
 
-    public void initTextureLocation(ResourceLocation texture) {
-        initTextureLocation(texture, new Point(0, 0));
-    }
-
-    public void initTextureLocation(ResourceLocation texture, Point textureLoc) {
+    @Override
+    public void initTextureLocation(ResourceLocation texture, int textureX, int textureY) {
         this.resource = texture;
-        this.textureLoc = textureLoc;
+        this.textureLoc = new Point(textureX, textureY);
     }
 
     @Override
