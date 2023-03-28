@@ -55,7 +55,7 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return machine.getRecipeSerializer(); //TODO
+		return machine.getRecipeSerializer();
 	}
 
 	@Override

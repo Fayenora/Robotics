@@ -1,12 +1,17 @@
 package com.ignis.igrobotics.core.robot;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.util.Lang;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,18 +47,17 @@ public class CommandType {
 
     public void applyToEntity(List<Selection> selectors, RobotEntity robot, int priority) {
         if(robot.level == null || robot.level.isClientSide()) return;
-        Goal goal = null;
+        Goal goal;
         try {
             goal = applyToEntity.apply(robot, selectors.toArray(new Selection[selectors.size()]));
         } catch(CommandApplyException e) {
-            /* TODO
-            if(robot.getOwner().equals(Reference.DEFAULT_UUID)) return;
-            Player player = robot.level.getPlayerByUUID(robot.getOwner());
-            if(player == null) return;
-            MutableComponent msg = Component.literal(e.getMessage());
-            msg.setStyle(msg.getStyle().withColor(TextColor.fromLegacyFormat(ChatFormatting.RED)));
-            player.sendSystemMessage(msg);
-            */
+            robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
+                Player player = robot.level.getPlayerByUUID(r.getOwner());
+                if(player == null) return;
+                MutableComponent msg = Component.literal(e.getMessage());
+                msg.setStyle(msg.getStyle().withColor(TextColor.fromLegacyFormat(ChatFormatting.RED)));
+                player.sendSystemMessage(msg);
+            });
             return;
         }
 

@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
-@AutoRegisterCapability //TODO: Implement
+@AutoRegisterCapability
 public interface IPerkMapCap extends IPerkMap, IEntityHook {
 	
 	/**

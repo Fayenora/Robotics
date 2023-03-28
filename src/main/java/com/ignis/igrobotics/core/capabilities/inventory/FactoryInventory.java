@@ -1,9 +1,12 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +26,8 @@ public class FactoryInventory extends MachineInventory {
         if(factory.hasCraftedRobotReady()) return;
         super.setStackInSlot(index, stack);
         if(factory.getLevel().isClientSide()) return;
+        IRobot robot = factory.getRobot().getCapability(ModCapabilities.ROBOT).orElse(null);
+        if(robot == null) return;
 
         if(index < 6) {
             EnumRobotPart part = EnumRobotPart.byId(index);
@@ -33,9 +38,9 @@ public class FactoryInventory extends MachineInventory {
                 factory.setRobotPart(part, EnumRobotMaterial.NONE);
             }
         } else {
-            //TODO factory.getRobot().setModules(inventory.subList(6, getSizeInventory()));
+            robot.setModules(stacks.subList(6, getSlots()));
         }
-        //TODO setSize(6 + factory.getRobot().getModuleCount());
+        setSize((int) (6 + factory.getRobot().getAttributeValue(ModAttributes.MODIFIER_SLOTS)));
         factory.sync();
     }
 
