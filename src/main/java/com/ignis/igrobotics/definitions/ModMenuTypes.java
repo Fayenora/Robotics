@@ -19,6 +19,8 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<FactoryMenu>> FACTORY = registerMenuType(FactoryMenu::new, "factory_menu");
     public static final RegistryObject<MenuType<RobotMenu>> ROBOT = registerMenuType(RobotMenu::new, "robot_menu");
     public static final RegistryObject<MenuType<RobotInfoMenu>> ROBOT_INFO = registerMenuType(RobotInfoMenu::new, "robot_info_menu");
+    public static final RegistryObject<MenuType<AbstractContainerMenu>> ROBOT_INVENTORY = registerMenuType((id, inv, buf) -> null, "robot_inventory_menu");
+    public static final RegistryObject<MenuType<RobotCommandMenu>> ROBOT_COMMANDS = registerMenuType(RobotCommandMenu::new, "robot_command_menu");
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));

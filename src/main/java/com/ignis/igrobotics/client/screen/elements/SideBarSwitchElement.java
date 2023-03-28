@@ -26,7 +26,6 @@ public class SideBarSwitchElement extends GuiElement {
     public SideBarSwitchElement(MenuType currentMenu, List<MenuType> possibleMenus, int x, int y, int width, int height, int entityId) {
         super(x, y, width, height);
 
-
         for(int i = 0; i < POSSIBLE_TYPES.length; i++) {
             if(currentMenu.equals(POSSIBLE_TYPES[i].get())) {
                 currentGuiIndex = i;
@@ -55,7 +54,7 @@ public class SideBarSwitchElement extends GuiElement {
         this.textureRows = new int[buttonGuiIds.size()];
         int i = 0, j = 0;
         while(i < POSSIBLE_TYPES.length && j < buttonGuiIds.size()) {
-            if(POSSIBLE_TYPES[i].get() == buttonGuiIds.get(j)) {
+            if(buttonGuiIds.get(j).equals(POSSIBLE_TYPES[i].get())) {
                 textureRows[j] = i;
                 j++;
             }
@@ -73,5 +72,10 @@ public class SideBarSwitchElement extends GuiElement {
             texturable.initTextureLocation(texture, textureX, textureY + textureRows[i] * height);
             i++;
         }
+    }
+
+    @Override
+    public int getY() {
+        return super.getY() + subsetGuiIndex * height;
     }
 }

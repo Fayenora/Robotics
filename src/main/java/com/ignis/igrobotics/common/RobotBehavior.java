@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
@@ -30,7 +31,9 @@ public class RobotBehavior {
     public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
     public static final RegistryObject<MenuType<?>>[] ALL_ROBOT_MENUS = new RegistryObject[]{
             ModMenuTypes.ROBOT,
-            ModMenuTypes.ROBOT_INFO
+            ModMenuTypes.ROBOT_INFO,
+            ModMenuTypes.ROBOT_INVENTORY,
+            ModMenuTypes.ROBOT_COMMANDS
     };
 
     @SubscribeEvent
@@ -51,10 +54,15 @@ public class RobotBehavior {
                     new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
                     buf -> buf.writeInt(target.getId()));
         }
+        if(type == ModMenuTypes.ROBOT_COMMANDS.get()) {
+            NetworkHooks.openScreen(serverPlayer,
+                    new SimpleMenuProvider((id, f2, f3) -> new RobotCommandMenu(id, target), Lang.localise("container.robot_commands")),
+                    buf -> buf.writeInt(target.getId()));
+        }
     }
 
     public static List<MenuType> possibleMenus(Entity entity) {
-        return List.of(ModMenuTypes.ROBOT.get(), ModMenuTypes.ROBOT_INFO.get());
+        return List.of(ModMenuTypes.ROBOT.get(), ModMenuTypes.ROBOT_INFO.get(), ModMenuTypes.ROBOT_COMMANDS.get());
     }
 
     private static ContainerData constructContainerData(Entity entity) {
