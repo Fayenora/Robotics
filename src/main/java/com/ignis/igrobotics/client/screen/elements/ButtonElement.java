@@ -1,5 +1,9 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.network.messages.IMessage;
+import com.ignis.igrobotics.network.messages.NetworkHandler;
+import com.ignis.igrobotics.network.messages.NetworkInfo;
+import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -16,6 +20,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 
 public class ButtonElement extends Button implements IElement, IGuiTexturable {
 
@@ -24,6 +29,7 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     private int state = 0;
     private int maxStates = 1;
     private List<Component>[] tooltips = new ArrayList[1];
+    private Supplier<IMessage> networkAction;
 
     private boolean dragging;
     private final List<IElement> components = new CopyOnWriteArrayList<>();
@@ -51,8 +57,11 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
 
     @Override
     public void onPress() {
-        onPress.onPress(this);
+        //Client stuff
         nextState();
+        onPress.onPress(this);
+        //Server stuff
+        NetworkHandler.sendToServer(networkAction.get());
     }
 
     @Override
@@ -127,6 +136,10 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
                 icons[i][j] = new Point(x + j * width, y + i * height);
             }
         }
+    }
+
+    public void setNetworkAction(Supplier<IMessage> action) {
+        this.networkAction = action;
     }
 
     public void setTooltip(List<Component> tooltip) throws Exception {

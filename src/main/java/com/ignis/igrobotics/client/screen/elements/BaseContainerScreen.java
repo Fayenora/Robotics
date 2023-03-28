@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -22,11 +23,44 @@ import java.util.Stack;
  */
 public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IElement {
 
-    Stack<IElement> subGuis = new Stack<>();
+    private Stack<IElement> subGuis = new Stack<>();
 
     public BaseContainerScreen(T menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
     }
+
+    /////////////////
+    // Rendering
+    /////////////////
+
+    @Override
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+        super.render(poseStack, mouseX, mouseY, delta);
+
+        if(hasSubGui()) {
+            for(IElement comp : subGuis) {
+                renderBackground(poseStack);
+                comp.render(poseStack, mouseX, mouseY, delta);
+            }
+        }
+    }
+
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        super.renderTooltip(poseStack, mouseX, mouseY);
+        //Only show hovered tooltips of the current subGui (may be this gui itself)
+        Optional<GuiEventListener> child = getSubGui().getChildAt(mouseX, mouseY);
+        if(child.isPresent() && child.get() instanceof IElement) {
+            IElement element = (IElement) child.get();
+            if(element.isEnabled()) {
+                renderTooltip(poseStack, element.getTooltip(mouseX, mouseY), Optional.empty(), mouseX, mouseY);
+            }
+        }
+    }
+
+    //////////////////////////////
+    // Adding & Removing Components
+    //////////////////////////////
 
     @Override
     public void addElement(IElement element) {
@@ -60,16 +94,33 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
         super.clearWidgets();
     }
 
+    /////////////////
+    // Hooks
+    /////////////////
+
+
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        super.render(poseStack, mouseX, mouseY, delta);
-        Optional<GuiEventListener> child = getChildAt(mouseX, mouseY);
-        if(child.isPresent() && child.get() instanceof IElement) {
-            IElement element = (IElement) child.get();
-            if(element.isEnabled()) {
-                renderTooltip(poseStack, element.getTooltip(mouseX, mouseY), Optional.empty(), mouseX, mouseY);
-            }
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        if(hasSubGui()) {
+            return getSubGui().keyPressed(pKeyCode, pScanCode, pModifiers);
         }
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        if(hasSubGui()) {
+            getSubGui().mouseScrolled(pMouseX, pMouseY, pDelta);
+        }
+        return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if(hasSubGui()) {
+            return getSubGui().mouseClicked(pMouseX, pMouseY, pButton);
+        }
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
     @Override
@@ -79,6 +130,33 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
             ((IElement) child).onClose();
         }
         super.onClose();
+    }
+
+    /////////////////
+    // Implementations
+    /////////////////
+
+    public void addSubGui(IElement subGui) {
+        //Add the next subGui
+        subGuis.push(subGui);
+        subGui.setX((width - subGui.getShape().width) / 2);
+        subGui.setY((height - subGui.getShape().height) / 2);
+        addElement(subGui);
+    }
+
+    public void removeSubGui() {
+        IElement toRemove = subGuis.pop();
+        toRemove.onClose();
+        removeWidget(toRemove);
+    }
+
+    public boolean hasSubGui() {
+        return subGuis.size() > 0;
+    }
+
+    public IElement getSubGui() {
+        if(subGuis.size() == 0) return this;
+        return subGuis.peek();
     }
 
     @Override
