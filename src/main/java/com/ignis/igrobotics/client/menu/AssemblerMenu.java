@@ -8,7 +8,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -32,7 +31,7 @@ public class AssemblerMenu extends BaseMenu {
     }
 
     public AssemblerMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.ASSEMBLER_MENU.get(), id);
+        super(ModMenuTypes.ASSEMBLER.get(), id);
         this.blockEntity = (AssemblerBlockEntity) blockEntity;
         this.level = playerInv.player.level;
         this.data = data;

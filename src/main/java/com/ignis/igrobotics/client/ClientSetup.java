@@ -24,10 +24,10 @@ public class ClientSetup {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(ModMenuTypes.WIRECUTTER_MENU.get(), WireCutterScreen::new);
-            MenuScreens.register(ModMenuTypes.ASSEMBLER_MENU.get(), AssemblerScreen::new);
-            MenuScreens.register(ModMenuTypes.FACTORY_MENU.get(), FactoryScreen::new);
-            MenuScreens.register(ModMenuTypes.ROBOT_MENU.get(), RobotScreen::new);
+            MenuScreens.register(ModMenuTypes.WIRE_CUTTER.get(), WireCutterScreen::new);
+            MenuScreens.register(ModMenuTypes.ASSEMBLER.get(), AssemblerScreen::new);
+            MenuScreens.register(ModMenuTypes.FACTORY.get(), FactoryScreen::new);
+            MenuScreens.register(ModMenuTypes.ROBOT.get(), RobotScreen::new);
         });
     }
 

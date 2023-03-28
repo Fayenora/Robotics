@@ -13,7 +13,7 @@ import java.util.List;
 public class SideBarSwitchElement extends GuiElement {
 
     public static final RegistryObject<MenuType<?>>[] POSSIBLE_TYPES = new RegistryObject[]{
-            ModMenuTypes.ROBOT_MENU
+            ModMenuTypes.ROBOT
     };
 
     /** Index of current menu inside all possible menus */

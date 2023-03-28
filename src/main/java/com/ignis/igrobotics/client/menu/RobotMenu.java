@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -22,7 +21,7 @@ public class RobotMenu extends BaseMenu {
     }
 
     public RobotMenu(int id, Inventory playerInv, Entity entity, ContainerData data) {
-        super(ModMenuTypes.ROBOT_MENU.get(), id);
+        super(ModMenuTypes.ROBOT.get(), id);
         this.robot = (LivingEntity) entity;
         this.data = data;
 

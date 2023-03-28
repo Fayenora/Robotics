@@ -27,13 +27,13 @@ public class RobotBehavior {
 
     @SubscribeEvent
     public static void onRobotRightClick(PlayerInteractEvent.EntityInteractSpecific event) {
-        openRobotMenu(event.getEntity(), ModMenuTypes.ROBOT_MENU.get(), event.getTarget());
+        openRobotMenu(event.getEntity(), ModMenuTypes.ROBOT.get(), event.getTarget());
     }
 
     public static void openRobotMenu(Player player, MenuType type, Entity target) {
         if(!(player instanceof ServerPlayer serverPlayer)) return;
         if(!target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
-        if(type.equals(ModMenuTypes.ROBOT_MENU.get())) {
+        if(type.equals(ModMenuTypes.ROBOT.get())) {
             NetworkHooks.openScreen(serverPlayer,
                     new SimpleMenuProvider((id, playerInv, ignored) -> new RobotMenu(id, playerInv, target, constructContainerData(target)), Lang.localise("container.robot")),
                     buf -> buf.writeInt(target.getId()));
