@@ -44,11 +44,11 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
     @Override
     protected void renderBg(PoseStack poseStack, float p_97788_, int mouseX, int mouseY) {
-		if(entity == null) return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
         this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        if(entity == null) return;
 
         RenderSystem.setShaderTexture(0, Reference.MISC);
         entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
