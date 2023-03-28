@@ -6,10 +6,13 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -24,11 +27,17 @@ public class RobotBehavior {
 
     @SubscribeEvent
     public static void onRobotRightClick(PlayerInteractEvent.EntityInteractSpecific event) {
-        if(event.getEntity().level.isClientSide()) return;
-        if(!event.getTarget().getCapability(ModCapabilities.ROBOT).isPresent()) return;
-        NetworkHooks.openScreen((ServerPlayer) event.getEntity(),
-                new SimpleMenuProvider((id, playerInv, player) -> new RobotMenu(id, playerInv, event.getTarget(), constructContainerData(event.getTarget())), Lang.localise("container.robot")),
-                buf -> buf.writeInt(event.getTarget().getId()));
+        openRobotMenu(event.getEntity(), ModMenuTypes.ROBOT_MENU.get(), event.getTarget());
+    }
+
+    public static void openRobotMenu(Player player, MenuType type, Entity target) {
+        if(!(player instanceof ServerPlayer serverPlayer)) return;
+        if(!target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
+        if(type.equals(ModMenuTypes.ROBOT_MENU.get())) {
+            NetworkHooks.openScreen(serverPlayer,
+                    new SimpleMenuProvider((id, playerInv, ignored) -> new RobotMenu(id, playerInv, target, constructContainerData(target)), Lang.localise("container.robot")),
+                    buf -> buf.writeInt(target.getId()));
+        }
     }
 
     private static ContainerData constructContainerData(Entity entity) {

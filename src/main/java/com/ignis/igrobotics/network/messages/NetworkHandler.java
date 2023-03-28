@@ -2,7 +2,7 @@ package com.ignis.igrobotics.network.messages;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;
-import com.ignis.igrobotics.network.messages.server.PacketOpenGui;
+import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
 import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -37,6 +36,7 @@ public class NetworkHandler {
     public static void registerMessages() {
         registerMessage(PacketSetEntityEffects.class, NetworkDirection.PLAY_TO_CLIENT);
         registerMessage(PacketSetWatched.class, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(PacketOpenRobotMenu.class, NetworkDirection.PLAY_TO_SERVER);
     }
 
     private static <MSG extends IMessage> void registerMessage(Class<MSG> clazz, NetworkDirection direction) {
