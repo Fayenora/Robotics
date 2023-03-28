@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.core.util.Lang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
