@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public interface IMessage<MSG> {
+public interface IMessage {
 
     void encode(FriendlyByteBuf buf);
 

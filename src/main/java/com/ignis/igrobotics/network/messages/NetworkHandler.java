@@ -2,6 +2,7 @@ package com.ignis.igrobotics.network.messages;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;
+import com.ignis.igrobotics.network.messages.server.PacketOpenGui;
 import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -66,7 +67,7 @@ public class NetworkHandler {
         return (msg, buf) -> msg.encode(buf);
     }
 
-    private static <MSG extends IMessage<MSG>> Function<FriendlyByteBuf, MSG> defaultDecoder(Class<MSG> clazz) {
+    private static <MSG extends IMessage> Function<FriendlyByteBuf, MSG> defaultDecoder(Class<MSG> clazz) {
         try {
             Constructor constr = clazz.getConstructor();
             return (buf) -> {
@@ -86,18 +87,19 @@ public class NetworkHandler {
     }
 
     private static <MSG extends IMessage> BiConsumer<MSG, Supplier<NetworkEvent.Context>> defaultHandler(NetworkDirection dir) {
-        if(dir.getReceptionSide().equals(LogicalSide.CLIENT)) {
-            return (msg, cxt) -> {
+        switch(dir.getReceptionSide()) {
+            case CLIENT: return (msg, cxt) -> {
                 cxt.get().enqueueWork(() -> {
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> msg.handle(cxt.get()));
                 });
                 cxt.get().setPacketHandled(true);
             };
+            case SERVER: return (msg, cxt) -> {
+                cxt.get().enqueueWork(() -> msg.handle(cxt.get()));
+                cxt.get().setPacketHandled(true);
+            };
+            default: return (msg, cxt) -> {};
         }
-        return (msg, cxt) -> {
-            cxt.get().enqueueWork(() -> msg.handle(cxt.get()));
-            cxt.get().setPacketHandled(true);
-        };
     }
 
 }
