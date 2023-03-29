@@ -48,11 +48,6 @@ public class Reference {
 		ATTRIBUTE_COLORS.put(ModAttributes.INVENTORY_SLOTS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.RED));
 	}
 	
-	/**
-	 * List of basic instances of most living entities, excluding special ones like lightning. Only contains elements once a world is loaded
-	 */
-	public static HashMap<String, LivingEntity> allLivingEntities = new HashMap<String, LivingEntity>();
-	
 	public static final Dimension GUI_DEFAULT_DIMENSIONS = new Dimension(176, 166);
 	public static final Dimension GUI_COMMANDER_DIMENSIONS = new Dimension(176, 182);
 	public static final Dimension GUI_ASSEMBLER_DIMENSIONS = new Dimension(GUI_DEFAULT_DIMENSIONS.width, 216);

@@ -41,7 +41,7 @@ public class RenderUtil {
         ent.setCustomNameVisible(f1);
     }
 
-    public static void drawRotatingEntity(int posX, int posY, int scale, LivingEntity entity, int angle) {
+    public static void drawRotatingEntity(int posX, int posY, int scale, LivingEntity entity, float angle) {
         float f = 0;
         float f1 = 0;
         PoseStack posestack = RenderSystem.getModelViewStack();
@@ -87,7 +87,7 @@ public class RenderUtil {
         Lighting.setupFor3DItems();
     }
 
-    protected void drawItemStack(ItemStack stack, int x, int y) {
+    public static void drawItemStack(ItemStack stack, int x, int y) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.translate(0.0F, 0.0F, 32.0F);

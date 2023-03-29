@@ -4,10 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.client.PacketGuiData;
 import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;
-import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
-import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
-import com.ignis.igrobotics.network.messages.server.PacketSetEntityName;
-import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
+import com.ignis.igrobotics.network.messages.server.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,6 +41,7 @@ public class NetworkHandler {
         registerMessage(PacketOpenRobotMenu.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketComponentAction.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketSetEntityName.class, NetworkDirection.PLAY_TO_SERVER);
+        registerMessageHandledOnMessageThread(PacketRequestEntitySearch.class, NetworkDirection.PLAY_TO_SERVER);
     }
 
     private static <MSG extends IMessage> void registerMessage(Class<MSG> clazz, NetworkDirection direction) {
@@ -51,6 +49,14 @@ public class NetworkHandler {
                 .encoder(defaultEncoder())
                 .decoder(defaultDecoder(clazz))
                 .consumerMainThread(defaultHandler(direction))
+                .add();
+    }
+
+    private static <MSG extends IMessage> void registerMessageHandledOnMessageThread(Class<MSG> clazz, NetworkDirection direction) {
+        INSTANCE.messageBuilder(clazz, id++, direction)
+                .encoder(defaultEncoder())
+                .decoder(defaultDecoder(clazz))
+                .consumerMainThread(handleOnMsgThread(direction))
                 .add();
     }
 
@@ -103,6 +109,20 @@ public class NetworkHandler {
             };
             case SERVER: return (msg, cxt) -> {
                 cxt.get().enqueueWork(() -> msg.handle(cxt.get()));
+                cxt.get().setPacketHandled(true);
+            };
+            default: return (msg, cxt) -> {};
+        }
+    }
+
+    private static <MSG extends IMessage> BiConsumer<MSG, Supplier<NetworkEvent.Context>> handleOnMsgThread(NetworkDirection dir) {
+        switch(dir.getReceptionSide()) {
+            case CLIENT: return (msg, cxt) -> {
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> msg.handle(cxt.get()));
+                cxt.get().setPacketHandled(true);
+            };
+            case SERVER: return (msg, cxt) -> {
+                msg.handle(cxt.get());
                 cxt.get().setPacketHandled(true);
             };
             default: return (msg, cxt) -> {};

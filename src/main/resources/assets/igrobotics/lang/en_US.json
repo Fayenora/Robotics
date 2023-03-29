@@ -1,5 +1,6 @@
 {
   "owner": "Owner",
+  "default": "Default",
 
   "item.igrobotics.circuit": "Circuitry",
 

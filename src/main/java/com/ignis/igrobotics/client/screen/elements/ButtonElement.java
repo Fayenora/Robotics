@@ -148,6 +148,10 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
         setTooltip(0, tooltip);
     }
 
+    public void setTooltip(Component tooltip) {
+        setTooltip(0, tooltip);
+    }
+
     public void setTooltip(int state, Component tooltip) {
         setTooltip(state, List.of(tooltip));
     }

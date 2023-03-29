@@ -9,17 +9,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.resources.ResourceLocation;
 
+import java.awt.*;
 import java.util.List;
 
 public abstract class SelectorElement<A> extends ButtonElement {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/selectors.png");
+    public static final Dimension BOUNDS = new Dimension(18, 18);
 
     protected Selection<A> selection;
     protected float angle = 0;
 
     public SelectorElement(Selection<A> selection, int x, int y) {
-        super(x, y, 18, 18);
+        super(x, y, BOUNDS.width, BOUNDS.height);
         initTextureLocation(TEXTURE, 0, 164);
         this.selection = selection;
     }
@@ -42,10 +44,6 @@ public abstract class SelectorElement<A> extends ButtonElement {
         if(currentGuiActive()) {
             renderSelection(poseStack, pMouseX, pMouseY, pPartialTick);
         }
-    }
-
-    public Selection<A> getSelector() {
-        return selection;
     }
 
     /**

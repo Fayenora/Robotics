@@ -15,6 +15,7 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketSetEntityName;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -155,9 +156,9 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public boolean keyPressed(int keyCode, int pScanCode, int pModifiers) {
         if(nameBar.isFocused()) {
             switch(keyCode) {
-                case 256:
+                case InputConstants.KEY_ESCAPE:
                     return super.keyPressed(keyCode, pScanCode, pModifiers);
-                case 257:
+                case InputConstants.KEY_RETURN:
                     nameBar.setFocus(false);
                     renameRobot();
                     return true;

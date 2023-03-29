@@ -15,6 +15,14 @@ public class BaseScreen extends Screen implements IElement {
 
     private IElement parentElement;
 
+    protected BaseScreen(int x, int y, int width, int height) {
+        this(Component.empty());
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
     protected BaseScreen(Component pTitle) {
         super(pTitle);
     }
