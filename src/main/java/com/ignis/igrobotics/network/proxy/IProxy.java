@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface IProxy {
 
     WeakReference<Player> createFakePlayer(Level level, GameProfile profile);
+
+    Level getLevel();
 }

@@ -2,6 +2,7 @@ package com.ignis.igrobotics.network;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.messages.IMessage;
+import com.ignis.igrobotics.network.messages.client.PacketGuiData;
 import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
@@ -38,6 +39,7 @@ public class NetworkHandler {
 
     public static void registerMessages() {
         registerMessage(PacketSetEntityEffects.class, NetworkDirection.PLAY_TO_CLIENT);
+        registerMessage(PacketGuiData.class, NetworkDirection.PLAY_TO_CLIENT);
         registerMessage(PacketSetWatched.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketOpenRobotMenu.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketComponentAction.class, NetworkDirection.PLAY_TO_SERVER);

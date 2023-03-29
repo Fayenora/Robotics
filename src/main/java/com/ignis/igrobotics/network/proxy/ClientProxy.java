@@ -19,6 +19,11 @@ import java.util.UUID;
 public class ClientProxy implements IProxy {
 
     @Override
+    public Level getLevel() {
+        return Minecraft.getInstance().level;
+    }
+
+    @Override
     public WeakReference<Player> createFakePlayer(Level level, GameProfile profile) {
         if(level instanceof ServerLevel serverLevel) {
             return new WeakReference<>(FakePlayerFactory.get(serverLevel, profile));
