@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core.access;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.network.messages.IBufferSerializable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +15,7 @@ import java.util.UUID;
  * Manages the access rights to an object implementing the {@link ISecuredObject} interface
  * @author Ignis
  */
-public class AccessConfig implements INBTSerializable<CompoundTag> {
+public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSerializable {
 	
 	/** {@link Reference#DEFAULT_UUID} if there is no owner*/
 	protected UUID owner;
@@ -96,7 +97,8 @@ public class AccessConfig implements INBTSerializable<CompoundTag> {
 			permissions.put(UUID.fromString(key), permissionNBT.getInt(key));
 		}
 	}
-	
+
+	@Override
 	public void read(FriendlyByteBuf buffer) {
 		setOwner(buffer.readUUID());
 		int size = buffer.readInt();
@@ -106,7 +108,8 @@ public class AccessConfig implements INBTSerializable<CompoundTag> {
 			setPermissions(player, permissions);
 		}
 	}
-	
+
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUUID(getOwner());
 		buffer.writeInt(getPermissions().size());

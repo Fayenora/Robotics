@@ -15,7 +15,7 @@ public abstract class SelectorElement<A> extends ButtonElement {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/selectors.png");
 
-    private Selection<A> selection;
+    protected Selection<A> selection;
     protected float angle = 0;
 
     public SelectorElement(Selection<A> selection, int x, int y) {
