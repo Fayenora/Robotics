@@ -4,6 +4,7 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -45,9 +46,11 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     @Override
     public void setX(int x) {
         for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setX(element.getShape().x + x - this.x);
+            if(b instanceof IElement element) {
+                element.setX(element.getShape().x + x - this.x);
+            } else if(b instanceof AbstractWidget widget) {
+                widget.setX(widget.getX() + x - this.x);
+            }
         }
         this.x = x;
     }
@@ -55,9 +58,11 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     @Override
     public void setY(int y) {
         for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setY(element.getShape().y + y - this.y);
+            if(b instanceof IElement element) {
+                element.setY(element.getShape().y + y - this.y);
+            } else if(b instanceof AbstractWidget widget) {
+                widget.setY(widget.getY() + y - this.y);
+            }
         }
         this.y = y;
     }
@@ -130,6 +135,10 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     public void addElement(IElement element) {
         children.add(element);
         element.setParentComponent(this);
+    }
+
+    public void addElement(GuiEventListener element) {
+        children.add(element);
     }
 
     @Override

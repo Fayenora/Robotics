@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.screen.base;
 
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,9 +31,11 @@ public class BaseScreen extends Screen implements IElement {
     @Override
     public void setX(int x) {
         for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setX(element.getShape().x + x - this.x);
+            if(b instanceof IElement element) {
+                element.setX(element.getShape().x + x - this.x);
+            } else if(b instanceof AbstractWidget widget) {
+                widget.setX(widget.getX() + x - this.x);
+            }
         }
         this.x = x;
     }
@@ -40,9 +43,11 @@ public class BaseScreen extends Screen implements IElement {
     @Override
     public void setY(int y) {
         for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setY(element.getShape().y + y - this.y);
+            if(b instanceof IElement element) {
+                element.setY(element.getShape().y + y - this.y);
+            } else if(b instanceof AbstractWidget widget) {
+                widget.setY(widget.getY() + y - this.y);
+            }
         }
         this.y = y;
     }

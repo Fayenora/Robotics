@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.screen.selectors;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.client.screen.base.BaseScreen;
+import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.common.items.CommanderItem;
@@ -41,7 +41,7 @@ public class PosSelector extends SelectorElement<BlockPos> {
 		drawCenteredString(poseStack, font, Integer.toString(selection.get().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR);
 	}
 	
-	class GuiSelectPos extends BaseScreen {
+	class GuiSelectPos extends GuiElement {
 		EditBox textFieldX, textFieldY, textFieldZ;
 		ButtonElement buttonSelectPos, buttonSelfPos, buttonConfirm;
 
@@ -86,9 +86,9 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			buttonSelfPos.initTextureLocation(Reference.MISC, 0, 0);
 			buttonConfirm.initTextureLocation(Reference.MISC, 0, 170);
 
-			addRenderableWidget(textFieldX);
-			addRenderableWidget(textFieldY);
-			addRenderableWidget(textFieldZ);
+			addElement(textFieldX);
+			addElement(textFieldY);
+			addElement(textFieldZ);
 			addElement(buttonSelectPos);
 			addElement(buttonSelfPos);
 			addElement(buttonConfirm);

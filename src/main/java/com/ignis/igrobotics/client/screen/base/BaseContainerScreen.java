@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.client.screen.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -92,6 +93,13 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     // Hooks
     /////////////////
 
+    @Override
+    public boolean charTyped(char pCodePoint, int pModifiers) {
+        if(hasSubGui()) {
+            return getSubGui().charTyped(pCodePoint, pModifiers);
+        }
+        return super.charTyped(pCodePoint, pModifiers);
+    }
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
@@ -110,11 +118,27 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if(hasSubGui()) {
+            getSubGui().mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        }
+        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    }
+
+    @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if(hasSubGui()) {
             return getSubGui().mouseClicked(pMouseX, pMouseY, pButton);
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
+    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+        if(hasSubGui()) {
+            return getSubGui().mouseReleased(pMouseX, pMouseY, pButton);
+        }
+        return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
     @Override
@@ -160,9 +184,11 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     @Override
     public void setX(int x) {
         for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setX(element.getShape().x + x - this.leftPos);
+            if(b instanceof IElement element) {
+                element.setX(element.getShape().x + x - this.leftPos);
+            } else if(b instanceof AbstractWidget widget) {
+                widget.setX(widget.getX() + x - this.leftPos);
+            }
         }
         leftPos = x;
     }
@@ -170,9 +196,11 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     @Override
     public void setY(int y) {
         for(GuiEventListener b : children()) {
-            if(!(b instanceof IElement)) continue;
-            IElement element = (IElement) b;
-            element.setY(element.getShape().y + y - this.topPos);
+            if(b instanceof IElement element) {
+                element.setY(element.getShape().y + y - this.topPos);
+            } else if(b instanceof AbstractWidget widget) {
+                widget.setY(widget.getY() + y - this.topPos);
+            }
         }
         topPos = y;
     }

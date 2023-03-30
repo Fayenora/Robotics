@@ -79,7 +79,7 @@ public class ScrollableElement extends GuiElement {
         if(Screen.hasShiftDown()) {
             int scroll_diff = scrollDistanceX;
 
-            scrollDistanceX += delta / -30;
+            scrollDistanceX += delta / -10;
             scrollDistanceX = Math.max(Math.min(scrollDistanceX, scrollMaxX - width), 0);
 
             scroll_diff = scroll_diff - scrollDistanceX;
@@ -94,7 +94,7 @@ public class ScrollableElement extends GuiElement {
         } else {
             int scroll_diff = scrollDistanceY;
 
-            scrollDistanceY += delta / -30;
+            scrollDistanceY += delta * -10;
             scrollDistanceY = Math.max(Math.min(scrollDistanceY, scrollMaxY - height), 0);
 
             scroll_diff = scroll_diff - scrollDistanceY;

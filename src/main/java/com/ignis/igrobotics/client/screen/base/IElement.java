@@ -1,10 +1,12 @@
 package com.ignis.igrobotics.client.screen.base;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +39,14 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 	@Override
 	default boolean isMouseOver(double mouseX, double mouseY) {
 		return mouseX >= getShape().x && mouseY >= getShape().y && mouseX < getShape().x + getShape().width && mouseY < getShape().y + getShape().height;
+	}
+
+	@Override
+	default boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+		if(pKeyCode == InputConstants.KEY_ESCAPE) {
+			getBaseGui().removeSubGui();
+		}
+		return ContainerEventHandler.super.keyPressed(pKeyCode, pScanCode, pModifiers);
 	}
 
 	default List<Component> getTooltip(int mouseX, int mouseY) {

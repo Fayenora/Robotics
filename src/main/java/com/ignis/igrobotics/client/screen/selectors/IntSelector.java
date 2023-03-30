@@ -2,6 +2,7 @@ package com.ignis.igrobotics.client.screen.selectors;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.BaseScreen;
+import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -36,7 +37,7 @@ public class IntSelector extends SelectorElement<Integer> {
 		drawCenteredString(poseStack, Minecraft.getInstance().font, Integer.toString(selection.get()), getX() + width / 2, getY() + 5, Reference.FONT_COLOR);
 	}
 	
-	class GuiSelectInt extends BaseScreen {
+	class GuiSelectInt extends GuiElement {
 		
 		EditBox textField;
 
@@ -64,7 +65,7 @@ public class IntSelector extends SelectorElement<Integer> {
 				}
 			};
 			textField.setFocus(true);
-			addRenderableWidget(textField);
+			addElement(textField);
 		}
 		
 		protected void keepIntToBounds() {

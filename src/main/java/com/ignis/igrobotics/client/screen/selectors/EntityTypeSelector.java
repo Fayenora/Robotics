@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.client.screen.selectors;
 
-import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.client.screen.base.BaseScreen;
+import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.ScrollableElement;
@@ -18,8 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -36,6 +33,13 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 	
 	public EntityTypeSelector(Selection sel, int x, int y, Collection<LivingEntity> options) {
 		super(sel, x, y);
+		this.selection = new Selection<>((LivingEntity) sel.get()) {
+			@Override
+			public void set(LivingEntity value) {
+				setTooltip(value.getName());
+				super.set(value);
+			}
+		};
 		setTooltip(selection.get().getName());
 		this.options = options;
 		if(options == null) {
@@ -56,7 +60,7 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 		RenderSystem.disableScissor();
 	}
 	
-	class GuiSelectEntity extends BaseScreen {
+	class GuiSelectEntity extends GuiElement {
 		
 		EditBox searchBar;
 		ScrollableElement entityGrid;
@@ -75,8 +79,8 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 			searchBar.setFocus(true);
 			entityGrid = new ScrollableElement(getX() + 9, getY() + 25, 145, 131);
 			setOptions(currentOptions);
-			
-			addRenderableWidget(searchBar);
+
+			addElement(searchBar);
 			addElement(entityGrid);
 		}
 
@@ -123,8 +127,7 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 		@Override
 		public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
 			super.renderButton(poseStack, pMouseX, pMouseY, pPartialTick);
-			Rectangle cutOut = MathUtil.downsizeRect(getShape(), 1);
-			RenderSystem.enableScissor(cutOut.x, cutOut.y, cutOut.width, cutOut.height);
+			RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
 			RenderUtil.drawRotatingEntity(getX() + BOUNDS.width / 2, getY() + 6 + BOUNDS.height / 2, (int) (8 / living.getBoundingBox().getSize()), living, angle);
 			RenderSystem.disableScissor();
 		}

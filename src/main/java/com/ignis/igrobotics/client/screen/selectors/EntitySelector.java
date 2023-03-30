@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.screen.selectors;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.client.screen.base.BaseScreen;
+import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.common.items.CommanderItem;
@@ -27,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.awt.*;
 import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
@@ -84,7 +83,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 		setCachedEntity(entity);
 	}
 
-	class GuiSelectSpEntity extends BaseScreen {
+	class GuiSelectSpEntity extends GuiElement {
 		
 		EditBox textField;
 		ButtonElement buttonSelect, buttonSelf, buttonConfirm;
@@ -124,8 +123,8 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			buttonSelect.initTextureLocation(Reference.MISC, 0, 187);
 			buttonSelf.initTextureLocation(Reference.MISC, 0, 0);
 			buttonConfirm.initTextureLocation(Reference.MISC, 0, 170);
-			
-			addRenderableWidget(textField);
+
+			addElement(textField);
 			addElement(buttonSelect);
 			addElement(buttonSelf);
 			addElement(buttonConfirm);

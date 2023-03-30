@@ -66,6 +66,27 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     }
 
     @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        GuiEventListener targeted = null;
+
+        for(GuiEventListener child : List.copyOf(this.children())) {
+            if (child.mouseClicked(pMouseX, pMouseY, pButton)) {
+                targeted = child;
+            }
+        }
+
+        if (targeted != null) {
+            this.setFocused(targeted);
+            if (pButton == 0) {
+                this.setDragging(true);
+            }
+            return true;
+        }
+
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         for(var comp : children()) {
