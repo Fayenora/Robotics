@@ -1,9 +1,12 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ibm.icu.impl.ICUResourceBundleReader;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
+import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -57,7 +60,7 @@ public class ScrollableElement extends GuiElement {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        RenderSystem.enableScissor(getX(), getY(), width, height);
+        RenderUtil.beginClipping(getShape());
         super.render(poseStack, mouseX, mouseY, delta);
         RenderSystem.disableScissor();
     }

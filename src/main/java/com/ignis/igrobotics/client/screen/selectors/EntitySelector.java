@@ -62,8 +62,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			return;
 		}
 		if(cachedEntity != null) {
-			Rectangle cutOut = MathUtil.downsizeRect(getShape(), 1);
-			RenderSystem.enableScissor(cutOut.x, cutOut.y, cutOut.width, cutOut.height);
+			RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
 			RenderUtil.drawRotatingEntity(getX() + width / 2, getY() + height / 2 + 6, (int) (8 / cachedEntity.getBoundingBox().getSize()), cachedEntity, angle);
 			RenderSystem.disableScissor();
 		}

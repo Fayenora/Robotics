@@ -13,7 +13,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Quaternionf;
 
+import java.awt.*;
+
 public class RenderUtil {
+
+    public static void beginClipping(Rectangle shape) {
+        Dimension screenSize = new Dimension(Minecraft.getInstance().screen.width, Minecraft.getInstance().screen.height);
+        //RenderSystem.enableScissor(0, 0, screenSize.width, shape.y);
+        //RenderSystem.enableScissor(0, shape.y, shape.x, shape.height);
+        //RenderSystem.enableScissor(shape.x + shape.width, shape.y, screenSize.width - shape.x - shape.width, shape.height);
+        //RenderSystem.enableScissor(0, shape.y + shape.height, screenSize.width, screenSize.height - shape.y - shape.height);
+    }
 
     public static void drawEntityOnScreen(int x, int y, int mouseX, int mouseY, LivingEntity entity) {
         drawEntityOnScreen(x, y, mouseX, mouseY, 30, false, entity);

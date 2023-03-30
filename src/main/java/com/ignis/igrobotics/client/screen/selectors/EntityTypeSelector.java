@@ -51,8 +51,7 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 	@Override
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		if(selection == null || selection.get() == null) return;
-		Rectangle cutOut = MathUtil.downsizeRect(getShape(), 1);
-		RenderSystem.enableScissor(cutOut.x, cutOut.y, cutOut.width, cutOut.height);
+		RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
 		RenderUtil.drawRotatingEntity(getX() + width / 2, getY() + height / 2 + 6, (int) (8 / selection.get().getBoundingBox().getSize()), selection.get(), angle);
 		RenderSystem.disableScissor();
 	}
