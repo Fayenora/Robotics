@@ -7,6 +7,7 @@ import com.ignis.igrobotics.common.CommonSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +29,13 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
 
     public static final List<SelectionType> TYPES = new ArrayList<>();
 
-    public static final SelectionType<LivingEntity> ENTITY_TYPE = register("<Entity-Type>", LivingEntity.class, () -> CommonSetup.allLivingEntities.get(EntityType.CREEPER), LivingEntity::serializeNBT, null, EntityTypeSelector.class);
+    public static final SelectionType<LivingEntity> ENTITY_TYPE = register("<Entity-Type>", LivingEntity.class, () -> CommonSetup.allLivingEntities.get(EntityType.CREEPER), LivingEntity::serializeNBT, tag -> {
+        Optional<Entity> entity = EntityType.create(tag, Robotics.proxy.getLevel());
+        if(entity.isPresent() && entity.get() instanceof LivingEntity living) {
+            return living;
+        }
+        return EntityType.CREEPER.create(Robotics.proxy.getLevel());
+    }, EntityTypeSelector.class);
     public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, () -> Items.IRON_SWORD.getDefaultInstance(), ItemStack::serializeNBT, ItemStack::of, ItemSelector.class);
     public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, null);
     public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, PosSelector.class);

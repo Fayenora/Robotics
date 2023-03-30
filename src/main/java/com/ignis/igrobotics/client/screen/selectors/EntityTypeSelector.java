@@ -33,13 +33,6 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 	
 	public EntityTypeSelector(Selection sel, int x, int y, Collection<LivingEntity> options) {
 		super(sel, x, y);
-		this.selection = new Selection<>((LivingEntity) sel.get()) {
-			@Override
-			public void set(LivingEntity value) {
-				setTooltip(value.getName());
-				super.set(value);
-			}
-		};
 		setTooltip(selection.get().getName());
 		this.options = options;
 		if(options == null) {
@@ -106,6 +99,7 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 			for(LivingEntity living : options) {
 				entityGrid.addElement(new ComponentEntity(living, 0, 0, pButton -> {
 					selection.set(living);
+					EntityTypeSelector.this.setTooltip(living.getName());
 					getBaseGui().removeSubGui();
 				}));
 			}

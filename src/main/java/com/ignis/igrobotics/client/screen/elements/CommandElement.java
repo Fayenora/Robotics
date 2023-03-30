@@ -48,6 +48,10 @@ public class CommandElement extends ButtonElement {
         }
     }
 
+    public RobotCommand getCommand() {
+        return command;
+    }
+
     private int getOffsetToSelector(int index) {
         return getOffsetToText(index + 1) - OFFSET_FROM_TEXT - TYPICAL_SELECTOR_WIDTH;
     }

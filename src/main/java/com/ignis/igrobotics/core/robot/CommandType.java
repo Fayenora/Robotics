@@ -45,7 +45,7 @@ public class CommandType {
         this.applyToEntity = applyToEntity;
     }
 
-    public void applyToEntity(List<Selection> selectors, RobotEntity robot, int priority) {
+    public void applyToEntity(List<Selection> selectors, Mob robot, int priority) {
         if(robot.level.isClientSide()) return;
         Goal goal;
         try {

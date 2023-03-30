@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Mob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,12 @@ public class RobotCommand {
         }
     }
 
-    public void applyToEntity(RobotEntity robot, int priority) {
+    public void applyToEntity(Mob robot, int priority) {
         type.applyToEntity(selectors, robot, priority + COMMANDS_BELOW_CUSTOM);
     }
 
-    public int getId() {
-        return type.getId();
+    public CommandType getType() {
+        return type;
     }
 
     public List<Component> getDescription() {
@@ -56,14 +57,14 @@ public class RobotCommand {
      * Serialization
      */
 
-    public static void writeToNBT(CompoundTag comp, RobotCommand[] commands) {
+    public static void writeToNBT(CompoundTag comp, List<RobotCommand> commands) {
         ListTag list = new ListTag();
 
         for(RobotCommand command : commands) {
             CompoundTag commandTag = new CompoundTag();
 
             //Type of command
-            commandTag.putInt("id", command.getId());
+            commandTag.putInt("id", command.type.getId());
 
             //Individual selections of the command
             ListTag selectorList = new ListTag();
@@ -78,10 +79,10 @@ public class RobotCommand {
         comp.put("commands", list);
     }
 
-    public static RobotCommand[] readFromNBT(CompoundTag comp) {
+    public static List<RobotCommand> readFromNBT(CompoundTag comp) {
         ListTag list = comp.getList("commands", Tag.TAG_COMPOUND);
 
-        RobotCommand[] commands = new RobotCommand[list.size()];
+        List<RobotCommand> commands = new ArrayList<>();
 
         for(int i = 0; i < list.size(); i++) {
             CompoundTag com = (CompoundTag) list.get(i);
@@ -97,7 +98,7 @@ public class RobotCommand {
             }
 
             //Instantiate command
-            commands[i] = new RobotCommand(CommandType.byId(id), selections);
+            commands.add(new RobotCommand(CommandType.byId(id), selections));
         }
 
         return commands;
