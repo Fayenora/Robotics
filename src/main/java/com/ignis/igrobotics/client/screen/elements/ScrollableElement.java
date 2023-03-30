@@ -21,7 +21,7 @@ public class ScrollableElement extends GuiElement {
     /** The total height of everything in the scrollable area */
     protected int scrollMaxY = 0;
 
-    protected int mouseX, mouseY;
+    private int toRemove = -1;
 
     public ScrollableElement(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -37,16 +37,19 @@ public class ScrollableElement extends GuiElement {
     }
 
     public void removeComponent(int index) {
-        children().remove(index);
-        for(int i = index; i < children().size(); i++) {
-            alignElement(i);
-        }
-        updateScrollMax();
+        toRemove = index;
     }
 
     public void removeComponent(IElement comp) {
-        int index = children().indexOf(comp);
-        children().remove(comp);
+        removeComponent(children().indexOf(comp));
+    }
+
+    /**
+     * This ensures only one element is removed at a time. To clear all elements use {@link #clear()}
+     * @param index
+     */
+    private void internalRemove(int index) {
+        children().remove(index);
         for(int i = index; i < children().size(); i++) {
             alignElement(i);
         }
@@ -60,6 +63,10 @@ public class ScrollableElement extends GuiElement {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+        if(toRemove >= 0) {
+            internalRemove(toRemove);
+            toRemove = -1;
+        }
         RenderUtil.beginClipping(getShape());
         super.render(poseStack, mouseX, mouseY, delta);
         RenderSystem.disableScissor();

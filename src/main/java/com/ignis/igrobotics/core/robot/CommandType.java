@@ -77,10 +77,10 @@ public class CommandType {
     }
 
     public List<Component> getDescription() {
-        if(selectionTypes.size() <= 1) return List.of(Lang.localise(name));
+        if(selectionTypes.size() <= 1) return List.of(Lang.localise("command." + name));
         List<Component> description = new ArrayList<>();
         for(int i = 0; i < selectionTypes.size(); i++) {
-            description.add(Lang.localise(getName() + "." + i));
+            description.add(Lang.localise("command." + getName() + "." + i));
         }
         return description;
     }

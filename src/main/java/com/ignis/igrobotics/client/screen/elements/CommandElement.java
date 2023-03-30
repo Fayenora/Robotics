@@ -6,6 +6,7 @@ import com.ignis.igrobotics.client.screen.RobotCommandScreen;
 import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.robot.Selection;
+import com.ignis.igrobotics.core.robot.SelectionType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 public class CommandElement extends ButtonElement {
 
@@ -32,14 +34,8 @@ public class CommandElement extends ButtonElement {
         initSingleTextureLocation(TEXTURE, 9, 182);
         int i = 0;
         for(Selection selection : command.getSelectors()) {
-            try {
-                Constructor constructor = selection.getType().gui().getConstructor(Selection.class, int.class, int.class);
-                SelectorElement selector = (SelectorElement) constructor.newInstance(selection, getX() + getOffsetToSelector(i++), getY() + 3);
-                addElement(selector);
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException e) {
-                Robotics.LOGGER.warn("Something went wrong when adding selector of type " + selection.getType() + ". This shouldn't happen,  please report it to the mod author!");
-                e.printStackTrace();
-            }
+            Optional<SelectorElement<?>> selector = SelectionType.createSelectionGui(selection, getX() + getOffsetToSelector(i++), getY() + 3);
+            selector.ifPresent(this::addElement);
         }
     }
 

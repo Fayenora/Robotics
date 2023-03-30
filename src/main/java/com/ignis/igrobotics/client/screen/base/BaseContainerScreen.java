@@ -63,12 +63,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
 
     @Override
     public void addElement(IElement element) {
-        if(element instanceof Renderable) {
-            addRenderableWidget(element);
-        }
-        if(element instanceof GuiEventListener && element instanceof NarratableEntry) {
-            addWidget(element);
-        }
+        addRenderableWidget(element);
     }
 
     @Override

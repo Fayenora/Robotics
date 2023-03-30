@@ -63,8 +63,10 @@ public class RenderUtil {
         posestack1.translate(0.0F, 0.0F, 1000.0F);
         posestack1.scale((float)scale, (float)scale, (float)scale);
         Quaternionf quaternionf = (new Quaternionf()).rotateZ((float)Math.PI);
-        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(f1 * 20.0F * ((float)Math.PI / 180F) + 30); // +30 To view slightly from above
-        Quaternionf quaternion_rotate = new Quaternionf().rotateY(angle - 180); //Keep rotating the entity
+        // Add -30 deg to view slightly from above
+        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(f1 * 20.0F * ((float)Math.PI / 180F) - (float)Math.toRadians(30));
+        //Keep rotating the entity
+        Quaternionf quaternion_rotate = new Quaternionf().rotateY((float) Math.toRadians(angle - 180));
         quaternionf.mul(quaternionf1);
         quaternionf.mul(quaternion_rotate);
         posestack1.mulPose(quaternionf);

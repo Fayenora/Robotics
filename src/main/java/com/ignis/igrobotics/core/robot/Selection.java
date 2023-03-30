@@ -14,7 +14,7 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	
 	public Selection(SelectionType type) {
 		this.type = type;
-		this.target = (A) type.defaultsTo();
+		this.target = (A) type.defaultsTo().get();
 	}
 	
 	public Selection(CompoundTag tag) {

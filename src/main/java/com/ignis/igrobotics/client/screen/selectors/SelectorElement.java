@@ -39,7 +39,7 @@ public abstract class SelectorElement<A> extends ButtonElement {
     @Override
     public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderButton(poseStack, pMouseX, pMouseY, pPartialTick);
-        angle += pPartialTick * 20;
+        angle += pPartialTick * 5;
         angle %= 360;
         if(currentGuiActive()) {
             renderSelection(poseStack, pMouseX, pMouseY, pPartialTick);
