@@ -14,30 +14,36 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @OnlyIn(Dist.CLIENT)
-public class EntityTypeSelector extends SelectorElement<LivingEntity> {
+public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 	
 	protected Collection<LivingEntity> options;
 	
-	public EntityTypeSelector(Selection sel, int x, int y) {
+	public EntityTypeSelector(Selection<EntityType<?>> sel, int x, int y) {
 		this(sel, x, y, CommonSetup.allLivingEntities.values());
 	}
 	
-	public EntityTypeSelector(Selection sel, int x, int y, Collection<LivingEntity> options) {
+	public EntityTypeSelector(Selection<EntityType<?>> sel, int x, int y, Collection<LivingEntity> options) {
 		super(sel, x, y);
-		setTooltip(selection.get().getName());
+		setTooltip(selection.get().getDescription());
 		this.options = options;
 		if(options == null) {
 			this.options = new ArrayList<>();
 		}
+	}
+
+	public void setSelection(EntityType<?> type) {
+		selection.set(type);
+		setTooltip(selection.get().getDescription());
 	}
 	
 	@Override
@@ -48,8 +54,10 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 	@Override
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		if(selection == null || selection.get() == null) return;
+		Entity entity = CommonSetup.allLivingEntities.get(selection.get());
+		if(!(entity instanceof LivingEntity living)) return;
 		RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
-		RenderUtil.drawRotatingEntity(getX() + width / 2, getY() + height / 2 + 6, (int) (8 / selection.get().getBoundingBox().getSize()), selection.get(), angle);
+		RenderUtil.drawRotatingEntity(getX() + width / 2, getY() + height / 2 + 6, (int) (8 / living.getBoundingBox().getSize()), living, angle);
 		RenderSystem.disableScissor();
 	}
 	
@@ -98,8 +106,7 @@ public class EntityTypeSelector extends SelectorElement<LivingEntity> {
 			entityGrid.clear();
 			for(LivingEntity living : options) {
 				entityGrid.addElement(new ComponentEntity(living, 0, 0, pButton -> {
-					selection.set(living);
-					EntityTypeSelector.this.setTooltip(living.getName());
+					setSelection(living.getType());
 					getBaseGui().removeSubGui();
 				}));
 			}

@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -21,7 +22,7 @@ public class CommandType {
 
     public static final List<CommandType> COMMAND_TYPES = new ArrayList<>();
 
-    public static final CommandType ATTACK = register("attack", LivingEntity.class);
+    public static final CommandType ATTACK = register("attack", EntityType.class);
 
     static {
         ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, selections[0].get().getClass(), true));

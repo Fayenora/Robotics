@@ -29,13 +29,11 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
 
     public static final List<SelectionType> TYPES = new ArrayList<>();
 
-    public static final SelectionType<LivingEntity> ENTITY_TYPE = register("<Entity-Type>", LivingEntity.class, () -> CommonSetup.allLivingEntities.get(EntityType.CREEPER), LivingEntity::serializeNBT, tag -> {
-        Optional<Entity> entity = EntityType.create(tag, Robotics.proxy.getLevel());
-        if(entity.isPresent() && entity.get() instanceof LivingEntity living) {
-            return living;
-        }
-        return EntityType.CREEPER.create(Robotics.proxy.getLevel());
-    }, EntityTypeSelector.class);
+    public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("value", type.getDescriptionId());
+        return tag;
+    }, tag -> EntityType.byString(tag.getString("value")).get(), EntityTypeSelector.class);
     public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, () -> Items.IRON_SWORD.getDefaultInstance(), ItemStack::serializeNBT, ItemStack::of, ItemSelector.class);
     public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, null);
     public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, PosSelector.class);
