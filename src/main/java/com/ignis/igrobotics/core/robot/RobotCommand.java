@@ -17,8 +17,11 @@ public class RobotCommand {
     private CommandType type;
     protected List<Selection> selectors = new ArrayList<>();
 
-    public RobotCommand(CommandType command_type) {
-        this.type = command_type;
+    public RobotCommand(CommandType commandType) {
+        this.type = commandType;
+        for(SelectionType type : commandType.getSelectionTypes()) {
+            selectors.add(new Selection(type));
+        }
     }
 
     private RobotCommand(CommandType command_type, List<Selection> selections) {

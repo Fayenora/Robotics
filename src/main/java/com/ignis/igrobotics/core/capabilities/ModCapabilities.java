@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
+import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
@@ -28,7 +29,7 @@ public class ModCapabilities {
     public static final Capability<IRobot> ROBOT = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IPerkMapCap> PERKS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IPartBuilt> PARTS = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IPartBuilt> COMMANDS = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<ICommandable> COMMANDS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IChunkLoader> CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static final ResourceLocation LOC_ROBOT = new ResourceLocation(Robotics.MODID, "robot");

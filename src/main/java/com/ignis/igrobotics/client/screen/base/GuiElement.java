@@ -113,11 +113,12 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        if(resource == null) return;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, resource);
-        this.blit(poseStack, getX(), getY(), textureLoc.x, textureLoc.y, getShape().width, getShape().height);
+        if(resource != null) {
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, resource);
+            this.blit(poseStack, getX(), getY(), textureLoc.x, textureLoc.y, getShape().width, getShape().height);
+        }
         for(var child : children()) {
             if(child instanceof Renderable renderable) {
                 renderable.render(poseStack, mouseX, mouseY, delta);

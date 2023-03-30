@@ -19,9 +19,9 @@ import java.util.function.BiFunction;
 
 public class CommandType {
 
-    private static final ArrayList<CommandType> COMMAND_TYPES = new ArrayList<>();
+    public static final List<CommandType> COMMAND_TYPES = new ArrayList<>();
 
-    public static final CommandType ATTACK = new CommandType("attack", LivingEntity.class);
+    public static final CommandType ATTACK = register("attack", LivingEntity.class);
 
     static {
         ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, selections[0].get().getClass(), true));
@@ -30,10 +30,10 @@ public class CommandType {
     private static int ID;
     private final int id;
     private final String name;
-    private final List<SelectionType> selectionTypes = new ArrayList<>();
+    private final List<SelectionType<?>> selectionTypes = new ArrayList<>();
     private BiFunction<Mob, Selection[], Goal> applyToEntity;
 
-    public CommandType(String name, Class... selectionClasses) {
+    private CommandType(String name, Class... selectionClasses) {
         this.id = ID++;
         this.name = name;
         for(Class clazz : selectionClasses) {
@@ -46,10 +46,10 @@ public class CommandType {
     }
 
     public void applyToEntity(List<Selection> selectors, RobotEntity robot, int priority) {
-        if(robot.level == null || robot.level.isClientSide()) return;
+        if(robot.level.isClientSide()) return;
         Goal goal;
         try {
-            goal = applyToEntity.apply(robot, selectors.toArray(new Selection[selectors.size()]));
+            goal = applyToEntity.apply(robot, selectors.toArray(new Selection[0]));
         } catch(CommandApplyException e) {
             robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
                 Player player = robot.level.getPlayerByUUID(r.getOwner());
@@ -83,5 +83,15 @@ public class CommandType {
             description.add(Lang.localise(getName() + "." + i));
         }
         return description;
+    }
+
+    public List<SelectionType<?>> getSelectionTypes() {
+        return selectionTypes;
+    }
+
+    public static CommandType register(String name, Class... selectionClasses) {
+        CommandType commandType = new CommandType(name, selectionClasses);
+        COMMAND_TYPES.add(commandType);
+        return commandType;
     }
 }

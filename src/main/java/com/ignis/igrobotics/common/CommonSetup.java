@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Robotics;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -17,15 +18,16 @@ public class CommonSetup {
     /**
      * List of basic instances of most living entities, excluding special ones like lightning. Only contains elements once a world is loaded
      */
-    public static final HashMap<String, LivingEntity> allLivingEntities = new HashMap<>();
+    public static final HashMap<EntityType, LivingEntity> allLivingEntities = new HashMap<>();
 
     @SubscribeEvent
     public static void onLevelLoad(LevelEvent.Load event) {
         if(!allLivingEntities.isEmpty()) return;
         if(!(event.getLevel() instanceof Level level)) return;
         for(EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
-            if(LivingEntity.class.isAssignableFrom(type.getBaseClass())) {
-                allLivingEntities.put(type.getDescriptionId(), (LivingEntity) type.create(level));
+            Entity entity = type.create(level);
+            if(entity instanceof LivingEntity living) {
+                allLivingEntities.put(type, living);
             }
         }
     }
