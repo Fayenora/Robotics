@@ -7,8 +7,10 @@ import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
+import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -55,9 +57,16 @@ public class RobotBehavior {
                     buf -> buf.writeInt(target.getId()));
         }
         if(type == ModMenuTypes.ROBOT_COMMANDS.get()) {
-            NetworkHooks.openScreen(serverPlayer,
-                    new SimpleMenuProvider((id, f2, f3) -> new RobotCommandMenu(id, target), Lang.localise("container.robot_commands")),
-                    buf -> buf.writeInt(target.getId()));
+            target.getCapability(ModCapabilities.COMMANDS).ifPresent(robot -> {
+                NetworkHooks.openScreen(serverPlayer,
+                        new SimpleMenuProvider((id, f2, f3) -> new RobotCommandMenu(id, target), Lang.localise("container.robot_commands")),
+                        buf -> {
+                            buf.writeInt(target.getId());
+                            CompoundTag tag = new CompoundTag();
+                            RobotCommand.writeToNBT(tag, robot.getCommands()); //TODO: Optimize
+                            buf.writeNbt(tag);
+                        });
+            });
         }
     }
 

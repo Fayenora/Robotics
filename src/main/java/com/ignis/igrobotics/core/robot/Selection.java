@@ -5,16 +5,16 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class Selection<A> implements INBTSerializable<CompoundTag> {
 	
-	private SelectionType type;
+	private SelectionType<A> type;
 	private A target;
 	
 	public Selection(A value) {
 		set(value);
 	}
 	
-	public Selection(SelectionType type) {
+	public Selection(SelectionType<A> type) {
 		this.type = type;
-		this.target = (A) type.defaultsTo().get();
+		this.target = type.defaultsTo().get();
 	}
 	
 	public Selection(CompoundTag tag) {
@@ -22,7 +22,9 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	}
 	
 	public static CompoundTag writeNBT(Selection sel) {
-		return (CompoundTag) sel.getType().writer().apply(sel.get());
+		CompoundTag tag = (CompoundTag) sel.getType().writer().apply(sel.get());
+		tag.putInt("type", sel.getType().getId());
+		return tag;
 	}
 	
 	public static Selection readNBT(CompoundTag tag) {

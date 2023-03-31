@@ -1,5 +1,7 @@
 package com.ignis.igrobotics.client.menu;
 
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +17,9 @@ public class RobotCommandMenu extends AbstractContainerMenu {
 
     public RobotCommandMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv.player.level.getEntity(extraData.readInt()));
+        robot.getCapability(ModCapabilities.COMMANDS).ifPresent(commands -> {
+            commands.setCommands(RobotCommand.readFromNBT(extraData.readNbt()));
+        });
     }
 
     public RobotCommandMenu(int id, Entity entity) {

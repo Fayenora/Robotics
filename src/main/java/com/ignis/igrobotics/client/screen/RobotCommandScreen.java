@@ -13,6 +13,8 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.CommandType;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.network.NetworkHandler;
+import com.ignis.igrobotics.network.messages.server.PacketSetCommands;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -21,6 +23,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
 
@@ -94,6 +99,20 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
     public void onClose() {
         super.onClose();
         if(entity == null) return;
-        //TODO: Send commands to server
+
+        List<RobotCommand> commands = new ArrayList<>();
+        for(var child : selectedCommands.children()) {
+            if(child instanceof CommandElement commandElement) {
+                commands.add(commandElement.getCommand());
+            }
+        }
+
+        entity.getCapability(ModCapabilities.COMMANDS).ifPresent(robot -> {
+            //In the case the client has not been informed about current commands (client side robot does not contain commands)
+            //prevent it from deleting them immediatly by closing the gui
+            //NOTE: If a player manages to add a command in the time it takes to inform him, server-side commands will be overwritten
+            if(robot.getCommands().isEmpty() && commands.isEmpty()) return;
+            NetworkHandler.sendToServer(new PacketSetCommands(entity.getId(), commands));
+        });
     }
 }

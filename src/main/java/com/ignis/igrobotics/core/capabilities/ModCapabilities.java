@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
+import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
@@ -47,6 +48,9 @@ public class ModCapabilities {
 
         RobotCapability robotCapability = new RobotCapability(robot);
         event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
+
+        CommandCapability commandCapability = new CommandCapability(robot);
+        event.addCapability(LOC_COMMANDS, new AlwaysProvideAndSave<>(COMMANDS, commandCapability));
     }
 }
 

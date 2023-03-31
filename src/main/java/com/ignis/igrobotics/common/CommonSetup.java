@@ -22,7 +22,7 @@ public class CommonSetup {
 
     @SubscribeEvent
     public static void onLevelLoad(LevelEvent.Load event) {
-        if(!allLivingEntities.isEmpty()) return;
+        if(!allLivingEntities.isEmpty() && event.getLevel().equals(allLivingEntities.get(EntityType.CREEPER).level)) return;
         if(!(event.getLevel() instanceof Level level)) return;
         for(EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
             Entity entity = type.create(level);

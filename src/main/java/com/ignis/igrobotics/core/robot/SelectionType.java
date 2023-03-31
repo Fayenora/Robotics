@@ -31,7 +31,7 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
 
     public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
         CompoundTag tag = new CompoundTag();
-        tag.putString("value", type.getDescriptionId());
+        tag.putString("value", type.toShortString());
         return tag;
     }, tag -> EntityType.byString(tag.getString("value")).get(), EntityTypeSelector.class);
     public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, () -> Items.IRON_SWORD.getDefaultInstance(), ItemStack::serializeNBT, ItemStack::of, ItemSelector.class);
@@ -74,6 +74,10 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
             }
         }
         return null;
+    }
+
+    public int getId() {
+        return TYPES.indexOf(this);
     }
 
     @Nullable
