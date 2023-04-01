@@ -36,7 +36,7 @@ public class RobotLevelStorage {
         this.pos = pos;
     }
 
-    public void enterStorage(RobotEntity robot) {
+    public void enterStorage(LivingEntity robot) {
         if(containsRobot()) exitStorage(); //Make the previous robot exit
         setRobot(robot);
         robot.remove(Entity.RemovalReason.CHANGED_DIMENSION);

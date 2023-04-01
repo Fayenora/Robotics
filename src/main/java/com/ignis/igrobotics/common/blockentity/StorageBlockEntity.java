@@ -54,7 +54,7 @@ public class StorageBlockEntity extends BlockEntity {
         storedRobot.clearRobot();
     }
 
-    public void enterRobot(RobotEntity robot) {
+    public void enterRobot(LivingEntity robot) {
         storedRobot.enterStorage(robot);
     }
 
