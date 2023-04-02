@@ -20,13 +20,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class RobotLevelStorage {
 
     private final Level level;
+    @Nullable
     private LivingEntity stored;
+    @Nullable
     private IPartBuilt parts;
     private final Supplier<BlockPos> pos;
 
@@ -42,7 +45,9 @@ public class RobotLevelStorage {
         robot.remove(Entity.RemovalReason.CHANGED_DIMENSION);
     }
 
+    @Nullable
     public LivingEntity exitStorage() {
+        if(stored == null) return null;
         //Clone entity
         RobotEntity robot = new RobotEntity(level);
         robot.deserializeNBT(this.stored.serializeNBT());
@@ -84,7 +89,7 @@ public class RobotLevelStorage {
     }
 
     public LivingEntity createNewRobot(UUID owner) {
-        if(!parts.hasAnyBodyPart() || level.isClientSide) return null;
+        if(parts == null || !parts.hasAnyBodyPart() || level.isClientSide) return null;
 
         //Limit amount of robots
         int ownedRobots = 0; //TODO: level.getEntities(RobotEntity.class, (robot) -> owner.equals(robot.getOwner())).size();
@@ -101,6 +106,7 @@ public class RobotLevelStorage {
     }
 
     public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
+        if(parts == null) return;
         parts.setBodyPart(RobotPart.get(part, material));
     }
 
@@ -126,6 +132,6 @@ public class RobotLevelStorage {
     }
 
     public boolean containsRobot() {
-        return parts.hasAnyBodyPart();
+        return parts != null && parts.hasAnyBodyPart();
     }
 }
