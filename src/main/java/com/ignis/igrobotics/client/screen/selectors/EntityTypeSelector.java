@@ -77,12 +77,12 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 			this.currentOptions = selectableOptions;
 			
 			searchBar = new EditBox(Minecraft.getInstance().font, getX() + 8, getY() + 8, 146, 10, Component.empty());
-			searchBar.setFocus(true);
 			entityGrid = new ScrollableElement(getX() + 9, getY() + 25, 145, 131);
 			setOptions(currentOptions);
 
 			addElement(searchBar);
 			addElement(entityGrid);
+			setFocused(searchBar);
 		}
 
 		@Override

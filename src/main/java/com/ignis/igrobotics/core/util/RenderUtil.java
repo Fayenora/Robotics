@@ -1,13 +1,17 @@
 package com.ignis.igrobotics.core.util;
 
+import com.ignis.igrobotics.Reference;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -23,6 +27,56 @@ public class RenderUtil {
         //RenderSystem.enableScissor(0, shape.y, shape.x, shape.height);
         //RenderSystem.enableScissor(shape.x + shape.width, shape.y, screenSize.width - shape.x - shape.width, shape.height);
         //RenderSystem.enableScissor(0, shape.y + shape.height, screenSize.width, screenSize.height - shape.y - shape.height);
+    }
+
+    public static void drawString(PoseStack poseStack, String text, int x, int y, int color, float scale) {
+        Font font = Minecraft.getInstance().font;
+        poseStack.pushPose();
+        poseStack.scale(scale, scale, 1);
+        GuiComponent.drawString(poseStack, Minecraft.getInstance().font, text, (int) (x / scale), (int) (y / scale), color);
+        poseStack.popPose();
+    }
+
+    public static void drawCenteredString(PoseStack poseStack, String text, int x, int y, int color, float scale) {
+        Font font = Minecraft.getInstance().font;
+        poseStack.pushPose();
+        poseStack.scale(scale, scale, 1);
+        GuiComponent.drawString(poseStack, Minecraft.getInstance().font, text, (int) ((x - font.width(text)) / scale), (int) (y /scale), color);
+        poseStack.popPose();
+    }
+
+    public static void drawString(PoseStack poseStack, String text, int x, int y, int color, float scaleY, int maxWidth) {
+        Font font = Minecraft.getInstance().font;
+        poseStack.pushPose();
+        float scale = maxWidth / (float)font.width(text);
+        poseStack.scale(scale, scaleY, 1);
+        GuiComponent.drawString(poseStack, Minecraft.getInstance().font, text, (int) (x / scale), (int) (y / scaleY), color);
+        poseStack.popPose();
+    }
+
+    public static void drawCenteredString(PoseStack poseStack, String text, int x, int y, int color, float scaleY, int maxWidth) {
+        Font font = Minecraft.getInstance().font;
+        poseStack.pushPose();
+        float scale = Math.min(scaleY, maxWidth / (float)font.width(text));
+        poseStack.scale(scale, scaleY, 1);
+        GuiComponent.drawString(poseStack, Minecraft.getInstance().font, text, (int) (x / scale - font.width(text) / 2), (int) (y / scaleY), color);
+        poseStack.popPose();
+    }
+
+    public static void drawString(PoseStack poseStack, Component text, int x, int y, int color, float scale) {
+        drawString(poseStack, text.getString(), x, y, color, scale);
+    }
+
+    public static void drawCenteredString(PoseStack poseStack, Component text, int x, int y, int color, float scale) {
+        drawCenteredString(poseStack, text.getString(), x, y, color, scale);
+    }
+
+    public static void drawString(PoseStack poseStack, Component text, int x, int y, int color, float scaleY, int maxWidth) {
+        drawString(poseStack, text.getString(), x, y, color, scaleY, maxWidth);
+    }
+
+    public static void drawCenteredString(PoseStack poseStack, Component text, int x, int y, int color, float scaleY, int maxWidth) {
+        drawCenteredString(poseStack, text.getString(), x, y, color, scaleY, maxWidth);
     }
 
     public static void drawEntityOnScreen(int x, int y, int mouseX, int mouseY, LivingEntity entity) {

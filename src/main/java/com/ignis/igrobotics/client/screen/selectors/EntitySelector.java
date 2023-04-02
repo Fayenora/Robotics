@@ -36,7 +36,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	private boolean cached = false;
 	private LivingEntity cachedEntity;
 
-	public EntitySelector(Selection sel, int x, int y) {
+	public EntitySelector(Selection<UUID> sel, int x, int y) {
 		super(sel, x, y);
 	}
 
@@ -49,10 +49,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		if(selection.get() == null) return;
 		if(selection.get().equals(Reference.DEFAULT_UUID)) {
-			poseStack.pushPose();
-			poseStack.scale(0.4f, 0.4f, 0.4f);
-			drawString(poseStack, Minecraft.getInstance().font, Component.translatable("default"), getX() + 2, getY() + height / 2 - 2, Reference.FONT_COLOR);
-			poseStack.popPose();
+			RenderUtil.drawString(poseStack, Component.translatable("default"), getX() + 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.4f);
 			return;
 		}
 		if(!cached) {
@@ -93,8 +90,6 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			initTextureLocation(TEXTURE, 162, 144);
 			Player player = Minecraft.getInstance().player;
 			textField = new EditBox(Minecraft.getInstance().font, getX() + 8, getY() + 8, 80, 15, Component.empty());
-			textField.setFocus(true);
-			
 			buttonSelect = new ButtonElement(getX() + 8, getY() + 16 + 15, 17, 17, button -> {
 				ItemStack stack = ItemStackUtils.searchPlayerForItem(player, ModItems.COMMANDER.get(), stack1 -> CommanderItem.getRememberedEntity(stack1) != null);
 
@@ -128,6 +123,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			addElement(buttonSelect);
 			addElement(buttonSelf);
 			addElement(buttonConfirm);
+			setFocused(textField);
 		}
 	}
 

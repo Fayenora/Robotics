@@ -13,7 +13,7 @@ public class BufferSerializers {
 
     private static final List<BufferSerializer<?>> SERIALIZERS = new ArrayList<>();
 
-    public static final BufferSerializer<?> NONE = new BufferSerializer<>(0, null, (ignored, buf) -> {}, buf -> null);
+    public static final BufferSerializer<?> NONE = new BufferSerializer<>(0, Dummy.class, (ignored, buf) -> {}, buf -> null);
     public static final BufferSerializer<LivingEntity> ENTITY = new BufferSerializer<>(1, LivingEntity.class, EntityByteBufUtil::writeEntity, EntityByteBufUtil::readEntity);
     public static final BufferSerializer<LivingEntity[]> ENTITIES = new BufferSerializer<>(2, LivingEntity[].class, (entities, buf) -> {
         buf.writeInt(entities.length);
@@ -65,4 +65,6 @@ public class BufferSerializers {
             SERIALIZERS.add(this);
         }
     }
+
+    private class Dummy {}
 }

@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.client.screen.selectors;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.client.screen.base.BaseScreen;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.robot.Selection;
@@ -18,7 +17,7 @@ public class IntSelector extends SelectorElement<Integer> {
 	
 	int min = Integer.MIN_VALUE, max = Integer.MAX_VALUE;
 
-	public IntSelector(Selection sel, int x, int y) {
+	public IntSelector(Selection<Integer> sel, int x, int y) {
 		super(sel, x, y);
 	}
 	
@@ -64,13 +63,13 @@ public class IntSelector extends SelectorElement<Integer> {
 					super.insertText(cleanedText);
 				}
 			};
-			textField.setFocus(true);
+			setFocused(textField);
 			addElement(textField);
 		}
 		
 		protected void keepIntToBounds() {
 			try {
-				Integer in = Integer.parseInt(textField.getValue());
+				int in = Integer.parseInt(textField.getValue());
 				in = Math.max(min, Math.min(in, max));
 				textField.setValue(Integer.toString(in));
 			} catch(NumberFormatException e) {
@@ -93,10 +92,8 @@ public class IntSelector extends SelectorElement<Integer> {
 				} catch(NumberFormatException e) {
 					selection.set(0);
 				}
-				getBaseGui().removeSubGui();
-				return true;
 			}
-			return false;
+			return super.keyPressed(keyCode, pScanCode, pModifiers);
 		}
 		
 	}

@@ -7,7 +7,6 @@ import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ItemSelector extends SelectorElement<ItemStack> {
 
-	public ItemSelector(Selection sel, int x, int y) {
+	public ItemSelector(Selection<ItemStack> sel, int x, int y) {
 		super(sel, x, y);
 	}
 
@@ -55,10 +54,7 @@ public class ItemSelector extends SelectorElement<ItemStack> {
 		@Override
 		public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
 			super.render(poseStack, mouseX, mouseY, delta);
-			poseStack.pushPose();
-			poseStack.scale(0.55f,0.55f ,0.55f);
-			drawString(poseStack, Minecraft.getInstance().font, Lang.localise("pick_with_jei"), getX() + 5, getY() + height / 2 - 2, Reference.FONT_COLOR);
-			poseStack.popPose();
+			RenderUtil.drawString(poseStack, Lang.localise("pick_with_jei"), getX() + 5, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.55f);
 		}
 	}
 

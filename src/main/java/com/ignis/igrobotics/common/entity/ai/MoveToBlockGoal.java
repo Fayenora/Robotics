@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.entity.ai;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -14,7 +15,7 @@ import java.util.EnumSet;
  */
 public class MoveToBlockGoal extends Goal {
 
-    protected final PathfinderMob mob;
+    protected final Mob mob;
     /** Controls task execution delay */
     protected int nextStartTick;
     protected int tryTicks;
@@ -23,7 +24,7 @@ public class MoveToBlockGoal extends Goal {
     protected BlockPos blockPos;
     private boolean reachedTarget;
 
-    public MoveToBlockGoal(PathfinderMob pMob, BlockPos target) {
+    public MoveToBlockGoal(Mob pMob, BlockPos target) {
         this.mob = pMob;
         this.blockPos = target;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP));

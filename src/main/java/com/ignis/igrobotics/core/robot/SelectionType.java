@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Class gui) {
 
-    public static final List<SelectionType> TYPES = new ArrayList<>();
+    public static final List<SelectionType<?>> TYPES = new ArrayList<>();
 
     public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
         CompoundTag tag = new CompoundTag();
@@ -42,7 +42,7 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
         tag.putInt("value", number);
         return tag;
     }, (tag) -> tag.getInt("value"), IntSelector.class);
-    public static final SelectionType<UUID> ENTITY = new SelectionType<>("<Entity>", UUID.class, () -> Reference.DEFAULT_UUID, uuid -> {
+    public static final SelectionType<UUID> ENTITY = register("<Entity>", UUID.class, () -> Reference.DEFAULT_UUID, uuid -> {
         CompoundTag tag = new CompoundTag();
         tag.putUUID("value", uuid);
         return tag;

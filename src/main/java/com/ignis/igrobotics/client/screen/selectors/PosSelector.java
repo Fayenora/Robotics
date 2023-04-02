@@ -8,6 +8,7 @@ import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,10 +36,10 @@ public class PosSelector extends SelectorElement<BlockPos> {
 
 	@Override
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		Font font = Minecraft.getInstance().font;
-		drawCenteredString(poseStack, font, Integer.toString(selection.get().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR);
-		drawCenteredString(poseStack, font, Integer.toString(selection.get().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR);
-		drawCenteredString(poseStack, font, Integer.toString(selection.get().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR);
+		float fontSize = 0.5f;
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR, fontSize, 16);
 	}
 	
 	class GuiSelectPos extends GuiElement {
@@ -52,7 +53,7 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			textFieldX = new EditBox(font, getX() + width - 68, getY() + 8, 60, 15, Component.literal("text_box_x"));
 			textFieldY = new EditBox(font, getX() + width - 68, getY() + 38, 60, 15, Component.literal("text_box_y"));
 			textFieldZ = new EditBox(font, getX() + width - 68, getY() + 68, 60, 15, Component.literal("text_box_z"));
-			textFieldX.setFocus(true);
+			setFocused(textFieldX);
 			textFieldX.setValue(Integer.toString(selection.get().getX()));
 			textFieldY.setValue(Integer.toString(selection.get().getY()));
 			textFieldZ.setValue(Integer.toString(selection.get().getZ()));
@@ -96,6 +97,9 @@ public class PosSelector extends SelectorElement<BlockPos> {
 
 		@Override
 		public boolean keyPressed(int keyCode, int pScanCode, int pModifiers) {
+			if(keyCode == InputConstants.KEY_ESCAPE) {
+				return super.keyPressed(keyCode, pScanCode, pModifiers);
+			}
 			int position =  textFieldX.isFocused() ? textFieldX.getCursorPosition() :
 					textFieldY.isFocused() ? textFieldY.getCursorPosition() :
 							textFieldZ.isFocused() ? textFieldZ.getCursorPosition() : -1;

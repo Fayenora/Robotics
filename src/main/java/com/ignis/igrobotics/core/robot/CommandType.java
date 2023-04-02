@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.robot;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -10,6 +11,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
@@ -20,25 +22,17 @@ import java.util.function.BiFunction;
 
 public class CommandType {
 
-    public static final List<CommandType> COMMAND_TYPES = new ArrayList<>();
-
-    public static final CommandType ATTACK = register("attack", EntityType.class);
-
-    static {
-        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, selections[0].get().getClass(), true));
-    }
-
-    private static int ID;
-    private final int id;
     private final String name;
     private final List<SelectionType<?>> selectionTypes = new ArrayList<>();
     private BiFunction<Mob, Selection[], Goal> applyToEntity;
 
-    private CommandType(String name, Class... selectionClasses) {
-        this.id = ID++;
+    public CommandType(String name, Class... selectionClasses) {
         this.name = name;
         for(Class clazz : selectionClasses) {
-            this.selectionTypes.add(SelectionType.byClass(clazz));
+            SelectionType<?> type = SelectionType.byClass(clazz);
+            if(type != null) {
+                this.selectionTypes.add(type);
+            }
         }
     }
 
@@ -66,11 +60,11 @@ public class CommandType {
     }
 
     public static CommandType byId(int id) {
-        return COMMAND_TYPES.get(id);
+        return ModCommands.byId(id);
     }
 
     public int getId() {
-        return id;
+        return ModCommands.getId(this);
     }
 
     public String getName() {
@@ -90,9 +84,5 @@ public class CommandType {
         return selectionTypes;
     }
 
-    public static CommandType register(String name, Class... selectionClasses) {
-        CommandType commandType = new CommandType(name, selectionClasses);
-        COMMAND_TYPES.add(commandType);
-        return commandType;
-    }
+
 }
