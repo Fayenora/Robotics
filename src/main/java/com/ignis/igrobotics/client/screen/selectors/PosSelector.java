@@ -53,7 +53,6 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			textFieldX = new EditBox(font, getX() + width - 68, getY() + 8, 60, 15, Component.literal("text_box_x"));
 			textFieldY = new EditBox(font, getX() + width - 68, getY() + 38, 60, 15, Component.literal("text_box_y"));
 			textFieldZ = new EditBox(font, getX() + width - 68, getY() + 68, 60, 15, Component.literal("text_box_z"));
-			setFocused(textFieldX);
 			textFieldX.setValue(Integer.toString(selection.get().getX()));
 			textFieldY.setValue(Integer.toString(selection.get().getY()));
 			textFieldZ.setValue(Integer.toString(selection.get().getZ()));
@@ -93,6 +92,8 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			addElement(buttonSelectPos);
 			addElement(buttonSelfPos);
 			addElement(buttonConfirm);
+			setFocused(textFieldX);
+			textFieldX.setFocus(true);
 		}
 
 		@Override

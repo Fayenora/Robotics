@@ -18,7 +18,7 @@ public class CommonSetup {
     /**
      * List of basic instances of most living entities, excluding special ones like lightning. Only contains elements once a world is loaded
      */
-    public static final HashMap<EntityType, LivingEntity> allLivingEntities = new HashMap<>();
+    public static final HashMap<EntityType<?>, LivingEntity> allLivingEntities = new HashMap<>();
 
     @SubscribeEvent
     public static void onLevelLoad(LevelEvent.Load event) {

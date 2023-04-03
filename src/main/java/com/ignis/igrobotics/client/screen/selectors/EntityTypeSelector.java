@@ -83,6 +83,7 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 			addElement(searchBar);
 			addElement(entityGrid);
 			setFocused(searchBar);
+			searchBar.setFocus(true);
 		}
 
 		@Override

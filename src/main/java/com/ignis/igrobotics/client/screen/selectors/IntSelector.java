@@ -63,8 +63,9 @@ public class IntSelector extends SelectorElement<Integer> {
 					super.insertText(cleanedText);
 				}
 			};
-			setFocused(textField);
 			addElement(textField);
+			setFocused(textField);
+			textField.setFocus(true);
 		}
 		
 		protected void keepIntToBounds() {
@@ -92,6 +93,7 @@ public class IntSelector extends SelectorElement<Integer> {
 				} catch(NumberFormatException e) {
 					selection.set(0);
 				}
+				getBaseGui().removeSubGui();
 			}
 			return super.keyPressed(keyCode, pScanCode, pModifiers);
 		}
