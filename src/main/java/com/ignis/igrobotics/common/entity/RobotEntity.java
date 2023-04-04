@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -30,6 +31,8 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Arrays;
 
 public class RobotEntity extends PathfinderMob implements GeoEntity {
 
@@ -58,10 +61,13 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     public RobotEntity(Level pLevel, DyeColor color) {
         super(ModEntityTypes.ROBOT.get(), pLevel);
         getCapability(ModCapabilities.PARTS).ifPresent(part -> part.setColor(color));
+        Arrays.fill(this.armorDropChances, 0); //These would be randomly damaged
+        Arrays.fill(this.handDropChances, 0); //These would be randomly damaged
     }
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, getAttributeValue(Attributes.MOVEMENT_SPEED), true));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6));
     }
 

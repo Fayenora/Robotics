@@ -51,7 +51,7 @@ public class ModAttributes {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.3f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.35f).build();
     }
 
     @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)

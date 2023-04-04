@@ -12,9 +12,6 @@ import java.util.List;
 
 public class RobotCommand {
 
-    /** number of free priority values lower(=higher priority) than the ones selected by the player */
-    public static final int COMMANDS_BELOW_CUSTOM = 10;
-
     private CommandType type;
     protected List<Selection> selectors = new ArrayList<>();
 
@@ -33,7 +30,7 @@ public class RobotCommand {
     }
 
     public void applyToEntity(Mob robot, int priority) {
-        type.applyToEntity(selectors, robot, priority + COMMANDS_BELOW_CUSTOM);
+        type.applyToEntity(selectors, robot, priority);
     }
 
     public CommandType getType() {

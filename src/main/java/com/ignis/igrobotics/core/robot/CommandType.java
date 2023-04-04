@@ -45,6 +45,7 @@ public class CommandType {
         Goal goal;
         try {
             goal = applyToEntity.apply(robot, selectors.toArray(new Selection[0]));
+            robot.goalSelector.addGoal(priority, goal);
         } catch(CommandApplyException e) {
             robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
                 Player player = robot.level.getPlayerByUUID(r.getOwner());
@@ -53,10 +54,7 @@ public class CommandType {
                 msg.setStyle(msg.getStyle().withColor(TextColor.fromLegacyFormat(ChatFormatting.RED)));
                 player.sendSystemMessage(msg);
             });
-            return;
         }
-
-        robot.goalSelector.addGoal(priority, goal);
     }
 
     public static CommandType byId(int id) {

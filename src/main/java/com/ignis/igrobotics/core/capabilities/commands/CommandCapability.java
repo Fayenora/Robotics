@@ -1,5 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.commands;
 
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Mob;
@@ -7,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class CommandCapability implements ICommandable {
@@ -31,11 +34,12 @@ public class CommandCapability implements ICommandable {
 
     @Override
     public void readFromNBT(CompoundTag compound) {
-        commands = RobotCommand.readFromNBT(compound);
+        setCommands(RobotCommand.readFromNBT(compound));
     }
 
     @Override
     public void applyCommands() {
+        if(entity.level.isClientSide()) return;
         int i = 0;
         for(RobotCommand command : commands) {
             command.applyToEntity(entity, MAX_NON_COMMAND_GOALS + i++);
@@ -45,6 +49,9 @@ public class CommandCapability implements ICommandable {
     @Override
     public void setCommands(List<RobotCommand> commands) {
         this.commands = commands;
+        Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
+        if(robot.isPresent() && !robot.get().isActive()) return;
+        applyCommands();
     }
 
     @Override

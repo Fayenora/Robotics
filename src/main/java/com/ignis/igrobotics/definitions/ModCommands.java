@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.client.screen.selectors.EntityTypeSelector;
+import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.common.entity.ai.*;
 import com.ignis.igrobotics.core.robot.CommandType;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,7 @@ public class ModCommands {
     static {
         STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (BlockPos) selections[0].get()));
         GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (BlockPos) selections[0].get()));
-        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, selections[0].get().getClass(), true));
+        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass(), true));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;
             Entity entity = server.getEntity((UUID) selections[0].get());
