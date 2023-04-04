@@ -1,11 +1,17 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.blocks.MachineBlock;
+import com.ignis.igrobotics.common.blocks.StorageBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 /**
@@ -22,12 +28,20 @@ public class MoveToBlockGoal extends Goal {
     protected int maxStayTicks;
     /** Block to move to */
     protected BlockPos blockPos;
+    @Nullable
+    private BlockPos storagePos;
     private boolean reachedTarget;
 
-    public MoveToBlockGoal(Mob pMob, BlockPos target) {
-        this.mob = pMob;
-        this.blockPos = target;
+    public MoveToBlockGoal(Mob mob, BlockPos target) {
+        this.mob = mob;
+        this.blockPos = determineEnterPosition(mob.level.getBlockState(target), target);
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP));
+    }
+
+    private BlockPos determineEnterPosition(BlockState state, BlockPos pos) {
+        if(!StorageBlock.class.isAssignableFrom(state.getBlock().getClass())) return pos;
+        this.storagePos = pos;
+        return pos.below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 2 : 1).relative(state.getValue(MachineBlock.FACING));
     }
 
     public boolean canUse() {
@@ -73,6 +87,14 @@ public class MoveToBlockGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
+        if(storagePos != null) {
+            if(mob.distanceToSqr(storagePos.getCenter()) < 4) {
+                BlockEntity tile = mob.level.getBlockEntity(storagePos);
+                if(tile instanceof StorageBlockEntity storage) {
+                    storage.enterRobot(mob);
+                }
+            }
+        }
         BlockPos blockpos = this.getMoveToTarget();
         if (!blockpos.closerToCenterThan(this.mob.position(), this.acceptedDistance())) {
             this.reachedTarget = false;
