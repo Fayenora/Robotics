@@ -188,4 +188,9 @@ public class RetrieveGoal extends Goal {
 		return player;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof RetrieveGoal retrieveGoal)) return false;
+		return entity.equals(retrieveGoal.entity) && target.equals(retrieveGoal.target) && toTake.equals(retrieveGoal.toTake);
+	}
 }

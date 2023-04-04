@@ -44,4 +44,10 @@ public class PickupGoal extends FollowGoal {
         });
         return hasSpace.get();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof PickupGoal pickupGoal)) return false;
+        return entity.equals(pickupGoal.entity);
+    }
 }

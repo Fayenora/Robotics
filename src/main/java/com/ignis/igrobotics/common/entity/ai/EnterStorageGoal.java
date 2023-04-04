@@ -35,4 +35,9 @@ public class EnterStorageGoal extends MoveToBlockGoal {
 		return storage.below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 2 : 1).relative(state.getValue(MachineBlock.FACING));
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof EnterStorageGoal enterStorageGoal)) return false;
+		return storage.equals(enterStorageGoal.storage);
+	}
 }

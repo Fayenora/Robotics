@@ -26,4 +26,9 @@ public class HuntGoal extends TargetGoal {
 		return canAttack(targetMob, TargetingConditions.DEFAULT);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof HuntGoal huntGoal)) return false;
+		return mob.equals(huntGoal.mob) && targetMob.equals(huntGoal.targetMob);
+	}
 }

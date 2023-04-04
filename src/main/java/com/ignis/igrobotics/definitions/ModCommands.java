@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.definitions;
 
-import com.ignis.igrobotics.client.screen.selectors.EntityTypeSelector;
 import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.common.entity.ai.*;
 import com.ignis.igrobotics.core.robot.CommandType;
@@ -10,7 +9,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class ModCommands {
     static {
         STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (BlockPos) selections[0].get()));
         GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (BlockPos) selections[0].get()));
-        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass(), true));
+        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;
             Entity entity = server.getEntity((UUID) selections[0].get());

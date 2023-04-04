@@ -36,4 +36,10 @@ public class DefendGoal extends TargetGoal {
         }
         super.start();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof DefendGoal defendGoal)) return false;
+        return attacker.equals(defendGoal.attacker) && toDefend.equals(defendGoal.toDefend);
+    }
 }

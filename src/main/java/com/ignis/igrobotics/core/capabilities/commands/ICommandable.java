@@ -9,8 +9,6 @@ import java.util.List;
 @AutoRegisterCapability
 public interface ICommandable extends INBTSerializer {
 
-    void applyCommands();
-
     void setCommands(List<RobotCommand> commands);
 
     List<RobotCommand> getCommands();

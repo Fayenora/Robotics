@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -40,12 +41,11 @@ public class CommandType {
         this.applyToEntity = applyToEntity;
     }
 
-    public void applyToEntity(List<Selection> selectors, Mob robot, int priority) {
-        if(robot.level.isClientSide()) return;
-        Goal goal;
+    @Nullable
+    public Goal getGoal(List<Selection> selectors, Mob robot) {
+        if(robot.level.isClientSide()) return null;
         try {
-            goal = applyToEntity.apply(robot, selectors.toArray(new Selection[0]));
-            robot.goalSelector.addGoal(priority, goal);
+            return applyToEntity.apply(robot, selectors.toArray(new Selection[0]));
         } catch(CommandApplyException e) {
             robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
                 Player player = robot.level.getPlayerByUUID(r.getOwner());
@@ -54,6 +54,7 @@ public class CommandType {
                 msg.setStyle(msg.getStyle().withColor(TextColor.fromLegacyFormat(ChatFormatting.RED)));
                 player.sendSystemMessage(msg);
             });
+            return null;
         }
     }
 

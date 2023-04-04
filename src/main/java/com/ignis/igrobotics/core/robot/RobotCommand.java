@@ -6,6 +6,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class RobotCommand {
         }
     }
 
-    public void applyToEntity(Mob robot, int priority) {
-        type.applyToEntity(selectors, robot, priority);
+    public Goal getGoal(Mob robot) {
+        return type.getGoal(selectors, robot);
     }
 
     public CommandType getType() {

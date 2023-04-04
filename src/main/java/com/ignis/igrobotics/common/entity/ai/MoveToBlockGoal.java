@@ -96,4 +96,9 @@ public class MoveToBlockGoal extends Goal {
         return reachedTarget;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof MoveToBlockGoal moveToBlockGoal)) return false;
+        return mob.equals(moveToBlockGoal.mob) && blockPos.equals(moveToBlockGoal.blockPos);
+    }
 }

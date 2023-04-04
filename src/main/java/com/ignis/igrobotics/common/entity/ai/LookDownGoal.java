@@ -32,4 +32,9 @@ public class LookDownGoal extends Goal {
 		entity.lerpHeadTo(entity.getYHeadRot(), -45);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof LookDownGoal lookDownGoal)) return false;
+		return entity.equals(lookDownGoal.entity);
+	}
 }
