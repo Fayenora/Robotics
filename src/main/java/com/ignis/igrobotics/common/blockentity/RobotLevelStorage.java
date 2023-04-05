@@ -11,27 +11,33 @@ import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.INBTSerializable;
 import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class RobotLevelStorage {
+public class RobotLevelStorage implements INBTSerializable<CompoundTag> {
 
-    private final Level level;
+    private Level level;
     @Nullable
     private LivingEntity stored;
     @Nullable
     private IPartBuilt parts;
     private final Supplier<BlockPos> pos;
+    /** Do not load this nbt during normal world loading, but just when entering the level */
+    private CompoundTag entityNBT;
 
     public RobotLevelStorage(Level level, LivingEntity stored, Supplier<BlockPos> pos) {
         this.level = level;
@@ -89,7 +95,7 @@ public class RobotLevelStorage {
     }
 
     public LivingEntity createNewRobot(UUID owner) {
-        if(parts == null || !parts.hasAnyBodyPart() || level.isClientSide) return null;
+        if(!containsRobot() || level.isClientSide) return null;
 
         //Limit amount of robots
         int ownedRobots = 0; //TODO: level.getEntities(RobotEntity.class, (robot) -> owner.equals(robot.getOwner())).size();
@@ -111,10 +117,9 @@ public class RobotLevelStorage {
     }
 
     public void clearRobot() {
-        if(parts == null) return;
         RobotEntity robot = new RobotEntity(level);
-        parts.clear();
         setRobot(robot);
+        parts.clear();
     }
 
     public void setRobot(LivingEntity robot) {
@@ -127,11 +132,35 @@ public class RobotLevelStorage {
         parts = stored.getCapability(ModCapabilities.PARTS, null).orElse(null);
     }
 
+    @Override
+    public CompoundTag serializeNBT() {
+        if(stored == null) return new CompoundTag();
+        return stored.serializeNBT();
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        entityNBT = nbt;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+        deserializeEntity(entityNBT);
+    }
+
+    public void deserializeEntity(CompoundTag tag) {
+        if(tag == null || level == null) return;
+        Optional<Entity> entity = EntityType.create(tag, level);
+        if(entity.isPresent() && entity.get() instanceof LivingEntity living) {
+            setRobot(living);
+        }
+    }
+
     public LivingEntity getRobot() {
         return stored;
     }
 
     public boolean containsRobot() {
-        return parts != null && parts.hasAnyBodyPart();
+        return stored != null && (parts == null || parts.hasAnyBodyPart());
     }
 }

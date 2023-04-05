@@ -1,12 +1,17 @@
 package com.ignis.igrobotics.common.blocks;
 
+import com.ignis.igrobotics.common.items.CommanderItem;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.definitions.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,46 +66,9 @@ public class StorageBlock extends MachineBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if(level.isClientSide) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
-        if(state.getValue(HALF) == DoubleBlockHalf.UPPER) pos = pos.below(); //Reassign pos here to only handle the tile-entity origin block pos
-
-        //TODO Logic:
-        /*
-        //If the player holds anything else than the Commander, simply open the gui
-		if(playerIn.getHeldItem(hand).getItem() != ModItems.commander) return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
-
-		EntityLiving living = ItemCommander.getRememberedEntity(worldIn, stack);
-		BlockPos pos_other = ItemCommander.getRememberedPos(stack);
-		//Move a robot into storage
-		if(living != null && living instanceof EntityRobot) {
-			EntityRobot robot = (EntityRobot) living;
-			ItemCommander.rememberPos(stack, pos);
-			robot.targetTasks.addTask(2, new EntityAIEnterStorage(robot, pos));
-			robot.playSound(RegisterSounds.ENTITY_ROBOT_COMMAND, 1, 1);
-			return true;
-		}
-		//Move a robot out of another storage into this one
-		if(pos_other != null && !pos.equals(pos_other) && worldIn.getBlockState(pos_other).getBlock() == ModBlocks.robot_storage) {
-			TileEntityRobotStorage storage = (TileEntityRobotStorage) worldIn.getTileEntity(pos_other);
-			//Selected storage needs to contain a robot
-			if(storage.containsRobot()) {
-				ItemCommander.clearRememberedPos(stack);
-				ItemCommander.rememberPos(stack, pos);
-				EntityRobot robot_spawned = storage.createRobot();
-				robot_spawned.targetTasks.addTask(2, new EntityAIEnterStorage(robot_spawned, pos));
-				robot_spawned.playSound(RegisterSounds.ENTITY_ROBOT_COMMAND, 1, 1);
-				return true;
-			}
-		}
-		//Remember the position if sneaking, otherwise just open the gui as default
-		if(playerIn.isSneaking()) {
-			ItemCommander.rememberPos(stack, pos);
-			playerIn.sendMessage(new TextComponentTranslation("commandGroup.selected.pos"));
-			return true;
-		}
-         */
-        return InteractionResult.CONSUME;
+        if(stack.getItem() == ModItems.COMMANDER.get()) return InteractionResult.PASS;
+        return super.use(state, level, pos, player, hand, hit);
     }
 
     @Override

@@ -23,11 +23,8 @@ public class StorageBlockEntity extends BlockEntity {
     public static final int MACHINE_TO_ROBOT_ENERGY_TRANSFER = 1000;
     private static final Machine MACHINE = ModMachines.ROBOT_STORAGE;
 
-    private final RobotLevelStorage storedRobot;
+    private RobotLevelStorage storedRobot;
     private final EnergyStorage energy;
-
-    /** Do not load this nbt during normal world loading, but just when entering the level */
-    private CompoundTag entityNBT;
 
     public StorageBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(MACHINE.getBlockEntityType(), pPos, pBlockState);
@@ -93,21 +90,21 @@ public class StorageBlockEntity extends BlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        deserializeEntity(entityNBT);
+        storedRobot.setLevel(level);
     }
 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = super.serializeNBT();
         nbt.put("energy", energy.serializeNBT());
-        nbt.put("entity", storedRobot.getRobot().serializeNBT());
+        nbt.put("entity", storedRobot.serializeNBT());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         energy.deserializeNBT(nbt.getCompound("energy"));
-        entityNBT = nbt.getCompound("entity");
+        storedRobot.deserializeNBT(nbt);
         super.deserializeNBT(nbt);
     }
 
@@ -115,7 +112,7 @@ public class StorageBlockEntity extends BlockEntity {
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = super.getUpdateTag();
         nbt.put("energy", energy.serializeNBT());
-        nbt.put("entity", storedRobot.getRobot().serializeNBT());
+        nbt.put("entity", storedRobot.serializeNBT());
         return serializeNBT();
     }
 
@@ -123,14 +120,7 @@ public class StorageBlockEntity extends BlockEntity {
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
         energy.deserializeNBT(tag.getCompound("energy"));
-        deserializeEntity(tag.getCompound("entity"));
-    }
-
-    public void deserializeEntity(CompoundTag nbt) {
-        if(nbt == null) return;
-        RobotEntity robot = new RobotEntity(level);
-        robot.deserializeNBT(nbt);
-        storedRobot.setRobot(robot);
+        storedRobot.deserializeEntity(tag.getCompound("entity"));
     }
 
 }
