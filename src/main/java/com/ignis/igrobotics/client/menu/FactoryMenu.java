@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
+import java.awt.*;
+
 public class FactoryMenu extends BaseMenu {
     public final FactoryBlockEntity blockEntity;
     private final Level level;
@@ -28,7 +30,8 @@ public class FactoryMenu extends BaseMenu {
         this.level = playerInv.player.level;
         this.data = data;
 
-        addPlayerInv(playerInv, Reference.GUI_ROBOTFACTORY_DIMENSIONS);
+        addDataSlots(data);
+        addPlayerInv(playerInv, 35, 136);
         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             addSlot(new SlotItemHandler(handler, 0, 27, 17)); //Head
             addSlot(new SlotItemHandler(handler, 1, 186, 17)); //Body

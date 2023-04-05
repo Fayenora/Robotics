@@ -31,8 +31,8 @@ public class FactoryInventory extends MachineInventory {
 
         if(index < 6) {
             EnumRobotPart part = EnumRobotPart.byId(index);
-            if(!getStackInSlot(index).isEmpty()) {
-                EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(index).getItem()).getMaterial();
+            if(!stack.isEmpty()) {
+                EnumRobotMaterial material = RobotPart.getFromItem(stack.getItem()).getMaterial();
                 factory.setRobotPart(part, material);
             } else {
                 factory.setRobotPart(part, EnumRobotMaterial.NONE);

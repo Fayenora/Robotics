@@ -19,6 +19,10 @@ public abstract class BaseMenu extends AbstractContainerMenu {
     protected void addPlayerInv(Inventory playerInv, Dimension size) {
         int offsetX = size.width / 2 - (9 * 18 / 2) + 1;
         int offsetY = size.height - 82;
+        addPlayerInv(playerInv, offsetX, offsetY);
+    }
+
+    protected void addPlayerInv(Inventory playerInv, int offsetX, int offsetY) {
         //Inventory
         for(int x = 0; x < 9; x++) {
             for(int y = 0; y < 3; y++) {

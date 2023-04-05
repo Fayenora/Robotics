@@ -78,6 +78,10 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         }
     };
 
+    public static boolean isRunning(ContainerData data) {
+        return data.get(2) > 0;
+    }
+
     protected MachineBlockEntity(Machine machine, BlockPos pos, BlockState state, int inventorySize, int[] inputs, int[] outputs) {
         super(machine.getBlockEntityType(), pos, state);
         this.machine = machine;
