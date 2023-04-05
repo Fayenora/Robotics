@@ -2,8 +2,10 @@ package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.core.INBTSerializer;
+import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -39,6 +41,10 @@ public interface IRobot extends INBTSerializer {
 
     default boolean hasOwner() {
         return getOwner().equals(Reference.DEFAULT_UUID);
+    }
+
+    default boolean hasAccess(Player player, EnumPermission permission) {
+        return player.getUUID().equals(getOwner());
     }
 
     //////////////////////

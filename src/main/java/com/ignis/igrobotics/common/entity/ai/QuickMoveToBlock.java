@@ -14,13 +14,10 @@ public class QuickMoveToBlock extends MoveToBlockGoal {
         super(mob, target);
 
         //There can only be one task of this type be applied at once
-        Iterator<WrappedGoal> entries = mob.targetSelector.getAvailableGoals().iterator();
-        while(entries.hasNext()) {
-            Goal goal = entries.next().getGoal();
-            if(goal instanceof QuickMoveToBlock) {
-                entries.remove();
-            }
-        }
+        mob.goalSelector.getRunningGoals().filter(goal -> goal.getGoal() instanceof QuickMoveToBlock).forEach(WrappedGoal::stop);
+        mob.targetSelector.getRunningGoals().filter(goal -> goal.getGoal() instanceof QuickMoveToBlock).forEach(WrappedGoal::stop);
+        mob.goalSelector.removeAllGoals(goal -> goal instanceof QuickMoveToBlock);
+        mob.targetSelector.removeAllGoals(goal -> goal instanceof QuickMoveToBlock);
     }
 
     @Override

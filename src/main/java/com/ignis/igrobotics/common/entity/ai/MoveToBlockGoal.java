@@ -40,7 +40,7 @@ public class MoveToBlockGoal extends Goal {
 
     private BlockPos determineEnterPosition(BlockState state, BlockPos pos) {
         if(!StorageBlock.class.isAssignableFrom(state.getBlock().getClass())) return pos;
-        this.storagePos = pos;
+        this.storagePos = pos.below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 1 : 0);
         return pos.below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 2 : 1).relative(state.getValue(MachineBlock.FACING));
     }
 
@@ -88,7 +88,7 @@ public class MoveToBlockGoal extends Goal {
      */
     public void tick() {
         if(storagePos != null) {
-            if(mob.distanceToSqr(storagePos.getCenter()) < 4) {
+            if(mob.distanceToSqr(storagePos.getCenter()) < 12) {
                 BlockEntity tile = mob.level.getBlockEntity(storagePos);
                 if(tile instanceof StorageBlockEntity storage) {
                     storage.enterRobot(mob);

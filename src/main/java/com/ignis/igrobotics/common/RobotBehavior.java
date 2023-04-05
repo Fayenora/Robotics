@@ -12,11 +12,15 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -39,8 +43,16 @@ public class RobotBehavior {
     };
 
     @SubscribeEvent
-    public static void onRobotRightClick(PlayerInteractEvent.EntityInteractSpecific event) {
-        openRobotMenu(event.getEntity(), ModMenuTypes.ROBOT.get(), event.getTarget());
+    public static void onRobotRightClick(PlayerInteractEvent.EntityInteract event) {
+        event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCanceled(true);
+        Player player = event.getEntity();
+        Entity target = event.getTarget();
+        ItemStack stack = event.getItemStack();
+        InteractionHand hand = event.getHand();
+        if(event.getTarget().interact(player, hand).consumesAction()) return;
+        if(target instanceof LivingEntity living && stack.getItem().interactLivingEntity(stack, player, living, hand).consumesAction()) return;
+        openRobotMenu(player, ModMenuTypes.ROBOT.get(), target);
     }
 
     public static void openRobotMenu(Player player, MenuType type, Entity target) {
