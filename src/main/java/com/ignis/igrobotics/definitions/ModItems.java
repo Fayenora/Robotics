@@ -49,7 +49,7 @@ public class ModItems {
             PLATES[material.getID() - 1] = registerBasicItem("plate_" + material.getName());
             MATERIALS[material.getID() - 1] = new RegistryObject[EnumRobotPart.values().length];
             for(EnumRobotPart part : EnumRobotPart.values()) {
-                MATERIALS[material.getID() - 1][part.getID()] = registerBasicItem(material.getName() + "_" + part.getName());
+                MATERIALS[material.getID() - 1][part.getID()] = ITEMS.register(material.getName() + "_" + part.getName(), () -> new Item(new Item.Properties().stacksTo(1)));
             }
         }
     }

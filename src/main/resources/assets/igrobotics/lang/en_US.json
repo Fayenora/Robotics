@@ -1,6 +1,8 @@
 {
   "owner": "Owner",
   "default": "Default",
+  "create": "Create",
+  "start": "Start",
 
   "item.igrobotics.circuit": "Circuitry",
 
@@ -87,6 +89,13 @@
   "igrobotics.selected_robot": "Selected Entity",
   "igrobotics.selected_pos": "Selected Position",
   "igrobotics.pick_with_jei": "Press [ENTER] on any JEI Item",
+  "igrobotics.remaining_time": "Remaining Time",
+  "igrobotics.requires": "Requires:",
+  "igrobotics.requirement.name": "A name",
+  "igrobotics.requirement.leg": "At least one leg",
+  "igrobotics.requirement.energy": "At least %s",
+  "igrobotics.requirement.body": "A body",
+  "igrobotics.requirement.head": "A head",
 
   "igrobotics.found_no_selection": "No command unit in inventory has selected an entity!",
   "igrobotics.max_commands": "This robot cannot handle more tasks!",

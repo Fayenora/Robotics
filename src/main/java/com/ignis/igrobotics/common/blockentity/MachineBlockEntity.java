@@ -119,6 +119,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
 
     public void sync() {
         level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), level.getBlockState(getBlockPos()), 2);
+        setChanged();
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MachineBlockEntity machine) {

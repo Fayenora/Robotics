@@ -25,21 +25,22 @@ public class FactoryInventory extends MachineInventory {
     public void setStackInSlot(int index, ItemStack stack) {
         if(factory.hasCraftedRobotReady()) return;
         super.setStackInSlot(index, stack);
-        if(factory.getLevel().isClientSide()) return;
-        IRobot robot = factory.getRobot().getCapability(ModCapabilities.ROBOT).orElse(null);
-        if(robot == null) return;
+    }
 
+    @Override
+    protected void onContentsChanged(int index) {
         if(index < 6) {
             EnumRobotPart part = EnumRobotPart.byId(index);
-            if(!stack.isEmpty()) {
-                EnumRobotMaterial material = RobotPart.getFromItem(stack.getItem()).getMaterial();
+            if(!getStackInSlot(index).isEmpty()) {
+                EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(index).getItem()).getMaterial();
                 factory.setRobotPart(part, material);
             } else {
                 factory.setRobotPart(part, EnumRobotMaterial.NONE);
             }
-        } else {
-            robot.setModules(stacks.subList(6, getSlots()));
+        } else if(!factory.getLevel().isClientSide() && factory.getRobot() != null) {
+            factory.getRobot().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setModules(stacks.subList(6, getSlots())));
         }
+        if(factory.getLevel().isClientSide()) return;
         setSize((int) (6 + factory.getRobot().getAttributeValue(ModAttributes.MODIFIER_SLOTS)));
         factory.sync();
     }
@@ -58,7 +59,7 @@ public class FactoryInventory extends MachineInventory {
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if(factory.hasCraftedRobotReady()) return ItemStack.EMPTY;
+        if(factory.hasCraftedRobotReady()) return stack;
         return super.insertItem(slot, stack, simulate);
     }
 

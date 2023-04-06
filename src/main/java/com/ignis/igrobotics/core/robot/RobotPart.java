@@ -57,10 +57,10 @@ public class RobotPart {
 	}
 
 	public static RobotPart getFromItem(Item item) {
-		for(int i = 1; i < EnumRobotMaterial.valuesWithoutEmpty().length; i++) {
+		for(int i = 0; i < EnumRobotMaterial.valuesWithoutEmpty().length; i++) {
 			for(int j = 0; j < EnumRobotPart.values().length; j++) {
-				if(ModItems.MATERIALS[i][j].equals(item)) {
-					return RobotPart.get(EnumRobotPart.byId(j), EnumRobotMaterial.byId(i));
+				if(ModItems.MATERIALS[i][j].get().equals(item)) {
+					return RobotPart.get(EnumRobotPart.byId(j), EnumRobotMaterial.byId(i + 1));
 				}
 			}
 		}

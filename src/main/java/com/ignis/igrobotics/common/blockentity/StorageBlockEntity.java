@@ -94,18 +94,17 @@ public class StorageBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = super.serializeNBT();
+    protected void saveAdditional(CompoundTag nbt) {
         nbt.put("energy", energy.serializeNBT());
         nbt.put("entity", storedRobot.serializeNBT());
-        return nbt;
+        super.saveAdditional(nbt);
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void load(CompoundTag nbt) {
         energy.deserializeNBT(nbt.getCompound("energy"));
         storedRobot.deserializeNBT(nbt);
-        super.deserializeNBT(nbt);
+        super.load(nbt);
     }
 
     @Override
@@ -113,14 +112,7 @@ public class StorageBlockEntity extends BlockEntity {
         CompoundTag nbt = super.getUpdateTag();
         nbt.put("energy", energy.serializeNBT());
         nbt.put("entity", storedRobot.serializeNBT());
-        return serializeNBT();
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
-        energy.deserializeNBT(tag.getCompound("energy"));
-        storedRobot.deserializeEntity(tag.getCompound("entity"));
+        return nbt;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
@@ -19,7 +21,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.UUID;
 
@@ -52,6 +56,17 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         return new FactoryMenu(id, inv, this, this.dataAccess);
     }
 
+    @Override
+    public void setLevel(Level p_155231_) {
+        super.setLevel(p_155231_);
+        storedRobot.setLevel(level);
+        if(storedRobot.getRobot() == null) {
+            RobotEntity robot = new RobotEntity(level);
+            robot.getCapability(ModCapabilities.PARTS).ifPresent(IPartBuilt::clear);
+            storedRobot.setRobot(robot);
+        }
+    }
+
     ////////////////////
     // Altering default machine behavior
     ////////////////////
@@ -82,7 +97,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
      * If this should change, update the according description in com.ignis.robotics.client.container.GuiRobotFactory
      * @return whether the machine could start right now
      */
-    protected boolean canStart() {
+    public boolean canStart() {
         if(level == null) return false;
         if(level.isClientSide()) return canStart;
         return
@@ -130,22 +145,17 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        canStart = pkt.getTag().getBoolean("canStart");
-        super.onDataPacket(net, pkt);
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        super.deserializeNBT(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        canStart = nbt.getBoolean("canStart");
         builtRobot = nbt.getBoolean("builtRobot");
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = super.serializeNBT();
-        tag.putBoolean("builtRobot", builtRobot);
-        return tag;
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        compound.putBoolean("canStart", canStart());
+        compound.putBoolean("builtRobot", builtRobot);
     }
 
     ////////////////////
@@ -171,12 +181,8 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void onItemCrafted() {
-
-    }
+    protected void onItemCrafted() {}
 
     @Override
-    protected void onMachineStart() {
-
-    }
+    protected void onMachineStart() {}
 }

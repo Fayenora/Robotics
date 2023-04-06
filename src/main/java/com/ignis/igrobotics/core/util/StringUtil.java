@@ -31,4 +31,32 @@ public class StringUtil {
 		return parts;
 	}
 
+	/**
+	 * Generate a string indicating a time <1 hour
+	 * @param time in milliseconds
+	 * @return A string representing a time stamp, f.e. "4m 23s"
+	 */
+	public static String getTimeDisplay(int time) {
+		if(time >= 1200) {
+			return (time / 1200) + "m " + ((time % 1200) / 20) + "s";
+		}
+		return (time / 20) + " s";
+	}
+
+	public static String getEnergyDisplay(long rf) {
+		if(rf > 1e12) {
+			return (rf / 1e12) + "TRF";
+		}
+		if(rf > 1e9) {
+			return (rf / 1e9) + "GRF";
+		}
+		if(rf > 1e6) {
+			return (rf / 1e6) + "MRF";
+		}
+		if(rf > 1e3) {
+			return (rf / 1e3) + "kRF";
+		}
+		return rf + "RF";
+	}
+
 }

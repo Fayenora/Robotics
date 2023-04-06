@@ -68,7 +68,8 @@ public class StorageBlock extends MachineBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         if(stack.getItem() == ModItems.COMMANDER.get()) return InteractionResult.PASS;
-        return super.use(state, level, pos, player, hand, hit);
+        if(state.getValue(HALF) == DoubleBlockHalf.UPPER) pos = pos.below();
+        return super.use(level.getBlockState(pos), level, pos, player, hand, hit);
     }
 
     @Override

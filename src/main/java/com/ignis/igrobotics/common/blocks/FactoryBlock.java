@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
 
 public class FactoryBlock extends StorageBlock {
@@ -16,7 +17,7 @@ public class FactoryBlock extends StorageBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FactoryBlockEntity(pos, state);
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new FactoryBlockEntity(pos, state) : null;
     }
 
     @Nullable

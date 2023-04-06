@@ -16,8 +16,8 @@ public class RobotRenderer extends GeoEntityRenderer<RobotEntity> {
         super(renderManager, new RobotModel());
         shadowRadius = 0.4f;
         for(EnumRobotPart part : EnumRobotPart.values()) {
-            addRenderLayer(new ColorLayer(this, part));
             addRenderLayer(new LimbLayer(this, part));
+            addRenderLayer(new ColorLayer(this, part));
         }
         addRenderLayer(new ItemArmorGeoLayer<>(this));
     }
