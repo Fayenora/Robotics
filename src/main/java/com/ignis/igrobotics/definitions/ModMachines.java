@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.definitions;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
@@ -10,6 +11,7 @@ import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.IRecipeSerializer;
 import com.ignis.igrobotics.core.Machine;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +21,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.awt.*;
 import java.util.function.Supplier;
 
 public class ModMachines {
@@ -27,17 +30,18 @@ public class ModMachines {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, Robotics.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Robotics.MODID);
 
-    public static final Machine ASSEMBLER = registerMachine("assembler", AssemblerBlockEntity::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
-    public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", WireCutterBlockEntity::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
-    public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", FactoryBlockEntity::new, ModBlocks.ROBOT_FACTORY, null);
-    public static final Machine ROBOT_STORAGE = registerMachine("robot_storage", StorageBlockEntity::new, ModBlocks.ROBOT_STORAGE, null);
+    public static final Machine ASSEMBLER = registerMachine("assembler", Reference.GUI_ASSEMBLER_DIMENSIONS, AssemblerBlockEntity::new, ModBlocks.ASSEMBLER, AssemblerRecipes::new);
+    public static final Machine WIRE_CUTTER = registerMachine("wire_cutter", Reference.GUI_DEFAULT_DIMENSIONS, WireCutterBlockEntity::new, ModBlocks.WIRE_CUTTER, WireCutterRecipes::new);
+    public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", Reference.GUI_ROBOTFACTORY_DIMENSIONS, FactoryBlockEntity::new, ModBlocks.ROBOT_FACTORY, null);
+    public static final Machine ROBOT_STORAGE = registerMachine("robot_storage", Reference.GUI_DEFAULT_DIMENSIONS, StorageBlockEntity::new, ModBlocks.ROBOT_STORAGE, null);
 
-    private static <T extends BlockEntity> Machine registerMachine(String name, BlockEntityType.BlockEntitySupplier<T> supplier, Supplier<Block> block, Supplier<? extends IRecipeSerializer<?>> recipeSerializer) {
-        RegistryObject<BlockEntityType<T>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));
-        if(recipeSerializer == null) return new Machine(null, null, blockEntityType);
-        RegistryObject<RecipeType<?>> recipeType = RECIPE_TYPES.register(name, () -> RecipeType.simple(new ResourceLocation(Robotics.MODID, name)));
-        RegistryObject<IRecipeSerializer<?>> serializer = RECIPE_SERIALIZERS.register(name, recipeSerializer);
-        return new Machine(recipeType, serializer, blockEntityType);
+    private static <R extends Recipe<?>> Machine registerMachine(String name, Dimension guiDimension, BlockEntityType.BlockEntitySupplier<?> supplier, RegistryObject<Block> block, Supplier<? extends IRecipeSerializer<R>> recipeSerializer) {
+        RegistryObject<BlockEntityType<?>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));
+        Machine.Builder<R> builder = new Machine.Builder<R>(name).setBlock(block).setBlockEntityType(blockEntityType).setGuiDimensions(guiDimension);
+        if(recipeSerializer == null) return builder.build();
+        RegistryObject<RecipeType<R>> recipeType = RECIPE_TYPES.register(name, () -> RecipeType.simple(new ResourceLocation(Robotics.MODID, name)));
+        RegistryObject<IRecipeSerializer<R>> serializer = RECIPE_SERIALIZERS.register(name, recipeSerializer);
+        return builder.setRecipeType(recipeType).setRecipeSerializer(serializer).build();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.core.util.Lang;
@@ -16,7 +17,6 @@ import java.util.function.Supplier;
 
 public class EnergyBarElement extends GuiElement {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/energy_bar.png");
     private Supplier<Integer> energy, maxEnergy;
 
     public EnergyBarElement(int x, int y, int height, Supplier<Integer> energy, Supplier<Integer> maxEnergy) {
@@ -33,7 +33,7 @@ public class EnergyBarElement extends GuiElement {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderTexture(0, Reference.ENERGY_BAR);
         int k = scaleEnergy(height);
         this.blit(poseStack, getX(), getY() + height - k, 0, height - k, width, k);
     }

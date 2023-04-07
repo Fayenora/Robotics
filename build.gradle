@@ -5,7 +5,7 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-version = '0.8.0'
+version = "${robotics_version}"
 group = 'com.ignis.igrobotics' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'igrobotics'
 
@@ -140,10 +140,11 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.3-44.1.0'
 
     // compile against the JEI API but do not include it at runtime
-    //compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
-    //compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
     // at runtime, use the full JEI jar for Forge
-    //runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+    //Geckolib
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.3:4.0.4')
 }
 

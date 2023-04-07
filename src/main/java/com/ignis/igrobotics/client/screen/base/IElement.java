@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,6 +84,16 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 		if(!(baseGui instanceof IBaseGui))
 			throw new RuntimeException("Did not find currently opened Gui"); //TODO Barely recoverable -> close the gui here
 		return (IBaseGui) baseGui;
+	}
+
+	default List<Rect2i> getBlockingAreas() {
+		List<Rect2i> blockedAreas = new ArrayList<>();
+		for(var comp : children()) {
+			if(comp instanceof IElement element) {
+				blockedAreas.add(new Rect2i(element.getShape().x, element.getShape().y, element.getShape().width, element.getShape().height));
+			}
+		}
+		return blockedAreas;
 	}
 
 }

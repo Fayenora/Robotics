@@ -1,5 +1,11 @@
 package com.ignis.igrobotics.core;
 
+import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.core.util.StringUtil;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -8,6 +14,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MachineRecipe<T extends Container> implements Recipe<T> {
 
@@ -79,12 +88,43 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 		return getEnergyPerTick(machine.getEnergyConsumption(), machine.getProcessingSpeed());
 	}
 
+	@Override
+	public NonNullList<Ingredient> getIngredients() {
+		return NonNullList.of(Ingredient.EMPTY, inputs);
+	}
+
 	public Ingredient[] getInputs() {
 		return inputs;
 	}
 
 	public ItemStack[] getOutputs() {
 		return outputs;
+	}
+
+	public List<Component> getRuntimeTooltip() {
+		List<Component> tooltip = new ArrayList<>();
+		List<Component> processingSpeed = List.of(
+				Lang.localise("machine.processing_speed"),
+				Component.literal(": "),
+				Component.literal(StringUtil.getTimeDisplay(this.getProcessingTime())).withStyle(ChatFormatting.GOLD));
+
+		tooltip.add(ComponentUtils.formatList(processingSpeed, Component.empty()));
+		return tooltip;
+	}
+
+	public List<Component> getEnergyTooltip() {
+		List<Component> tooltip = new ArrayList<>();
+		List<Component> energyUsage = List.of(
+				Lang.localise("machine.energy_usage"),
+				Component.literal(": "),
+				Component.literal(StringUtil.getEnergyDisplay(this.getEnergyPerTick()) + "/t").withStyle(ChatFormatting.YELLOW));
+		List<Component> energyCost = List.of(
+				Lang.localise("machine.energy_cost"),
+				Component.literal(": "),
+				Component.literal(StringUtil.getEnergyDisplay(this.getEnergy())).withStyle(ChatFormatting.YELLOW));
+		tooltip.add(ComponentUtils.formatList(energyUsage, Component.empty()));
+		tooltip.add(ComponentUtils.formatList(energyCost, Component.empty()));
+		return tooltip;
 	}
 
 	public static class Builder {

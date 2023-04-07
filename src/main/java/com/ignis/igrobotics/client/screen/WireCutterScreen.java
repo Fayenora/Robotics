@@ -11,9 +11,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.awt.*;
+
 public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/wire_cutter.png");
+    public static final Rectangle energy_bar = new Rectangle(14, 12, 13, 61);
+    public static final Rectangle arrow = new Rectangle(80, 32, 22, 15);
 
     public WireCutterScreen(WireCutterMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
@@ -22,7 +26,7 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnergyBarElement(leftPos + 14, topPos + 12, 61, () -> menu.data.get(3), () -> menu.data.get(4)));
+        addRenderableWidget(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
     }
 
     @Override

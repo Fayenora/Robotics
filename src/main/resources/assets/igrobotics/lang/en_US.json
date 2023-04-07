@@ -64,6 +64,12 @@
   "container.robot_factory": "Robot Factory",
   "container.robot_storage": "Robot Storage",
 
+  "igrobotics.assembler": "Assembling",
+  "igrobotics.wire_cutter": "Wire Cutting",
+  "igrobotics.machine.energy_usage": "Energy Usage",
+  "igrobotics.machine.energy_cost": "Total Energy Cost",
+  "igrobotics.machine.processing_speed": "Processing Time",
+
   "death.attack.perkImpact": "%s experienced the impact of a robotic fist accelerated to 100 m/s",
 
   "igrobotics.button.pickup.default": "Currently picking up items",
@@ -150,10 +156,6 @@
   "igrobotics.selector.pos.useSelf": "Your position",
   "igrobotics.selector.spEntity.useCommander": "Search your inventory for any Commanders that selected an entity",
   "igrobotics.selector.spEntity.useSelf": "Select yourself",
-
-  "igrobotics.assembler": "Assembling",
-  "igrobotics.machine.energy_usage": "Energy Usage",
-  "igrobotics.machine.processing_speed": "Processing Time",
 
   "item.igrobotics.iron_plate": "Iron Plate",
   "item.igrobotics.gold_plate": "Gold Plate",

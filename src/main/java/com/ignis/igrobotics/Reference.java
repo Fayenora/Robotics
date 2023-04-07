@@ -17,6 +17,7 @@ public class Reference {
 	
 	public static final ResourceLocation MISC = new ResourceLocation(Robotics.MODID + ":textures/gui/buttons.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("minecraft", "textures/gui/icons.png");
+	public static final ResourceLocation ENERGY_BAR = new ResourceLocation(Robotics.MODID, "textures/gui/energy_bar.png");
 	
 	public static final String MODULE_CONFIG = "robot_modules.json";
 	public static final String PART_CONFIG = "robot_parts.json";
