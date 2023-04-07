@@ -140,7 +140,11 @@ public class RobotLevelStorage implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        entityNBT = nbt;
+        if(level != null) {
+            deserializeEntity(nbt);
+        } else {
+            entityNBT = nbt;
+        }
     }
 
     public void setLevel(Level level) {

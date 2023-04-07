@@ -7,6 +7,10 @@ import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -53,10 +57,18 @@ public class StorageBlockEntity extends BlockEntity {
 
     public void enterRobot(LivingEntity robot) {
         storedRobot.enterStorage(robot);
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
+        setChanged();
     }
 
     public LivingEntity exitStorage() {
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
+        setChanged();
         return storedRobot.exitStorage();
+    }
+
+    public LivingEntity getEntity() {
+        return storedRobot.getRobot();
     }
 
     /////////////////////
@@ -103,7 +115,7 @@ public class StorageBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag nbt) {
         energy.deserializeNBT(nbt.getCompound("energy"));
-        storedRobot.deserializeNBT(nbt);
+        storedRobot.deserializeNBT(nbt.getCompound("entity"));
         super.load(nbt);
     }
 
@@ -115,4 +127,9 @@ public class StorageBlockEntity extends BlockEntity {
         return nbt;
     }
 
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 }

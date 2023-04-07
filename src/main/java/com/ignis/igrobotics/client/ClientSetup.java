@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client;
 
+import com.ignis.igrobotics.client.rendering.RobotFactoryRenderer;
 import com.ignis.igrobotics.client.screen.*;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Robotics;
@@ -34,5 +35,6 @@ public class ClientSetup {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         EntityRenderers.register(ModEntityTypes.ROBOT.get(), RobotRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
+        event.registerBlockEntityRenderer(ModMachines.ROBOT_FACTORY.getBlockEntityType(), RobotFactoryRenderer::new);
     }
 }
