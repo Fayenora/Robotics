@@ -10,8 +10,6 @@ public interface IChunkLoader {
 	
 	UUID getUUID();
 	
-	UUID getOwner();
-	
 	void loadChunks(ChunkPos chunk);
 	
 	void unloadChunks(ChunkPos chunk);

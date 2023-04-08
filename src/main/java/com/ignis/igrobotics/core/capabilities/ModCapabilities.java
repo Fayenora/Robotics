@@ -1,8 +1,10 @@
 package com.ignis.igrobotics.core.capabilities;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.ChunkLoadingHandler;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.INBTSerializer;
+import com.ignis.igrobotics.core.capabilities.chunkloading.ChunkLoadingCapability;
 import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
@@ -14,7 +16,9 @@ import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -32,12 +36,14 @@ public class ModCapabilities {
     public static final Capability<IPartBuilt> PARTS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<ICommandable> COMMANDS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IChunkLoader> CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>(){});
+    public static Capability<ChunkLoadingHandler.ChunkTracker> CHUNK_TRACKER = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static final ResourceLocation LOC_ROBOT = new ResourceLocation(Robotics.MODID, "robot");
     public static final ResourceLocation LOC_PERKS = new ResourceLocation(Robotics.MODID, "perks");
     public static final ResourceLocation LOC_PARTS = new ResourceLocation(Robotics.MODID, "parts");
     public static final ResourceLocation LOC_COMMANDS = new ResourceLocation(Robotics.MODID, "commands");
     public static final ResourceLocation LOC_LOADER = new ResourceLocation(Robotics.MODID, "chunk_loader");
+    public static final ResourceLocation LOC_TRACKER = new ResourceLocation(Robotics.MODID, "chunk_tracker");
 
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -51,6 +57,17 @@ public class ModCapabilities {
 
         CommandCapability commandCapability = new CommandCapability(robot);
         event.addCapability(LOC_COMMANDS, new AlwaysProvideAndSave<>(COMMANDS, commandCapability));
+
+        ChunkLoadingCapability chunkLoadingCapability = new ChunkLoadingCapability(robot);
+        event.addCapability(LOC_LOADER, new AlwaysProvide<>(CHUNK_LOADER, chunkLoadingCapability));
+    }
+
+    @SubscribeEvent
+    public static void attachChunkLoadingCapability(AttachCapabilitiesEvent<Level> event) {
+        if(!(event.getObject() instanceof ServerLevel serverLevel)) return;
+
+        ChunkLoadingHandler.ChunkTracker chunkTracker = new ChunkLoadingHandler.ChunkTracker(serverLevel);
+        event.addCapability(LOC_TRACKER, new AlwaysProvideAndSave<>(CHUNK_TRACKER, chunkTracker));
     }
 }
 
