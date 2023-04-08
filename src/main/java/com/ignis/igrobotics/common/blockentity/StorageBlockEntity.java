@@ -108,6 +108,8 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
 
     public void clearRobot() {
         storedRobot.clearRobot();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
+        setChanged();
     }
 
     public void enterRobot(LivingEntity robot) {

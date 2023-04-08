@@ -68,6 +68,7 @@ public class RobotPart {
 	}
 
 	public ItemStack getItemStack(int count) {
+		if(material == EnumRobotMaterial.NONE) return ItemStack.EMPTY;
 		return new ItemStack(ModItems.MATERIALS[material.getID() - 1][part.getID()].get(), count);
 	}
 	
