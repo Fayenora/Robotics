@@ -33,7 +33,7 @@ public abstract class MachineBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.isClientSide()) return InteractionResult.SUCCESS;
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if(blockEntity instanceof MachineBlockEntity) {
+        if(blockEntity instanceof MenuProvider) {
             NetworkHooks.openScreen((ServerPlayer) player, (MenuProvider) blockEntity, pos);
         }
         return InteractionResult.CONSUME;

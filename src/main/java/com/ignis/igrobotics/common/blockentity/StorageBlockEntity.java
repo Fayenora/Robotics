@@ -1,17 +1,24 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.definitions.ModMachines;
-import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.client.menu.StorageMenu;
+import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
+import com.ignis.igrobotics.definitions.ModMachines;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,13 +29,61 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StorageBlockEntity extends BlockEntity {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class StorageBlockEntity extends BlockEntity implements MenuProvider {
 
     public static final int MACHINE_TO_ROBOT_ENERGY_TRANSFER = 1000;
     private static final Machine MACHINE = ModMachines.ROBOT_STORAGE;
 
-    private RobotLevelStorage storedRobot;
+    private final RobotLevelStorage storedRobot;
     private final EnergyStorage energy;
+
+    protected ContainerData dataAccess = new ContainerData() {
+        @Override
+        public int get(int id) {
+            return switch (id) {
+                case 0 -> energy.getEnergyStored();
+                case 1 -> energy.getMaxEnergyStored();
+                case 2 ->
+                        storedRobot.containsRobot() ? storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getEnergyStored() : 0;
+                case 3 ->
+                        storedRobot.containsRobot() ? storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getMaxEnergyStored() : 0;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int id, int value) {
+            switch (id) {
+                case 0 -> energy.setEnergy(value);
+                case 1 -> energy.setMaxEnergyStored(value);
+                case 2 -> {
+                    if (!storedRobot.containsRobot()) return;
+                    storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).ifPresent(robotEnergy -> {
+                        if (robotEnergy instanceof EnergyStorage energyStorage) {
+                            energyStorage.setEnergy(value);
+                        }
+                    });
+                }
+                case 3 -> {
+                    if (!storedRobot.containsRobot()) return;
+                    storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).ifPresent(robotEnergy -> {
+                        if (robotEnergy instanceof EnergyStorage energyStorage) {
+                            energyStorage.setMaxEnergyStored(value);
+                        }
+                    });
+                }
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
 
     public StorageBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(MACHINE.getBlockEntityType(), pPos, pBlockState);
@@ -61,12 +116,14 @@ public class StorageBlockEntity extends BlockEntity {
         setChanged();
     }
 
+    @Nullable
     public LivingEntity exitStorage() {
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
         setChanged();
         return storedRobot.exitStorage();
     }
 
+    @Nullable
     public LivingEntity getEntity() {
         return storedRobot.getRobot();
     }
@@ -131,5 +188,16 @@ public class StorageBlockEntity extends BlockEntity {
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("container.robot_storage");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inv, Player pPlayer) {
+        return new StorageMenu(id, inv, this, this.dataAccess);
     }
 }

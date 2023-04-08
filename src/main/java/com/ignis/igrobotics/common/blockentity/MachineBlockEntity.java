@@ -51,24 +51,24 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     protected ContainerData dataAccess = new ContainerData() {
         @Override
         public int get(int id) {
-            switch(id) {
-                case 0: return inventory.getSlots();
-                case 1: return runTime;
-                case 2: return currentRunTime;
-                case 3: return storage.getEnergyStored();
-                case 4: return storage.getMaxEnergyStored();
-                default: return 0;
-            }
+            return switch (id) {
+                case 0 -> inventory.getSlots();
+                case 1 -> runTime;
+                case 2 -> currentRunTime;
+                case 3 -> storage.getEnergyStored();
+                case 4 -> storage.getMaxEnergyStored();
+                default -> 0;
+            };
         }
 
         @Override
         public void set(int id, int value) {
-            switch(id) {
-                case 0: inventory.setSize(value); break;
-                case 1: runTime = value; break;
-                case 2: currentRunTime = value; break;
-                case 3: storage.setEnergy(value); break;
-                case 4: storage.setMaxEnergyStored(value); break;
+            switch (id) {
+                case 0 -> inventory.setSize(value);
+                case 1 -> runTime = value;
+                case 2 -> currentRunTime = value;
+                case 3 -> storage.setEnergy(value);
+                case 4 -> storage.setMaxEnergyStored(value);
             }
         }
 
