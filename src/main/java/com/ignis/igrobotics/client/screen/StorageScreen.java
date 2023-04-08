@@ -26,7 +26,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_storage.png");
 
     private StorageBlockEntity storage;
-    public ButtonElement releaseRobot;
+    public ButtonElement releaseRobot, dismantleRobot;
     public EnergyBarElement storageEnergy, robotEnergy;
 
     public StorageScreen(StorageMenu menu, Inventory playerInv, Component title) {
@@ -44,9 +44,13 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
         releaseRobot = new ButtonElement(leftPos + 55, topPos + 7, 41, 17, Lang.localise("deploy"), button -> {});
         releaseRobot.initTextureLocation(Reference.MISC, 83, 17);
         releaseRobot.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_FACTORY_BUTTON, new NetworkInfo(storage.getBlockPos())));
+        dismantleRobot = new ButtonElement(leftPos + 55, topPos + 28, 41, 17, Lang.localise("dismantle"), button -> {});
+        dismantleRobot.initTextureLocation(Reference.MISC, 83, 17);
+        dismantleRobot.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_DISMANTLE_ROBOT, new NetworkInfo(storage.getBlockPos())));
 
         addElement(robotEnergy);
         addElement(releaseRobot);
+        addElement(dismantleRobot);
     }
 
     @Override
@@ -59,6 +63,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
         if(!storage.containsRobot()) {
             removeWidget(robotEnergy);
             removeWidget(releaseRobot);
+            removeWidget(dismantleRobot);
             return;
         }
 

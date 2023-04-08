@@ -90,6 +90,7 @@
   "commandGroup.cleared.pos": "Unselecting Position",
   "igrobotics.start": "Start",
   "igrobotics.deploy": "Deploy",
+  "igrobotics.dismantle": "Dismantle",
   "igrobotics.stored_energy": "Stored Energy",
   "igrobotics.stored_robot_energy": "Stored Robot Energy",
   "igrobotics.selected_robot": "Selected Entity",

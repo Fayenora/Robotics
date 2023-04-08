@@ -2,16 +2,21 @@ package com.ignis.igrobotics.network.messages.server;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
 public class PacketComponentAction implements IMessage {
@@ -23,6 +28,7 @@ public class PacketComponentAction implements IMessage {
     public static final byte ACTION_FACTORY_BUTTON = 5;
     public static final byte ACTION_COLOR_LEFT = 6;
     public static final byte ACTION_COLOR_RIGHT = 7;
+    public static final byte ACTION_DISMANTLE_ROBOT = 8;
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
@@ -72,6 +78,19 @@ public class PacketComponentAction implements IMessage {
                 if (blockEntity instanceof StorageBlockEntity storage) {
                     if (storage.containsRobot()) {
                         storage.exitStorage();
+                    }
+                }
+            }
+            case ACTION_DISMANTLE_ROBOT -> {
+                if (blockEntity instanceof StorageBlockEntity storage) {
+                    if (storage.containsRobot()) {
+                        Vec3 pos = Vec3.atCenterOf(data.getAsPos()).relative(blockEntity.getBlockState().getValue(MachineBlock.FACING), 0.6);
+                        storage.getEntity().getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                            for(RobotPart part : parts.getBodyParts()) {
+                                ItemStackUtils.dropItem(level, pos.x, pos.y, pos.z, part.getItemStack(1));
+                            }
+                        });
+                        storage.clearRobot();
                     }
                 }
             }

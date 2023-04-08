@@ -47,8 +47,12 @@ public class RobotLevelStorage implements INBTSerializable<CompoundTag> {
 
     public void enterStorage(LivingEntity robot) {
         if(containsRobot()) exitStorage(); //Make the previous robot exit
-        setRobot(robot);
-        robot.remove(Entity.RemovalReason.CHANGED_DIMENSION);
+        Optional<Entity> newEntity = EntityType.create(robot.serializeNBT(), level);
+        newEntity.ifPresent(entity -> {
+            if(!(entity instanceof LivingEntity living)) return;
+            setRobot(living);
+            robot.remove(Entity.RemovalReason.CHANGED_DIMENSION);
+        });
     }
 
     @Nullable
