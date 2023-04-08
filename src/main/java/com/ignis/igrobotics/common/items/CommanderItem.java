@@ -26,9 +26,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -110,15 +112,7 @@ public class CommanderItem extends Item {
             //FIXME: Handle trans-dimensional positions
             //If the currently remembered BlockPos points towards a valid robot in storage make it exit and move here
             if(level.getBlockState(saved_pos).getBlock() == ModBlocks.ROBOT_STORAGE.get()) {
-                StorageBlockEntity storage = (StorageBlockEntity) level.getBlockEntity(saved_pos);
-                if(storage != null && storage.containsRobot()) {
-                    LivingEntity spawnedEntity = storage.exitStorage();
-                    if(spawnedEntity instanceof Mob mob) {
-                        mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, pos));
-                    }
-                    if(spawnedEntity instanceof RobotEntity) {
-                        spawnedEntity.playSound(ModSounds.ROBOT_KILL_COMMAND.get(), 1, 1);
-                    }
+                if(orderEntityOutOfStorage(level.getBlockEntity(saved_pos), pos)) {
                     return InteractionResult.CONSUME;
                 }
             }
@@ -128,6 +122,19 @@ public class CommanderItem extends Item {
         cxt.getPlayer().sendSystemMessage(Component.translatable("commandGroup.selected.pos"));
 
         return InteractionResult.CONSUME;
+    }
+
+    private boolean orderEntityOutOfStorage(@Nullable BlockEntity blockEntity, BlockPos to) {
+        if(!(blockEntity instanceof StorageBlockEntity storage)) return false;
+        Optional<Entity> spawnedEntity = storage.exitStorage();
+        if(spawnedEntity.isEmpty()) return false;
+        if(spawnedEntity.get() instanceof Mob mob) {
+            mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, to));
+        }
+        if(spawnedEntity.get() instanceof RobotEntity) {
+            spawnedEntity.get().playSound(ModSounds.ROBOT_KILL_COMMAND.get(), 1, 1);
+        }
+        return true;
     }
 
     //Called on empty right click

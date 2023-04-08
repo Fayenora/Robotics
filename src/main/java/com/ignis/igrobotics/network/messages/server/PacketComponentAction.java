@@ -9,7 +9,6 @@ import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -55,19 +54,17 @@ public class PacketComponentAction implements IMessage {
             }
             case ACTION_COLOR_LEFT -> {
                 if (!(blockEntity instanceof FactoryBlockEntity factory)) return;
-                if (!factory.containsRobot()) return;
-                factory.getRobot().getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                factory.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                     DyeColor colorLeft = DyeColor.byId(Math.floorMod(parts.getColor().getId() + 1, 16));
                     parts.setColor(colorLeft);
-                });
+                }));
             }
             case ACTION_COLOR_RIGHT -> {
                 if (!(blockEntity instanceof FactoryBlockEntity factory)) return;
-                if (!factory.containsRobot()) return;
-                factory.getRobot().getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                factory.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                     DyeColor colorRight = DyeColor.byId(Math.floorMod(parts.getColor().getId() - 1, 16));
                     parts.setColor(colorRight);
-                });
+                }));
             }
             case ACTION_FACTORY_BUTTON -> {
                 if (blockEntity instanceof FactoryBlockEntity factory) {
@@ -76,22 +73,20 @@ public class PacketComponentAction implements IMessage {
                     } else factory.startMachine(2);
                 }
                 if (blockEntity instanceof StorageBlockEntity storage) {
-                    if (storage.containsRobot()) {
+                    if (storage.getEntity().isPresent()) {
                         storage.exitStorage();
                     }
                 }
             }
             case ACTION_DISMANTLE_ROBOT -> {
                 if (blockEntity instanceof StorageBlockEntity storage) {
-                    if (storage.containsRobot()) {
-                        Vec3 pos = Vec3.atCenterOf(data.getAsPos()).relative(blockEntity.getBlockState().getValue(MachineBlock.FACING), 0.6);
-                        storage.getEntity().getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                            for(RobotPart part : parts.getBodyParts()) {
-                                ItemStackUtils.dropItem(level, pos.x, pos.y, pos.z, part.getItemStack(1));
-                            }
-                        });
-                        storage.clearRobot();
-                    }
+                    Vec3 pos = Vec3.atCenterOf(data.getAsPos()).relative(blockEntity.getBlockState().getValue(MachineBlock.FACING), 0.6);
+                    storage.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                        for(RobotPart part : parts.getBodyParts()) {
+                            ItemStackUtils.dropItem(level, pos.x, pos.y, pos.z, part.getItemStack(1));
+                        }
+                    }));
+                    storage.clearEntity();
                 }
             }
         }

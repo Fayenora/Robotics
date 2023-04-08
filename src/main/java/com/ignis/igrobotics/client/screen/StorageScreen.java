@@ -8,7 +8,6 @@ import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -17,9 +16,8 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.awt.*;
 
 public class StorageScreen extends BaseContainerScreen<StorageMenu> {
 
@@ -39,7 +37,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
         super.init();
         storageEnergy = new EnergyBarElement(leftPos + 8, topPos + 7, 71, () -> menu.data.get(0), () -> menu.data.get(1));
         addElement(storageEnergy);
-        if(!storage.containsRobot()) return;
+        if(storage.getEntity().isEmpty()) return;
         robotEnergy = new EnergyBarElement(leftPos + 155, topPos + 7, 71, () -> menu.data.get(2), () -> menu.data.get(3));
         releaseRobot = new ButtonElement(leftPos + 55, topPos + 7, 41, 17, Lang.localise("deploy"), button -> {});
         releaseRobot.initTextureLocation(Reference.MISC, 83, 17);
@@ -60,7 +58,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
         RenderSystem.setShaderTexture(0, TEXTURE);
         this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-        if(!storage.containsRobot()) {
+        if(storage.getEntity().isEmpty() || !(storage.getEntity().get() instanceof LivingEntity living)) {
             removeWidget(robotEnergy);
             removeWidget(releaseRobot);
             removeWidget(dismantleRobot);
@@ -68,7 +66,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
         }
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        InventoryScreen.renderEntityInInventory(leftPos + 126, topPos + 74, 30, 0, 0, storage.getEntity());
+        InventoryScreen.renderEntityInInventory(leftPos + 126, topPos + 74, 30, 0, 0, living);
     }
 
     @Override

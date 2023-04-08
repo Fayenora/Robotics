@@ -1,43 +1,46 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
-import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.FactoryMenu;
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.MachineRecipe;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
+import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.MachineRecipe;
-import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
+import com.ignis.igrobotics.definitions.ModMachines;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class FactoryBlockEntity extends MachineBlockEntity {
 
     public static final int ENERGY_COST = 500000;
     public static final int WORK_TIME = 60;
 
-    public static final MachineRecipe<FactoryBlockEntity> DEFAULT_RECIPE = new MachineRecipe.Builder(ModMachines.ROBOT_FACTORY, new ResourceLocation(Robotics.MODID, "robot_construction"))
+    public static final MachineRecipe<?> DEFAULT_RECIPE = new MachineRecipe.Builder(ModMachines.ROBOT_FACTORY, new ResourceLocation(Robotics.MODID, "robot_construction"))
             .setEnergyRequirement(ENERGY_COST)
             .setProcessingTime(WORK_TIME)
             .build();
 
-    private final RobotLevelStorage storedRobot;
+    private final EntityLevelStorage storedRobot;
 
     /** Whether the contruction time is over */
     private boolean builtRobot;
@@ -46,7 +49,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     public FactoryBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES, new int[] {}, new int[] {});
-        storedRobot = new RobotLevelStorage(level, null, this::getBlockPos);
+        storedRobot = new EntityLevelStorage(level, null, this::getBlockPos);
         inventory = new FactoryInventory(this, getContainerSize());
         inventory.setAllSlotsAccessibleByDefault();
     }
@@ -60,10 +63,10 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     public void setLevel(Level p_155231_) {
         super.setLevel(p_155231_);
         storedRobot.setLevel(level);
-        if(storedRobot.getRobot() == null) {
+        if(storedRobot.getEntity().isEmpty()) {
             RobotEntity robot = new RobotEntity(level);
             robot.getCapability(ModCapabilities.PARTS).ifPresent(IPartBuilt::clear);
-            storedRobot.setRobot(robot);
+            storedRobot.setEntity(robot);
         }
     }
 
@@ -79,6 +82,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    @Nullable
     protected MachineRecipe getRecipe(ItemStack[] inputStacks) {
         return canStart() || (isRunning() && !hasCraftedRobotReady()) ? DEFAULT_RECIPE : null;
     }
@@ -118,16 +122,12 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         storedRobot.setRobotPart(part, material);
     }
 
-    public void clearRobot() {
-        storedRobot.clearRobot();
-    }
-
     public void setRobot(RobotEntity robot) {
-        storedRobot.setRobot(robot);
+        storedRobot.setEntity(robot);
     }
 
-    public LivingEntity createNewRobot(UUID owner) {
-        LivingEntity robot = storedRobot.createNewRobot(owner);
+    public Optional<Entity> createNewRobot(UUID owner) {
+        Optional<Entity> robot = storedRobot.createNewRobot(owner);
         builtRobot = false;
         this.inventory.clear();
         return robot;
@@ -163,12 +163,8 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     ////////////////////
 
 
-    public LivingEntity getRobot() {
-        return storedRobot.getRobot();
-    }
-
-    public boolean containsRobot() {
-        return storedRobot.containsRobot();
+    public Optional<Entity> getEntity() {
+        return storedRobot.getEntity();
     }
 
     public boolean hasCraftedRobotReady() {

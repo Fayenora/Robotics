@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.client.rendering;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,8 +19,8 @@ public class RobotFactoryRenderer implements BlockEntityRenderer<FactoryBlockEnt
 
     @Override
     public void render(FactoryBlockEntity storage, float pPartialTick, PoseStack poseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        if(!storage.containsRobot()) return;
+        if(storage.getEntity().isEmpty()) return;
         Direction facing = storage.getBlockState().getValue(MachineBlock.FACING);
-        RobotStorageRenderer.drawRobot(entityRenderer, storage.getRobot(), facing, poseStack, pPartialTick, pBufferSource, pPackedLight);
+        RobotStorageRenderer.drawRobot(entityRenderer, storage.getEntity().get(), facing, poseStack, pPartialTick, pBufferSource, pPackedLight);
     }
 }

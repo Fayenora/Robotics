@@ -91,7 +91,7 @@ public class MoveToBlockGoal extends Goal {
             if(mob.distanceToSqr(storagePos.getCenter()) < 12) {
                 BlockEntity tile = mob.level.getBlockEntity(storagePos);
                 if(tile instanceof StorageBlockEntity storage) {
-                    storage.enterRobot(mob);
+                    storage.enterStorage(mob);
                 }
             }
         }

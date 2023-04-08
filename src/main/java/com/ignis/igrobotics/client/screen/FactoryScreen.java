@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 
@@ -54,27 +55,25 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         startButton.initTextureLocation(Reference.MISC, 94, 34);
         startButton.setNetworkAction(() -> new PacketConstructRobot(factory.getBlockPos(), nameBar.getValue()));
         switchColorLeft = new ButtonElement(leftPos + 75, topPos + 62, 13, 17, button -> {
-            if (!factory.containsRobot()) return;
-            factory.getRobot().getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+            factory.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                 DyeColor colorLeft = DyeColor.byId(Math.floorMod(parts.getColor().getId() + 1, 16));
                 parts.setColor(colorLeft);
-            });
+            }));
         });
         switchColorLeft.initTextureLocation(Reference.MISC, 51, 170);
         switchColorLeft.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_COLOR_LEFT, new NetworkInfo(factory.getBlockPos())));
         switchColorRight = new ButtonElement(leftPos + 143, topPos + 62, 13, 17, button -> {
-            if (!factory.containsRobot()) return;
-            factory.getRobot().getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+            factory.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                 DyeColor colorRight = DyeColor.byId(Math.floorMod(parts.getColor().getId() - 1, 16));
                 parts.setColor(colorRight);
-            });
+            }));
         });
         switchColorRight.initTextureLocation(Reference.MISC, 51, 187);
         switchColorRight.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_COLOR_RIGHT, new NetworkInfo(factory.getBlockPos())));
         nameBar = new EditBox(Minecraft.getInstance().font, leftPos + 80, topPos + 17, 70, 16, Component.empty());
         nameBar.setMaxLength(Reference.MAX_ROBOT_NAME_LENGTH);
-        if(factory.containsRobot() && factory.getRobot().hasCustomName()) {
-            nameBar.setValue(factory.getRobot().getCustomName().getString());
+        if(factory.getEntity().isPresent() && factory.getEntity().get().hasCustomName()) {
+            nameBar.setValue(factory.getEntity().get().getCustomName().getString());
         }
 
         addElement(startButton);
@@ -91,19 +90,19 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         startButton.setEnabled(!MachineBlockEntity.isRunning(menu.data) && (factory.canStart() || (factory.hasCraftedRobotReady() && !nameBar.getValue().isEmpty())));
-        switchColorLeft.setVisible(factory.containsRobot());
-        switchColorRight.setVisible(factory.containsRobot());
-        switchColorLeft.setEnabled(factory.containsRobot());
-        switchColorRight.setEnabled(factory.containsRobot());
+        switchColorLeft.setVisible(factory.getEntity().isPresent());
+        switchColorRight.setVisible(factory.getEntity().isPresent());
+        switchColorLeft.setEnabled(factory.getEntity().isPresent());
+        switchColorRight.setEnabled(factory.getEntity().isPresent());
 
         if(factory.hasCraftedRobotReady()) {
             startButton.setMessage(Component.translatable("create"));
         } else startButton.setMessage(Component.translatable("start"));
 
-        if(!factory.containsRobot()) return;
+        if(factory.getEntity().isEmpty() || !(factory.getEntity().get() instanceof LivingEntity living)) return;
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderUtil.drawEntityOnScreen(leftPos + 116, topPos + 105, 30, 0, 0, factory.getRobot());
+        RenderUtil.drawEntityOnScreen(leftPos + 116, topPos + 105, 30, 0, 0, living);
 
         //Draw Module Slots
         RenderSystem.setShaderTexture(0, Reference.MISC);
@@ -124,7 +123,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     @Override
     public void onClose() {
         super.onClose();
-        factory.getRobot().setCustomName(Component.literal(nameBar.getValue()));
+        factory.getEntity().ifPresent(ent -> ent.setCustomName(Component.literal(nameBar.getValue())));
     }
 
     @Override

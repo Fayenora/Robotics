@@ -37,7 +37,7 @@ public class PacketConstructRobot implements IMessage {
         BlockEntity tile = cxt.getSender().level.getBlockEntity(pos);
         if(!(tile instanceof FactoryBlockEntity factory)) return;
 
-        factory.getRobot().setCustomName(Component.literal(name));
+        factory.getEntity().ifPresent(ent -> ent.setCustomName(Component.literal(name)));
         if(factory.hasCraftedRobotReady()) {
             factory.createNewRobot(cxt.getSender().getUUID());
         } else factory.startMachine(2);

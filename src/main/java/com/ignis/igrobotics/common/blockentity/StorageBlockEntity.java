@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -38,21 +40,23 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
     public static final int MACHINE_TO_ROBOT_ENERGY_TRANSFER = 1000;
     private static final Machine MACHINE = ModMachines.ROBOT_STORAGE;
 
-    private final RobotLevelStorage storedRobot;
+    private final EntityLevelStorage storedRobot;
     private final EnergyStorage energy;
 
     protected ContainerData dataAccess = new ContainerData() {
         @Override
         public int get(int id) {
-            return switch (id) {
-                case 0 -> energy.getEnergyStored();
-                case 1 -> energy.getMaxEnergyStored();
-                case 2 ->
-                        storedRobot.containsRobot() ? storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getEnergyStored() : 0;
-                case 3 ->
-                        storedRobot.containsRobot() ? storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getMaxEnergyStored() : 0;
-                default -> 0;
-            };
+            switch (id) {
+                case 0: return energy.getEnergyStored();
+                case 1: return energy.getMaxEnergyStored();
+                case 2:
+                        if(storedRobot.getEntity().isEmpty()) return 0;
+                        return storedRobot.getEntity().get().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getEnergyStored();
+                case 3:
+                        if(storedRobot.getEntity().isEmpty()) return 0;
+                        return storedRobot.getEntity().get().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getMaxEnergyStored();
+                default: return 0;
+            }
         }
 
         @Override
@@ -60,22 +64,18 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
             switch (id) {
                 case 0 -> energy.setEnergy(value);
                 case 1 -> energy.setMaxEnergyStored(value);
-                case 2 -> {
-                    if (!storedRobot.containsRobot()) return;
-                    storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).ifPresent(robotEnergy -> {
+                case 2 ->
+                    storedRobot.getEntity().ifPresent(ent -> ent.getCapability(ForgeCapabilities.ENERGY).ifPresent(robotEnergy -> {
                         if (robotEnergy instanceof EnergyStorage energyStorage) {
                             energyStorage.setEnergy(value);
                         }
-                    });
-                }
-                case 3 -> {
-                    if (!storedRobot.containsRobot()) return;
-                    storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).ifPresent(robotEnergy -> {
+                    }));
+                case 3 ->
+                    storedRobot.getEntity().ifPresent(ent -> ent.getCapability(ForgeCapabilities.ENERGY).ifPresent(robotEnergy -> {
                         if (robotEnergy instanceof EnergyStorage energyStorage) {
                             energyStorage.setMaxEnergyStored(value);
                         }
-                    });
-                }
+                    }));
             }
         }
 
@@ -87,47 +87,49 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
 
     public StorageBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(MACHINE.getBlockEntityType(), pPos, pBlockState);
-        storedRobot = new RobotLevelStorage(level, null, this::getBlockPos);
+        storedRobot = new EntityLevelStorage(level, null, this::getBlockPos);
         energy = new EnergyStorage(MACHINE.getEnergyCapacity(), MACHINE.getEnergyTransfer());
         energy_cap = LazyOptional.of(() -> energy);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, StorageBlockEntity storage) {
-        if(!storage.containsRobot()) return;
         //Transfer energy from the block to the robot
-        storage.storedRobot.getRobot().getCapability(ForgeCapabilities.ENERGY).ifPresent((robotEnergy) -> {
+        storage.storedRobot.getEntity().ifPresent(ent -> ent.getCapability(ForgeCapabilities.ENERGY).ifPresent((robotEnergy) -> {
             int to_transfer = Math.min(robotEnergy.receiveEnergy(MACHINE_TO_ROBOT_ENERGY_TRANSFER, true), storage.energy.extractEnergy(MACHINE_TO_ROBOT_ENERGY_TRANSFER, true));
             robotEnergy.receiveEnergy(to_transfer, false);
             storage.energy.extractEnergy(to_transfer, false);
-        });
+        }));
     }
 
-    public boolean containsRobot() {
-        return storedRobot.containsRobot();
-    }
-
-    public void clearRobot() {
-        storedRobot.clearRobot();
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
-        setChanged();
-    }
-
-    public void enterRobot(LivingEntity robot) {
-        storedRobot.enterStorage(robot);
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
-        setChanged();
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("container.robot_storage");
     }
 
     @Nullable
-    public LivingEntity exitStorage() {
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
-        setChanged();
-        return storedRobot.exitStorage();
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inv, Player pPlayer) {
+        return new StorageMenu(id, inv, this, this.dataAccess);
     }
 
-    @Nullable
-    public LivingEntity getEntity() {
-        return storedRobot.getRobot();
+    public void clearEntity() {
+        storedRobot.clearEntity();
+        sync();
+    }
+
+    public void enterStorage(Entity entity) {
+        storedRobot.enterStorage(entity);
+        sync();
+    }
+
+    public Optional<Entity> exitStorage() {
+        Optional<Entity> exitedEntity = storedRobot.exitStorage();
+        sync();
+        return exitedEntity;
+    }
+
+    public Optional<Entity> getEntity() {
+        return storedRobot.getEntity();
     }
 
     /////////////////////
@@ -192,14 +194,8 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("container.robot_storage");
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inv, Player pPlayer) {
-        return new StorageMenu(id, inv, this, this.dataAccess);
+    public void sync() {
+        if(level != null) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
+        setChanged();
     }
 }
