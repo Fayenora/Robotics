@@ -18,12 +18,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -43,6 +45,12 @@ public class RobotBehavior {
             ModMenuTypes.ROBOT_INVENTORY,
             ModMenuTypes.ROBOT_COMMANDS
     };
+
+    @SubscribeEvent
+    public static void onRobotSpawn(LivingSpawnEvent event) {
+        if(!event.getEntity().getCapability(ModCapabilities.ROBOT).isPresent()) return;
+        onRobotCreated(event.getEntity());
+    }
 
     @SubscribeEvent
     public static void onRobotRightClick(PlayerInteractEvent.EntityInteract event) {
@@ -83,6 +91,12 @@ public class RobotBehavior {
                             buf.writeNbt(tag);
                         });
             });
+        }
+    }
+
+    public static void onRobotCreated(LivingEntity entity) {
+        if(entity instanceof Mob mob) {
+            mob.setPersistenceRequired();
         }
     }
 
