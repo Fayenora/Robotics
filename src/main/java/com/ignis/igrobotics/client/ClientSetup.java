@@ -29,6 +29,7 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.ROBOT.get(), RobotScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT_INFO.get(), RobotInfoScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT_COMMANDS.get(), RobotCommandScreen::new);
+            MenuScreens.register(ModMenuTypes.COMMANDER.get(), CommanderScreen::new);
         });
     }
 

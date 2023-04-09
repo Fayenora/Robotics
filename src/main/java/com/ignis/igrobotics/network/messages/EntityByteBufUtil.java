@@ -13,6 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -61,10 +63,10 @@ public class EntityByteBufUtil implements IBufferSerializable {
 		Optional<EntityType<?>> entityType = EntityType.byString(entity_type);
 		
 		//Handle Entities
-		if(entityType.isPresent() && LivingEntity.class.isAssignableFrom(entityType.get().getBaseClass())) {
+		if(entityType.isPresent()) {
 			try {
 				Entity ent = entityType.get().create(level);
-				if(ent == null) return null;
+				if(ent == null || !(ent instanceof LivingEntity)) return null;
 				ent.deserializeNBT(nbt);
 				ent.setId(entityId);
 				return (LivingEntity) ent;
@@ -96,6 +98,24 @@ public class EntityByteBufUtil implements IBufferSerializable {
 	@Nullable
 	public static LivingEntity readEntity(FriendlyByteBuf buf) {
 		return new EntityByteBufUtil(buf).constructEntity(Robotics.proxy.getLevel());
+	}
+
+	public static void writeEntities(Collection<LivingEntity> entities, FriendlyByteBuf buf) {
+		buf.writeShort(entities.size() & 65535); //Write an unsigned short
+		for(LivingEntity living : entities) {
+			writeEntity(living, buf);
+		}
+	}
+
+	public static Collection<LivingEntity> readEntities(FriendlyByteBuf buf) {
+		int size = buf.readShort() & 65535;
+		Collection<LivingEntity> entities = new HashSet<>(size);
+		for(int i = 0; i < size; i++) {
+			LivingEntity living = readEntity(buf);
+			if(living == null) continue;
+			entities.add(living);
+		}
+		return entities;
 	}
 
 }
