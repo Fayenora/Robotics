@@ -1,23 +1,26 @@
 package com.ignis.igrobotics.common.items;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.menu.CommanderMenu;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
+import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModSounds;
+import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -27,9 +30,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -158,7 +163,11 @@ public class CommanderItem extends Item {
         }
 
         assignID(stack);
-        //TODO Open commander screen
+        int commandGroup = getID(stack);
+        Collection<LivingEntity> robotsOfCommandGroup = RoboticsFinder.getRobotics(level, robot -> robot.getCommandGroup() == commandGroup);
+        NetworkHooks.openScreen((ServerPlayer) player,
+                new SimpleMenuProvider((id, ign1, ign2) -> new CommanderMenu(id, robotsOfCommandGroup), stack.getHoverName().copy().withStyle(Style.EMPTY)),
+                buf -> EntityByteBufUtil.writeEntities(robotsOfCommandGroup, buf));
 
         return InteractionResultHolder.consume(stack);
     }
@@ -223,7 +232,7 @@ public class CommanderItem extends Item {
         UUID uuid = getTagCompound(stack).getUUID(NBT_ENTITY);
 
         //FIXME Clients may not know of the entity
-        Entity entity = Robotics.proxy.getEntity(uuid);
+        Entity entity = RoboticsFinder.getEntity(level, uuid);
         if(!(entity instanceof LivingEntity living)) return null;
         cacheEntity(stack, living.getId());
         return living;

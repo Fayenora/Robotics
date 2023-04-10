@@ -44,6 +44,7 @@ public interface IRobot extends INBTSerializer {
     }
 
     default boolean hasAccess(Player player, EnumPermission permission) {
+        if(getOwner().equals(Reference.DEFAULT_UUID)) return true;
         return player.getUUID().equals(getOwner());
     }
 

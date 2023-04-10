@@ -25,9 +25,9 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
 
     protected ResourceLocation resource;
     protected Point[][] icons;
-    private int state = 0;
-    private int maxStates = 1;
-    private List<Component>[] tooltips = new List[1];
+    private int state;
+    private final int maxStates;
+    private final List<Component>[] tooltips;
     private Supplier<IMessage> networkAction;
 
     private boolean dragging;
@@ -36,10 +36,11 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     private GuiEventListener focused;
 
     public ButtonElement(int x, int y, int widthIn, int heightIn, int currentState, int maxStates) {
-        this(x, y, widthIn, heightIn);
-        this.state = currentState;
-        this.maxStates = maxStates;
-        tooltips = new List[getMaxStates()];
+        this(x, y, widthIn, heightIn, currentState, maxStates, button -> {});
+    }
+
+    public ButtonElement(int x, int y, int widthIn, int heightIn, int currentState, int maxStates, Button.OnPress onPress) {
+        this(x, y, widthIn, heightIn, Component.empty(), currentState, maxStates, onPress);
     }
 
     public ButtonElement(int pX, int pY, int pWidth, int pHeight) {
@@ -51,7 +52,14 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     }
 
     public ButtonElement(int pX, int pY, int pWidth, int pHeight, Component pMessage, Button.OnPress onPress) {
+        this(pX, pY, pWidth, pHeight, pMessage, 0, 1, onPress);
+    }
+
+    public ButtonElement(int pX, int pY, int pWidth, int pHeight, Component pMessage, int currentState, int maxStates, Button.OnPress onPress) {
         super(pX, pY, pWidth, pHeight, pMessage, onPress, DEFAULT_NARRATION);
+        this.state = currentState;
+        this.maxStates = maxStates;
+        tooltips = new List[getMaxStates()];
     }
 
     @Override
