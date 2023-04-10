@@ -18,9 +18,4 @@ public interface IProxy {
     WeakReference<Player> createFakePlayer(Level level, GameProfile profile);
 
     Level getLevel();
-
-    @Nullable
-    Entity getEntity(UUID uuid);
-
-    Collection<LivingEntity> getRobotics(Predicate<IRobot> condition);
 }

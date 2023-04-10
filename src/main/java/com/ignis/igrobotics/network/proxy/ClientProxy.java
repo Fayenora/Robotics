@@ -34,33 +34,6 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
-    public Entity getEntity(UUID uuid) {
-        if(Minecraft.getInstance().level == null) return null;
-        Player player = Minecraft.getInstance().player;
-        for(Entity ent : player.level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {
-            if(ent.getUUID().equals(uuid)) {
-                return ent;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Collection<LivingEntity> getRobotics(Predicate<IRobot> condition) {
-        if(Minecraft.getInstance().level == null) return null;
-        Player player = Minecraft.getInstance().player;
-        Collection<LivingEntity> robots = new HashSet<>();
-        for(Entity ent : player.level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {
-            if(ent instanceof LivingEntity living
-                    && ent.getCapability(ModCapabilities.ROBOT).isPresent()
-                    && condition.test(ent.getCapability(ModCapabilities.ROBOT).resolve().get())) {
-                robots.add(living);
-            }
-        }
-        return robots;
-    }
-
-    @Override
     public WeakReference<Player> createFakePlayer(Level level, GameProfile profile) {
         if(level instanceof ClientLevel clientLevel) {
             return new WeakReference<>(new RemotePlayer(clientLevel, profile));

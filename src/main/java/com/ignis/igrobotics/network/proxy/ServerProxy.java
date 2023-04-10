@@ -21,42 +21,9 @@ import java.util.function.Predicate;
 
 public class ServerProxy implements IProxy {
 
-    public static final EntityTypeTest<Entity, LivingEntity> LIVING = new EntityTypeTest<>() {
-        @Nullable
-        @Override
-        public LivingEntity tryCast(Entity entity) {
-            return LivingEntity.class.isInstance(entity) ? (LivingEntity) entity : null;
-        }
-
-        public Class<? extends LivingEntity> getBaseClass() {
-            return LivingEntity.class;
-        }
-    };
-
     @Override
     public Level getLevel() {
         return ServerLifecycleHooks.getCurrentServer().overworld();
-    }
-
-    @Override
-    public Entity getEntity(UUID uuid) {
-        for(ServerLevel dimension : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
-            Entity entity = dimension.getEntity(uuid);
-            if(entity != null) {
-                return entity;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Collection<LivingEntity> getRobotics(Predicate<IRobot> condition) {
-        Collection<LivingEntity> robots = new HashSet<>();
-        for(ServerLevel dimension : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
-            robots.addAll(dimension.getEntities(LIVING, living ->
-                    living.getCapability(ModCapabilities.ROBOT).isPresent() && condition.test(living.getCapability(ModCapabilities.ROBOT).resolve().get())));
-        }
-        return robots;
     }
 
     @Override

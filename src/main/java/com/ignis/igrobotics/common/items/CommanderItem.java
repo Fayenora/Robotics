@@ -6,6 +6,7 @@ import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
+import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
@@ -163,7 +164,7 @@ public class CommanderItem extends Item {
 
         assignID(stack);
         int commandGroup = getID(stack);
-        Collection<LivingEntity> robotsOfCommandGroup = Robotics.proxy.getRobotics(robot -> robot.getCommandGroup() == commandGroup);
+        Collection<LivingEntity> robotsOfCommandGroup = RoboticsFinder.getRobotics(level, robot -> robot.getCommandGroup() == commandGroup);
         NetworkHooks.openScreen((ServerPlayer) player,
                 new SimpleMenuProvider((id, ign1, ign2) -> new CommanderMenu(id, robotsOfCommandGroup), stack.getHoverName().copy().withStyle(Style.EMPTY)),
                 buf -> EntityByteBufUtil.writeEntities(robotsOfCommandGroup, buf));
@@ -231,7 +232,7 @@ public class CommanderItem extends Item {
         UUID uuid = getTagCompound(stack).getUUID(NBT_ENTITY);
 
         //FIXME Clients may not know of the entity
-        Entity entity = Robotics.proxy.getEntity(uuid);
+        Entity entity = RoboticsFinder.getEntity(level, uuid);
         if(!(entity instanceof LivingEntity living)) return null;
         cacheEntity(stack, living.getId());
         return living;
