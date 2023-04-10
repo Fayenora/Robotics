@@ -22,11 +22,6 @@ public class ChunkLoadingCapability implements IChunkLoader {
     }
 
     @Override
-    public UUID getOwner() {
-        return Reference.DEFAULT_UUID;
-    }
-
-    @Override
     public UUID getUUID() {
         return entity.getUUID();
     }

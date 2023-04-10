@@ -185,11 +185,11 @@ public class RobotCapability implements IRobot {
     @Override
     public void setChunkLoading(int state) {
         entity.getCapability(ModCapabilities.CHUNK_LOADER).ifPresent(loader -> {
-            loader.unloadChunks(new ChunkPos(entity.getOnPos()));
+            loader.unloadChunks(new ChunkPos(entity.blockPosition()));
         });
         dataManager.set(LOAD_CHUNK, state);
         entity.getCapability(ModCapabilities.CHUNK_LOADER).ifPresent(loader -> {
-            loader.loadChunks(new ChunkPos(entity.getOnPos()));
+            loader.loadChunks(new ChunkPos(entity.blockPosition()));
         });
     }
 

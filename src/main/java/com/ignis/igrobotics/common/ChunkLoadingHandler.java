@@ -25,11 +25,6 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ChunkLoadingHandler {
 
-    public static void register() {
-        //TODO: Is it necessary to save tickets here, or it the callback now only needed for removing no longer valid tickets?
-        //ForgeChunkManager.setForcedChunkLoadingCallback(Robotics.MODID, (level, ticketHelper) -> {});
-    }
-
     @SubscribeEvent
     public static void onEntityEntersChunk(EntityEvent.EnteringSection event) {
         if(!event.didChunkChange()) return;
