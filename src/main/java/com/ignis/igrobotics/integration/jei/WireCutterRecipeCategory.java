@@ -48,7 +48,7 @@ public class WireCutterRecipeCategory extends MachineRecipeCategory {
 		if(WireCutterScreen.arrow.contains(mouseX, mouseY)) {
 			return recipe.getRuntimeTooltip();
 		}
-		if(WireCutterScreen.energy_bar.contains(mouseX, mouseY)) {
+		if(WireCutterScreen.energy_bar.contains(mouseX + 7, mouseY + 4)) {
 			return recipe.getEnergyTooltip();
 		}
 		return List.of();

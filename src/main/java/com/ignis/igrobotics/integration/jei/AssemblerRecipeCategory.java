@@ -68,7 +68,7 @@ public class AssemblerRecipeCategory extends MachineRecipeCategory {
 				AssemblerScreen.arr_left.contains(mouseX, mouseY)) {
 			return recipe.getRuntimeTooltip();
 		}
-		if(AssemblerScreen.energy_bar.contains(mouseX, mouseY)) {
+		if(AssemblerScreen.energy_bar.contains(mouseX + 7, mouseY + 4)) {
 			return recipe.getEnergyTooltip();
 		}
 		return List.of();
