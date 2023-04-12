@@ -1,17 +1,19 @@
 package com.ignis.igrobotics;
 
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.UUID;
+
+import static com.ignis.igrobotics.core.robot.EnumRobotMaterial.*;
 
 public class Reference {
 	
@@ -30,8 +32,8 @@ public class Reference {
 	public static final int MAX_INVENTORY_SIZE = 36;
 	public static final int MAX_COMMANDS = 50;
 
-	public static final String[] WIRE_METALS = new String[] {
-			"iron", "gold", "copper", "tin", "aluminium", "silver", "lead", "bronze", "constantan", "electrum", "platinum"
+	public static final EnumRobotMaterial[] WIRE_METALS = new EnumRobotMaterial[] {
+			IRON, GOLD, COPPER, TIN, ALUMINIUM, SILVER, LEAD, BRONZE, CONSTANTAN, ELECTRUM, PLATINUM
 	};
 	
 	public static final HashMap<String, TextColor> ATTRIBUTE_COLORS = new HashMap<String, TextColor>();

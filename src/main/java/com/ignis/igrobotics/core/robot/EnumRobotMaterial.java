@@ -1,5 +1,10 @@
 package com.ignis.igrobotics.core.robot;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+
 public enum EnumRobotMaterial {
     NONE(0, "none", 0),
     IRON(1, "iron", 1),
@@ -40,8 +45,9 @@ public enum EnumRobotMaterial {
     //Psi
     PSIMETAL(24, "psimetal", 3);
 
-    private String name;
-    private int id, stiffness;
+    private final String name;
+    private final int id, stiffness;
+    private final TagKey<Item> metalTag;
 
     /**
      * @param id
@@ -52,6 +58,7 @@ public enum EnumRobotMaterial {
         this.id = id;
         this.name = name;
         this.stiffness = stiffness;
+        this.metalTag = ItemTags.create(new ResourceLocation("forge", "ingots/" + name));
     }
 
     public String getName() {
@@ -66,8 +73,8 @@ public enum EnumRobotMaterial {
         return this.stiffness;
     }
 
-    public String getMaterialOreName() {
-        return "ingot" + name.substring(0, 1).toUpperCase() + name.substring(1);
+    public TagKey<Item> getMetal() {
+        return metalTag;
     }
 
     public static EnumRobotMaterial byId(int id) {

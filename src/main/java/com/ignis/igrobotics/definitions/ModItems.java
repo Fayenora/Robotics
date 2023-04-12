@@ -42,8 +42,9 @@ public class ModItems {
     public static final RegistryObject<Item>[][] MATERIALS = new RegistryObject[EnumRobotMaterial.valuesWithoutEmpty().length][];
 
     static {
-        for(int i = 0; i < Reference.WIRE_METALS.length; i++) {
-            WIRES[i] = registerBasicItem(Reference.WIRE_METALS[i] + "_wire");
+        int i = 0;
+        for(EnumRobotMaterial material : Reference.WIRE_METALS) {
+            WIRES[i++] = registerBasicItem(material.getName() + "_wire");
         }
         for(EnumRobotMaterial material : EnumRobotMaterial.valuesWithoutEmpty()) {
             PLATES[material.getID() - 1] = registerBasicItem("plate_" + material.getName());
