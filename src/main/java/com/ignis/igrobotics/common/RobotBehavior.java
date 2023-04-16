@@ -53,6 +53,52 @@ public class RobotBehavior {
     }
 
     @SubscribeEvent
+    public static void onRobotTick(LivingTickEvent event) {
+        if(event.getEntity().level.isClientSide()) return;
+        event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                if(robot.isActive()) return;
+                event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+                        if(energy.getEnergyStored() <= 0) {
+                            robot.setActivation(false);
+                        }
+
+                        double consumption = entity.getAttributeValue(EntityRobot.ENERGY_CONSUMPTION);
+                        if(consumption > 0) {
+                            float configMultiplier = RoboticsConfig.general.robotEnergyConsumption.get();
+                            energy.extractEnergy(consumption * configMultiplier, false);
+                        } else {
+                            energy.receiveEnergy(-consumption, false);
+                        }
+                    })
+            });
+    }
+
+    @SubscribeEvent
+    public static void onRobotStruckByLightning(MobStruckByLightningEvent event) {
+        event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+                        energy.receiveEnergy(2000000, false);
+                        event.getEntity().addMobEffect(MobEffects.SPEED, 300, 1)
+                })
+        });
+    }
+
+    @SubscribeEvent
+    public static void onRobotDeath(EntityDeathEvent event) {
+        if(event.getEntity().level.isClientSide()) return;
+        event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                event.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
+                        for(int i = 0; i < inventory.getSize(); i++) {
+                            entity.entityDropItem(inventory.getStackInSlot(i), 0);
+                        }
+                        for(ItemStack stack : getModules()) {
+                            entity.entityDropItem(stack, 0);
+                        }
+                })
+        });
+    }
+
+    @SubscribeEvent
     public static void onRobotRightClick(PlayerInteractEvent.EntityInteract event) {
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
@@ -98,6 +144,10 @@ public class RobotBehavior {
         if(entity instanceof Mob mob) {
             mob.setPersistenceRequired();
         }
+        entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+                if(!(energy instanceof EnergyStorage storage)) return;
+                storage.setEnergy(Integer.MAX_VALUE);
+            });
     }
 
     public static List<MenuType> possibleMenus(Entity entity) {
