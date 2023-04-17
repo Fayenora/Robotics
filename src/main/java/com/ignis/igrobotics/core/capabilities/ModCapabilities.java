@@ -4,15 +4,20 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.ChunkLoadingHandler;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.INBTSerializer;
+import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.chunkloading.ChunkLoadingCapability;
 import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
+import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
+import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
+import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
+import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +32,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Iterator;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID)
 public class ModCapabilities {
@@ -44,6 +51,50 @@ public class ModCapabilities {
     public static final ResourceLocation LOC_COMMANDS = new ResourceLocation(Robotics.MODID, "commands");
     public static final ResourceLocation LOC_LOADER = new ResourceLocation(Robotics.MODID, "chunk_loader");
     public static final ResourceLocation LOC_TRACKER = new ResourceLocation(Robotics.MODID, "chunk_tracker");
+
+    public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
+    public static final IPerkMapCap NO_PERKS = new IPerkMapCap() {
+        @Override
+        public void updateAttributeModifiers() {}
+        @Override
+        public SimpleDataManager values() {
+            return new SimpleDataManager();
+        }
+        @Override
+        public void add(Perk perk, int level) {
+
+        }
+        @Override
+        public void remove(Perk perk, int level) {
+
+        }
+        @Override
+        public void merge(IPerkMap other) {
+
+        }
+        @Override
+        public void diff(IPerkMap toRemove) {
+
+        }
+        @Override
+        public boolean contains(Perk perk) {
+            return false;
+        }
+        @NotNull
+        @Override
+        public Iterator<Tuple<Perk, Integer>> iterator() {
+            return new Iterator<>() {
+                @Override
+                public boolean hasNext() {
+                    return false;
+                }
+                @Override
+                public Tuple<Perk, Integer> next() {
+                    return null;
+                }
+            };
+        }
+    };
 
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {

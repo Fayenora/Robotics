@@ -13,6 +13,8 @@ public class PerkConfig implements IJsonConfig {
 	
 	public final HashMap<String, Perk> PERKS = new HashMap<String, Perk>();
 
+	public Perk PERK_LUMINOUS;
+
 	/*
 	public final Perk PERK_STRENGTH = new PerkStrength(this, "perk.strength");
 	public final Perk PERK_IMPACT = new PerkImpact(this, "perk.impact");

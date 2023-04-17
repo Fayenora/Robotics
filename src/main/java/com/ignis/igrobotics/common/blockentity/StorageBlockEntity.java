@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common.blockentity;
 import com.ignis.igrobotics.client.menu.StorageMenu;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.Machine;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -51,10 +52,10 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
                 case 1: return energy.getMaxEnergyStored();
                 case 2:
                         if(storedRobot.getEntity().isEmpty()) return 0;
-                        return storedRobot.getEntity().get().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getEnergyStored();
+                        return storedRobot.getEntity().get().getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getEnergyStored();
                 case 3:
                         if(storedRobot.getEntity().isEmpty()) return 0;
-                        return storedRobot.getEntity().get().getCapability(ForgeCapabilities.ENERGY).orElse(RobotBehavior.NO_ENERGY).getMaxEnergyStored();
+                        return storedRobot.getEntity().get().getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getMaxEnergyStored();
                 default: return 0;
             }
         }

@@ -9,13 +9,18 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.robot.RobotCommand;
+import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -25,6 +30,10 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,7 +47,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RobotBehavior {
 
-    public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
     public static final RegistryObject<MenuType<?>>[] ALL_ROBOT_MENUS = new RegistryObject[]{
             ModMenuTypes.ROBOT,
             ModMenuTypes.ROBOT_INFO,
@@ -53,7 +61,7 @@ public class RobotBehavior {
     }
 
     @SubscribeEvent
-    public static void onRobotTick(LivingTickEvent event) {
+    public static void onRobotTick(LivingEvent.LivingTickEvent event) {
         if(event.getEntity().level.isClientSide()) return;
         event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
                 if(robot.isActive()) return;
@@ -62,40 +70,42 @@ public class RobotBehavior {
                             robot.setActivation(false);
                         }
 
-                        double consumption = entity.getAttributeValue(EntityRobot.ENERGY_CONSUMPTION);
+                        double consumption = event.getEntity().getAttributeValue(ModAttributes.ENERGY_CONSUMPTION);
                         if(consumption > 0) {
-                            float configMultiplier = RoboticsConfig.general.robotEnergyConsumption.get();
-                            energy.extractEnergy(consumption * configMultiplier, false);
+                            float configMultiplier = RoboticsConfig.general.robotBaseConsumption.get();
+                            energy.extractEnergy((int) (consumption * configMultiplier), false);
                         } else {
-                            energy.receiveEnergy(-consumption, false);
+                            energy.receiveEnergy((int) -consumption, false);
                         }
-                    })
+                    });
             });
     }
 
     @SubscribeEvent
-    public static void onRobotStruckByLightning(MobStruckByLightningEvent event) {
+    public static void onRobotStruckByLightning(EntityStruckByLightningEvent event) {
+        if(!(event.getEntity() instanceof LivingEntity living)) return;
         event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
-                        energy.receiveEnergy(2000000, false);
-                        event.getEntity().addMobEffect(MobEffects.SPEED, 300, 1)
-                })
+            living.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+                energy.receiveEnergy(2000000, false);
+                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300, 1));
+            });
         });
     }
 
     @SubscribeEvent
-    public static void onRobotDeath(EntityDeathEvent event) {
+    public static void onRobotDeath(LivingDeathEvent event) {
         if(event.getEntity().level.isClientSide()) return;
-        event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                event.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
-                        for(int i = 0; i < inventory.getSize(); i++) {
-                            entity.entityDropItem(inventory.getStackInSlot(i), 0);
+        Entity entity = event.getEntity();
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
+                entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
+                        for(int i = 0; i < inventory.getSlots(); i++) {
+                            ItemStackUtils.dropItem(entity, inventory.getStackInSlot(i));
                         }
-                        for(ItemStack stack : getModules()) {
-                            entity.entityDropItem(stack, 0);
+                        for(ItemStack stack : robot.getModules()) {
+                            ItemStackUtils.dropItem(entity, stack);
                         }
                 })
-        });
+        );
     }
 
     @SubscribeEvent
@@ -165,8 +175,8 @@ public class RobotBehavior {
             @Override
             public int get(int key) {
                 switch(key) {
-                    case 0: return entity.getCapability(ForgeCapabilities.ENERGY).orElse(NO_ENERGY).getEnergyStored();
-                    case 1: return entity.getCapability(ForgeCapabilities.ENERGY).orElse(NO_ENERGY).getMaxEnergyStored();
+                    case 0: return entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getEnergyStored();
+                    case 1: return entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getMaxEnergyStored();
                     default: return 0;
                 }
             }

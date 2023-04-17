@@ -5,6 +5,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -18,6 +19,10 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class ItemStackUtils {
+
+	public static void dropItem(Entity entity, ItemStack stack) {
+		dropItem(entity.level, entity.xOld, entity.yOld, entity.zOld, stack);
+	}
 
 	public static void dropItem(Level level, double x, double y, double z, ItemStack stack) {
 		ItemEntity item = new ItemEntity(level, x, y, z, stack);
