@@ -79,11 +79,11 @@ public class RenderUtil {
         drawCenteredString(poseStack, text.getString(), x, y, color, scaleY, maxWidth);
     }
 
-    public static void drawEntityOnScreen(int x, int y, int mouseX, int mouseY, LivingEntity entity) {
-        drawEntityOnScreen(x, y, mouseX, mouseY, 30, false, entity);
+    public static void drawEntityOnScreen(PoseStack poseStack, int x, int y, int mouseX, int mouseY, LivingEntity entity) {
+        drawEntityOnScreen(poseStack, x, y, mouseX, mouseY, 30, false, entity);
     }
 
-    public static void drawEntityOnScreen(int x, int y, int mouseX, int mouseY, int scale, boolean ignoreMouse, LivingEntity entity) {
+    public static void drawEntityOnScreen(PoseStack poseStack, int x, int y, int mouseX, int mouseY, int scale, boolean ignoreMouse, LivingEntity entity) {
         int intmouseX = x - mouseX + (int)(5/6F * scale);
         int intmouseY = y - mouseY + (int)(17/30F * scale);
         if(ignoreMouse) {
@@ -91,17 +91,17 @@ public class RenderUtil {
             intmouseY = 0;
         }
 
-        drawEntityOnScreen(x + (int)(13/15F * scale), y + (int)(34/15F * scale), scale, intmouseX, intmouseY, entity);
+        drawEntityOnScreen(poseStack, x + (int)(13/15F * scale), y + (int)(34/15F * scale), scale, intmouseX, intmouseY, entity);
     }
 
-    public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent) {
-        drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, ent, false);
+    public static void drawEntityOnScreen(PoseStack poseStack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent) {
+        drawEntityOnScreen(poseStack, posX, posY, scale, mouseX, mouseY, ent, false);
     }
 
-    public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
+    public static void drawEntityOnScreen(PoseStack poseStack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
         boolean f1 = ent.shouldShowName();
         ent.setCustomNameVisible(renderNameTag);
-        InventoryScreen.renderEntityInInventory(posX, posY, scale, mouseX, mouseY, ent);
+        InventoryScreen.renderEntityInInventoryFollowsAngle(poseStack, posX, posY, scale, mouseX, mouseY, ent);
         ent.setCustomNameVisible(f1);
     }
 
@@ -158,13 +158,9 @@ public class RenderUtil {
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.translate(0.0F, 0.0F, 32.0F);
         RenderSystem.applyModelViewMatrix();
-        //this.setBlitOffset(200);
-        itemRenderer.blitOffset = 200.0F;
         var otherFont = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
         if (otherFont == null) otherFont = Minecraft.getInstance().font;
-        itemRenderer.renderAndDecorateItem(stack, x, y);
-        itemRenderer.renderGuiItemDecorations(otherFont, stack, x, y - (stack.isEmpty() ? 0 : 8), "");
-        //this.setBlitOffset(0);
-        itemRenderer.blitOffset = 0.0F;
+        itemRenderer.renderAndDecorateItem(posestack, stack, x, y);
+        itemRenderer.renderGuiItemDecorations(posestack, otherFont, stack, x, y - (stack.isEmpty() ? 0 : 8), "");
     }
 }

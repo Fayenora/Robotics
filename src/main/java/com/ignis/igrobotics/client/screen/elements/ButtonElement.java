@@ -104,7 +104,7 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
         if(icons == null) return;
         Point[] currentIcons = icons[state];
 

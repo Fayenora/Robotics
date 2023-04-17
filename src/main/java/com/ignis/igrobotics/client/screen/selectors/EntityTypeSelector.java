@@ -83,7 +83,7 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 			addElement(searchBar);
 			addElement(entityGrid);
 			setFocused(searchBar);
-			searchBar.setFocus(true);
+			searchBar.setFocused(true);
 		}
 
 		@Override
@@ -127,8 +127,8 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 		}
 
 		@Override
-		public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-			super.renderButton(poseStack, pMouseX, pMouseY, pPartialTick);
+		public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+			super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
 			RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
 			RenderUtil.drawRotatingEntity(getX() + BOUNDS.width / 2, getY() + 6 + BOUNDS.height / 2, (int) (8 / living.getBoundingBox().getSize()), living, angle);
 			RenderSystem.disableScissor();

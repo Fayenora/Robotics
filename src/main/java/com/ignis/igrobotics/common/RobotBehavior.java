@@ -25,7 +25,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -47,7 +47,7 @@ public class RobotBehavior {
     };
 
     @SubscribeEvent
-    public static void onRobotSpawn(LivingSpawnEvent event) {
+    public static void onRobotSpawn(MobSpawnEvent event) {
         if(!event.getEntity().getCapability(ModCapabilities.ROBOT).isPresent()) return;
         onRobotCreated(event.getEntity());
     }

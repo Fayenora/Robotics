@@ -77,7 +77,7 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
                 }
 
                 if (mobeffectinstance != null) {
-                    List<Component> list = List.of(this.getEffectName(mobeffectinstance), Component.literal(MobEffectUtil.formatDuration(mobeffectinstance, 1.0F)));
+                    List<Component> list = List.of(this.getEffectName(mobeffectinstance), MobEffectUtil.formatDuration(mobeffectinstance, 1.0F));
                     this.renderTooltip(pPoseStack, list, Optional.empty(), pMouseX, pMouseY);
                 }
             }
@@ -110,7 +110,7 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
             MobEffect mobeffect = mobeffectinstance.getEffect();
             TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(mobeffect);
             RenderSystem.setShaderTexture(0, textureatlassprite.atlasLocation());
-            blit(pPoseStack, pRenderX + (p_194013_ ? 6 : 7), i + 7, this.getBlitOffset(), 18, 18, textureatlassprite);
+            blit(pPoseStack, pRenderX + (p_194013_ ? 6 : 7), i + 7, this.getGuiLeft(), 18, 18, textureatlassprite);
             i += pYOffset;
         }
 
@@ -122,7 +122,7 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         for(MobEffectInstance mobeffectinstance : pEffects) {
             Component component = this.getEffectName(mobeffectinstance);
             this.font.drawShadow(pPoseStack, component, (float)(pRenderX + 10 + 18), (float)(i + 6), 16777215);
-            String s = MobEffectUtil.formatDuration(mobeffectinstance, 1.0F);
+            Component s = MobEffectUtil.formatDuration(mobeffectinstance, 1.0F);
             this.font.drawShadow(pPoseStack, s, (float)(pRenderX + 10 + 18), (float)(i + 6 + 10), 8355711);
             i += pYOffset;
         }

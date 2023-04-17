@@ -62,7 +62,7 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             if(robot.isActive()) {
-                RenderUtil.drawEntityOnScreen(leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
+                RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
             } else {
                 //TODO
                 //RenderUtil.drawInactiveRobotOnScreen(this.guiLeft + 25, this.guiTop + 7, 30, robot);

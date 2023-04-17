@@ -65,7 +65,7 @@ public class IntSelector extends SelectorElement<Integer> {
 			};
 			addElement(textField);
 			setFocused(textField);
-			textField.setFocus(true);
+			textField.setFocused(true);
 		}
 		
 		protected void keepIntToBounds() {

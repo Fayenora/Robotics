@@ -124,7 +124,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			addElement(buttonSelf);
 			addElement(buttonConfirm);
 			setFocused(textField);
-			textField.setFocus(true);
+			textField.setFocused(true);
 		}
 	}
 

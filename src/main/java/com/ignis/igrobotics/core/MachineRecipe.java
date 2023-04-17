@@ -4,6 +4,7 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.StringUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +44,7 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 	}
 
 	@Override
-	public ItemStack assemble(Container inv) {
+	public ItemStack assemble(T p_44001_, RegistryAccess p_267165_) {
 		return outputs[0].copy();
 	}
 
@@ -53,7 +54,7 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess p_267052_) {
 		return outputs[0];
 	}
 
