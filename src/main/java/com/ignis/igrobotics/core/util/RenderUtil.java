@@ -101,7 +101,7 @@ public class RenderUtil {
     public static void drawEntityOnScreen(PoseStack poseStack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
         boolean f1 = ent.shouldShowName();
         ent.setCustomNameVisible(renderNameTag);
-        InventoryScreen.renderEntityInInventoryFollowsAngle(poseStack, posX, posY, scale, mouseX, mouseY, ent);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(poseStack, posX, posY, scale, mouseX, mouseY, ent);
         ent.setCustomNameVisible(f1);
     }
 
