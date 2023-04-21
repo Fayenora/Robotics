@@ -121,13 +121,14 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
             }
         }
 
+        poseStack.translate(0, 0, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, resource);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(poseStack, getX(), getY(), i, j, width, height);
+        blit(poseStack, getX(), getY(), i, j, width, height);
 
         drawCenteredString(poseStack, Minecraft.getInstance().font, getMessage(), getX() + this.width / 2, getY() + (height - 8) / 2, color | Mth.ceil(this.alpha * 255.0F) << 24);
     }

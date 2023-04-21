@@ -40,6 +40,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
         if(hasSubGui()) {
             for(IElement comp : subGuis) {
                 renderBackground(poseStack);
+                poseStack.translate(0, 0, 100);
                 comp.render(poseStack, mouseX, mouseY, delta);
             }
         }
