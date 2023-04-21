@@ -1,6 +1,7 @@
 {
   "owner": "Owner",
   "default": "Default",
+  "none": "None",
   "create": "Create",
   "start": "Start",
 

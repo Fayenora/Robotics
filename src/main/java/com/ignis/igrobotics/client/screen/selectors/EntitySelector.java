@@ -49,7 +49,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		if(selection.get() == null) return;
 		if(selection.get().equals(Reference.DEFAULT_UUID)) {
-			RenderUtil.drawString(poseStack, Component.translatable("none"), getX() + 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.4f);
+			RenderUtil.drawCenteredString(poseStack, Component.translatable("none"), getX() + width / 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.5f, getWidth() - 2);
 			return;
 		}
 		if(!cached) {
