@@ -93,7 +93,6 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			addElement(buttonSelfPos);
 			addElement(buttonConfirm);
 			setFocused(textFieldX);
-			textFieldX.setFocused(true);
 		}
 
 		@Override

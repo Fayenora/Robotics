@@ -4,6 +4,8 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.robot.Selection;
+import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.core.util.StringUtil;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -33,7 +35,7 @@ public class IntSelector extends SelectorElement<Integer> {
 
 	@Override
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		drawCenteredString(poseStack, Minecraft.getInstance().font, Integer.toString(selection.get()), getX() + width / 2, getY() + 5, Reference.FONT_COLOR);
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get()), getX() + width / 2, getY() + 5, Reference.FONT_COLOR, 1, 16);
 	}
 	
 	class GuiSelectInt extends GuiElement {
@@ -65,7 +67,6 @@ public class IntSelector extends SelectorElement<Integer> {
 			};
 			addElement(textField);
 			setFocused(textField);
-			textField.setFocused(true);
 		}
 		
 		protected void keepIntToBounds() {

@@ -49,7 +49,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		if(selection.get() == null) return;
 		if(selection.get().equals(Reference.DEFAULT_UUID)) {
-			RenderUtil.drawString(poseStack, Component.translatable("default"), getX() + 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.4f);
+			RenderUtil.drawString(poseStack, Component.translatable("none"), getX() + 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.4f);
 			return;
 		}
 		if(!cached) {
@@ -124,7 +124,6 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			addElement(buttonSelf);
 			addElement(buttonConfirm);
 			setFocused(textField);
-			textField.setFocused(true);
 		}
 	}
 
