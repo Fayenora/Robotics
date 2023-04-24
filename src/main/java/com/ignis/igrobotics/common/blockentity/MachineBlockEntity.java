@@ -113,7 +113,9 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
 
     protected void onEnteredWorld() {}
 
-    public void dropInventory() {
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
         Containers.dropContents(level, getBlockPos(), this);
     }
 

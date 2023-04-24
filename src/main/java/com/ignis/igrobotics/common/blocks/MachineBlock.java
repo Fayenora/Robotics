@@ -40,14 +40,6 @@ public abstract class MachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if(blockEntity instanceof MachineBlockEntity) {
-            ((MachineBlockEntity) blockEntity).dropInventory();
-        }
-    }
-
-    @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
     }

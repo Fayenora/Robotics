@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.menu.StorageMenu;
-import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
@@ -111,6 +109,12 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv, Player pPlayer) {
         return new StorageMenu(id, inv, this, this.dataAccess);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        storedRobot.exitStorage(Direction.DOWN);
     }
 
     public void clearEntity() {

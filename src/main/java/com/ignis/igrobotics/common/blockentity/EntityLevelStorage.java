@@ -59,7 +59,7 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
         });
     }
 
-    public Optional<Entity> exitStorage() {
+    public Optional<Entity> exitStorage(Direction facing) {
         if(stored == null) return Optional.empty();
         //Clone entity
         Optional<Entity> opt = copyEntity(this.stored);
@@ -67,26 +67,25 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
         Entity entity = opt.get();
 
         //Determine spawn location
-        Direction facing = level.getBlockState(pos.get()).getValue(MachineBlock.FACING);
         switch (facing) {
             case NORTH -> {
-                entity.setPos(Vec3.atCenterOf(pos.get().north()));
+                entity.setPos(Vec3.atBottomCenterOf(pos.get().north()));
                 entity.lerpHeadTo(MathHelper.wrapDegrees(180.0F), 0);
             }
             case WEST -> {
-                entity.setPos(Vec3.atCenterOf(pos.get().west()));
+                entity.setPos(Vec3.atBottomCenterOf(pos.get().west()));
                 entity.lerpHeadTo(MathHelper.wrapDegrees(90.0F), 0);
             }
             case EAST -> {
-                entity.setPos(Vec3.atCenterOf(pos.get().east()));
+                entity.setPos(Vec3.atBottomCenterOf(pos.get().east()));
                 entity.lerpHeadTo(MathHelper.wrapDegrees(-90.0F), 0);
             }
             case SOUTH -> {
-                entity.setPos(Vec3.atCenterOf(pos.get().south()));
+                entity.setPos(Vec3.atBottomCenterOf(pos.get().south()));
                 entity.lerpHeadTo(0, 0);
             }
             default -> {
-                entity.setPos(Vec3.atCenterOf(pos.get()));
+                entity.setPos(Vec3.atBottomCenterOf(pos.get()));
                 entity.lerpHeadTo(0, 0);
             }
         }
@@ -94,6 +93,10 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
         clearEntity();
 
         return Optional.of(entity);
+    }
+
+    public Optional<Entity> exitStorage() {
+        return exitStorage(level.getBlockState(pos.get()).getValue(MachineBlock.FACING));
     }
 
     public Optional<Entity> createNewRobot(UUID owner) {
