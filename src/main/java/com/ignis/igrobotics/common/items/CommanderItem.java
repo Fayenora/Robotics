@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.CommanderMenu;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
 import com.ignis.igrobotics.core.RoboticsFinder;
@@ -30,6 +31,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -117,7 +120,8 @@ public class CommanderItem extends Item {
             //FIXME: Handle trans-dimensional positions
             //If the currently remembered BlockPos points towards a valid robot in storage make it exit and move here
             if(level.getBlockState(saved_pos).getBlock() == ModBlocks.ROBOT_STORAGE.get()) {
-                if(orderEntityOutOfStorage(level.getBlockEntity(saved_pos), pos)) {
+                BlockEntity storage = level.getBlockEntity(level.getBlockState(saved_pos).getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER ? saved_pos.below() : saved_pos);
+                if(orderEntityOutOfStorage(storage, pos)) {
                     return InteractionResult.CONSUME;
                 }
             }
