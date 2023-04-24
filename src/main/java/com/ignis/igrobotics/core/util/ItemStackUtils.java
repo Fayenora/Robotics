@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.util;
 
+import com.google.gson.JsonElement;
 import com.ignis.igrobotics.Robotics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
+import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -180,6 +182,17 @@ public class ItemStackUtils {
 	
 	public static Ingredient getIngredient(Item item, int amount) {
 		return Ingredient.of(new ItemStack(item, amount));
+	}
+
+	public static Ingredient fromJson(JsonElement json) {
+		Ingredient ingr = Ingredient.fromJson(json);
+		if(json.isJsonObject() && json.getAsJsonObject().has("amount")) {
+			int amount = json.getAsJsonObject().get("amount").getAsInt();
+			for(ItemStack stack : ingr.getItems()) {
+				stack.setCount(amount);
+			}
+		}
+		return ingr;
 	}
 
 }
