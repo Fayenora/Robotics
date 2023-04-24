@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.util;
 
-import com.ignis.igrobotics.Reference;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,12 +20,12 @@ import java.awt.*;
 
 public class RenderUtil {
 
-    public static void beginClipping(Rectangle shape) {
-        Dimension screenSize = new Dimension(Minecraft.getInstance().screen.width, Minecraft.getInstance().screen.height);
-        //RenderSystem.enableScissor(0, 0, screenSize.width, shape.y);
-        //RenderSystem.enableScissor(0, shape.y, shape.x, shape.height);
-        //RenderSystem.enableScissor(shape.x + shape.width, shape.y, screenSize.width - shape.x - shape.width, shape.height);
-        //RenderSystem.enableScissor(0, shape.y + shape.height, screenSize.width, screenSize.height - shape.y - shape.height);
+    public static void enableScissor(Rectangle rect) {
+        GuiComponent.enableScissor(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+    }
+
+    public static void disableScissor() {
+        GuiComponent.disableScissor();
     }
 
     public static void drawString(PoseStack poseStack, String text, int x, int y, int color, float scale) {
@@ -105,16 +104,16 @@ public class RenderUtil {
         ent.setCustomNameVisible(f1);
     }
 
-    public static void drawRotatingEntity(int posX, int posY, int scale, LivingEntity entity, float angle) {
+    public static void drawRotatingEntity(PoseStack posestack1, int posX, int posY, int scale, LivingEntity entity, float angle) {
         float f = 0;
         float f1 = 0;
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
-        posestack.translate((float)posX, (float)posY, 1050.0F);
+        posestack.translate((float)posX, (float)posY, 10500.0F);
         posestack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
-        PoseStack posestack1 = new PoseStack();
-        posestack1.translate(0.0F, 0.0F, 1000.0F);
+        posestack1.pushPose();
+        posestack1.translate(0.0F, 0.0F, 10000.0F);
         posestack1.scale((float)scale, (float)scale, (float)scale);
         Quaternionf quaternionf = (new Quaternionf()).rotateZ((float)Math.PI);
         // Add -30 deg to view slightly from above
@@ -149,6 +148,7 @@ public class RenderUtil {
         entity.yHeadRotO = f5;
         entity.yHeadRot = f6;
         posestack.popPose();
+        posestack1.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
     }
