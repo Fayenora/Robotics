@@ -136,7 +136,7 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
             }
         }
         RenderSystem.disableDepthTest();
-        if(tickCounter >= 10) {
+        if(tickCounter >= 5) {
             tickCounter = 0;
             if(getFocused() instanceof EditBox editBox) {
                 editBox.tick();
