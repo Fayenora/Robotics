@@ -24,7 +24,7 @@ public class WireCutterRecipes implements IRecipeSerializer<MachineRecipe<?>> {
 
     @Override
     public List<MachineRecipe<?>> getRecipes() {
-        return null;
+        return recipes;
     }
 
     @Override
