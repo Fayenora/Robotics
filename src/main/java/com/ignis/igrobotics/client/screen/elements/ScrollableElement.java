@@ -67,9 +67,9 @@ public class ScrollableElement extends GuiElement {
             internalRemove(toRemove);
             toRemove = -1;
         }
-        RenderUtil.beginClipping(getShape());
+        RenderUtil.enableScissor(getShape());
         super.render(poseStack, mouseX, mouseY, delta);
-        RenderSystem.disableScissor();
+        RenderUtil.disableScissor();
     }
 
     @Override

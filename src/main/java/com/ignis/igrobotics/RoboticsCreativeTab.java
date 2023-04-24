@@ -24,26 +24,26 @@ public class RoboticsCreativeTab {
         event.registerCreativeModeTab(new ResourceLocation(Robotics.MODID, "items"), builder -> {
             builder.title(Component.translatable("item_group." + Robotics.MODID + ".items"))
                     .icon(() -> new ItemStack(ModItems.CIRCUIT.get()))
-                    .displayItems((flags, populator, hasPermissions) -> {
+                    .displayItems((params, output) -> {
                         Collection<RegistryObject<Item>> itemsWithoutMaterials = new ArrayList(ModItems.ITEMS.getEntries());
                         for(RegistryObject[] regs : ModItems.MATERIALS) {
                             itemsWithoutMaterials.removeAll(List.of(regs));
                         }
                         for(RegistryObject<Item> item : itemsWithoutMaterials) {
-                            populator.accept(item.get());
+                            output.accept(item.get());
                         }
                         for(RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {
-                            populator.accept(block.get());
+                            output.accept(block.get());
                         }
                     });
         });
         event.registerCreativeModeTab(new ResourceLocation(Robotics.MODID, "materials"), builder -> {
             builder.title(Component.translatable("item_group." + Robotics.MODID + ".materials"))
                     .icon(() -> new ItemStack(ModItems.MATERIALS[0][0].get()))
-                    .displayItems((flags, populator, hasPermissions) -> {
+                    .displayItems((params, output) -> {
                         for(RegistryObject[] regs : ModItems.MATERIALS) {
                             for(RegistryObject<Item> reg : regs) {
-                                populator.accept(reg.get());
+                                output.accept(reg.get());
                             }
                         }
                     });

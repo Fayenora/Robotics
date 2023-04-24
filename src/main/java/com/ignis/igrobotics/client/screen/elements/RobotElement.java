@@ -27,6 +27,6 @@ public class RobotElement extends ButtonElement {
     public void render(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(poseStack, pMouseX, pMouseY, pPartialTick);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        InventoryScreen.renderEntityInInventory(getX() + 10, getY() + 23, 10, 0, 0, robot);
+        InventoryScreen.renderEntityInInventoryFollowsAngle(poseStack, getX() + 10, getY() + 23, 10, 0, 0, robot);
     }
 }

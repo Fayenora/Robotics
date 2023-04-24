@@ -40,8 +40,8 @@ public class CommandElement extends ButtonElement {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderButton(poseStack, pMouseX, pMouseY, pPartialTick);
+    public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
         int i = 0;
         for(Component comp : command.getDescription()) {
             drawString(poseStack, font, comp, getX() + getOffsetToText(i++), getY() + 9, Reference.FONT_COLOR);

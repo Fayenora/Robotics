@@ -91,7 +91,7 @@ public class AssemblerRecipeCategory extends MachineRecipeCategory {
 				.addIngredients(recipe.getIngredients().get(3));
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, AssemblerMenu.slot_out.x - 7, AssemblerMenu.slot_out.y - 4)
-				.addIngredient(VanillaTypes.ITEM_STACK, recipe.getResultItem());
+				.addIngredient(VanillaTypes.ITEM_STACK, recipe.getOutputs()[0]);
 	}
 
 }

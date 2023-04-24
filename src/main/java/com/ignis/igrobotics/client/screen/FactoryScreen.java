@@ -102,7 +102,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         if(factory.getEntity().isEmpty() || !(factory.getEntity().get() instanceof LivingEntity living)) return;
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderUtil.drawEntityOnScreen(leftPos + 116, topPos + 105, 30, 0, 0, living);
+        RenderUtil.drawEntityOnScreen(poseStack, leftPos + 116, topPos + 105, 30, 0, 0, living);
 
         //Draw Module Slots
         RenderSystem.setShaderTexture(0, Reference.MISC);

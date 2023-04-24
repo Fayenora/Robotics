@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.util;
 
-import com.ignis.igrobotics.Reference;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,12 +20,12 @@ import java.awt.*;
 
 public class RenderUtil {
 
-    public static void beginClipping(Rectangle shape) {
-        Dimension screenSize = new Dimension(Minecraft.getInstance().screen.width, Minecraft.getInstance().screen.height);
-        //RenderSystem.enableScissor(0, 0, screenSize.width, shape.y);
-        //RenderSystem.enableScissor(0, shape.y, shape.x, shape.height);
-        //RenderSystem.enableScissor(shape.x + shape.width, shape.y, screenSize.width - shape.x - shape.width, shape.height);
-        //RenderSystem.enableScissor(0, shape.y + shape.height, screenSize.width, screenSize.height - shape.y - shape.height);
+    public static void enableScissor(Rectangle rect) {
+        GuiComponent.enableScissor(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+    }
+
+    public static void disableScissor() {
+        GuiComponent.disableScissor();
     }
 
     public static void drawString(PoseStack poseStack, String text, int x, int y, int color, float scale) {
@@ -79,11 +78,11 @@ public class RenderUtil {
         drawCenteredString(poseStack, text.getString(), x, y, color, scaleY, maxWidth);
     }
 
-    public static void drawEntityOnScreen(int x, int y, int mouseX, int mouseY, LivingEntity entity) {
-        drawEntityOnScreen(x, y, mouseX, mouseY, 30, false, entity);
+    public static void drawEntityOnScreen(PoseStack poseStack, int x, int y, int mouseX, int mouseY, LivingEntity entity) {
+        drawEntityOnScreen(poseStack, x, y, mouseX, mouseY, 30, false, entity);
     }
 
-    public static void drawEntityOnScreen(int x, int y, int mouseX, int mouseY, int scale, boolean ignoreMouse, LivingEntity entity) {
+    public static void drawEntityOnScreen(PoseStack poseStack, int x, int y, int mouseX, int mouseY, int scale, boolean ignoreMouse, LivingEntity entity) {
         int intmouseX = x - mouseX + (int)(5/6F * scale);
         int intmouseY = y - mouseY + (int)(17/30F * scale);
         if(ignoreMouse) {
@@ -91,30 +90,30 @@ public class RenderUtil {
             intmouseY = 0;
         }
 
-        drawEntityOnScreen(x + (int)(13/15F * scale), y + (int)(34/15F * scale), scale, intmouseX, intmouseY, entity);
+        drawEntityOnScreen(poseStack, x + (int)(13/15F * scale), y + (int)(34/15F * scale), scale, intmouseX, intmouseY, entity);
     }
 
-    public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent) {
-        drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, ent, false);
+    public static void drawEntityOnScreen(PoseStack poseStack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent) {
+        drawEntityOnScreen(poseStack, posX, posY, scale, mouseX, mouseY, ent, false);
     }
 
-    public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
+    public static void drawEntityOnScreen(PoseStack poseStack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
         boolean f1 = ent.shouldShowName();
         ent.setCustomNameVisible(renderNameTag);
-        InventoryScreen.renderEntityInInventory(posX, posY, scale, mouseX, mouseY, ent);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(poseStack, posX, posY, scale, mouseX, mouseY, ent);
         ent.setCustomNameVisible(f1);
     }
 
-    public static void drawRotatingEntity(int posX, int posY, int scale, LivingEntity entity, float angle) {
+    public static void drawRotatingEntity(PoseStack posestack1, int posX, int posY, int scale, LivingEntity entity, float angle) {
         float f = 0;
         float f1 = 0;
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
-        posestack.translate((float)posX, (float)posY, 1050.0F);
+        posestack.translate((float)posX, (float)posY, 10500.0F);
         posestack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
-        PoseStack posestack1 = new PoseStack();
-        posestack1.translate(0.0F, 0.0F, 1000.0F);
+        posestack1.pushPose();
+        posestack1.translate(0.0F, 0.0F, 10000.0F);
         posestack1.scale((float)scale, (float)scale, (float)scale);
         Quaternionf quaternionf = (new Quaternionf()).rotateZ((float)Math.PI);
         // Add -30 deg to view slightly from above
@@ -149,6 +148,7 @@ public class RenderUtil {
         entity.yHeadRotO = f5;
         entity.yHeadRot = f6;
         posestack.popPose();
+        posestack1.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
     }
@@ -158,13 +158,9 @@ public class RenderUtil {
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.translate(0.0F, 0.0F, 32.0F);
         RenderSystem.applyModelViewMatrix();
-        //this.setBlitOffset(200);
-        itemRenderer.blitOffset = 200.0F;
         var otherFont = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
         if (otherFont == null) otherFont = Minecraft.getInstance().font;
-        itemRenderer.renderAndDecorateItem(stack, x, y);
-        itemRenderer.renderGuiItemDecorations(otherFont, stack, x, y - (stack.isEmpty() ? 0 : 8), "");
-        //this.setBlitOffset(0);
-        itemRenderer.blitOffset = 0.0F;
+        itemRenderer.renderAndDecorateItem(posestack, stack, x, y);
+        itemRenderer.renderGuiItemDecorations(posestack, otherFont, stack, x, y - (stack.isEmpty() ? 0 : 8), "");
     }
 }

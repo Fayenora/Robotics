@@ -47,7 +47,7 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         if(entity == null) return;
 
         RenderSystem.setShaderTexture(0, Reference.MISC);
@@ -62,7 +62,7 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             if(robot.isActive()) {
-                RenderUtil.drawEntityOnScreen(leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
+                RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
             } else {
                 //TODO
                 //RenderUtil.drawInactiveRobotOnScreen(this.guiLeft + 25, this.guiTop + 7, 30, robot);

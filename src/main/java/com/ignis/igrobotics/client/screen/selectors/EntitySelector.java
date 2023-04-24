@@ -27,11 +27,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.awt.*;
 import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
 public class EntitySelector extends SelectorElement<UUID> implements IPacketDataReceiver {
-	
+
 	/** If a server side search yielded no result(cachedEntity is null), the client still needs to stop asking */
 	private boolean cached = false;
 	private LivingEntity cachedEntity;
@@ -49,7 +50,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		if(selection.get() == null) return;
 		if(selection.get().equals(Reference.DEFAULT_UUID)) {
-			RenderUtil.drawString(poseStack, Component.translatable("default"), getX() + 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.4f);
+			RenderUtil.drawCenteredString(poseStack, Component.translatable("none"), getX() + width / 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.5f, getWidth() - 2);
 			return;
 		}
 		if(!cached) {
@@ -57,18 +58,18 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			NetworkHandler.sendToServer(new PacketRequestEntitySearch(getParentGuiPath(), selection.get()));
 			return;
 		}
-		if(cachedEntity != null) {
-			RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
-			RenderUtil.drawRotatingEntity(getX() + width / 2, getY() + height / 2 + 6, (int) (8 / cachedEntity.getBoundingBox().getSize()), cachedEntity, angle);
-			RenderSystem.disableScissor();
+		if(cachedEntity != null && !getBaseGui().hasSubGui()) {
+			RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
+			RenderUtil.drawRotatingEntity(poseStack, getX() + width / 2, getY() + height / 2 + 6, (int) (8 / cachedEntity.getBoundingBox().getSize()), cachedEntity, angle);
+			RenderUtil.disableScissor();
 		}
 	}
-	
+
 	public void setCachedEntity(LivingEntity ent) {
 		cached = true;
 		cachedEntity = ent;
 	}
-	
+
 	public void setSelection(UUID uuid) {
 		cached = false;
 		selection.set(uuid);
@@ -81,7 +82,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	}
 
 	class GuiSelectSpEntity extends GuiElement {
-		
+
 		EditBox textField;
 		ButtonElement buttonSelect, buttonSelf, buttonConfirm;
 
@@ -124,7 +125,6 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			addElement(buttonSelf);
 			addElement(buttonConfirm);
 			setFocused(textField);
-			textField.setFocus(true);
 		}
 	}
 

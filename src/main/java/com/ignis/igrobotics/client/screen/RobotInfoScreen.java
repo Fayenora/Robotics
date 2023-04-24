@@ -140,7 +140,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         int entity_size = 55;
         if(!hasSubGui()) {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            RenderUtil.drawEntityOnScreen(leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entity);
+            RenderUtil.drawEntityOnScreen(poseStack, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entity);
         }
     }
 
@@ -159,7 +159,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
                 case InputConstants.KEY_ESCAPE:
                     return super.keyPressed(keyCode, pScanCode, pModifiers);
                 case InputConstants.KEY_RETURN:
-                    nameBar.setFocus(false);
+                    nameBar.setFocused(false);
                     renameRobot();
                     return true;
                 default:

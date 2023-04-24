@@ -66,7 +66,7 @@ public class WireCutterRecipeCategory extends MachineRecipeCategory {
 		builder.addSlot(RecipeIngredientRole.INPUT, WireCutterMenu.slot_main.x - 7, WireCutterMenu.slot_main.y - 4)
 				.addIngredients(recipe.getIngredients().get(1));
 		builder.addSlot(RecipeIngredientRole.OUTPUT, WireCutterMenu.slot_out.x - 7, WireCutterMenu.slot_out.y - 4)
-				.addIngredient(VanillaTypes.ITEM_STACK, recipe.getResultItem());
+				.addIngredient(VanillaTypes.ITEM_STACK, recipe.getOutputs()[0]);
 	}
 
 }

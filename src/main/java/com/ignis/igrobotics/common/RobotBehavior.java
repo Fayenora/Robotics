@@ -55,7 +55,7 @@ public class RobotBehavior {
     };
 
     @SubscribeEvent
-    public static void onRobotSpawn(LivingSpawnEvent event) {
+    public static void onRobotSpawn(MobSpawnEvent event) {
         if(!event.getEntity().getCapability(ModCapabilities.ROBOT).isPresent()) return;
         onRobotCreated(event.getEntity());
     }

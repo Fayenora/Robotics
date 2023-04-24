@@ -66,7 +66,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
         }
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        InventoryScreen.renderEntityInInventory(leftPos + 126, topPos + 74, 30, 0, 0, living);
+        InventoryScreen.renderEntityInInventoryFollowsAngle(poseStack, leftPos + 126, topPos + 74, 30, 0, 0, living);
     }
 
     @Override

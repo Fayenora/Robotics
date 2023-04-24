@@ -11,6 +11,7 @@ import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -20,18 +21,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @OnlyIn(Dist.CLIENT)
 public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
-	
+
 	protected Collection<LivingEntity> options;
-	
+
 	public EntityTypeSelector(Selection<EntityType<?>> sel, int x, int y) {
 		this(sel, x, y, CommonSetup.allLivingEntities.values());
 	}
-	
+
 	public EntityTypeSelector(Selection<EntityType<?>> sel, int x, int y, Collection<LivingEntity> options) {
 		super(sel, x, y);
 		setTooltip(selection.get().getDescription());
@@ -45,7 +47,7 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 		selection.set(type);
 		setTooltip(selection.get().getDescription());
 	}
-	
+
 	@Override
 	protected IElement getMaximizedVersion() {
 		return new GuiSelectEntity(options);
@@ -56,26 +58,27 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 		if(selection == null || selection.get() == null) return;
 		Entity entity = CommonSetup.allLivingEntities.get(selection.get());
 		if(!(entity instanceof LivingEntity living)) return;
-		RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
-		RenderUtil.drawRotatingEntity(getX() + width / 2, getY() + height / 2 + 6, (int) (8 / living.getBoundingBox().getSize()), living, angle);
-		RenderSystem.disableScissor();
+		if(getBaseGui().hasSubGui()) return;
+		RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
+		RenderUtil.drawRotatingEntity(poseStack, getX() + width / 2, getY() + height / 2 + 6, (int) (8 / living.getBoundingBox().getSize()), living, angle);
+		RenderUtil.disableScissor();
 	}
-	
+
 	class GuiSelectEntity extends GuiElement {
-		
+
 		EditBox searchBar;
 		ScrollableElement entityGrid;
-		
+
 		String currentSearch = "";
 		Collection<LivingEntity> allOptions;
 		Collection<LivingEntity> currentOptions;
-		
+
 		public GuiSelectEntity(Collection<LivingEntity> selectableOptions) {
 			super(0, 0, 162, 164);
 			initTextureLocation(TEXTURE, 0, 0);
 			this.allOptions = selectableOptions;
 			this.currentOptions = selectableOptions;
-			
+
 			searchBar = new EditBox(Minecraft.getInstance().font, getX() + 8, getY() + 8, 146, 10, Component.empty());
 			entityGrid = new ScrollableElement(getX() + 9, getY() + 25, 145, 131);
 			setOptions(currentOptions);
@@ -83,7 +86,6 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 			addElement(searchBar);
 			addElement(entityGrid);
 			setFocused(searchBar);
-			searchBar.setFocus(true);
 		}
 
 		@Override
@@ -102,7 +104,7 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 			setOptions(currentOptions);
 			currentSearch = searchTerm;
 		}
-		
+
 		private void setOptions(Collection<LivingEntity> options) {
 			entityGrid.clear();
 			for(LivingEntity living : options) {
@@ -112,7 +114,7 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 				}));
 			}
 		}
-		
+
 	}
 
 	public class ComponentEntity extends ButtonElement {
@@ -127,13 +129,13 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 		}
 
 		@Override
-		public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-			super.renderButton(poseStack, pMouseX, pMouseY, pPartialTick);
-			RenderUtil.beginClipping(MathUtil.downsizeRect(getShape(), 1));
-			RenderUtil.drawRotatingEntity(getX() + BOUNDS.width / 2, getY() + 6 + BOUNDS.height / 2, (int) (8 / living.getBoundingBox().getSize()), living, angle);
-			RenderSystem.disableScissor();
+		public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+			super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
+			RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
+			RenderUtil.drawRotatingEntity(poseStack, getX() + BOUNDS.width / 2, getY() + 6 + BOUNDS.height / 2, (int) (8 / living.getBoundingBox().getSize()), living, angle);
+			RenderUtil.disableScissor();
 		}
-		
+
 	}
 
 }
