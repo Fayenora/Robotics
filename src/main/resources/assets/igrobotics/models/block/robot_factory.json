@@ -3,6 +3,7 @@
 	"texture_size": [128, 128],
 	"render_type": "cutout",
 	"textures": {
+		"particle": "igrobotics:block/robot_factory",
 		"2": "igrobotics:block/robot_factory"
 	},
 	"elements": [
