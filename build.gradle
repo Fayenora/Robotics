@@ -132,6 +132,13 @@ repositories {
         //Geckolib
         url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
     }
+    maven {
+        // CurseForge
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -147,6 +154,11 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
     //Geckolib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${geckolib_version}")
+
+    //RFTools at runtime
+    runtimeOnly(fg.deobf("curse.maven:McJtyLib-233105:4501793"))
+    runtimeOnly(fg.deobf("curse.maven:RFToolsBase-326041:4474182"))
+    runtimeOnly(fg.deobf("curse.maven:RFToolsPower-290209:4462358"))
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

@@ -1,30 +1,55 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 
 import java.awt.*;
+import java.util.function.Supplier;
 
 public class ArrowElement extends GuiElement {
 
-    public ArrowElement(int x, int y, Direction pointTo) {
+    private final Direction pointTo;
+    private final Supplier<Float> progress;
+
+    public ArrowElement(int x, int y, Direction pointTo, Supplier<Float> progress) {
         super(x, y, dimensionsFromDirection(pointTo).width, dimensionsFromDirection(pointTo).height);
+        this.pointTo = pointTo;
+        this.progress = progress;
     }
 
     private static Dimension dimensionsFromDirection(Direction dir) {
-        switch(dir) {
-            case EAST: return new Dimension(22, 15);
-            case NORTH:
-            case UP: return new Dimension(16, 23);
-            case SOUTH:
-            case DOWN: return new Dimension(15, 22);
-            default: return new Dimension(23, 16); //Includes west/left-pointing case
-        }
+        return switch (dir) {
+            case EAST -> new Dimension(22, 15);
+            case NORTH, UP -> new Dimension(16, 23);
+            case SOUTH, DOWN -> new Dimension(15, 22);
+            default -> new Dimension(23, 16); //Includes west/left-pointing case
+        };
     }
 
     @Override
-    public void render(PoseStack p_94669_, int p_94670_, int p_94671_, float p_94672_) {
+    public void render(PoseStack poseStack, int p_94670_, int p_94671_, float p_94672_) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Reference.MISC);
 
+        int k = (int) (progress.get() * Math.max(width, height));
+        int l = (k != 0) ? 1 : 0;
+
+        switch (pointTo) {
+            case DOWN, SOUTH -> blit(poseStack, getX(), getY(), 233, 211, width, k);
+            case EAST -> blit(poseStack, getX(), getY(), 233, 196, k, height);
+            case WEST -> {
+                k += l;
+                blit(poseStack, getX() + width - k, getY(), 233 + width - k, 180, k, height);
+            }
+            case UP, NORTH -> {
+                k += l;
+                blit(poseStack, getX(), getY() + height - k, 233, 233 + height - k, width, k);
+            }
+        }
     }
 }

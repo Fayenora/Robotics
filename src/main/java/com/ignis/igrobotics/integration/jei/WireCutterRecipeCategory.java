@@ -40,12 +40,12 @@ public class WireCutterRecipeCategory extends MachineRecipeCategory {
 	@Override
 	public void draw(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
 		energy_bar.draw(stack, WireCutterScreen.energy_bar.x - 7, WireCutterScreen.energy_bar.y - 4);
-		arrow.draw(stack, WireCutterScreen.arrow.x, WireCutterScreen.arrow.y);
+		arrow.draw(stack, WireCutterScreen.arrow.x - 7, WireCutterScreen.arrow.y - 4);
 	}
 
 	@Override
 	public List<Component> getTooltipStrings(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-		if(WireCutterScreen.arrow.contains(mouseX, mouseY)) {
+		if(WireCutterScreen.arrow.contains(mouseX + 7, mouseY + 4)) {
 			return recipe.getRuntimeTooltip();
 		}
 		if(WireCutterScreen.energy_bar.contains(mouseX + 7, mouseY + 4)) {

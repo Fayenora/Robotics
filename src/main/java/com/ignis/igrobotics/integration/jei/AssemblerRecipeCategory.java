@@ -54,18 +54,18 @@ public class AssemblerRecipeCategory extends MachineRecipeCategory {
 	@Override
 	public void draw(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
 		energy_bar.draw(stack, AssemblerScreen.energy_bar.x - 7, AssemblerScreen.energy_bar.y - 4);
-		arrow_down.draw(stack, AssemblerScreen.arr_down.x, AssemblerScreen.arr_down.y);
-		arrow_up.draw(stack, AssemblerScreen.arr_up.x, AssemblerScreen.arr_up.y);
-		arrow_right.draw(stack, AssemblerScreen.arr_right.x, AssemblerScreen.arr_right.y);
-		arrow_left.draw(stack, AssemblerScreen.arr_left.x, AssemblerScreen.arr_left.y);
+		arrow_down.draw(stack, AssemblerScreen.arr_down.x - 7, AssemblerScreen.arr_down.y - 4);
+		arrow_up.draw(stack, AssemblerScreen.arr_up.x - 7, AssemblerScreen.arr_up.y - 4);
+		arrow_right.draw(stack, AssemblerScreen.arr_right.x - 7, AssemblerScreen.arr_right.y - 4);
+		arrow_left.draw(stack, AssemblerScreen.arr_left.x - 7, AssemblerScreen.arr_left.y - 4);
 	}
 
 	@Override
 	public List<Component> getTooltipStrings(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-		if (AssemblerScreen.arr_down.contains(mouseX, mouseY) ||
-				AssemblerScreen.arr_up.contains(mouseX, mouseY) ||
-				AssemblerScreen.arr_right.contains(mouseX, mouseY) ||
-				AssemblerScreen.arr_left.contains(mouseX, mouseY)) {
+		if (AssemblerScreen.arr_down.contains(mouseX + 7, mouseY + 4) ||
+				AssemblerScreen.arr_up.contains(mouseX + 7, mouseY + 4) ||
+				AssemblerScreen.arr_right.contains(mouseX + 7, mouseY + 4) ||
+				AssemblerScreen.arr_left.contains(mouseX + 7, mouseY + 4)) {
 			return recipe.getRuntimeTooltip();
 		}
 		if(AssemblerScreen.energy_bar.contains(mouseX + 7, mouseY + 4)) {

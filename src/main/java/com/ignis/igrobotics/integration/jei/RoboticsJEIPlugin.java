@@ -81,7 +81,7 @@ public class RoboticsJEIPlugin implements IModPlugin {
     }
 
     private void addRecipeClickArea(IGuiHandlerRegistration registration, Class<? extends AbstractContainerScreen<?>> screenClass, Rectangle clickArea, RecipeType<?> recipeType) {
-        registration.addRecipeClickArea(screenClass, clickArea.x + 7, clickArea.y + 4, clickArea.width, clickArea.height, recipeType);
+        registration.addRecipeClickArea(screenClass, clickArea.x, clickArea.y, clickArea.width, clickArea.height, recipeType);
     }
 
     @Override
