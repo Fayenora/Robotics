@@ -30,11 +30,16 @@ public class FactoryInventory extends MachineInventory {
 
     @Override
     protected void onContentsChanged(int index) {
+        deriveEntity(index);
+        factory.sync();
+    }
+
+    private void deriveEntity(int slotIndex) {
         if(factory.getEntity().isEmpty() || !(factory.getEntity().get() instanceof LivingEntity living)) return;
-        if(index < 6) {
-            EnumRobotPart part = EnumRobotPart.byId(index);
-            if(!getStackInSlot(index).isEmpty()) {
-                EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(index).getItem()).getMaterial();
+        if(slotIndex < 6) {
+            EnumRobotPart part = EnumRobotPart.byId(slotIndex);
+            if(!getStackInSlot(slotIndex).isEmpty()) {
+                EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(slotIndex).getItem()).getMaterial();
                 factory.setRobotPart(part, material);
             } else {
                 factory.setRobotPart(part, EnumRobotMaterial.NONE);
@@ -44,6 +49,12 @@ public class FactoryInventory extends MachineInventory {
         }
         if(factory.getLevel().isClientSide()) return;
         setSize((int) (6 + living.getAttributeValue(ModAttributes.MODIFIER_SLOTS)));
+    }
+
+    public void deriveEntity() {
+        for(int i = 0; i < getSlots(); i++) {
+            deriveEntity(i);
+        }
         factory.sync();
     }
 

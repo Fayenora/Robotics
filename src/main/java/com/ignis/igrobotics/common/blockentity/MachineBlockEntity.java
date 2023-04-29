@@ -108,19 +108,10 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     public void setLevel(Level p_155231_) {
         inventory.setLevel(level);
         super.setLevel(p_155231_);
-        onEnteredWorld();
-    }
-
-    protected void onEnteredWorld() {}
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        Containers.dropContents(level, getBlockPos(), this);
     }
 
     public void sync() {
-        level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), level.getBlockState(getBlockPos()), 2);
+        level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), level.getBlockState(getBlockPos()), 3);
         setChanged();
     }
 
@@ -128,30 +119,32 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         boolean flag1 = false;
         boolean flag2 = machine.isRunning();
 
-        if(machine.isRunning() && machine.hasEnoughEnergy(machine.currentRecipe)) {
-            ++machine.currentRunTime;
-            machine.consumeEnergy(machine.currentRecipe);
+        if(machine.hasRecipe() && machine.hasEnoughEnergy(machine.currentRecipe)) {
+            if(machine.isRunning()) {
+                ++machine.currentRunTime;
+                machine.consumeEnergy(machine.currentRecipe);
 
-            if (machine.currentRunTime == machine.runTime) {
-                machine.craftItem(machine.currentRecipe);
-                machine.onItemCrafted();
+                if (machine.currentRunTime == machine.runTime) {
+                    machine.craftItem(machine.currentRecipe);
+                    machine.onItemCrafted();
 
-                //Evaluate the next recipe
-                machine.currentRecipe = machine.getRecipe();
-                machine.currentlyProcessedItems = ItemStackUtils.full(machine.inputs.length, ItemStack.EMPTY);
-                machine.currentRunTime = 0;
-                machine.runTime = machine.currentRecipe != null ? machine.currentRecipe.getProcessingTime() : 0;
+                    //Evaluate the next recipe
+                    machine.currentRecipe = machine.getRecipe();
+                    machine.currentlyProcessedItems = ItemStackUtils.full(machine.inputs.length, ItemStack.EMPTY);
+                    machine.currentRunTime = 0;
+                    machine.runTime = machine.currentRecipe != null ? machine.currentRecipe.getProcessingTime() : 0;
+
+                    flag1 = true;
+                }
+            } else {
+                machine.currentRunTime = 1;
+
+                machine.onMachineStart();
+                machine.consumeEnergy(machine.currentRecipe);
+                machine.consumeInputs(machine.currentRecipe);
 
                 flag1 = true;
             }
-        } else if (machine.hasRecipe() && machine.hasEnoughEnergy(machine.currentRecipe)) {
-            machine.currentRunTime = 1;
-
-            machine.onMachineStart();
-            machine.consumeEnergy(machine.currentRecipe);
-            machine.consumeInputs(machine.currentRecipe);
-
-            flag1 = true;
         }
 
         if (flag2 != machine.isRunning()) {

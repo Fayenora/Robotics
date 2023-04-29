@@ -10,18 +10,27 @@ import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,7 +41,7 @@ import java.util.UUID;
 @MethodsReturnNonnullByDefault
 public class FactoryBlockEntity extends MachineBlockEntity {
 
-    public static final int ENERGY_COST = 500000;
+    public static final int ENERGY_COST = 50000;
     public static final int WORK_TIME = 60;
 
     public static final MachineRecipe<?> DEFAULT_RECIPE = new MachineRecipe.Builder(ModMachines.ROBOT_FACTORY, new ResourceLocation(Robotics.MODID, "robot_construction"))
@@ -48,7 +57,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     private boolean canStart = false;
 
     public FactoryBlockEntity(BlockPos pos, BlockState state) {
-        super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES, new int[] {}, new int[] {});
+        super(ModMachines.ROBOT_FACTORY, pos, state, 6, new int[] {}, new int[] {});
         storedRobot = new EntityLevelStorage(level, null, this::getBlockPos);
         inventory = new FactoryInventory(this, getContainerSize());
         inventory.setAllSlotsAccessibleByDefault();
@@ -130,6 +139,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         Optional<Entity> robot = storedRobot.createNewRobot(owner);
         builtRobot = false;
         this.inventory.clear();
+        sync();
         return robot;
     }
 
@@ -137,25 +147,41 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     // Saving & Syncing
     ////////////////////
 
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::getUpdateTag);
+    }
+
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
+        CompoundTag tag = new CompoundTag();
         tag.putBoolean("canStart", canStart());
+        tag.putBoolean("builtRobot", builtRobot);
+        tag.put("inventory", inventory.serializeNBT());
         return tag;
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        canStart = nbt.getBoolean("canStart");
-        builtRobot = nbt.getBoolean("builtRobot");
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        handleUpdateTag(pkt.getTag());
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        compound.putBoolean("canStart", canStart());
-        compound.putBoolean("builtRobot", builtRobot);
+    public void handleUpdateTag(CompoundTag tag) {
+        canStart = tag.getBoolean("canStart");
+        builtRobot = tag.getBoolean("builtRobot");
+        inventory.deserializeNBT(tag.getCompound("inventory"));
+        requestModelDataUpdate();
+    }
+
+    @Override
+    public void requestModelDataUpdate() {
+        if(isRemoved()) return;
+        if(inventory instanceof FactoryInventory inv) {
+            inv.deriveEntity();
+        }
+        super.requestModelDataUpdate();
     }
 
     ////////////////////

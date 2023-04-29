@@ -111,12 +111,6 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
         return new StorageMenu(id, inv, this, this.dataAccess);
     }
 
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        storedRobot.exitStorage(Direction.DOWN);
-    }
-
     public void clearEntity() {
         storedRobot.clearEntity();
         sync();

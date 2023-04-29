@@ -62,7 +62,7 @@ public class MachineInventory extends BaseInventory {
     }
 
     public void setAllSlotsAccessibleByDefault() {
-        int[] allSlots = new int[getMaxInventorySize()];
+        int[] allSlots = new int[getSlots()];
         for(int i = 0; i < allSlots.length; i++) {
             allSlots[i] = i;
         }

@@ -16,12 +16,10 @@ public class BaseInventory extends ItemStackHandler implements ModifiableInvento
 
 	private Level world;
 	private Supplier<BlockPos> pos;
-	private int inventorySize;
 	private int[] lockedSlots = new int[0];
 	
 	public BaseInventory(Supplier<BlockPos> pos, int size) {
 		super(size);
-		inventorySize = size;
 		this.pos = pos;
 	}
 
@@ -34,48 +32,28 @@ public class BaseInventory extends ItemStackHandler implements ModifiableInvento
 	}
 
 	@Override
-	public int getSlots() {
-		return inventorySize;
-	}
-
-	@Override
 	public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 		return !IntStream.of(lockedSlots).anyMatch((x) -> x == slot);	//The very fancy way of "contains";
-	}
-	
-	public int getMaxInventorySize() {
-		return stacks.size();
 	}
 
 	@Override
 	public void setSize(int newSize) {
-		newSize = Math.min(newSize, getMaxInventorySize());
 		if(getSlots() == newSize) return;
 		
 		//Drop items that don't fit anymore
-		if(world != null && !world.isClientSide()) {
-			if(newSize < getSlots()) {
-				Containers.dropContents(world, pos.get(), subList(newSize, inventorySize));
-				for(int i = newSize; i < inventorySize; i++) {
-					stacks.set(i, ItemStack.EMPTY);
-				}
+		if(world != null && !world.isClientSide() && newSize < getSlots()) {
+			Containers.dropContents(world, pos.get(), subList(newSize, getSlots()));
+			for(int i = newSize; i < getSlots(); i++) {
+				stacks.set(i, ItemStack.EMPTY);
 			}
 		}
 
-		this.inventorySize = newSize;
-	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		CompoundTag nbt = super.serializeNBT();
-		nbt.putInt("inventorySize", inventorySize);
-		return super.serializeNBT();
-	}
-
-	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		super.deserializeNBT(nbt);
-		this.inventorySize = nbt.getInt("inventorySize");
+		//Change the list size
+		NonNullList<ItemStack> newStacks = NonNullList.withSize(newSize, ItemStack.EMPTY);
+		for(int i = 0; i < Math.min(newSize, getSlots()); i++) {
+			newStacks.set(i, stacks.get(i));
+		}
+		stacks = newStacks;
 	}
 
 	public boolean isEmpty() {
