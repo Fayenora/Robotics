@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class RobotModule {
@@ -80,5 +82,9 @@ public class RobotModule {
         module.perks = PerkMap.deserialize(obj.get("perks"));
 
         return module;
+    }
+
+    public static boolean isModule(ItemStack stack) {
+        return RoboticsConfig.current().modules.isModule(stack.getItem());
     }
 }

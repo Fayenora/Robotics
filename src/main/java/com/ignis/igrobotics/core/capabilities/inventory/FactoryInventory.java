@@ -4,8 +4,11 @@ import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.definitions.ModAttributes;
+import com.ignis.igrobotics.definitions.ModItems;
+import com.ignis.igrobotics.integration.config.ModuleConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +23,20 @@ public class FactoryInventory extends MachineInventory {
     public FactoryInventory(FactoryBlockEntity factory, int size) {
         super(factory, size);
         this.factory = factory;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        EnumRobotPart part = RobotPart.getFromItem(stack.getItem()).getPart();
+        return switch(slot) {
+            case 0 -> part == EnumRobotPart.HEAD;
+            case 1 -> part == EnumRobotPart.BODY;
+            case 2 -> part == EnumRobotPart.LEFT_ARM;
+            case 3 -> part == EnumRobotPart.RIGHT_ARM;
+            case 4 -> part== EnumRobotPart.LEFT_LEG;
+            case 5 -> part == EnumRobotPart.RIGHT_LEG;
+            default -> RobotModule.isModule(stack);
+        };
     }
 
     @Override

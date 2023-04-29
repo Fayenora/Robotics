@@ -42,7 +42,7 @@ public class MachineInventory extends BaseInventory {
         if(face != null && outputSlots.contains(slot)) {
             return false;
         }
-        return IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
+        return isItemValid(slot, stack) && IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
     }
 
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction face) {

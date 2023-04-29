@@ -16,7 +16,6 @@ public class BaseInventory extends ItemStackHandler implements ModifiableInvento
 
 	private Level world;
 	private Supplier<BlockPos> pos;
-	private int[] lockedSlots = new int[0];
 	
 	public BaseInventory(Supplier<BlockPos> pos, int size) {
 		super(size);
@@ -25,15 +24,6 @@ public class BaseInventory extends ItemStackHandler implements ModifiableInvento
 
 	public void setLevel(Level level) {
 		this.world = level;
-	}
-	
-	public void lockSlots(int... slots) {
-		lockedSlots = slots;
-	}
-
-	@Override
-	public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-		return !IntStream.of(lockedSlots).anyMatch((x) -> x == slot);	//The very fancy way of "contains";
 	}
 
 	@Override
