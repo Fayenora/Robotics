@@ -15,6 +15,7 @@ import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketConstructRobot;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -155,6 +156,17 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
             }
             renderComponentTooltip(poseStack, tooltip, mouseX, mouseY);
         }
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int pScanCode, int pModifiers) {
+        if(keyCode == InputConstants.KEY_ESCAPE) {
+            return super.keyPressed(keyCode, pScanCode, pModifiers);
+        }
+        if(nameBar.isFocused()) {
+            return nameBar.keyPressed(keyCode, pScanCode, pModifiers);
+        }
+        return super.keyPressed(keyCode, pScanCode, pModifiers);
     }
 
     private Component requirement(String localizationString, Object... args) {

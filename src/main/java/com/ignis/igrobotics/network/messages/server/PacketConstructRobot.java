@@ -5,8 +5,11 @@ import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.Optional;
 
 public class PacketConstructRobot implements IMessage {
 
@@ -37,9 +40,9 @@ public class PacketConstructRobot implements IMessage {
         BlockEntity tile = cxt.getSender().level.getBlockEntity(pos);
         if(!(tile instanceof FactoryBlockEntity factory)) return;
 
-        factory.getEntity().ifPresent(ent -> ent.setCustomName(Component.literal(name)));
         if(factory.hasCraftedRobotReady()) {
-            factory.createNewRobot(cxt.getSender().getUUID());
+            Optional<Entity> entity = factory.createNewRobot(cxt.getSender().getUUID());
+            entity.ifPresent(ent -> ent.setCustomName(Component.literal(name)));
         } else factory.startMachine(2);
     }
 }

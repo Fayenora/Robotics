@@ -64,13 +64,13 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
 
     @Override
     public void onPress() {
-        //Client stuff
-        nextState();
-        onPress.onPress(this);
         //Server stuff
         if(networkAction != null) {
             NetworkHandler.sendToServer(networkAction.get());
         }
+        //Client stuff
+        nextState();
+        onPress.onPress(this);
     }
 
     @Override

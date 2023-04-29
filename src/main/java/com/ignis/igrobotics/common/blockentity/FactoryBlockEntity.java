@@ -72,6 +72,10 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     public void setLevel(Level p_155231_) {
         super.setLevel(p_155231_);
         storedRobot.setLevel(level);
+        setDefaultRobot();
+    }
+
+    private void setDefaultRobot() {
         if(storedRobot.getEntity().isEmpty()) {
             RobotEntity robot = new RobotEntity(level);
             robot.getCapability(ModCapabilities.PARTS).ifPresent(IPartBuilt::clear);
@@ -139,6 +143,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         Optional<Entity> robot = storedRobot.createNewRobot(owner);
         builtRobot = false;
         this.inventory.clear();
+        setDefaultRobot();
         sync();
         return robot;
     }
