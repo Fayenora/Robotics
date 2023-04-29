@@ -36,7 +36,7 @@ public class Machine<R extends Recipe<?>> {
         return 1000000; //TODO Load from config
     }
 
-    public int getEnergyTransfer() { return 10000; }
+    public int getEnergyTransfer() { return 100000; }
 
     public float getEnergyConsumption() {
         return 10; //TODO Load from config

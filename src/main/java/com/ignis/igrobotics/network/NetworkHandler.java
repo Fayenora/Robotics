@@ -40,6 +40,7 @@ public class NetworkHandler {
         registerMessage(PacketSetWatched.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketOpenRobotMenu.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketComponentAction.class, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(PacketConstructRobot.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketSetEntityName.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessageHandledOnMessageThread(PacketRequestEntitySearch.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketSetCommands.class, NetworkDirection.PLAY_TO_SERVER);

@@ -51,7 +51,11 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         super.init();
         addRenderableWidget(new EnergyBarElement(leftPos + 8, topPos + 8, 203, () -> menu.data.get(3), () -> menu.data.get(4)));
 
-        startButton = new ButtonElement(leftPos + 89, topPos + 112, 54, 19, Lang.localise("start"), button -> {});
+        startButton = new ButtonElement(leftPos + 89, topPos + 112, 54, 19, Lang.localise("start"), button -> {
+            if(factory.hasCraftedRobotReady()) {
+                nameBar.setValue("");
+            }
+        });
         startButton.initTextureLocation(Reference.MISC, 94, 34);
         startButton.setNetworkAction(() -> new PacketConstructRobot(factory.getBlockPos(), nameBar.getValue()));
         switchColorLeft = new ButtonElement(leftPos + 75, topPos + 62, 13, 17, button -> {
@@ -136,7 +140,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     @Override
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         super.renderTooltip(poseStack, mouseX, mouseY);
-        if(startButton.isHoveredOrFocused()) {
+        if(startButton.isHovered()) {
             List<Component> tooltip = new ArrayList<>();
             if(MachineBlockEntity.isRunning(menu.data)) {
                 Component timeDisplay = Component.literal(": " + StringUtil.getTimeDisplay(menu.data.get(1) - menu.data.get(2)));
