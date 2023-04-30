@@ -42,17 +42,19 @@ public class PartsCapability implements IPartBuilt {
 			dataManager.define(BODY_PARTS[i], 1);
 		}
 	}
-	
+
 	@Override
-	public void writeToNBT(CompoundTag compound) {
-		compound.putInt("color", this.dataManager.get(COLOR));
-		compound.putIntArray("parts", getMaterials());
+	public CompoundTag serializeNBT() {
+		CompoundTag nbt = new CompoundTag();
+		nbt.putInt("color", this.dataManager.get(COLOR));
+		nbt.putIntArray("parts", getMaterials());
+		return nbt;
 	}
-	
+
 	@Override
-	public void readFromNBT(CompoundTag compound) {
-		setMaterials(compound.getIntArray("parts"));
-		dataManager.set(COLOR, compound.getInt("color"));
+	public void deserializeNBT(CompoundTag nbt) {
+		setMaterials(nbt.getIntArray("parts"));
+		dataManager.set(COLOR, nbt.getInt("color"));
 	}
 	
 	@Override
@@ -154,5 +156,4 @@ public class PartsCapability implements IPartBuilt {
 	public DyeColor getTemporaryColor() {
 		return DyeColor.byId(Math.floorDiv(dataManager.get(COLOR).intValue(), DyeColor.values().length) & 15);
 	}
-
 }

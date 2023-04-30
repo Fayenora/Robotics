@@ -30,13 +30,15 @@ public class CommandCapability implements ICommandable {
     }
 
     @Override
-    public void writeToNBT(CompoundTag compound) {
-        RobotCommand.writeToNBT(compound, commands);
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        RobotCommand.writeToNBT(nbt, commands);
+        return nbt;
     }
 
     @Override
-    public void readFromNBT(CompoundTag compound) {
-        setCommands(RobotCommand.readFromNBT(compound));
+    public void deserializeNBT(CompoundTag nbt) {
+        setCommands(RobotCommand.readFromNBT(nbt));
     }
 
     /**

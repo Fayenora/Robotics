@@ -3,7 +3,6 @@ package com.ignis.igrobotics.core.capabilities;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.ChunkLoadingHandler;
 import com.ignis.igrobotics.common.entity.RobotEntity;
-import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.chunkloading.ChunkLoadingCapability;
 import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
@@ -25,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,6 +46,7 @@ public class ModCapabilities {
     public static Capability<ChunkLoadingHandler.ChunkTracker> CHUNK_TRACKER = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static final ResourceLocation LOC_ROBOT = new ResourceLocation(Robotics.MODID, "robot");
+    public static final ResourceLocation LOC_INVENTORY = new ResourceLocation(Robotics.MODID, "inventory");
     public static final ResourceLocation LOC_PERKS = new ResourceLocation(Robotics.MODID, "perks");
     public static final ResourceLocation LOC_PARTS = new ResourceLocation(Robotics.MODID, "parts");
     public static final ResourceLocation LOC_COMMANDS = new ResourceLocation(Robotics.MODID, "commands");
@@ -141,7 +142,7 @@ class AlwaysProvide<C> implements ICapabilityProvider {
     }
 }
 
-class AlwaysProvideAndSave<C extends INBTSerializer> implements ICapabilitySerializable<CompoundTag> {
+class AlwaysProvideAndSave<C extends INBTSerializable<CompoundTag>> implements ICapabilitySerializable<CompoundTag> {
 
     private final Capability<C> cap;
     private final LazyOptional<C> optional;
@@ -153,14 +154,12 @@ class AlwaysProvideAndSave<C extends INBTSerializer> implements ICapabilitySeria
 
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        optional.ifPresent((impl) -> impl.writeToNBT(nbt));
-        return nbt;
+        return optional.map(INBTSerializable::serializeNBT).orElse(new CompoundTag());
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        optional.ifPresent((impl) -> impl.readFromNBT(nbt));
+        optional.ifPresent((impl) -> impl.deserializeNBT(nbt));
     }
 
     @Override

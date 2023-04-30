@@ -53,29 +53,31 @@ public class RobotCapability implements IRobot {
     }
 
     @Override
-    public void writeToNBT(CompoundTag compound) {
-        ItemStackUtils.saveAllItems(compound, modules, "modules");
-        compound.putBoolean("active", isActive());
-        compound.putInt("overlays", dataManager.get(RENDER_OVERLAYS));
-        compound.putBoolean("muted", isMuffled());
-        compound.putInt("load_chunks", getChunkLoadingState());
-        compound.putInt("pickup_state", getPickUpState());
-        compound.putInt("command_group", getCommandGroup());
-        compound.putUUID("owner", getOwner());
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        ItemStackUtils.saveAllItems(nbt, modules, "modules");
+        nbt.putBoolean("active", isActive());
+        nbt.putInt("overlays", dataManager.get(RENDER_OVERLAYS));
+        nbt.putBoolean("muted", isMuffled());
+        nbt.putInt("load_chunks", getChunkLoadingState());
+        nbt.putInt("pickup_state", getPickUpState());
+        nbt.putInt("command_group", getCommandGroup());
+        nbt.putUUID("owner", getOwner());
+        return nbt;
     }
 
     @Override
-    public void readFromNBT(CompoundTag compound) {
+    public void deserializeNBT(CompoundTag nbt) {
         modules = NonNullList.withSize(RoboticsConfig.general.moduleAmount.get(), ItemStack.EMPTY);
-        ItemStackUtils.loadAllItems(compound, modules, "modules");
+        ItemStackUtils.loadAllItems(nbt, modules, "modules");
         setModules(modules);
-        setActivation(compound.getBoolean("active"));
-        dataManager.set(RENDER_OVERLAYS, compound.getInt("overlays"));
-        setMuffled(compound.getBoolean("muted"));
-        setChunkLoading(compound.getInt("load_chunks"));
-        setPickUpState(compound.getInt("pickup_state"));
-        setCommandGroup(compound.getInt("command_group"));
-        setOwner(compound.getUUID("owner"));
+        setActivation(nbt.getBoolean("active"));
+        dataManager.set(RENDER_OVERLAYS, nbt.getInt("overlays"));
+        setMuffled(nbt.getBoolean("muted"));
+        setChunkLoading(nbt.getInt("load_chunks"));
+        setPickUpState(nbt.getInt("pickup_state"));
+        setCommandGroup(nbt.getInt("command_group"));
+        setOwner(nbt.getUUID("owner"));
     }
 
     private void applyPickupTask() {

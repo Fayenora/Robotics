@@ -1,13 +1,14 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.UUID;
  */
 // No pun intended
 @AutoRegisterCapability
-public interface IRobot extends INBTSerializer {
+public interface IRobot extends INBTSerializable<CompoundTag> {
 
     boolean isActive();
 

@@ -4,11 +4,13 @@ import com.ignis.igrobotics.core.*;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+import net.minecraftforge.common.util.INBTSerializable;
 
 @AutoRegisterCapability
-public interface IPartBuilt extends INBTSerializer, IEntityHook {
+public interface IPartBuilt extends INBTSerializable<CompoundTag>, IEntityHook {
 	
 	public RobotPart[] getBodyParts();
 	

@@ -1,13 +1,14 @@
 package com.ignis.igrobotics.core.capabilities.commands;
 
-import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.robot.RobotCommand;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.List;
 
 @AutoRegisterCapability
-public interface ICommandable extends INBTSerializer {
+public interface ICommandable extends INBTSerializable<CompoundTag> {
 
     void setCommands(List<RobotCommand> commands);
 

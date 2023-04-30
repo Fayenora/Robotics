@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.INBTSerializer;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
 import com.ignis.igrobotics.core.util.Tuple;
@@ -13,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.world.ForgeChunkManager;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -60,7 +60,7 @@ public class ChunkLoadingHandler {
      * Keeps track of which Entities(UUIDs) are attempting to load which chunks, so Chunks are not removed to eagerly if multiple Entities are currently loading it
      */
     @AutoRegisterCapability
-    public static class ChunkTracker implements INBTSerializer {
+    public static class ChunkTracker implements INBTSerializable<CompoundTag> {
 
         private final ServerLevel world;
         private final Map<ChunkPos, List<UUID>> chunks = new HashMap<>();
@@ -100,7 +100,8 @@ public class ChunkLoadingHandler {
         }
 
         @Override
-        public void writeToNBT(CompoundTag compound) {
+        public CompoundTag serializeNBT() {
+            CompoundTag nbt = new CompoundTag();
             for(Map.Entry<ChunkPos,List<UUID>> entry : this.chunks.entrySet()) {
                 CompoundTag chunkTag = new CompoundTag();
                 chunkTag.putInt("chunkX", entry.getKey().x);
@@ -113,14 +114,15 @@ public class ChunkLoadingHandler {
                 });
                 chunkTag.put("uuids", uuids);
 
-                compound.put(entry.getKey().x + ";" + entry.getKey().z, chunkTag);
+                nbt.put(entry.getKey().x + ";" + entry.getKey().z, chunkTag);
             }
+            return nbt;
         }
 
         @Override
-        public void readFromNBT(CompoundTag compound) {
-            for(String key : compound.getAllKeys()) {
-                CompoundTag chunkTag = compound.getCompound(key);
+        public void deserializeNBT(CompoundTag nbt) {
+            for(String key : nbt.getAllKeys()) {
+                CompoundTag chunkTag = nbt.getCompound(key);
                 ChunkPos chunk = new ChunkPos(chunkTag.getInt("chunkX"), chunkTag.getInt("chunkY"));
 
                 ListTag uuids = chunkTag.getList("uuids", Tag.TAG_STRING);
