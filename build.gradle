@@ -1,9 +1,28 @@
+buildscript {
+    repositories {
+        //Forge
+        maven { url = 'https://maven.minecraftforge.net' }
+        //Mixin
+        maven {
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+            content { includeGroup "org.spongepowered" }
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
 plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
+
+apply plugin: 'org.spongepowered.mixin'
 
 version = "${robotics_version}"
 group = 'com.ignis.igrobotics' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -147,6 +166,8 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
@@ -159,6 +180,11 @@ dependencies {
     runtimeOnly(fg.deobf("curse.maven:McJtyLib-233105:4501793"))
     runtimeOnly(fg.deobf("curse.maven:RFToolsBase-326041:4474182"))
     runtimeOnly(fg.deobf("curse.maven:RFToolsPower-290209:4462358"))
+}
+
+mixin {
+    add sourceSets.main, "igrobotics.refmap.json"
+    config "igrobotics.mixins.json"
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
