@@ -65,15 +65,13 @@ public class RobotBehavior {
     public static void onRobotTick(LivingEvent.LivingTickEvent event) {
         if(event.getEntity().level.isClientSide()) return;
         event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                if(robot.isActive()) return;
                 event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
-                        if(energy.getEnergyStored() <= 0) {
-                            robot.setActivation(false);
-                        }
+                        robot.setActivation(energy.getEnergyStored() > 0);
 
+                        if(!robot.isActive()) return;
                         double consumption = event.getEntity().getAttributeValue(ModAttributes.ENERGY_CONSUMPTION);
                         if(consumption > 0) {
-                            float configMultiplier = RoboticsConfig.general.robotBaseConsumption.get();
+                            float configMultiplier = RoboticsConfig.general.robotBaseConsumption.get() / 100f;
                             energy.extractEnergy((int) (consumption * configMultiplier), false);
                         } else {
                             energy.receiveEnergy((int) -consumption, false);

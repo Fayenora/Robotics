@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
 
-    public static final Attribute ENERGY_CAPACITY = new RangedAttribute("robot.energy_capacity", 0, 0, Double.MAX_VALUE).setSyncable(true);
+    public static final Attribute ENERGY_CAPACITY = new RangedAttribute("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE).setSyncable(true);
     public static final Attribute ENERGY_CONSUMPTION = new RangedAttribute("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE);
     public static final Attribute MODIFIER_SLOTS = new RangedAttribute("robot.module_slots", 1, 0, Reference.MAX_MODULES);
     public static final Attribute INVENTORY_SLOTS = new RangedAttribute("robot.inventory_slots", 12, 0, Reference.MAX_INVENTORY_SIZE).setSyncable(true);

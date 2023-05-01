@@ -9,6 +9,7 @@ import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
+import com.ignis.igrobotics.core.capabilities.energy.RobotEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
@@ -21,6 +22,7 @@ import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -38,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID)
 public class ModCapabilities {
@@ -51,6 +54,7 @@ public class ModCapabilities {
 
     public static final ResourceLocation LOC_ROBOT = new ResourceLocation(Robotics.MODID, "robot");
     public static final ResourceLocation LOC_INVENTORY = new ResourceLocation(Robotics.MODID, "inventory");
+    public static final ResourceLocation LOC_ENERGY = new ResourceLocation(Robotics.MODID, "energy");
     public static final ResourceLocation LOC_PERKS = new ResourceLocation(Robotics.MODID, "perks");
     public static final ResourceLocation LOC_PARTS = new ResourceLocation(Robotics.MODID, "parts");
     public static final ResourceLocation LOC_COMMANDS = new ResourceLocation(Robotics.MODID, "commands");
@@ -114,6 +118,8 @@ public class ModCapabilities {
         RobotCapability robotCapability = new RobotCapability(robot);
         event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
 
+        event.addCapability(LOC_ENERGY, new AlwaysProvideAndSave<>(ForgeCapabilities.ENERGY, new RobotEnergyStorage()));
+
         RobotInventory robotInventory = new RobotInventory(robot);
         event.addCapability(LOC_INVENTORY, new AlwaysProvideAndSave<>(ForgeCapabilities.ITEM_HANDLER, robotInventory));
 
@@ -152,7 +158,7 @@ class AlwaysProvide<C> implements ICapabilityProvider {
     }
 }
 
-class AlwaysProvideAndSave<C, IMP extends INBTSerializable<CompoundTag>> implements ICapabilitySerializable<CompoundTag> {
+class AlwaysProvideAndSave<C, TAG extends Tag, IMP extends INBTSerializable<TAG>> implements ICapabilitySerializable<TAG> {
 
     private final Capability<C> cap;
     private final LazyOptional<IMP> optional;
@@ -163,12 +169,12 @@ class AlwaysProvideAndSave<C, IMP extends INBTSerializable<CompoundTag>> impleme
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        return optional.map(INBTSerializable::serializeNBT).orElse(new CompoundTag());
+    public TAG serializeNBT() {
+        return optional.map(INBTSerializable::serializeNBT).orElseThrow();
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(TAG nbt) {
         optional.ifPresent((impl) -> impl.deserializeNBT(nbt));
     }
 
