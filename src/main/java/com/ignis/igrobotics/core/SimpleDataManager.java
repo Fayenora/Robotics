@@ -2,6 +2,9 @@ package com.ignis.igrobotics.core;
 
 import java.util.HashMap;
 
+/**
+ * A Hash Map with a little less access
+ */
 public class SimpleDataManager {
 	
 	private HashMap<String, Integer> values;

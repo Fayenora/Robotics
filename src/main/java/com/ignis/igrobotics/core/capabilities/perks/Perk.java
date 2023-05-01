@@ -5,19 +5,24 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.registries.ForgeRegistries;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class Perk {
@@ -26,7 +31,7 @@ public class Perk {
 	 * Since these obviously cannot stack, it just limits components to have a maximum level of this value */
 	public static final int UNSTACKABLE_MAX_LEVEL = 20;
 	
-	private String unlocalizedName;
+	private final String unlocalizedName;
 	private int maxLevel = Integer.MAX_VALUE;
 	private TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
 	private boolean visible = true;
@@ -35,7 +40,7 @@ public class Perk {
 	/**
 	 * AttributeModifiers to be later applied f.e. to a robot. Maps {@link Attribute#getDescriptionId()}  Attribute Names} to modifiers affecting this attribute
 	 */
-	private Multimap<String, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
+	private final Multimap<Attribute, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
 	
 	/** 
 	 * Maps attribute+operation to an array of scalars. There are the following possibilities: <p>
@@ -44,7 +49,7 @@ public class Perk {
 	 * <i> 3. The array contains equal or more than {@link #maxLevel} elements: </i> The elements are understood as absolute values 
 	 *    replacing the values in {@link #modifiers} with the according level 
 	 **/
-	private Map<Tuple<String, Integer>, Double[]> scalars = new HashMap<>();
+	private final Map<Tuple<Attribute, Integer>, Double[]> scalars = new HashMap<>();
 	
 	public Perk(String name, int maxLevel) {
 		this.unlocalizedName = name;
@@ -63,7 +68,7 @@ public class Perk {
 	 * Executed when a robot with this perk is attacking another entity
 	 * @param level of the perk
 	 * @param toAttack entity that is attacked
-	 * @return Knockback to add
+	 * @return knockback to add
 	 */
 	public int attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
 		return 0;
@@ -71,9 +76,9 @@ public class Perk {
 	
 	/**
 	 * Executed when a robot with this perk gets damaged
-	 * @param level
-	 * @param dmgSource
-	 * @param damage
+	 * @param level of the perk
+	 * @param dmgSource damage source
+	 * @param damage amount of damage
 	 * @return adjusted damage
 	 */
 	public float damageEntity(int level, Entity robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
@@ -84,31 +89,28 @@ public class Perk {
 	// Relevant Getters & Setters
 	//////////////////////////////////
 	
-	public Multimap<String, AttributeModifier> getAttributeModifiers(int level) {
-		Multimap<String, AttributeModifier> scaledModifiers = MultimapBuilder.hashKeys().arrayListValues().build();
-		modifiers.forEach(new BiConsumer<String, AttributeModifier>() {
-			@Override
-			public void accept(String attribute, AttributeModifier u) {
-				Double[] sc = getScalars(attribute, u.getOperation().toValue());
-				double attributeValue = u.getAmount();
-				
-				if(sc != null && sc.length > 0) {
-					if(sc.length == 1) {
-						attributeValue = u.getAmount() + level * sc[0];
-					} else {
-						//Use scalars directly. Do not extend over the length of the provided array
-						attributeValue = sc[Math.min(level, sc.length) - 1];
-					}
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(int level) {
+		Multimap<Attribute, AttributeModifier> scaledModifiers = MultimapBuilder.hashKeys().arrayListValues().build();
+		modifiers.forEach((attribute, u) -> {
+			Double[] sc = getScalars(attribute, u.getOperation().toValue());
+			double attributeValue = u.getAmount();
+
+			if (sc != null && sc.length > 0) {
+				if (sc.length == 1) {
+					attributeValue = u.getAmount() + level * sc[0];
+				} else {
+					//Use scalars directly. Do not extend over the length of the provided array
+					attributeValue = sc[Math.min(level, sc.length) - 1];
 				}
-				
-				scaledModifiers.put(attribute, new AttributeModifier(u.getId(), u.getName(), attributeValue, u.getOperation()));
 			}
+
+			scaledModifiers.put(attribute, new AttributeModifier(u.getId(), u.getName(), attributeValue, u.getOperation()));
 		});
 		return scaledModifiers;
 	}
 	
-	public Double[] getScalars(String attribute, int operation) {
-		return scalars.get(new Tuple<String, Integer>(attribute, operation));
+	public Double[] getScalars(Attribute attribute, int operation) {
+		return scalars.get(new Tuple<>(attribute, operation));
 	}
 	
 	/**
@@ -154,7 +156,7 @@ public class Perk {
 		obj.addProperty("stackable", perk.stackable);
 		
 		JsonArray attr = new JsonArray();
-		for(String attribute : perk.modifiers.keys()) {
+		for(Attribute attribute : perk.modifiers.keys()) {
 			JsonObject attr_obj = new JsonObject();
 			JsonArray mod_list = new JsonArray();
 			for(AttributeModifier modifier : perk.modifiers.get(attribute)) {
@@ -165,23 +167,20 @@ public class Perk {
 				Double[] scalars = perk.getScalars(attribute, modifier.getOperation().toValue());
 				if(scalars == null) {
 					mod_obj.addProperty("value", modifier.getAmount());
-				}
-				if(scalars.length == 1) {
+				} else if(scalars.length == 1) {
 					mod_obj.addProperty("value", modifier.getAmount());
 					mod_obj.addProperty("scalar", scalars[0]);
-				} 
-				if(scalars.length > 1) {
+				} else if(scalars.length > 1) {
 					JsonArray arr = new JsonArray();
 					for(double d : scalars) {
 						arr.add(d);
 					}
 					mod_obj.add("value", arr);
 				}
-				
-				
+
 				mod_list.add(mod_obj);
 			}
-			attr_obj.addProperty("name", attribute);
+			attr_obj.addProperty("name", attribute.getDescriptionId());
 			attr_obj.add("modifiers", mod_list);
 			
 			attr.add(attr_obj);
@@ -199,11 +198,11 @@ public class Perk {
 		int maxLevel = obj.has("maxLevel") ? obj.get("maxLevel").getAsInt() : Integer.MAX_VALUE;
 		Perk result = new Perk(unlocalizedName, maxLevel);
 
-		/* Retrieve the perk from the config if its name already has been defined
+		// Retrieve the perk from the config if its name already has been defined TODO
 		RoboticsConfig config = RoboticsConfig.current();
 		if(config.perks.PERKS.containsKey(unlocalizedName)) {
 			result = config.perks.PERKS.get(unlocalizedName);
-		} */
+		}
 		
 		if(obj.has("visible")) result.visible = obj.get("visible").getAsBoolean();
 		if(obj.has("stackable")) result.stackable = obj.get("stackable").getAsBoolean();
@@ -214,6 +213,14 @@ public class Perk {
 		if(obj.has("attributes")) {
 			for(JsonElement attribute : obj.get("attributes").getAsJsonArray()) {
 				String attributeName = ((JsonObject) attribute).get("name").getAsString();
+				ResourceLocation attributeLoc = ResourceLocation.tryParse(attributeName);
+				if(attributeLoc == null) {
+					throw new JsonSyntaxException("The specified attribute " + attributeName + " could not be found");
+				}
+				Attribute attributeType = ForgeRegistries.ATTRIBUTES.getValue(attributeLoc);
+				if(attributeType == null) {
+					throw new JsonSyntaxException("The specified attribute " + attributeName + " could not be found");
+				}
 				for(JsonElement modifier : ((JsonObject) attribute).get("modifiers").getAsJsonArray()) {
 					JsonObject jsonModifier = ((JsonObject) modifier);
 					
@@ -223,7 +230,7 @@ public class Perk {
 						amount = jsonModifier.get("value").getAsDouble();
 						if(jsonModifier.has("scalar")) {
 							double scalar = jsonModifier.get("scalar").getAsDouble();
-							result.scalars.put(new Tuple(attributeName, operation), new Double[] {scalar});
+							result.scalars.put(new Tuple<>(attributeType, operation), new Double[] {scalar});
 						}
 					} else {
 						JsonArray jsonScalars = jsonModifier.get("value").getAsJsonArray();
@@ -231,12 +238,12 @@ public class Perk {
 						for(int j = 0; j < jsonScalars.size(); j++) {
 							scalars[j] = jsonScalars.get(j).getAsDouble();
 						}
-						result.scalars.put(new Tuple(attributeName, operation), scalars);
+						result.scalars.put(new Tuple<>(attributeType, operation), scalars);
 						amount = scalars[0];
 					}
 					
 					AttributeModifier mod = new AttributeModifier("modifier_" + (i++), amount, AttributeModifier.Operation.fromValue(operation));
-					result.modifiers.put(attributeName, mod);
+					result.modifiers.put(attributeType, mod);
 				}
 				
 			}

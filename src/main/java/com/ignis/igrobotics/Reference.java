@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.awt.*;
@@ -36,19 +37,19 @@ public class Reference {
 			IRON, GOLD, COPPER, TIN, ALUMINIUM, SILVER, LEAD, BRONZE, CONSTANTAN, ELECTRUM, PLATINUM
 	};
 	
-	public static final HashMap<String, TextColor> ATTRIBUTE_COLORS = new HashMap<String, TextColor>();
+	public static final HashMap<Attribute, TextColor> ATTRIBUTE_COLORS = new HashMap<>();
 	
 	static {
-		ATTRIBUTE_COLORS.put(Attributes.MAX_HEALTH.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.RED));
-		ATTRIBUTE_COLORS.put(Attributes.ATTACK_DAMAGE.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.RED));
-		ATTRIBUTE_COLORS.put(Attributes.ARMOR.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.GRAY));
-		ATTRIBUTE_COLORS.put(Attributes.ARMOR_TOUGHNESS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
-		ATTRIBUTE_COLORS.put(Attributes.MOVEMENT_SPEED.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.WHITE));
-		ATTRIBUTE_COLORS.put(Attributes.KNOCKBACK_RESISTANCE.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
-		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CAPACITY.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.GOLD));
-		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CONSUMPTION.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-		ATTRIBUTE_COLORS.put(ModAttributes.MODIFIER_SLOTS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.WHITE));
-		ATTRIBUTE_COLORS.put(ModAttributes.INVENTORY_SLOTS.getDescriptionId(), TextColor.fromLegacyFormat(ChatFormatting.RED));
+		ATTRIBUTE_COLORS.put(Attributes.MAX_HEALTH, TextColor.fromLegacyFormat(ChatFormatting.RED));
+		ATTRIBUTE_COLORS.put(Attributes.ATTACK_DAMAGE, TextColor.fromLegacyFormat(ChatFormatting.RED));
+		ATTRIBUTE_COLORS.put(Attributes.ARMOR, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
+		ATTRIBUTE_COLORS.put(Attributes.ARMOR_TOUGHNESS, TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
+		ATTRIBUTE_COLORS.put(Attributes.MOVEMENT_SPEED, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		ATTRIBUTE_COLORS.put(Attributes.KNOCKBACK_RESISTANCE, TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
+		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CAPACITY, TextColor.fromLegacyFormat(ChatFormatting.GOLD));
+		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CONSUMPTION, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+		ATTRIBUTE_COLORS.put(ModAttributes.MODIFIER_SLOTS, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		ATTRIBUTE_COLORS.put(ModAttributes.INVENTORY_SLOTS, TextColor.fromLegacyFormat(ChatFormatting.RED));
 	}
 	
 	public static final Dimension GUI_DEFAULT_DIMENSIONS = new Dimension(176, 166);

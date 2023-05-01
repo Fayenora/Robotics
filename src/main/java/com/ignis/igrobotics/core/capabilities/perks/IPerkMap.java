@@ -7,8 +7,8 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 	
 	default ArrayList<Component> getDisplayString() {
 		ArrayList<Component> tooltip = new ArrayList<>();
-		Multimap<String, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
+		Multimap<Attribute, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
 		for(Tuple<Perk, Integer> tup : this) {
 			Perk perk = tup.getFirst();
 			
@@ -45,23 +45,23 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 			if(perk.showPerk()) {
 				tooltip.add(perk.getDisplayText(tup.getSecond()));
 			} else {
-				//NOTE: Convoluting all perks while displaying them is inefficient
+				//NOTE: Convolution of all perks while displaying them is inefficient
 				modifiers.putAll(perk.getAttributeModifiers(tup.getSecond()));
 			}
 		}
-		for(String attribute : modifiers.keySet()) {
+		for(Attribute attribute : modifiers.keySet()) {
 			double amount = 0;
 			double multiplier = 0;
 			double exp = 0;
 			for(AttributeModifier mod : modifiers.get(attribute)) {
-				switch(mod.getOperation()) {
-					case ADDITION: amount += mod.getAmount(); break;
-					case MULTIPLY_BASE: multiplier += mod.getAmount() * 100; break;
-					case MULTIPLY_TOTAL: exp += mod.getAmount(); break;
+				switch (mod.getOperation()) {
+					case ADDITION -> amount += mod.getAmount();
+					case MULTIPLY_BASE -> multiplier += mod.getAmount() * 100;
+					case MULTIPLY_TOTAL -> exp += mod.getAmount();
 				}
 			}
 			TextColor color = Reference.ATTRIBUTE_COLORS.getOrDefault(attribute, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
-			String attr_name = Lang.localiseExisting("stats." + attribute).getString();
+			String attr_name = Lang.localiseExisting("stats." + attribute.getDescriptionId()).getString();
 
 			if(amount != 0) tooltip.add(Lang.literal(Reference.FORMAT.format(amount) + " " + attr_name, color));
 			if(multiplier != 0) tooltip.add(Lang.literal(Reference.FORMAT.format(multiplier) + "% " + attr_name, color));
