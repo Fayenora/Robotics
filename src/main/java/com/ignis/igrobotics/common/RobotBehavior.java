@@ -8,6 +8,7 @@ import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
+import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
@@ -97,8 +99,8 @@ public class RobotBehavior {
         Entity entity = event.getEntity();
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
                 entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
-                        for(int i = 0; i < inventory.getSlots(); i++) {
-                            ItemStackUtils.dropItem(entity, inventory.getStackInSlot(i));
+                        if(inventory instanceof RobotInventory robotInv) {
+                            robotInv.dropItems();
                         }
                         for(ItemStack stack : robot.getModules()) {
                             ItemStackUtils.dropItem(entity, stack);
