@@ -49,7 +49,7 @@ public class Perk {
 	 * <i> 3. The array contains equal or more than {@link #maxLevel} elements: </i> The elements are understood as absolute values 
 	 *    replacing the values in {@link #modifiers} with the according level 
 	 **/
-	private final Map<Tuple<Attribute, Integer>, Double[]> scalars = new HashMap<>();
+	private final Map<Tuple<Attribute, Integer>, double[]> scalars = new HashMap<>();
 	
 	public Perk(String name, int maxLevel) {
 		this.unlocalizedName = name;
@@ -92,7 +92,7 @@ public class Perk {
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(int level) {
 		Multimap<Attribute, AttributeModifier> scaledModifiers = MultimapBuilder.hashKeys().arrayListValues().build();
 		modifiers.forEach((attribute, u) -> {
-			Double[] sc = getScalars(attribute, u.getOperation().toValue());
+			double[] sc = getScalars(attribute, u.getOperation().toValue());
 			double attributeValue = u.getAmount();
 
 			if (sc != null && sc.length > 0) {
@@ -109,7 +109,7 @@ public class Perk {
 		return scaledModifiers;
 	}
 	
-	public Double[] getScalars(Attribute attribute, int operation) {
+	public double[] getScalars(Attribute attribute, int operation) {
 		return scalars.get(new Tuple<>(attribute, operation));
 	}
 	
@@ -164,7 +164,7 @@ public class Perk {
 				mod_obj.addProperty("operation", modifier.getOperation().toValue());
 				
 				//Values and/or Scalars
-				Double[] scalars = perk.getScalars(attribute, modifier.getOperation().toValue());
+				double[] scalars = perk.getScalars(attribute, modifier.getOperation().toValue());
 				if(scalars == null) {
 					mod_obj.addProperty("value", modifier.getAmount());
 				} else if(scalars.length == 1) {
@@ -230,11 +230,11 @@ public class Perk {
 						amount = jsonModifier.get("value").getAsDouble();
 						if(jsonModifier.has("scalar")) {
 							double scalar = jsonModifier.get("scalar").getAsDouble();
-							result.scalars.put(new Tuple<>(attributeType, operation), new Double[] {scalar});
+							result.scalars.put(new Tuple<>(attributeType, operation), new double[] {scalar});
 						}
 					} else {
 						JsonArray jsonScalars = jsonModifier.get("value").getAsJsonArray();
-						Double[] scalars = new Double[jsonScalars.size()];
+						double[] scalars = new double[jsonScalars.size()];
 						for(int j = 0; j < jsonScalars.size(); j++) {
 							scalars[j] = jsonScalars.get(j).getAsDouble();
 						}
