@@ -65,12 +65,12 @@ public class Perk {
 	}
 	
 	/**
-	 * Executed when a robot with this perk is attacking another entity
+	 * Executed when a robot with this perk damages another entity
 	 * @param level of the perk
 	 * @param toAttack entity that is attacked
 	 * @return knockback to add
 	 */
-	public int attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
+	public float attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
 		return 0;
 	}
 	

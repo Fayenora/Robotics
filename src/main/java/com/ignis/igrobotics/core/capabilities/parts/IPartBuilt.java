@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
 
 @AutoRegisterCapability
-public interface IPartBuilt extends INBTSerializable<CompoundTag>, IEntityHook {
+public interface IPartBuilt extends INBTSerializable<CompoundTag> {
 	
 	public RobotPart[] getBodyParts();
 	

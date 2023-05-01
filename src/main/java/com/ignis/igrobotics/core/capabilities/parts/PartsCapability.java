@@ -56,19 +56,6 @@ public class PartsCapability implements IPartBuilt {
 		setMaterials(nbt.getIntArray("parts"));
 		dataManager.set(COLOR, nbt.getInt("color"));
 	}
-	
-	@Override
-	public void onDeath(DamageSource cause) {
-		if(entity.level.isClientSide()) return;
-		Random r = new Random();
-		if(entity.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-			for(RobotPart part : getBodyParts()) {
-				if(hasBodyPart(part.getPart()) && r.nextDouble() < RoboticsConfig.current().general.limbDropChance.get()) {
-					ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, part.getItemStack(1));
-				}
-			}
-		}
-	}
 
 	@Override
 	public RobotPart[] getBodyParts() {

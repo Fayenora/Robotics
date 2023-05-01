@@ -15,6 +15,7 @@ import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.core.capabilities.perks.PerkMapCapability;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.util.Tuple;
@@ -106,6 +107,9 @@ public class ModCapabilities {
 
         PartsCapability partsCapability = new PartsCapability(robot);
         event.addCapability(LOC_PARTS, new AlwaysProvideAndSave<>(PARTS, partsCapability));
+
+        PerkMapCapability perksCapability = new PerkMapCapability(robot);
+        event.addCapability(LOC_PERKS, new AlwaysProvide<>(PERKS, perksCapability));
 
         RobotCapability robotCapability = new RobotCapability(robot);
         event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
