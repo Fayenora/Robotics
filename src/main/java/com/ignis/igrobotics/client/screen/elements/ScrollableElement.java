@@ -1,12 +1,9 @@
 package com.ignis.igrobotics.client.screen.elements;
 
-import com.ibm.icu.impl.ICUResourceBundleReader;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.util.RenderUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -88,7 +85,7 @@ public class ScrollableElement extends GuiElement {
                 if(!(listener instanceof IElement element)) continue;
                 int newX = element.getShape().x + scroll_diff;
                 boolean shouldBeActive = getX() < newX + element.getShape().width && newX < getX() + width;
-                element.setX(newX);
+                element.element$setX(newX);
                 element.setEnabled(shouldBeActive);
             }
         } else {
@@ -103,7 +100,7 @@ public class ScrollableElement extends GuiElement {
                 if(!(listener instanceof IElement element)) continue;
                 int newY = element.getShape().y + scroll_diff;
                 boolean shouldBeActive = getY() < newY + element.getShape().height && newY < getY() + height;
-                element.setY(newY);
+                element.element$setY(newY);
                 element.setEnabled(shouldBeActive);
             }
         }
@@ -154,8 +151,8 @@ public class ScrollableElement extends GuiElement {
             alignY = getY();
         }
 
-        element.setX(alignX);
-        element.setY(alignY);
+        element.element$setX(alignX);
+        element.element$setY(alignY);
         return true;
     }
 

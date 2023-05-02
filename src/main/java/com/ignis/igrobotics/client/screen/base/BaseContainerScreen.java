@@ -159,8 +159,8 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     public void addSubGui(IElement subGui) {
         //Add the next subGui
         subGuis.push(subGui);
-        subGui.setX((width - subGui.getShape().width) / 2);
-        subGui.setY((height - subGui.getShape().height) / 2);
+        subGui.element$setX((width - subGui.getShape().width) / 2);
+        subGui.element$setY((height - subGui.getShape().height) / 2);
         addElement(subGui);
     }
 
@@ -183,10 +183,10 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    public void setX(int x) {
+    public void element$setX(int x) {
         for(GuiEventListener b : children()) {
             if(b instanceof IElement element) {
-                element.setX(element.getShape().x + x - this.leftPos);
+                element.element$setX(element.getShape().x + x - this.leftPos);
             } else if(b instanceof AbstractWidget widget) {
                 widget.setX(widget.getX() + x - this.leftPos);
             }
@@ -195,10 +195,10 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    public void setY(int y) {
+    public void element$setY(int y) {
         for(GuiEventListener b : children()) {
             if(b instanceof IElement element) {
-                element.setY(element.getShape().y + y - this.topPos);
+                element.element$setY(element.getShape().y + y - this.topPos);
             } else if(b instanceof AbstractWidget widget) {
                 widget.setY(widget.getY() + y - this.topPos);
             }

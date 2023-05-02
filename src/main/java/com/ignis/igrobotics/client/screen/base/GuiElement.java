@@ -1,7 +1,5 @@
 package com.ignis.igrobotics.client.screen.base;
 
-import com.ignis.igrobotics.client.screen.base.IElement;
-import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -47,10 +45,10 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     }
 
     @Override
-    public void setX(int x) {
+    public void element$setX(int x) {
         for(GuiEventListener b : children()) {
             if(b instanceof IElement element) {
-                element.setX(element.getShape().x + x - this.x);
+                element.element$setX(element.getShape().x + x - this.x);
             } else if(b instanceof AbstractWidget widget) {
                 widget.setX(widget.getX() + x - this.x);
             }
@@ -59,10 +57,10 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     }
 
     @Override
-    public void setY(int y) {
+    public void element$setY(int y) {
         for(GuiEventListener b : children()) {
             if(b instanceof IElement element) {
-                element.setY(element.getShape().y + y - this.y);
+                element.element$setY(element.getShape().y + y - this.y);
             } else if(b instanceof AbstractWidget widget) {
                 widget.setY(widget.getY() + y - this.y);
             }

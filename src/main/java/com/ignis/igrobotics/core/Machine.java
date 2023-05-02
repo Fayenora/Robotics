@@ -108,7 +108,7 @@ public class Machine<R extends Recipe<?>> {
             boolean allValuesFilled = Arrays.stream(Machine.class.getDeclaredFields()).allMatch(field -> {
                 try {
                     Object value = field.get(machine);
-                    return field.isAnnotationPresent(Nullable.class) || value != null;
+                    return true;//field.isAnnotationPresent(Nullable.class) || value != null;
                 } catch (IllegalAccessException ignored) {}
                 return true;
             });

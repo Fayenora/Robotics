@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
@@ -23,8 +22,8 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 public interface IElement extends ContainerEventHandler, Renderable, NarratableEntry {
 
-	void setX(int x);
-	void setY(int y);
+	void element$setX(int x);
+	void element$setY(int y);
 	Rectangle getShape();
 
 	void setEnabled(boolean enabled);

@@ -202,19 +202,29 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     /////////////////////////////
 
     @Override
-    public void setX(int x) {
+    public void setX(int p_254495_) {
+        element$setX(p_254495_);
+    }
+
+    @Override
+    public void setY(int p_253718_) {
+        element$setY(p_253718_);
+    }
+
+    @Override
+    public void element$setX(int x) {
         for(GuiEventListener b : children()) {
             if(!(b instanceof IElement element)) continue;
-            element.setX(element.getShape().x + x - getX());
+            element.element$setX(element.getShape().x + x - getX());
         }
         super.setX(x);
     }
 
     @Override
-    public void setY(int y) {
+    public void element$setY(int y) {
         for(GuiEventListener b : children()) {
             if(!(b instanceof IElement element)) continue;
-            element.setY(element.getShape().y + y - getY());
+            element.element$setY(element.getShape().y + y - getY());
         }
         super.setY(y);
     }
