@@ -47,7 +47,7 @@ public class AssemblerMenu extends BaseMenu {
             this.addSlot(new SlotItemHandler(handler, 3, slot_left.x, slot_left.y));
 
             //Output-Slot
-            this.addSlot(new SlotItemHandler(handler, 4, slot_out.x, slot_out.y));
+            this.addSlot(new SlotOutput(handler, 4, slot_out.x, slot_out.y));
         });
     }
 

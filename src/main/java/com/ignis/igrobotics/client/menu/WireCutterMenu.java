@@ -44,7 +44,7 @@ public class WireCutterMenu extends BaseMenu {
             this.addSlot(new SlotItemHandler(handler, 1, slot_main.x, slot_main.y));
 
             //Output-Slot
-            this.addSlot(new SlotItemHandler(handler, 2, slot_out.x, slot_out.y));
+            this.addSlot(new SlotOutput(handler, 2, slot_out.x, slot_out.y));
         });
     }
 
