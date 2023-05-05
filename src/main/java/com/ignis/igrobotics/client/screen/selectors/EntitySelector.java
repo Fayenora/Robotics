@@ -35,7 +35,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 
 	/** If a server side search yielded no result(cachedEntity is null), the client still needs to stop asking */
 	private boolean cached = false;
-	private LivingEntity cachedEntity;
+	protected LivingEntity cachedEntity;
 
 	public EntitySelector(Selection<UUID> sel, int x, int y) {
 		super(sel, x, y);
@@ -65,12 +65,12 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 		}
 	}
 
-	public void setCachedEntity(LivingEntity ent) {
+	private void setCachedEntity(LivingEntity ent) {
 		cached = true;
 		cachedEntity = ent;
 	}
 
-	public void setSelection(UUID uuid) {
+	protected void setSelection(UUID uuid) {
 		cached = false;
 		selection.set(uuid);
 	}
