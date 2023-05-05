@@ -20,6 +20,7 @@ import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,6 +30,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
@@ -44,9 +47,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -134,12 +139,19 @@ public class RobotBehavior {
                     buf -> buf.writeInt(target.getId()));
         }
         if(type == ModMenuTypes.ROBOT_INFO.get()) {
+            if(!(target instanceof LivingEntity living)) return;
             target.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
                 NetworkHooks.openScreen(serverPlayer,
                     new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
                     buf -> {
                         buf.writeInt(target.getId());
                         robot.getAccess().write(buf);
+                        for(Map.Entry<ResourceKey<Attribute>, Attribute> entry : ForgeRegistries.ATTRIBUTES.getEntries()) {
+                            if(living.getAttributes().hasAttribute(entry.getValue())) {
+                                buf.writeResourceKey(entry.getKey());
+                                buf.writeFloat((float) living.getAttributes().getValue(entry.getValue()));
+                            }
+                        }
                     });
             });
         }

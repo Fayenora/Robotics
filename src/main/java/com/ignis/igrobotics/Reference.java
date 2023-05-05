@@ -65,8 +65,6 @@ public class Reference {
 	public static final int FONT_COLOR = 0x8b8b8b;
 	public static final DecimalFormat FORMAT = new DecimalFormat("############.############");
 	
-	public static final int ACTION_NO_FUNCTION = 300;
-	
 	static {
 		FORMAT.setPositivePrefix("+");
 		FORMAT.setNegativePrefix("-");

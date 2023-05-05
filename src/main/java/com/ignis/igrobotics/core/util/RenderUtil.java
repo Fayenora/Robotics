@@ -47,7 +47,7 @@ public class RenderUtil {
     public static void drawString(PoseStack poseStack, String text, int x, int y, int color, float scaleY, int maxWidth) {
         Font font = Minecraft.getInstance().font;
         poseStack.pushPose();
-        float scale = maxWidth / (float)font.width(text);
+        float scale = Math.min(scaleY, maxWidth / (float)font.width(text));
         poseStack.scale(scale, scaleY, 1);
         GuiComponent.drawString(poseStack, Minecraft.getInstance().font, text, (int) (x / scale), (int) (y / scaleY), color);
         poseStack.popPose();

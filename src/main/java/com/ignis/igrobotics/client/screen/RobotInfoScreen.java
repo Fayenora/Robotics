@@ -29,14 +29,19 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.DyeColor;
+import net.minecraftforge.common.ForgeMod;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.awt.*;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 
 public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
@@ -120,6 +125,13 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             addRenderableWidget(permissionConfig);
             addRenderableWidget(nameBar);
         });
+
+        ScrollableElement attributeBar = new ScrollableElement(leftPos + 4, topPos + 5, 67, 170);
+        for(Attribute attribute : menu.attributes.keySet()) {
+            if(attribute.equals(ForgeMod.NAMETAG_DISTANCE.get()) || attribute.equals(Attributes.FOLLOW_RANGE)) continue;
+            attributeBar.addElement(new AttributeElement(0, 0, attribute, menu.attributes.get(attribute)));
+        }
+        addElement(attributeBar);
     }
 
     @Override
