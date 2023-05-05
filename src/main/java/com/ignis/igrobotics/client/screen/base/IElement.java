@@ -89,7 +89,7 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 		List<Rect2i> blockedAreas = new ArrayList<>();
 		for(var comp : children()) {
 			if(comp instanceof IElement element) {
-				blockedAreas.add(new Rect2i(element.getShape().x, element.getShape().y, element.getShape().width, element.getShape().height));
+				blockedAreas.add(new Rect2i(element.getShape().x - 7, element.getShape().y - 4, element.getShape().width, element.getShape().height));
 			}
 		}
 		return blockedAreas;
