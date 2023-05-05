@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.rendering;
+package com.ignis.igrobotics.client.rendering.layers;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
@@ -16,11 +16,11 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class LimbLayer extends GeoRenderLayer<RobotEntity> {
+public class ColorLayer extends GeoRenderLayer<RobotEntity> {
 
     private final EnumRobotPart part;
 
-    public LimbLayer(GeoRenderer<RobotEntity> entityRendererIn, EnumRobotPart part) {
+    public ColorLayer(GeoRenderer<RobotEntity> entityRendererIn, EnumRobotPart part) {
         super(entityRendererIn);
         this.part = part;
     }
@@ -37,7 +37,7 @@ public class LimbLayer extends GeoRenderLayer<RobotEntity> {
             return;
         }
 
-        ResourceLocation texture = limb.getLimbResourceLocation();
+        ResourceLocation texture = limb.getColorResourceLocation(parts.getTemporaryColor());
         RenderType armorRenderType = RenderType.armorCutoutNoCull(texture);
 
         getRenderer().reRender(getDefaultBakedModel(robot), poseStack, bufferSource, robot, armorRenderType,
