@@ -37,7 +37,6 @@ public class DialogElement extends GuiElement {
     @Override
     public void setParentComponent(IElement comp) {
         super.setParentComponent(comp);
-        center(this, comp.getShape());
     }
 
     @Override

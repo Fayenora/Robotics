@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
@@ -28,6 +29,7 @@ public class RobotCapability implements IRobot {
     protected LivingEntity entity;
     protected SynchedEntityData dataManager;
     protected IPerkMapCap perkMap;
+    private AccessConfig access = new AccessConfig();
 
     private NonNullList<ItemStack> modules;
     private UUID owner = Reference.DEFAULT_UUID;
@@ -257,5 +259,15 @@ public class RobotCapability implements IRobot {
     @Override
     public @NonNull UUID getOwner() {
         return owner;
+    }
+
+    @Override
+    public void setAccess(AccessConfig access) {
+        this.access = access;
+    }
+
+    @Override
+    public AccessConfig getAccess() {
+        return access; //TODO: Culminate across scopes
     }
 }

@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.menu;
 
+import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -13,9 +14,11 @@ import net.minecraft.world.item.ItemStack;
 public class RobotInfoMenu extends BaseMenu {
     public final LivingEntity robot;
     public final ContainerData data;
+    public final AccessConfig access = new AccessConfig();
 
     public RobotInfoMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv.player.level.getEntity(extraData.readInt()), new SimpleContainerData(2));
+        access.read(extraData);
     }
 
     public RobotInfoMenu(int id, Entity entity, ContainerData data) {

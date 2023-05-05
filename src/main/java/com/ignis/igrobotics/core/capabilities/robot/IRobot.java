@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
@@ -40,8 +41,12 @@ public interface IRobot extends INBTSerializable<CompoundTag> {
     @NonNull
     UUID getOwner();
 
+    void setAccess(AccessConfig access);
+
+    AccessConfig getAccess();
+
     default boolean hasOwner() {
-        return getOwner().equals(Reference.DEFAULT_UUID);
+        return !getOwner().equals(Reference.DEFAULT_UUID);
     }
 
     default boolean hasAccess(Player player, EnumPermission permission) {

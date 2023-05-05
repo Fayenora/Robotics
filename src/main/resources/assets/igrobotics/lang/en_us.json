@@ -82,6 +82,9 @@
   "igrobotics.button.power.up": "Power up",
   "igrobotics.button.power.down": "Power down",
   "igrobotics.button.claim": "Claim",
+  "igrobotics.button.ownership.confirm": "You will only retain the default rights to this robot",
+  "igrobotics.button.ownership.decline": "Keep Ownership",
+  "igrobotics.confirm_owner_change": "Are you sure you want to make \"%s\" the owner?",
 
   "commandGroup.robot.add": "Added Robot to command group",
   "commandGroup.robot.remove": "Removed Robot from command group",

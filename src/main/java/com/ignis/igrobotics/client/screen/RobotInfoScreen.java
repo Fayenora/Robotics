@@ -3,11 +3,15 @@ package com.ignis.igrobotics.client.screen;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
-import com.ignis.igrobotics.client.screen.elements.ButtonElement;
-import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
-import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
+import com.ignis.igrobotics.client.screen.base.IElement;
+import com.ignis.igrobotics.client.screen.elements.*;
+import com.ignis.igrobotics.client.screen.selectors.EntitySelector;
+import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.core.access.AccessConfig;
+import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
@@ -20,6 +24,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -28,7 +33,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
@@ -36,6 +44,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     private static final Component OWNER_CAPTION = ComponentUtils.formatList(List.of(Component.translatable("owner"), Component.literal(":")), CommonComponents.EMPTY);
 
     private final LivingEntity entity;
+    private final AccessConfig access;
 
     public ButtonElement pickUpButton;
     public ButtonElement chunkLoadingToggle;
@@ -43,12 +52,13 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public ButtonElement powerButton;
     public ButtonElement permissionConfig;
     public EditBox nameBar;
-    //public GuiSelectorOwner ownerSelector;
+    public GuiSelectorOwner ownerSelector;
     public ButtonElement claimButton;
 
     public RobotInfoScreen(RobotInfoMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, menu.robot, title);
         this.entity = menu.robot;
+        this.access = menu.access;
         imageWidth = Reference.GUI_COMMANDER_DIMENSIONS.width;
         imageHeight = Reference.GUI_COMMANDER_DIMENSIONS.height;
     }
@@ -85,17 +95,20 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             this.permissionConfig = new ButtonElement(leftPos + 135, topPos + 91, 17, 17);
             permissionConfig.initTextureLocation(Reference.MISC, 51, 153);
             this.nameBar = new EditBox(Minecraft.getInstance().font, leftPos + 77, topPos + 12, 50, 16, Component.literal("text_box"));
-            nameBar.insertText(entity.getName().getString());
+            if(entity.hasCustomName()) nameBar.insertText(entity.getName().getString());
             nameBar.setMaxLength(Reference.MAX_ROBOT_NAME_LENGTH);
 
-            if(robot.hasOwner()) {
-                //We want to initialize a selector which holds the current owner
-                //After a preliminary search on the client, ask the server to contact Mojang servers, as the owner may currently not be online
-                //TODO
-                //this.ownerSelector = new GuiSelectorOwner(robot.getOwner(), guiLeft + 113, guiTop + 150);
-                //addRenderableWidget(ownerSelector);
+            if(access.hasOwner()) {
+                this.ownerSelector = new GuiSelectorOwner(access.getOwner(), leftPos + 113, topPos + 150);
+                addRenderableWidget(ownerSelector);
             } else {
-                claimButton = new ButtonElement(leftPos + 76, topPos + 150, 54, 19, Lang.localise("button.claim"), button -> {});
+                claimButton = new ButtonElement(leftPos + 76, topPos + 150, 54, 19, Lang.localise("button.claim"), button -> {
+                    access.setOwner(Minecraft.getInstance().player.getUUID());
+                    RobotBehavior.setAccess(WorldAccessData.EnumAccessScope.ROBOT, entity, access);
+                    //Reinitialize the gui to get access to buttons / remove the claim button
+                    clearWidgets();
+                    init();
+                });
                 claimButton.initTextureLocation(Reference.MISC, 94, 34);
                 addRenderableWidget(claimButton);
             }
@@ -115,32 +128,31 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             if(menu.data.get(0) <= 0) {
                 robot.setActivation(false);
             }
 
-            if(robot.hasOwner()) {
+            if(access.hasOwner()) {
                 //Draw a String declaring the owner
                 drawString(poseStack, Minecraft.getInstance().font, OWNER_CAPTION, leftPos + 78, topPos + 154, Reference.FONT_COLOR);
 
                 //If the owner changed, ask for confirmation
-                /* TODO
-                if(ownerSelector != null && ownerSelector.getSelector().target != null && !hasSubGui()) {
-                    EntityLivingBase currentSelection = ownerSelector.getSelector().target;
-                    if(!robot.getOwner().equals(currentSelection.getUniqueID())) {
+                if(ownerSelector != null && ownerSelector.getOwner() != null && !hasSubGui()) {
+                    LivingEntity currentSelection = ownerSelector.getOwner();
+                    if(!access.getOwner().equals(currentSelection.getUUID())) {
                         createConfirmationDialog(currentSelection);
                     }
-                }*/
+                }
             }
         });
 
         int entity_size = 55;
         if(!hasSubGui()) {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            RenderUtil.drawEntityOnScreen(poseStack, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entity);
+            RenderUtil.drawEntityOnScreen(poseStack, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entity, false);
         }
     }
 
@@ -177,7 +189,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     }
 
     private void renameRobot() {
-        if(entity.isDeadOrDying()) return;
+        if(entity.isDeadOrDying() || nameBar.getValue().isEmpty()) return;
         if(!nameBar.getValue().equals(entity.getDisplayName().getString())) {
             NetworkHandler.sendToServer(new PacketSetEntityName(entity.getId(), nameBar.getValue()));
         }
@@ -193,5 +205,73 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     @Override
     protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
         //Don't
+    }
+
+    private void createConfirmationDialog(LivingEntity currentSelection) {
+         DialogElement confirmDialog = new DialogElement(94, 56, Lang.localise("confirm_owner_change", currentSelection.getName())) {
+             @Override
+             public void onClose() {
+                 if(ownerSelector == null) return;
+                 if(ownerSelector.getOwner().getUUID().equals(access.getOwner())) return;
+                 ownerSelector.setOwner(access.getOwner());
+                 super.onClose();
+             }
+        };
+        confirmDialog.initTextureLocation(SelectorElement.TEXTURE, 162, 144);
+        ButtonElement confirm = new ButtonElement(0, 0, 22, 22, button -> {
+            if(ownerSelector == null) return;
+            access.setOwner(ownerSelector.getOwner().getUUID());
+            RobotBehavior.setAccess(WorldAccessData.EnumAccessScope.ROBOT, entity, access);
+            removeSubGui();
+            clearWidgets();
+            init(); //Reinitialize the gui to get access to buttons / remove the claim button
+        });
+        ButtonElement decline = new ButtonElement(0, 0, 22, 22, button -> removeSubGui());
+        confirm.initTextureLocation(Reference.MISC, 102, 119);
+        decline.initTextureLocation(Reference.MISC, 102, 141);
+        confirm.setTooltip(Lang.localise("button.ownership.confirm"));
+        decline.setTooltip(Lang.localise("button.ownership.decline"));
+        confirmDialog.addElement(confirm);
+        confirmDialog.addElement(decline);
+        addSubGui(confirmDialog);
+    }
+
+    public static class GuiSelectorOwner extends EntitySelector {
+
+        public GuiSelectorOwner(UUID owner, int x, int y) {
+            super(new Selection<>(owner), x, y);
+        }
+
+        protected void setOwner(LivingEntity entity) {
+            setSelection(entity.getUUID());
+        }
+
+        protected void setOwner(UUID uuid) {
+            setSelection(uuid);
+        }
+
+        public LivingEntity getOwner() {
+            return cachedEntity;
+        }
+
+        @Override
+        protected IElement getMaximizedVersion() {
+            return new GuiSelectEntity(getPlayers(), this::setOwner);
+        }
+
+        private static Collection<LivingEntity> getPlayers() {
+            //Ensure a safe connection
+            if(!Minecraft.getInstance().isLocalServer() && !Minecraft.getInstance().getConnection().getConnection().isEncrypted()) return null;
+
+            Collection<PlayerInfo> networkInfo = Minecraft.getInstance().getConnection().getOnlinePlayers();
+            ArrayList<LivingEntity> players = new ArrayList<>();
+
+            for(PlayerInfo info : networkInfo) {
+                players.add(Robotics.proxy.createFakePlayer(Minecraft.getInstance().level, info.getProfile()).get());
+            }
+
+            return players;
+        }
+
     }
 }

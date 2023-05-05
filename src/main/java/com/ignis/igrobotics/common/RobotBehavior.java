@@ -4,7 +4,9 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
+import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
+import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
@@ -15,6 +17,8 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.network.NetworkHandler;
+import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -130,9 +134,14 @@ public class RobotBehavior {
                     buf -> buf.writeInt(target.getId()));
         }
         if(type == ModMenuTypes.ROBOT_INFO.get()) {
-            NetworkHooks.openScreen(serverPlayer,
+            target.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                NetworkHooks.openScreen(serverPlayer,
                     new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
-                    buf -> buf.writeInt(target.getId()));
+                    buf -> {
+                        buf.writeInt(target.getId());
+                        robot.getAccess().write(buf);
+                    });
+            });
         }
         if(type == ModMenuTypes.ROBOT_COMMANDS.get()) {
             if(!hasAccess(player, target, EnumPermission.COMMANDS)) return;
@@ -167,6 +176,12 @@ public class RobotBehavior {
         AtomicBoolean access = new AtomicBoolean(false);
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> access.set(robot.hasAccess(player, permission)));
         return access.get();
+    }
+
+    public static void setAccess(WorldAccessData.EnumAccessScope scope, Entity entity, AccessConfig access) {
+        if(entity.level.isClientSide()) {
+            NetworkHandler.sendToServer(new PacketSetAccessConfig(scope, entity, access));
+        } else entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setAccess(access));
     }
 
     private static ContainerData constructContainerData(Entity entity) {
