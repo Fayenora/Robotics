@@ -20,7 +20,6 @@ public class RobotRenderer extends GeoEntityRenderer<RobotEntity> {
             addRenderLayer(new ColorLayer(this, part)); //TODO: A color layer for every part might not be necessary as one should be able to hide the bones in the layer
         }
         addRenderLayer(new ArmorRenderer<>(this));
-        addRenderLayer(new FeetRenderer<>(this)); //TODO: Merge Feet Layer with default armor layer by adding feet bones to the model
         addRenderLayer(new HeldItemRenderer<>(this));
     }
 

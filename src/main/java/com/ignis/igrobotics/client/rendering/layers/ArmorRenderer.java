@@ -23,14 +23,14 @@ import javax.annotation.Nullable;
 
 public class ArmorRenderer<T extends LivingEntity & GeoAnimatable> extends ItemArmorGeoLayer<T> {
 
-    protected static final String LEFT_BOOT = "armorBipedLeftFoot";
-    protected static final String RIGHT_BOOT = "armorBipedRightFoot";
-    protected static final String LEFT_ARMOR_LEG = "LeftLeg";
-    protected static final String RIGHT_ARMOR_LEG = "RightLeg";
-    protected static final String CHESTPLATE = "Body";
-    protected static final String RIGHT_SLEEVE = "RightArm";
-    protected static final String LEFT_SLEEVE = "LeftArm";
-    protected static final String HELMET = "Head";
+    protected static final String LEFT_BOOT = "leftFoot";
+    protected static final String RIGHT_BOOT = "rightFoot";
+    protected static final String LEFT_ARMOR_LEG = "leftLeg";
+    protected static final String RIGHT_ARMOR_LEG = "rightLeg";
+    protected static final String CHESTPLATE = "body";
+    protected static final String RIGHT_SLEEVE = "rightArm";
+    protected static final String LEFT_SLEEVE = "leftArm";
+    protected static final String HELMET = "head";
 
     boolean hasLeftLeg, hasRightLeg, hasLeftArm, hasRightArm;
 
