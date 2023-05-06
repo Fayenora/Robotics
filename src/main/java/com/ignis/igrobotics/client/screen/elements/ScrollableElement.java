@@ -8,17 +8,20 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class ScrollableElement extends GuiElement {
 
-    protected int scrollDistanceX;
-    protected int scrollDistanceY;
+    private int scrollDistanceX;
+    private int scrollDistanceY;
     /** The total width of everything in the scrollable area. This implementation does not support extending this range */
-    protected int scrollMaxX;
+    private int scrollMaxX;
     /** The total height of everything in the scrollable area */
-    protected int scrollMaxY = 0;
+    private int scrollMaxY = 0;
 
-    private int toRemove = -1;
+    private final List<Integer> toRemove = new ArrayList<>();
 
     public ScrollableElement(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -34,7 +37,8 @@ public class ScrollableElement extends GuiElement {
     }
 
     public void removeComponent(int index) {
-        toRemove = index;
+        toRemove.add(index);
+        toRemove.sort(Comparator.reverseOrder());
     }
 
     public void removeComponent(IElement comp) {
@@ -46,6 +50,7 @@ public class ScrollableElement extends GuiElement {
      * @param index
      */
     private void internalRemove(int index) {
+        if(index > children().size()) return;
         children().remove(index);
         for(int i = index; i < children().size(); i++) {
             alignElement(i);
@@ -60,10 +65,10 @@ public class ScrollableElement extends GuiElement {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        if(toRemove >= 0) {
-            internalRemove(toRemove);
-            toRemove = -1;
+        for(int index : toRemove) {
+            internalRemove(index);
         }
+        toRemove.clear();
         RenderUtil.enableScissor(getShape());
         super.render(poseStack, mouseX, mouseY, delta);
         RenderUtil.disableScissor();
@@ -141,12 +146,12 @@ public class ScrollableElement extends GuiElement {
             alignY = lastComponent.y;
             //Component doesn't fit into current row
             if(getX() + scrollMaxX - alignX < element.getShape().width) {
-                scrollMaxY += element.getShape().height;
+                setScrollMaxY(scrollMaxY + element.getShape().height);
                 alignX = getX();
                 alignY += lastComponent.height;
             }
         } else {
-            scrollMaxY += element.getShape().height;
+            setScrollMaxY(scrollMaxY + element.getShape().height);
             alignX = getX();
             alignY = getY();
         }
@@ -166,6 +171,10 @@ public class ScrollableElement extends GuiElement {
                 highestY = Math.max(highestY, comp.getShape().y + comp.getShape().height);
             }
         }
-        scrollMaxY = highestY - getY();
+        setScrollMaxY(highestY - getY());
+    }
+
+    protected void setScrollMaxY(int scrollMaxY) {
+        this.scrollMaxY = scrollMaxY;
     }
 }

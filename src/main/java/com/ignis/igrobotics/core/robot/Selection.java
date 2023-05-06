@@ -42,7 +42,7 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	}
 
 	public void set(A value) {
-		this.type = SelectionType.byClass(value.getClass());
+		this.type = value == null ? null : SelectionType.byClass(value.getClass());
 		this.target = value;
 	}
 	

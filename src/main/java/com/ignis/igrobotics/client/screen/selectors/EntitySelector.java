@@ -58,7 +58,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			NetworkHandler.sendToServer(new PacketRequestEntitySearch(getParentGuiPath(), selection.get()));
 			return;
 		}
-		if(cachedEntity != null && !getBaseGui().hasSubGui()) {
+		if(cachedEntity != null && currentGuiActive()) {
 			RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
 			RenderUtil.drawRotatingEntity(poseStack, getX() + width / 2, getY() + height / 2 + 6, (int) (8 / cachedEntity.getBoundingBox().getSize()), cachedEntity, angle);
 			RenderUtil.disableScissor();

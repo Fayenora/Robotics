@@ -51,6 +51,7 @@ public class AttributeElement extends GuiElement {
         } else if(r.nextDouble() > 0.999) {
             shimmer++;
         }
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.disableBlend();
         RenderSystem.disableColorLogicOp();
     }

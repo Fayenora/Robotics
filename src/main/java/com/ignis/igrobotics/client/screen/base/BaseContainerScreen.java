@@ -166,6 +166,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
 
     @Override
     public void removeSubGui() {
+        if(!hasSubGui()) return;
         IElement toRemove = subGuis.pop();
         toRemove.onClose();
         removeWidget(toRemove);

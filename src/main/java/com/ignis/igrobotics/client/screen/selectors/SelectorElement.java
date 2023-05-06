@@ -50,9 +50,8 @@ public abstract class SelectorElement<A> extends ButtonElement {
      * Check whether there is a subGui in front of the gui this selector is on
      * @return whether the current gui is in front
      */
-    private boolean currentGuiActive() {
+    protected boolean currentGuiActive() {
         IBaseGui baseGui = getBaseGui();
-        if(baseGui.hasSubGui()) return true;
         IElement[] parentPath = getParentGuiPath();
         IElement currentSubGui = baseGui.getSubGui();
         for(IElement parent : parentPath) {
@@ -71,5 +70,9 @@ public abstract class SelectorElement<A> extends ButtonElement {
     @Override
     public List<? extends GuiEventListener> children() {
         return List.of();
+    }
+
+    public Selection<A> getSelection() {
+        return selection;
     }
 }
