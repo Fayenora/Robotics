@@ -9,12 +9,14 @@ import com.ignis.igrobotics.client.screen.selectors.EntitySelector;
 import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.access.AccessConfig;
+import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
@@ -35,6 +37,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.ForgeMod;
 
@@ -91,13 +94,16 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             chunkLoadingToggle.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_CHUNK_LOADING_STATE, new NetworkInfo(entity)));
             this.soundToggle = new ButtonElement(leftPos + 135, topPos + 49, 17, 17, robot.isMuffled() ? 1 : 0, 2);
             soundToggle.initTextureLocation(Reference.MISC, 51, 119);
+            soundToggle.setTooltip(0, Lang.localise("button.mute"));
+            soundToggle.setTooltip(1, Lang.localise("button.unmute"));
             soundToggle.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_MUTE_STATE, new NetworkInfo(entity)));
             this.powerButton = new ButtonElement(leftPos + 135, topPos + 70, 17, 17, robot.isActive() ? 1 : 0, 2);
             powerButton.initTextureLocation(Reference.MISC, 0, 204);
             powerButton.setTooltip(0, Lang.localise("button.power.up"));
             powerButton.setTooltip(1, Lang.localise("button.power.down"));
             powerButton.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_POWER_STATE, new NetworkInfo(entity)));
-            this.permissionConfig = new ButtonElement(leftPos + 135, topPos + 91, 17, 17);
+            this.permissionConfig = new ButtonElement(leftPos + 135, topPos + 91, 17, 17, button -> addSubGui(new PermissionsScreen(entity, access, 0, 0)));
+            permissionConfig.setTooltip(Lang.localise("button.config"));
             permissionConfig.initTextureLocation(Reference.MISC, 51, 153);
             this.nameBar = new EditBox(Minecraft.getInstance().font, leftPos + 77, topPos + 12, 50, 16, Component.literal("text_box"));
             if(entity.hasCustomName()) nameBar.insertText(entity.getName().getString());
@@ -132,11 +138,15 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             attributeBar.addElement(new AttributeElement(0, 0, attribute, menu.attributes.get(attribute)));
         }
         addElement(attributeBar);
+
+        updateButtonsEnabled();
     }
 
     @Override
     protected void renderBg(PoseStack poseStack, float pPartialTick, int pMouseX, int pMouseY) {
         if(entity == null) return;
+        updateButtonsEnabled();
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -198,6 +208,21 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public void onClose() {
         super.onClose();
         renameRobot();
+    }
+
+    private void updateButtonsEnabled() {
+        Player player = Minecraft.getInstance().player;
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+            boolean configureButtonsActive = access.hasPermission(player, EnumPermission.CONFIGURATION);
+            configureButtonsActive = configureButtonsActive && (RoboticsConfig.general.configShutdown.get() ? robot.isActive() : true);
+            pickUpButton.setEnabled(configureButtonsActive);
+            chunkLoadingToggle.setEnabled(configureButtonsActive);
+            soundToggle.setEnabled(configureButtonsActive);
+        });
+        permissionConfig.setEnabled(access.getOwner().equals(player.getUUID()));
+        powerButton.setEnabled(access.hasPermission(player, EnumPermission.ALLY) && menu.data.get(0) > 0);
+        nameBar.setEditable(access.hasPermission(player, EnumPermission.COMMANDS));
+        if(ownerSelector != null) ownerSelector.setEnabled(access.getOwner().equals(player.getUUID()));
     }
 
     private void renameRobot() {
