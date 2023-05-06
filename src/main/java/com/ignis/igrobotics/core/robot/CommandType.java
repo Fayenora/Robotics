@@ -1,19 +1,15 @@
 package com.ignis.igrobotics.core.robot;
 
-import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;

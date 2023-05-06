@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core.robot;
+package com.ignis.igrobotics.core.capabilities.commands;
 
 import com.ignis.igrobotics.core.util.Lang;
 
