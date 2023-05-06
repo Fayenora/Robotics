@@ -44,6 +44,7 @@ public class RobotCapability implements IRobot {
     public RobotCapability(LivingEntity entity) {
         this.entity = entity;
         this.dataManager = entity.getEntityData();
+        this.perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
         modules = NonNullList.withSize(RoboticsConfig.general.moduleAmount.get(), ItemStack.EMPTY);
 
         dataManager.define(RENDER_OVERLAYS, 0);

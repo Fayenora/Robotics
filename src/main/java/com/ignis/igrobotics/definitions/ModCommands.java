@@ -55,7 +55,7 @@ public class ModCommands {
         });
         RETRIEVE.setAISupplier((robot, s) -> new RetrieveGoal(robot, (BlockPos) s[1].get(), (ItemStack) s[0].get(), 20, 200));
         STORE.setAISupplier((robot, s) -> new StoreGoal(robot, (BlockPos) s[1].get(), (ItemStack) s[0].get(), 20, 200));
-        //BREAK.setAISupplier((robot, s) -> new EntityAIBreakBlocks(robot, (BlockPos) s[0].get(), (BlockPos) s[1].get()));
+        BREAK.setAISupplier((robot, s) -> new BreakBlocksGoal(robot, (BlockPos) s[0].get(), (BlockPos) s[1].get()));
     }
 
     public static CommandType register(String name, Class<?>... selectionClasses) {

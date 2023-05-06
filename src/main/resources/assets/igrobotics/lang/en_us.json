@@ -121,6 +121,7 @@
 
   "attribute.name.robot.energy_capacity": "Energy Capacity",
   "attribute.name.robot.energy_consumption": "Energy Consumption",
+  "attribute.name.robot.inventory_slots": "Inventory Slots",
   "attribute.name.robot.module_slots": "Module Slots",
   "igrobotics.perk.health": "Health",
   "igrobotics.perk.battery": "Battery",

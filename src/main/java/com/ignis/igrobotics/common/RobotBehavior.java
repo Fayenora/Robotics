@@ -19,6 +19,7 @@ import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,6 +38,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
@@ -194,6 +197,11 @@ public class RobotBehavior {
         if(entity.level.isClientSide()) {
             NetworkHandler.sendToServer(new PacketSetAccessConfig(scope, entity, access));
         } else entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setAccess(access));
+    }
+
+    public static boolean canReach(LivingEntity entity, BlockPos pos) {
+        double reach = entity.getAttributes().hasAttribute(ForgeMod.BLOCK_REACH.get()) ? entity.getAttributes().getValue(ForgeMod.BLOCK_REACH.get()) + 1.5 : 6; // Vanilla check is eye-to-center distance < 6, so padding is 6 - 4.5 = 1.5
+        return entity.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
     }
 
     private static ContainerData constructContainerData(Entity entity) {
