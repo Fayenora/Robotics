@@ -40,7 +40,10 @@ public class PerkConfig implements IJsonConfig {
 	public void load(File file) {
 		Gson gson = ConfigJsonSerializer.initGson();
 		if(!file.exists()) ConfigUtils.copyFromDefault("perks.json", file);
-		ConfigUtils.readJson(gson, file, Perk[].class);
+		Perk[] perks = (Perk[]) ConfigUtils.readJson(gson, file, Perk[].class);
+		for(Perk perk : perks) {
+			PERKS.put(perk.getUnlocalizedName(), perk);
+		}
 	}
 	
 	@Override

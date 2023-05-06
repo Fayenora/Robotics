@@ -9,9 +9,11 @@ import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.BaseInventory;
 import com.ignis.igrobotics.core.capabilities.inventory.ModifiableInventory;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -20,6 +22,8 @@ import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -28,10 +32,16 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
 
-    public static final Attribute ENERGY_CAPACITY = new RangedAttribute("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE).setSyncable(true);
-    public static final Attribute ENERGY_CONSUMPTION = new RangedAttribute("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE);
-    public static final Attribute MODIFIER_SLOTS = new RangedAttribute("robot.module_slots", 1, 0, Reference.MAX_MODULES);
-    public static final Attribute INVENTORY_SLOTS = new RangedAttribute("robot.inventory_slots", 12, 0, Reference.MAX_INVENTORY_SIZE).setSyncable(true);
+    public static final Attribute ENERGY_CAPACITY = register("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE, true);
+    public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE, false);
+    public static final Attribute MODIFIER_SLOTS = register("robot.module_slots", 1, 0, Reference.MAX_MODULES, false);
+    public static final Attribute INVENTORY_SLOTS = register("robot.inventory_slots", 12, 0, Reference.MAX_INVENTORY_SIZE, true);
+
+    private static Attribute register(String name, double defaultValue, double min, double max, boolean syncable) {
+        Attribute attr = new RangedAttribute("attribute.name." + name, defaultValue, min, max).setSyncable(syncable);
+        ForgeRegistries.ATTRIBUTES.register(new ResourceLocation(Robotics.MODID, name), attr);
+        return attr;
+    }
 
     @SubscribeEvent
     public static void robotAttributes(EntityAttributeCreationEvent event) {

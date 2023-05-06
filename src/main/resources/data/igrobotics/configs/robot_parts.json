@@ -217,5 +217,43 @@
 			"level": 1
 		}
 		]
+	}, 
+	{
+		"material": "lumium", 
+		"part": "head", 
+		"perks": [
+		{
+			"name": "perk.glowing", 
+			"level": 1
+		}
+		]
+	}, 
+	{
+		"material": "lumium", 
+		"part": "body", 
+		"perks": [
+		{
+			"name": "perk.glowing", 
+			"level": 1
+		}
+		]
+	},
+	{
+		"material": "electrum", 
+		"perks": [
+		{
+			"name": "perk.charge", 
+			"level": 1
+		}
+		]
+	}, 
+	{
+		"material": "constantan", 
+		"perks": [
+		{
+			"name": "perk.acceleration", 
+			"level": 1
+		}
+		]
 	}
 ]

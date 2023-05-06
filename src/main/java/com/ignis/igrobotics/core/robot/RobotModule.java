@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core.robot;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
@@ -67,21 +68,26 @@ public class RobotModule {
     public static RobotModule deserialize(JsonElement json) {
         JsonObject obj = json.getAsJsonObject();
 
-        Ingredient item = Ingredient.fromJson(obj.get("items"));
-        RobotModule module = new RobotModule(item);
+        try {
+            Ingredient item = Ingredient.fromJson(obj.get("items"));
+            RobotModule module = new RobotModule(item);
 
-        if(obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
-        if(obj.has("duration")) module.duration = obj.get("duration").getAsInt();
-        if(obj.has("energyCost")) module.energyCost = obj.get("energyCost").getAsInt();
-        if(obj.has("texture")) {
-            String path = obj.get("texture").getAsString();
-            if(!path.endsWith(".png")) path += ".png";
-            module.overlay = new ResourceLocation(TEXTURE_PATH + path);
+            if (obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
+            if (obj.has("duration")) module.duration = obj.get("duration").getAsInt();
+            if (obj.has("energyCost")) module.energyCost = obj.get("energyCost").getAsInt();
+            if (obj.has("texture")) {
+                String path = obj.get("texture").getAsString();
+                if (!path.endsWith(".png")) path += ".png";
+                module.overlay = new ResourceLocation(TEXTURE_PATH + path);
+            }
+
+            module.perks = PerkMap.deserialize(obj.get("perks"));
+
+            return module;
+        } catch(JsonSyntaxException e) {
+            Robotics.LOGGER.warn("Failed to register module: " + e.getLocalizedMessage());
+            return null;
         }
-
-        module.perks = PerkMap.deserialize(obj.get("perks"));
-
-        return module;
     }
 
     public static boolean isModule(ItemStack stack) {
