@@ -79,6 +79,11 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         return super.canBeAffected(instance);
     }
 
+    @Override
+    public void heal(float p_21116_) {
+        //Prevent any health regeneration
+    }
+
     /////////////////
     // Animations
     /////////////////
