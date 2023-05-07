@@ -8,6 +8,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -96,4 +97,13 @@ public class ArmorRenderer<T extends LivingEntity & GeoAnimatable> extends ItemA
         };
     }
 
+    @Override
+    protected void prepModelPartForRender(PoseStack poseStack, GeoBone bone, ModelPart sourcePart) {
+        super.prepModelPartForRender(poseStack, bone, sourcePart);
+        if(bone.getName().equals(HELMET)) {
+            sourcePart.xRot = 0;
+            sourcePart.yRot = 0;
+            sourcePart.zRot = 0;
+        }
+    }
 }
