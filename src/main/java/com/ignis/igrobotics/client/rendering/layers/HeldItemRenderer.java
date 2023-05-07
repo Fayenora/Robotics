@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 
 public class HeldItemRenderer<T extends LivingEntity & GeoAnimatable> extends BlockAndItemGeoLayer<T> {
 
-    private static final String LEFT_HAND = "LeftArm";
-    private static final String RIGHT_HAND = "LeftLeg";
+    private static final String LEFT_HAND = "leftArm";
+    private static final String RIGHT_HAND = "rightArm";
 
     public HeldItemRenderer(GeoRenderer<T> renderer) {
         super(renderer);
@@ -48,7 +48,7 @@ public class HeldItemRenderer<T extends LivingEntity & GeoAnimatable> extends Bl
     protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, T animatable, MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
         if (stack == animatable.getMainHandItem()) {
             poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
-            poseStack.translate(0.5, 0.125, 0);
+            poseStack.translate(0.1, 0.125, -0.6);
 
             if (stack.getItem() instanceof ShieldItem)
                 poseStack.translate(0, 0.125, -0.25);
