@@ -153,14 +153,13 @@ public class RenderUtil {
         Lighting.setupFor3DItems();
     }
 
-    public static void drawItemStack(ItemStack stack, int x, int y) {
+    public static void drawItemStack(PoseStack poseStack, ItemStack stack, int x, int y) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        PoseStack posestack = RenderSystem.getModelViewStack();
-        posestack.translate(0.0F, 0.0F, 32.0F);
-        RenderSystem.applyModelViewMatrix();
-        var otherFont = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
-        if (otherFont == null) otherFont = Minecraft.getInstance().font;
-        itemRenderer.renderAndDecorateItem(posestack, stack, x, y);
-        itemRenderer.renderGuiItemDecorations(posestack, otherFont, stack, x, y - (stack.isEmpty() ? 0 : 8), "");
+        poseStack.pushPose();
+        poseStack.translate(0.0F, 0.0F, 232.0F);
+        itemRenderer.renderAndDecorateItem(poseStack, stack, x, y);
+        var font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
+        itemRenderer.renderGuiItemDecorations(poseStack, font == null ? Minecraft.getInstance().font : font, stack, x, y - (stack.isEmpty() ? 0 : 8), "");
+        poseStack.popPose();
     }
 }

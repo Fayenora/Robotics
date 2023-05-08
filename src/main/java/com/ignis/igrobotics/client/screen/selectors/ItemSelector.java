@@ -6,10 +6,16 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.integration.jei.RoboticsJEIPlugin;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mezz.jei.api.ingredients.ITypedIngredient;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemSelector extends SelectorElement<ItemStack> {
@@ -25,9 +31,9 @@ public class ItemSelector extends SelectorElement<ItemStack> {
 
 	@Override
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		RenderUtil.drawItemStack(selection.get(), getX() + 1, getY() + 1);
+		RenderUtil.drawItemStack(poseStack, selection.get(), getX() + 1, getY() + 1);
 	}
-	
+
 	class GuiSelectItem extends GuiElement {
 
 		public GuiSelectItem() {
@@ -36,19 +42,17 @@ public class ItemSelector extends SelectorElement<ItemStack> {
 		}
 
 		@Override
-		public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-			/* TODO
-			if(keyCode == Keyboard.KEY_RETURN) {
-				IJeiRuntime jeiRuntime = RoboticsJEIPlugin.jeiRuntime;
-				if(jeiRuntime == null) return;
-				Object obj = jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse();
-				if(obj == null || !(obj instanceof ItemStack)) return;
-
-				selector.target = (ItemStack) obj;
-				getBaseGui().removeSubGui();
+		public boolean keyPressed(int keyCode, int pScanCode, int pModifiers) {
+			if(keyCode == InputConstants.KEY_RETURN) {
+				IJeiRuntime jeiRuntime = RoboticsJEIPlugin.JEI_RUNTIME;
+				if(jeiRuntime == null) return super.keyPressed(keyCode, pScanCode, pModifiers);
+				Optional<ITypedIngredient<?>> obj = jeiRuntime.getIngredientListOverlay().getIngredientUnderMouse();
+				if(obj.isPresent() && obj.get().getItemStack().isPresent()) {
+					selection.set(obj.get().getItemStack().get());
+					getBaseGui().removeSubGui();
+				}
 			}
-			 */
-			return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+			return super.keyPressed(keyCode, pScanCode, pModifiers);
 		}
 
 		@Override
