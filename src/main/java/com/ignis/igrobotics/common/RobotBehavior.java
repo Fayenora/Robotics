@@ -23,10 +23,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,6 +40,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -200,8 +203,53 @@ public class RobotBehavior {
     }
 
     public static boolean canReach(LivingEntity entity, BlockPos pos) {
-        double reach = entity.getAttributes().hasAttribute(ForgeMod.BLOCK_REACH.get()) ? entity.getAttributes().getValue(ForgeMod.BLOCK_REACH.get()) + 1.5 : 6; // Vanilla check is eye-to-center distance < 6, so padding is 6 - 4.5 = 1.5
+        double reach = entity.getAttributes().hasAttribute(ForgeMod.BLOCK_REACH.get()) ? entity.getAttributes().getValue(ForgeMod.BLOCK_REACH.get()) : 4.5;
         return entity.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
+    }
+
+    /**
+     * Speed modifier for any entity attempting to break a block
+     * NOTE: These calculations are copied from {@link Player#getDigSpeed(BlockState, BlockPos)}
+     * @param entity the entity attempting to break a block
+     * @param selected the item stack the entity is using
+     * @param state the blocks state
+     * @return the multiplier to the destroy speed
+     */
+    public static float destroySpeed(LivingEntity entity, ItemStack selected, BlockState state) {
+        float f = selected.getDestroySpeed(state);
+        if (f > 1.0F) {
+            int i = EnchantmentHelper.getBlockEfficiency(entity);
+            if (i > 0 && !selected.isEmpty()) {
+                f += (float)(i * i + 1);
+            }
+        }
+
+        if (MobEffectUtil.hasDigSpeed(entity)) {
+            f += (float)(MobEffectUtil.getDigSpeedAmplification(entity) + 1) * 0.2F;
+        }
+
+        if (entity.hasEffect(MobEffects.DIG_SLOWDOWN)) {
+            float f1;
+            switch (entity.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) {
+                case 0:
+                    f1 = 0.3F;
+                    break;
+                case 1:
+                    f1 = 0.09F;
+                    break;
+                case 2:
+                    f1 = 0.0027F;
+                    break;
+                case 3:
+                default:
+                    f1 = 8.1E-4F;
+            }
+
+            f *= f1;
+        }
+        //TODO: Post to event with attached fake player
+        //f = net.minecraftforge.event.ForgeEventFactory.getBreakSpeed(entity, state, f, pos);
+        return f;
     }
 
     private static ContainerData constructContainerData(Entity entity) {

@@ -3,7 +3,7 @@ package com.ignis.igrobotics.common.entity.ai;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.RobotBehavior;
-import com.ignis.igrobotics.core.EntityInteractionManager;
+import com.ignis.igrobotics.common.EntityInteractionManager;
 import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.mojang.authlib.GameProfile;
@@ -115,6 +115,7 @@ public class BreakBlocksGoal extends Goal {
 
     private boolean canToolHarvestBlock(BlockPos pos, ItemStack stack) {
         BlockState state = entity.level.getBlockState(pos);
+        if(state.isAir() || state.getDestroySpeed(entity.level, pos) < 0) return false;
         if(!state.requiresCorrectToolForDrops()) return true;
         return stack.isCorrectToolForDrops(state);
     }
@@ -124,12 +125,11 @@ public class BreakBlocksGoal extends Goal {
         int posY = MathUtil.restrict(minY, entity.getY(), maxY);
         int posZ = MathUtil.restrict(minZ, entity.getZ(), maxZ);
 
-        return nextNonAir(new BlockPos(posX, posY, posZ));
+        return nextHarvestable(new BlockPos(posX, posY, posZ));
     }
 
     //BFS for the next non air block in the area
-    public BlockPos nextNonAir(BlockPos start) {
-        Level level = entity.level;
+    public BlockPos nextHarvestable(BlockPos start) {
         List<BlockPos> queue = new ArrayList<>();
         Set<BlockPos> explored = new HashSet<>();
         explored.add(start);
@@ -138,8 +138,7 @@ public class BreakBlocksGoal extends Goal {
             BlockPos pos = queue.get(0);
             queue.remove(0);
             //Check condition
-            BlockState state = level.getBlockState(pos);
-            if(!state.isAir()) return pos;
+            if(canToolHarvestBlock(pos, entity.getMainHandItem())) return pos;
             // Check neighbors
             for(Direction dir : Direction.values()) {
                 BlockPos neighbor = pos.relative(dir);
@@ -157,5 +156,11 @@ public class BreakBlocksGoal extends Goal {
         return pos.getX() >= minX && pos.getX() <= maxX
                 && pos.getY() >= minY && pos.getY() <= maxY
                 && pos.getZ() >= minZ && pos.getZ() <= maxZ;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof BreakBlocksGoal other)) return false;
+        return entity.equals(other.entity) && minX == other.minX && minY == other.minY && minZ == other.minZ && maxX == other.maxX && maxY == other.maxY && maxZ == other.maxZ;
     }
 }

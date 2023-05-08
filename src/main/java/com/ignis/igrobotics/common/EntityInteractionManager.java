@@ -1,9 +1,7 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.RobotBehavior;
-import com.mojang.logging.LogUtils;
+import com.ignis.igrobotics.core.RobotFakePlayerFactory;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import org.slf4j.Logger;
 
 import java.lang.ref.WeakReference;
 
@@ -48,7 +45,7 @@ public class EntityInteractionManager {
     public EntityInteractionManager(Mob mob) {
         this.mob = mob;
         this.level = (ServerLevel) mob.level;
-        fakePlayer = Robotics.proxy.createFakePlayer(mob.level, Reference.PROFILE);
+        fakePlayer = new WeakReference<>(RobotFakePlayerFactory.get(mob, Reference.PROFILE));
     }
 
     private int lastSentState = -1;

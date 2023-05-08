@@ -3,6 +3,7 @@ package com.ignis.igrobotics;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -71,6 +72,6 @@ public class Reference {
 	}
 	
 	public static boolean isSpecialKey(int key) {
-		return key == 14 || key == 199 || key == 203 || key == 205 || key == 207 || key == 211;
+		return key == InputConstants.KEY_BACKSPACE || (key >= InputConstants.KEY_RIGHT && key <= InputConstants.KEY_UP);
 	}
 }
