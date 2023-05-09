@@ -39,6 +39,18 @@ public class StorageBlock extends MachineBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
+    public static final VoxelShape NORTH_TOP = Block.box(0, -16, 1, 16, 16, 16);
+    public static final VoxelShape NORTH_BOTTOM = Block.box(0, 0, 1, 16, 32, 16);
+
+    public static final VoxelShape EAST_TOP = Block.box(0, -16, 0, 15, 16, 16);
+    public static final VoxelShape EAST_BOTTOM = Block.box(0, 0, 0, 15, 32, 16);
+
+    public static final VoxelShape SOUTH_TOP = Block.box(0, -16, 0, 16, 16, 15);
+    public static final VoxelShape SOUTH_BOTTOM = Block.box(0, 0, 0, 16, 32, 15);
+
+    public static final VoxelShape WEST_TOP = Block.box(1, -16, 0, 16, 16, 16);
+    public static final VoxelShape WEST_BOTTOM = Block.box(1, 0, 0, 16, 32, 16);
+
     public static final VoxelShape TOP = Block.box(0, -16, 0, 16, 16, 16);
     public static final VoxelShape BOTTOM = Block.box(0, 0, 0, 16, 32, 16);
 
@@ -93,7 +105,13 @@ public class StorageBlock extends MachineBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return state.getValue(HALF) == DoubleBlockHalf.UPPER ? TOP : BOTTOM;
+        return switch(state.getValue(MachineBlock.FACING)) {
+            case NORTH -> state.getValue(HALF) == DoubleBlockHalf.UPPER ? NORTH_TOP : NORTH_BOTTOM;
+            case EAST -> state.getValue(HALF) == DoubleBlockHalf.UPPER ? EAST_TOP : EAST_BOTTOM;
+            case SOUTH -> state.getValue(HALF) == DoubleBlockHalf.UPPER ? SOUTH_TOP : SOUTH_BOTTOM;
+            case WEST -> state.getValue(HALF) == DoubleBlockHalf.UPPER ? WEST_TOP : WEST_BOTTOM;
+            default -> state.getValue(HALF) == DoubleBlockHalf.UPPER ? TOP : BOTTOM;
+        };
     }
 
     @Nullable
