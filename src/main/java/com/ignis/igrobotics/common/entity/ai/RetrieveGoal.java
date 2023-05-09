@@ -55,6 +55,7 @@ public class RetrieveGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
+		taskFinished = false;
 		return awayCounter++ > minAway;
 	}
 	
