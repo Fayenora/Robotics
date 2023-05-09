@@ -1,10 +1,9 @@
 package com.ignis.igrobotics.common.items;
 
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.CommanderMenu;
+import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
 import com.ignis.igrobotics.core.RoboticsFinder;
@@ -108,11 +107,14 @@ public class CommanderItem extends Item {
         LivingEntity living = getRememberedEntity(level, stack);
 
         //If the commander remembers a robot, make it move here
-        if(living != null && living.getCapability(ModCapabilities.ROBOT).isPresent() && living instanceof Mob mob) {
-            mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, pos));
-            if(mob instanceof RobotEntity) {
-                living.playSound(ModSounds.ROBOT_KILL_COMMAND.get(), 1, 1);
-            }
+
+        if(living instanceof Mob mob && living.getCapability(ModCapabilities.ROBOT).isPresent()) {
+            living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                if(robot.isActive()) {
+                    mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, pos));
+                    RobotBehavior.playAggressionSound(living);
+                }
+            });
             return InteractionResult.CONSUME;
         }
         //If the commander is pointing towards a robot in storage, make it exit and move here

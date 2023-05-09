@@ -4,7 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
-import com.ignis.igrobotics.common.entity.ai.BreakBlocksGoal;
+import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.RetrieveGoal;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
@@ -13,12 +13,13 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModAttributes;
-import com.ignis.igrobotics.definitions.ModCommands;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
@@ -26,7 +27,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -37,7 +37,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
@@ -62,6 +61,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -85,7 +85,9 @@ public class RobotBehavior {
         if(event.getEntity().level.isClientSide()) return;
         event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
                 event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
-                        robot.setActivation(energy.getEnergyStored() > 0);
+                        if(energy.getEnergyStored() <= 0) {
+                            robot.setActivation(false);
+                        }
 
                         if(!robot.isActive()) return;
                         double consumption = event.getEntity().getAttributeValue(ModAttributes.ENERGY_CONSUMPTION);
@@ -190,6 +192,7 @@ public class RobotBehavior {
     public static void onRobotCreated(LivingEntity entity) {
         if(entity instanceof Mob mob) {
             mob.setPersistenceRequired();
+            mob.setCanPickUpLoot(true);
         }
         entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
                 if(!(energy instanceof EnergyStorage storage)) return;
@@ -216,6 +219,16 @@ public class RobotBehavior {
     public static boolean canReach(LivingEntity entity, BlockPos pos) {
         double reach = entity.getAttributes().hasAttribute(ForgeMod.BLOCK_REACH.get()) ? entity.getAttributes().getValue(ForgeMod.BLOCK_REACH.get()) : 4.5;
         return entity.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
+    }
+
+    public static void playAggressionSound(LivingEntity entity) {
+        Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
+        if(robot.isPresent() && !robot.get().isActive()) return;
+        if(entity instanceof RobotEntity) {
+            entity.playSound(ModSounds.ROBOT_KILL_COMMAND.get(), 1, 1);
+        } else if(entity instanceof Mob mob) {
+            mob.playAmbientSound();
+        }
     }
 
     /**

@@ -95,6 +95,10 @@ public class CommandCapability implements ICommandable {
         inactiveTargets = entity.targetSelector.getAvailableGoals();
         entity.goalSelector.removeAllGoals(goal -> true);
         entity.targetSelector.removeAllGoals(goal -> true);
+        for(Goal.Flag flag : Goal.Flag.values()) {
+            entity.goalSelector.disableControlFlag(flag);
+            entity.targetSelector.disableControlFlag(flag);
+        }
         inactiveCommands = commands;
         commands = new ArrayList<>();
     }
@@ -106,6 +110,10 @@ public class CommandCapability implements ICommandable {
         }
         for(WrappedGoal goal : inactiveTargets) {
             entity.targetSelector.addGoal(goal.getPriority(), goal.getGoal());
+        }
+        for(Goal.Flag flag : Goal.Flag.values()) {
+            entity.goalSelector.enableControlFlag(flag);
+            entity.targetSelector.enableControlFlag(flag);
         }
         commands = inactiveCommands;
     }

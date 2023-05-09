@@ -2,8 +2,10 @@ package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.RobotModule;
@@ -14,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -22,6 +25,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class RobotCapability implements IRobot {
@@ -34,6 +38,8 @@ public class RobotCapability implements IRobot {
     private NonNullList<ItemStack> modules;
     private UUID owner = Reference.DEFAULT_UUID;
 
+    public final LookDownGoal lookDownGoal;
+
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
     private static final EntityDataAccessor<Boolean> MUTED = RobotEntity.MUTED;
@@ -41,11 +47,12 @@ public class RobotCapability implements IRobot {
     private static final EntityDataAccessor<Integer> PICKUP_STATE = RobotEntity.PICKUPSTATE;
     private static final EntityDataAccessor<Integer> COMMAND_GROUP = RobotEntity.COMMAND_GROUP;
 
-    public RobotCapability(LivingEntity entity) {
+    public RobotCapability(Mob entity) {
         this.entity = entity;
         this.dataManager = entity.getEntityData();
         this.perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
         modules = NonNullList.withSize(RoboticsConfig.general.moduleAmount.get(), ItemStack.EMPTY);
+        lookDownGoal = new LookDownGoal(entity);
 
         dataManager.define(RENDER_OVERLAYS, 0);
         dataManager.define(ACTIVATED, true);
@@ -94,33 +101,37 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void setActivation(boolean activation) {
-        IEnergyStorage storage = entity.getCapability(ForgeCapabilities.ENERGY).orElse(null);
-        if(storage != null && storage.getEnergyStored() <= 0) {
+        Optional<IEnergyStorage> storage = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
+        if(storage.isPresent() && storage.get().getEnergyStored() <= 0) {
             activation = false;
         }
         if(activation == isActive()) return;
+        Optional<IPartBuilt> parts = entity.getCapability(ModCapabilities.PARTS).resolve();
+        Optional<ICommandable> commands = entity.getCapability(ModCapabilities.COMMANDS).resolve();
 
+        // NOTE Maybe make this fire as an event?
         dataManager.set(ACTIVATED, activation);
 
         if(!activation && RoboticsConfig.general.chunkLoadShutdown.get()) {
             setChunkLoading(0);
         }
 
-        // NOTE Maybe make this fire as an event?
-        /* TODO Command Capability:
-        if(activation) {
-                robot.commands.removeAllTasks();
-                entity.initEntityAI();
+        if(commands.isPresent() && entity instanceof Mob mob) {
+            if(activation) {
+                mob.goalSelector.removeGoal(lookDownGoal);
+                commands.get().reapplyAllTasks();
             } else {
-                robot.commands.removeAllTasks();
-                entity.tasks.addTask(0, TASK_LOOK_DOWN);
-         */
-        IPartBuilt parts = entity.getCapability(ModCapabilities.PARTS).orElse(null);
-        if(parts == null) return;
-        if(activation) {
-            parts.setTemporaryColor(parts.getColor());
-        } else {
-            parts.setTemporaryColor(DyeColor.GRAY);
+                commands.get().removeAllTasks();
+                mob.goalSelector.addGoal(0, lookDownGoal);
+            }
+        }
+
+        if(parts.isPresent()) {
+            if(activation) {
+                parts.get().setTemporaryColor(parts.get().getColor());
+            } else {
+                parts.get().setTemporaryColor(DyeColor.GRAY);
+            }
         }
     }
 

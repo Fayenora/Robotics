@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.entity.ai;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
@@ -8,10 +9,12 @@ import java.util.EnumSet;
 
 public class LookDownGoal extends Goal {
 	
-	private LivingEntity entity;
+	private final Mob entity;
+	private final Vec3 idealLookVector;
 	
-	public LookDownGoal(LivingEntity entity) {
+	public LookDownGoal(Mob entity) {
 		this.entity = entity;
+		idealLookVector = Vec3.directionFromRotation(-45, entity.getYHeadRot());
 		setFlags(EnumSet.of(Flag.LOOK));
 	}
 
@@ -22,14 +25,13 @@ public class LookDownGoal extends Goal {
 	
 	@Override
 	public boolean canContinueToUse() {
-		Vec3 idealLookVector = Vec3.directionFromRotation(-45, entity.getYHeadRot());
 		Vec3 current = entity.getLookAngle();
 		return current.distanceTo(idealLookVector) > 0.1;
 	}
 	
 	@Override
 	public void tick() {
-		entity.lerpHeadTo(entity.getYHeadRot(), -45);
+		entity.getLookControl().setLookAt(idealLookVector);
 	}
 
 	@Override

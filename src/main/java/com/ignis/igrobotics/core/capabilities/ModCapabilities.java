@@ -23,7 +23,6 @@ import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -35,14 +34,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
-import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID)
 public class ModCapabilities {
@@ -112,25 +108,25 @@ public class ModCapabilities {
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if(!(event.getObject() instanceof RobotEntity robot)) return;
 
-        PartsCapability partsCapability = new PartsCapability(robot);
-        event.addCapability(LOC_PARTS, new AlwaysProvideAndSave<>(PARTS, partsCapability));
-
         PerkMapCapability perksCapability = new PerkMapCapability(robot);
         event.addCapability(LOC_PERKS, new AlwaysProvide<>(PERKS, perksCapability));
 
-        RobotCapability robotCapability = new RobotCapability(robot);
-        event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
+        ChunkLoadingCapability chunkLoadingCapability = new ChunkLoadingCapability(robot);
+        event.addCapability(LOC_LOADER, new AlwaysProvide<>(CHUNK_LOADER, chunkLoadingCapability));
 
         event.addCapability(LOC_ENERGY, new AlwaysProvideAndSave<>(ForgeCapabilities.ENERGY, new RobotEnergyStorage()));
 
         RobotInventory robotInventory = new RobotInventory(robot);
         event.addCapability(LOC_INVENTORY, new AlwaysProvideAndSave<>(ForgeCapabilities.ITEM_HANDLER, robotInventory));
 
+        PartsCapability partsCapability = new PartsCapability(robot);
+        event.addCapability(LOC_PARTS, new AlwaysProvideAndSave<>(PARTS, partsCapability));
+
         CommandCapability commandCapability = new CommandCapability(robot);
         event.addCapability(LOC_COMMANDS, new AlwaysProvideAndSave<>(COMMANDS, commandCapability));
 
-        ChunkLoadingCapability chunkLoadingCapability = new ChunkLoadingCapability(robot);
-        event.addCapability(LOC_LOADER, new AlwaysProvide<>(CHUNK_LOADER, chunkLoadingCapability));
+        RobotCapability robotCapability = new RobotCapability(robot);
+        event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
     }
 
     @SubscribeEvent
