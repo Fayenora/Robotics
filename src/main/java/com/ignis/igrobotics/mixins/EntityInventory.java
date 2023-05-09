@@ -32,6 +32,7 @@ public abstract class EntityInventory extends Entity {
      * In the case of robots, we want to return a larger inventory, which is not possible with Forge, as attaching another inventory works,
      * but all getCapability calls return the default inventory due to the if(capability == ITEM_HANDLER) clause in Vanilla Forge.
      * Solution: We alter the getCapability call to return the basic attached capabilities in case of robots
+     * NOTE: THIS HAS TO BE KEPT UP TO DATE WITH VANILLA CODE
      * @param capability the capability requested
      * @param facing the direction to interface from
      * @param <T> capability interface

@@ -27,7 +27,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import java.lang.ref.WeakReference;
 
 /**
- * See {@link net.minecraft.client.multiplayer.MultiPlayerGameMode} or {@link net.minecraft.server.level.ServerPlayerGameMode}
+ * A class for enabling a mob to perform player actions like digging and right-clicking
+ * The code is taken from {@link net.minecraft.server.level.ServerPlayerGameMode}
+ * NOTE: This should be kept up to date with vanilla code
  */
 public class EntityInteractionManager {
 

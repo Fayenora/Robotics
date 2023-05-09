@@ -10,6 +10,7 @@ import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.RobotEnergyStorage;
+import com.ignis.igrobotics.core.capabilities.inventory.BaseInventory;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
@@ -20,6 +21,7 @@ import com.ignis.igrobotics.core.capabilities.perks.PerkMapCapability;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.util.Tuple;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -61,6 +63,7 @@ public class ModCapabilities {
     public static final ResourceLocation LOC_LOADER = new ResourceLocation(Robotics.MODID, "chunk_loader");
     public static final ResourceLocation LOC_TRACKER = new ResourceLocation(Robotics.MODID, "chunk_tracker");
 
+    public static final BaseInventory EMPTY_INVENTORY = new BaseInventory(() -> BlockPos.ZERO, 0);
     public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
     public static final IPerkMapCap NO_PERKS = new IPerkMapCap() {
         @Override
