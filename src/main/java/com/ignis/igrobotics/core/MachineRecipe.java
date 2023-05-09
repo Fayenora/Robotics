@@ -78,15 +78,11 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 	}
 
 	public int getEnergy() {
-		return energy;
-	}
-
-	public int getEnergyPerTick(float energy_multiplier, float processing_speed) {
-		return (int) (energy / processingTime * energy_multiplier * processing_speed);
+		return (int) (energy * machine.getEnergyConsumption());
 	}
 
 	public int getEnergyPerTick() {
-		return getEnergyPerTick(machine.getEnergyConsumption(), machine.getProcessingSpeed());
+		return getEnergy() / getProcessingTime();
 	}
 
 	@Override

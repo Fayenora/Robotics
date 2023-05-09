@@ -230,13 +230,13 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     }
 
     protected void consumeEnergy(@Nonnull MachineRecipe recipe) {
-        this.storage.extractEnergy((recipe.getEnergyPerTick(machine.getEnergyConsumption(), machine.getProcessingSpeed())), false);
+        this.storage.extractEnergy((recipe.getEnergyPerTick()), false);
     }
 
     @Nonnull
     protected boolean hasEnoughEnergy(@Nonnull MachineRecipe recipe) {
-        int extractable = this.storage.extractEnergy(recipe.getEnergyPerTick(machine.getEnergyConsumption(), machine.getProcessingSpeed()), true);
-        int recipeRequirement = recipe.getEnergyPerTick(machine.getEnergyConsumption(), machine.getProcessingSpeed());
+        int extractable = this.storage.extractEnergy(recipe.getEnergyPerTick(), true);
+        int recipeRequirement = recipe.getEnergyPerTick();
         return extractable == recipeRequirement;
     }
 
