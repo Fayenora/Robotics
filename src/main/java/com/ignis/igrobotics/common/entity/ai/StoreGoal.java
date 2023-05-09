@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StoreGoal extends RetrieveGoal {
 
-	public StoreGoal(Mob mob, BlockPos from, ItemStack toStore, int time, int maxStay) {
-		super(mob, from, toStore, time, maxStay);
+	public StoreGoal(Mob mob, BlockPos from, ItemStack toStore, int time, int maxStay, int minAway) {
+	 	super(mob, from, toStore, time, maxStay, minAway);
 	}
 	
 	@Override

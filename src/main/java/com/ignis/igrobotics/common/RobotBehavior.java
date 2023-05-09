@@ -4,6 +4,8 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
+import com.ignis.igrobotics.common.entity.ai.BreakBlocksGoal;
+import com.ignis.igrobotics.common.entity.ai.RetrieveGoal;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.access.WorldAccessData;
@@ -15,6 +17,7 @@ import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModAttributes;
+import com.ignis.igrobotics.definitions.ModCommands;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
@@ -35,6 +38,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
@@ -120,6 +124,13 @@ public class RobotBehavior {
                         }
                 })
         );
+        if(entity instanceof Mob mob && mob.getCapability(ModCapabilities.COMMANDS).isPresent()) {
+            for(WrappedGoal goal : mob.goalSelector.getAvailableGoals()) {
+                if(goal.getGoal() instanceof RetrieveGoal retrieveGoal) {
+                    retrieveGoal.closeContainer();
+                }
+            }
+        }
     }
 
     @SubscribeEvent

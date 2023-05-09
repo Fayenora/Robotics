@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.common.RobotBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -24,12 +25,12 @@ public class RetrieveGoal extends Goal {
 	private final WeakReference<Player> fakePlayer;
 	BlockPos target, adjacent;
 	ItemStack toTake;
-	private boolean reachedContainer, openedContainer;
 	boolean taskFinished;
-	private int tickCounter, takeItemsCounter;
+	private int tickCounter, takeItemsCounter, awayCounter;
 	protected int takeItemTime;
-	private final int maxStay;
-	IItemHandler inventory;
+	private final int maxStay, minAway;
+	IItemHandler openedInventory;
+	Container openedContainer;
 	
 	/**
 	 * AI Task for an entity to walk to a storage container and take out the specified ItemStacks
@@ -38,20 +39,23 @@ public class RetrieveGoal extends Goal {
 	 * @param toTake the ItemStacks to take, matched along Item & Damage
 	 * @param time the time it should take to take out 1 stack
 	 * @param maxStay maximum ticks to stay at a location when no operation is possible
+	 * @param minAway Minimum ticks to stay away from the chest and do other tasks after this task ran out
 	 */
-	public RetrieveGoal(Mob mob, BlockPos from, ItemStack toTake, int time, int maxStay) {
+	public RetrieveGoal(Mob mob, BlockPos from, ItemStack toTake, int time, int maxStay, int minAway) {
 		this.entity = mob;
 		fakePlayer = new WeakReference<>(FakePlayerFactory.getMinecraft((ServerLevel) entity.level));
 		this.target = from;
 		this.toTake = toTake;
 		this.maxStay = maxStay;
+		this.minAway = minAway;
+		awayCounter = minAway; //On instantiation this task should immediately be usable
 		this.takeItemTime = time;
 		setFlags(EnumSet.of(Flag.MOVE, Flag.TARGET, Flag.LOOK));
 	}
 
 	@Override
 	public boolean canUse() {
-		return true;
+		return awayCounter++ > minAway;
 	}
 	
 	@Override
@@ -68,10 +72,8 @@ public class RetrieveGoal extends Goal {
 	
 	@Override
 	public void tick() {
-		if(taskFinished) return;
-		if (this.entity.distanceToSqr(this.target.getCenter()) > 4) {
+		if(!RobotBehavior.canReach(entity, target)) {
             ++this.tickCounter;
-            reachedContainer = false;
             takeItemsCounter = 0;
 
             if (this.tickCounter % 40 == 0) {
@@ -81,33 +83,36 @@ public class RetrieveGoal extends Goal {
             }
             return;
         }
-		if(!reachedContainer) {
-			reachedContainer = true;
-			inventory = openContainer(target);
-		}
-		if(inventory == null) {
-			//The target either is not a valid container (anymore or never was)
+		openedInventory = openContainer(target);
+		if(openedInventory == null) { //The target either is not a valid container (anymore or never was)
 			taskFinished = true;
 			return;
 		}
 		
         takeItemsCounter++;
-        interactWithContainer(inventory, takeItemsCounter);
-        
-        if(takeItemsCounter > maxStay) {
-        	taskFinished = true;
-        }
+        interactWithContainer(openedInventory, takeItemsCounter);
+
+		if(takeItemsCounter > maxStay) {
+			taskFinished = true;
+		}
 	}
 	
 	@Override
 	public void stop() {
-		closeContainer(target);
-		reachedContainer = false;
-		taskFinished = false;
+		//FIXME: closeContainer really needs to be called. Does this happen when the entity dies?
+		if(taskFinished || entity.isDeadOrDying()) {
+			closeContainer();
+		}
 		takeItemsCounter = 0;
+		awayCounter = 0;
 		adjacent = null;
 	}
-	
+
+	@Override
+	public boolean isInterruptable() {
+		return false;
+	}
+
 	protected void interactWithContainer(IItemHandler blockInventory, int ticks) {
 		if(ticks % takeItemTime != 0) return;
 		entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(entityInventory -> {
@@ -121,16 +126,16 @@ public class RetrieveGoal extends Goal {
 				for(int j = 0; j < entityInventory.getSlots(); j++) {
 					extracted = entityInventory.insertItem(j, extracted, false);
 				}
-				//If not all of the taken items fit, put the rest back
+				//If not all the taken items fit, put the rest back
 				if(extracted.getCount() > 0) {
 					blockInventory.insertItem(i, extracted, false);
 				}
 				return;
 			}
-		});
 
-		//No items of the desired type are left
-		taskFinished = true;
+			//No items of the desired type are left
+			taskFinished = true;
+		});
 	}
 	
 	private BlockPos findBestPosNextTo(BlockPos pos) {
@@ -150,34 +155,29 @@ public class RetrieveGoal extends Goal {
 		return result;
 	}
 	
-	private IItemHandler openContainer(BlockPos pos) {
+	public IItemHandler openContainer(BlockPos pos) {
+		if(openedInventory != null) return openedInventory;
 		BlockEntity tile = entity.level.getBlockEntity(pos);
 		if(!canInteractWith(tile)) return null;
 		IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-		if(openedContainer) return handler;
-		
-		if(tile instanceof Container container) {
+		if(tile instanceof Container container && openedContainer == null) {
+			openedContainer = container;
 			container.startOpen(getFakePlayer());
 		}
-		
-		openedContainer = true;
 		return handler;
 	}
 	
-	private void closeContainer(BlockPos pos) {
-		if(!openedContainer) return;
-		BlockEntity tile = entity.level.getBlockEntity(pos);
-		if(tile == null) return;
-		if(!(tile instanceof Container container)) return;
-
-		container.stopOpen(getFakePlayer());
-		openedContainer = false;
+	public void closeContainer() {
+		if(openedContainer == null) return;
+		openedContainer.stopOpen(getFakePlayer());
+		openedContainer = null;
+		openedInventory = null;
 	}
 	
 	private boolean canInteractWith(BlockEntity tile) {
 		if(tile == null) return false;
 		if(!tile.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) return false;
-		if(tile instanceof BaseContainerBlockEntity containerBlockEntity && containerBlockEntity.canOpen(getFakePlayer())) return false;
+		if(tile instanceof BaseContainerBlockEntity containerBlockEntity) return containerBlockEntity.canOpen(getFakePlayer());
 		return true;
 	}
 
