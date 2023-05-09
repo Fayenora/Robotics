@@ -32,7 +32,6 @@ public class Reference {
 	/** Absolute maximum for module count. Needs to be present at compile time */
 	public static final int MAX_MODULES = 8;
 	public static final int MAX_INVENTORY_SIZE = 36;
-	public static final int MAX_COMMANDS = 50;
 
 	public static final EnumRobotMaterial[] WIRE_METALS = new EnumRobotMaterial[] {
 			IRON, GOLD, COPPER, TIN, ALUMINIUM, SILVER, LEAD, BRONZE, CONSTANTAN, ELECTRUM, PLATINUM

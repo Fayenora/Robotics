@@ -16,6 +16,7 @@ import java.util.Set;
 public class CommandCapability implements ICommandable {
 
     public static final int MAX_NON_COMMAND_GOALS = 10;
+    public static final int MAX_COMMANDS = 50;
 
     protected final Mob entity;
     /** The goal selector to use for commands */

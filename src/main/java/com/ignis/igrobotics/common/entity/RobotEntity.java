@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.entity;
 
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
@@ -69,8 +70,8 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, getAttributeValue(Attributes.MOVEMENT_SPEED), true));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, getAttributeValue(Attributes.MOVEMENT_SPEED), true));
+        this.goalSelector.addGoal(CommandCapability.MAX_COMMANDS + CommandCapability.MAX_NON_COMMAND_GOALS + 2, new LookAtPlayerGoal(this, Player.class, 6));
     }
 
     @Override
