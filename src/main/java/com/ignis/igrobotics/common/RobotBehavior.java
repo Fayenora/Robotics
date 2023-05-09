@@ -27,13 +27,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -41,6 +44,7 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,9 +53,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -109,6 +111,30 @@ public class RobotBehavior {
                 energy.receiveEnergy(2000000, false);
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300, 1));
             });
+        });
+    }
+
+    /**
+     * Damage Armor for entities that are robotic but don't do it themselves
+     * NOTE: Code taken from {@link net.minecraft.world.entity.player.Inventory#hurtArmor(DamageSource, float, int[])}
+     * @param event
+     */
+    @SubscribeEvent
+    public static void afterRobotDamaged(LivingDamageEvent event) {
+        if(!event.getEntity().getCapability(ModCapabilities.ROBOT).isPresent()) return;
+        if(event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) return;
+        if(event.getAmount() <= 0) return;
+        if(event.getEntity() instanceof Player) return; //Players armor already gets damaged by default
+        float amount = Math.max(1, event.getAmount());
+        event.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
+            for(int i : new int[] {2, 3, 4, 5}) {
+                ItemStack stack = inventory.getStackInSlot(i);
+                if ((!event.getSource().is(DamageTypeTags.IS_FIRE) || !stack.getItem().isFireResistant()) && stack.getItem() instanceof ArmorItem) {
+                    stack.hurtAndBreak((int) amount, event.getEntity(), (p_35997_) -> {
+                        p_35997_.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i));
+                    });
+                }
+            }
         });
     }
 
