@@ -7,6 +7,7 @@ import com.ignis.igrobotics.common.CommonSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
@@ -31,9 +33,9 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
 
     public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
         CompoundTag tag = new CompoundTag();
-        tag.putString("value", type.toShortString());
+        tag.putString("value", ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
         return tag;
-    }, tag -> EntityType.byString(tag.getString("value")).get(), EntityTypeSelector.class);
+    }, tag -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(tag.getString("value"))), EntityTypeSelector.class);
     public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, () -> Items.IRON_SWORD.getDefaultInstance(), ItemStack::serializeNBT, ItemStack::of, ItemSelector.class);
     public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, null);
     public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, PosSelector.class);
@@ -54,7 +56,7 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
             return Optional.of((SelectorElement<?>) constructor.newInstance(selection, x, y));
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException |
                  InvocationTargetException | ClassCastException e) {
-            Robotics.LOGGER.warn("Something went wrong when adding selector of type " + selection.getType().identifier + ". This shouldn't happen,  please report it to the mod author!");
+            Robotics.LOGGER.error("Something went wrong when adding selector of type " + selection.getType().identifier + ". This shouldn't happen,  please report it to the mod author!");
             e.printStackTrace();
             return Optional.empty();
         }
