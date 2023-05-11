@@ -34,6 +34,8 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 
 	void diff(IPerkMap toRemove);
 
+	void clear();
+
 	boolean contains(Perk perk);
 
 	default ArrayList<Component> getDisplayString() {

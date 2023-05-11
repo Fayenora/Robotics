@@ -21,6 +21,8 @@ public class ModuleConfig implements IJsonConfig {
 	
 	@Override
 	public void load(File file) {
+		MODULES.clear();
+		overlays.clear();
 		Gson gson = ConfigJsonSerializer.initGson();
 		if(!file.exists()) ConfigUtils.copyFromDefault("robot_modules.json", file);
 		

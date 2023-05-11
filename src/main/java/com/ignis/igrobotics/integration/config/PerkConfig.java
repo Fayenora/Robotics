@@ -38,6 +38,7 @@ public class PerkConfig implements IJsonConfig {
 	
 	@Override
 	public void load(File file) {
+		PERKS.clear();
 		Gson gson = ConfigJsonSerializer.initGson();
 		if(!file.exists()) ConfigUtils.copyFromDefault("perks.json", file);
 		Perk[] perks = (Perk[]) ConfigUtils.readJson(gson, file, Perk[].class);

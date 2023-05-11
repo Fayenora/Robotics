@@ -43,7 +43,13 @@ public class PerkMap implements IPerkMap {
 			remove(tup.getFirst(), tup.getSecond());
 		}
 	}
-	
+
+	@Override
+	public void clear() {
+		perks.clear();
+		levels.clear();
+	}
+
 	@Override
 	public boolean contains(Perk perk) {
 		return perks.containsValue(perk);

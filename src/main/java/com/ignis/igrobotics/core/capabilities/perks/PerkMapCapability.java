@@ -33,7 +33,7 @@ public class PerkMapCapability implements IPerkMapCap {
         for(Attribute attribute : ForgeRegistries.ATTRIBUTES.getValues()) {
             AttributeInstance instance = entity.getAttributes().getInstance(attribute);
             if(tempAttributeMap.hasAttribute(attribute) && instance != null) {
-                instance.setBaseValue(tempAttributeMap.getBaseValue(attribute));
+                instance.setBaseValue(tempAttributeMap.getValue(attribute));
                 ModAttributes.onAttributeChanged(entity, instance);
             }
         }
@@ -57,6 +57,11 @@ public class PerkMapCapability implements IPerkMapCap {
     @Override
     public void diff(IPerkMap toRemove) {
         perkMap.diff(toRemove);
+    }
+
+    @Override
+    public void clear() {
+        perkMap.clear();
     }
 
     @Override

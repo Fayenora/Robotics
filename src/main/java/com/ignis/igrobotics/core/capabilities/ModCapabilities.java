@@ -69,21 +69,15 @@ public class ModCapabilities {
             return new SimpleDataManager();
         }
         @Override
-        public void add(Perk perk, int level) {
-
-        }
+        public void add(Perk perk, int level) {}
         @Override
-        public void remove(Perk perk, int level) {
-
-        }
+        public void remove(Perk perk, int level) {}
         @Override
-        public void merge(IPerkMap other) {
-
-        }
+        public void merge(IPerkMap other) {}
         @Override
-        public void diff(IPerkMap toRemove) {
-
-        }
+        public void diff(IPerkMap toRemove) {}
+        @Override
+        public void clear() {}
         @Override
         public boolean contains(Perk perk) {
             return false;

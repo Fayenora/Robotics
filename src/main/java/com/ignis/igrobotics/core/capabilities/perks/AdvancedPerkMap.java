@@ -106,6 +106,13 @@ public class AdvancedPerkMap implements IPerkMap {
 	}
 
 	@Override
+	public void clear() {
+		levelCounts.clear();
+		levels.clear();
+		perks.clear();
+	}
+
+	@Override
 	public boolean contains(Perk perk) {
 		return perks.containsValue(perk);
 	}
