@@ -39,7 +39,7 @@ public class PartsCapability implements IPartBuilt {
 
 		dataManager.define(COLOR, 0);
 		for(int i = 0; i < BODY_PARTS.length; i++) {
-			dataManager.define(BODY_PARTS[i], 1);
+			dataManager.define(BODY_PARTS[i], 0);
 		}
 	}
 
@@ -107,6 +107,8 @@ public class PartsCapability implements IPartBuilt {
 			ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
 			entity.setItemSlot(slot, ItemStack.EMPTY);
 		}
+
+		//TODO Kill the robot if integral parts were destroyed; Configurable?
 	}
 	
 	private void setMaterials(int[] materials) {

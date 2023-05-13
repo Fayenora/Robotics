@@ -13,7 +13,10 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
+import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
@@ -163,6 +166,7 @@ public class RobotBehavior {
 
     @SubscribeEvent
     public static void onRobotRightClick(PlayerInteractEvent.EntityInteract event) {
+        if(event.getSide().isClient()) return;
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
         Player player = event.getEntity();
@@ -220,10 +224,19 @@ public class RobotBehavior {
             mob.setPersistenceRequired();
             mob.setCanPickUpLoot(true);
         }
+        //If the robot has no body parts, initialize with iron
+        entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+            if(!parts.hasAnyBodyPart()) {
+                for(EnumRobotPart part : EnumRobotPart.values()) {
+                    parts.setBodyPart(part, EnumRobotMaterial.IRON);
+                }
+            }
+        });
         entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
                 if(!(energy instanceof EnergyStorage storage)) return;
                 storage.setEnergy(Integer.MAX_VALUE);
             });
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setActivation(true));
     }
 
     public static List<MenuType> possibleMenus(Entity entity) {
