@@ -38,8 +38,6 @@ public class RobotCapability implements IRobot {
     private NonNullList<ItemStack> modules;
     private UUID owner = Reference.DEFAULT_UUID;
 
-    public final LookDownGoal lookDownGoal;
-
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
     private static final EntityDataAccessor<Boolean> MUTED = RobotEntity.MUTED;
@@ -52,7 +50,6 @@ public class RobotCapability implements IRobot {
         this.dataManager = entity.getEntityData();
         this.perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
         modules = NonNullList.withSize(RoboticsConfig.general.moduleAmount.get(), ItemStack.EMPTY);
-        lookDownGoal = new LookDownGoal(entity);
 
         dataManager.define(RENDER_OVERLAYS, 0);
         dataManager.define(ACTIVATED, true);
@@ -118,11 +115,11 @@ public class RobotCapability implements IRobot {
 
         if(commands.isPresent() && entity instanceof Mob mob) {
             if(activation) {
-                mob.goalSelector.removeGoal(lookDownGoal);
+                mob.goalSelector.removeAllGoals(goal -> goal instanceof LookDownGoal);
                 commands.get().reapplyAllTasks();
             } else {
                 commands.get().removeAllTasks();
-                mob.goalSelector.addGoal(0, lookDownGoal);
+                mob.goalSelector.addGoal(0, new LookDownGoal(mob));
             }
         }
 
