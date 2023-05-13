@@ -8,6 +8,7 @@ import com.ignis.igrobotics.network.proxy.IProxy;
 import com.ignis.igrobotics.network.proxy.ServerProxy;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -59,7 +60,7 @@ public class Robotics {
     }
 
     @SubscribeEvent
-    public void serverSetup(ServerStartingEvent event) {
+    public void serverSetup(ServerAboutToStartEvent event) {
         RoboticsConfig.local().loadJsonConfigs();
     }
 
