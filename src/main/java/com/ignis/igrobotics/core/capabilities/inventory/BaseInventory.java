@@ -46,6 +46,12 @@ public class BaseInventory extends ItemStackHandler implements ModifiableInvento
 		stacks = newStacks;
 	}
 
+	@Override
+	public @NotNull ItemStack getStackInSlot(int slot) {
+		if(slot < 0 || slot >= stacks.size()) return ItemStack.EMPTY;
+		return super.getStackInSlot(slot);
+	}
+
 	public boolean isEmpty() {
 		for(ItemStack stack : stacks) {
 			if(!stack.isEmpty()) return false;
