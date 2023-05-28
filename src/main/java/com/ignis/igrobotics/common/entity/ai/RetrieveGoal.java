@@ -101,7 +101,7 @@ public class RetrieveGoal extends Goal {
 	
 	@Override
 	public void stop() {
-		//FIXME: closeContainer really needs to be called. Does this happen when the entity dies?
+		//NOTE: {@link RobotBehavior} handles the case the entity dies while having the container opened
 		if(taskFinished || entity.isDeadOrDying()) {
 			closeContainer();
 		}

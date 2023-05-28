@@ -131,7 +131,7 @@ public class PacketRequestEntitySearch implements IMessage {
 				result = server.getEntity(uuid);
 				break;
 			case 2:
-				//Greedely search for the closest entity
+				//Greedily search for the closest entity
 				//FIXME: If the client requires a EntityLiving, but a not living entity matching the search is closer to the player, the search will yield the not living entity, causing the client to believe no entity matches the search
 				float min_distance = Float.MAX_VALUE;
 				for(Entity ent : server.getAllEntities()) {

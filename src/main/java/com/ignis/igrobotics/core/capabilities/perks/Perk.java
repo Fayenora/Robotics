@@ -197,7 +197,7 @@ public class Perk {
 		int maxLevel = obj.has("maxLevel") ? obj.get("maxLevel").getAsInt() : Integer.MAX_VALUE;
 		Perk result = new Perk(unlocalizedName, maxLevel);
 
-		// Retrieve the perk from the config if its name already has been defined TODO
+		// Retrieve the perk from the config if its name already has been defined
 		RoboticsConfig config = RoboticsConfig.current();
 		if(config.perks.PERKS.containsKey(unlocalizedName)) {
 			result = config.perks.PERKS.get(unlocalizedName);

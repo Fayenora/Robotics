@@ -1,9 +1,13 @@
 package com.ignis.igrobotics.integration.config;
 
+import com.ignis.igrobotics.core.robot.CommandType;
+import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class GeneralConfig extends BaseConfig {
@@ -17,6 +21,8 @@ public class GeneralConfig extends BaseConfig {
     public Supplier<Boolean> configShutdown, pickUpShutdown, chunkLoadShutdown;
 
     public Supplier<Integer> robotAmountPerPlayerOnServer;
+
+    public Supplier<List<? extends String>> availableCommands;
 
     @Override
     public ForgeConfigSpec define(ForgeConfigSpec.Builder builder) {
@@ -43,6 +49,15 @@ public class GeneralConfig extends BaseConfig {
         configShutdown = builder.comment("Whether deactivated robots cease to be configurable").define("Config Shutdown", false);
         pickUpShutdown = builder.comment("Whether deactivated robots are unable to pick up items").define("Pickup Shutdown", true);
         chunkLoadShutdown = builder.comment("Whether deactivated robots cease chunk loading capabilities").define("Chunk Loading Shutdown", true);
+        builder.pop();
+
+        builder.push("Commands");
+        availableCommands = builder.comment("Available commands. Note that limiting these does not remove already applied commands!")
+                .defineList("Available Commands", ModCommands.COMMAND_TYPES.stream().map(CommandType::toString).toList(), typeString -> {
+                    if(!(typeString instanceof String string)) return false;
+                    return ModCommands.byName(string) != null;
+        });
+
         builder.pop();
 
         return builder.build();

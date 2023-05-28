@@ -225,6 +225,9 @@ public class RobotBehavior {
             mob.setPersistenceRequired();
             mob.setCanPickUpLoot(true);
             mob.setLeftHanded(false);
+            for(EquipmentSlot slot : EquipmentSlot.values()) {
+                mob.setDropChance(slot, 0); //We do this manually to not randomly damage anything!
+            }
         }
         //If the robot has no body parts, initialize with iron
         entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {

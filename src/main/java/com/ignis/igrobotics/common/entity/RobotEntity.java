@@ -35,7 +35,6 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
 import java.util.Optional;
 
 @MethodsReturnNonnullByDefault
@@ -67,9 +66,6 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     public RobotEntity(Level pLevel, DyeColor color) {
         super(ModEntityTypes.ROBOT.get(), pLevel);
         getCapability(ModCapabilities.PARTS).ifPresent(part -> part.setColor(color));
-        //TODO: This has to be done on making any entity a robot
-        Arrays.fill(this.armorDropChances, 0); //These would be randomly damaged
-        Arrays.fill(this.handDropChances, 0); //These would be randomly damaged
     }
 
     @Override

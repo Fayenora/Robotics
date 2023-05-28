@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.screen.base;
 
+import com.ignis.igrobotics.Robotics;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.Renderable;
@@ -79,8 +80,10 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 	default IBaseGui getBaseGui() {
 		IElement[] parentPath = getParentGuiPath();
 		IElement baseGui = parentPath[parentPath.length - 1];
-		if(!(baseGui instanceof IBaseGui))
-			throw new RuntimeException("Did not find currently opened Gui"); //TODO Barely recoverable -> close the gui here
+		if(!(baseGui instanceof IBaseGui)) {
+			Robotics.LOGGER.error("Opened Gui is not a Robotics Gui!");
+			return null; //Not recoverable -> Return null, which should forge make the gui close
+		}
 		return (IBaseGui) baseGui;
 	}
 

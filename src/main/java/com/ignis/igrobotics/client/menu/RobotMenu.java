@@ -31,7 +31,6 @@ public class RobotMenu extends BaseMenu {
         addPlayerInv(playerInv, Reference.GUI_ROBOT_DIMENSIONS);
         addDataSlots(data);
 
-        //TODO: Armor slots should only accept valid items
         robot.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             for(int i = 0; i < 4; i++) {
                 this.addSlot(new SlotItemHandler(handler, 5 - i, 8, 8 + 18 * i));

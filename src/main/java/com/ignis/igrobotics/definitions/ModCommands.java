@@ -71,4 +71,13 @@ public class ModCommands {
     public static int getId(CommandType type) {
         return COMMAND_TYPES.indexOf(type);
     }
+
+    public static CommandType byName(String name) {
+        for(CommandType type : COMMAND_TYPES) {
+            if(name.equalsIgnoreCase(type.getName())) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

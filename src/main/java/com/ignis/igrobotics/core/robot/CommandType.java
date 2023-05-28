@@ -79,5 +79,8 @@ public class CommandType {
         return selectionTypes;
     }
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core;
 
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -13,15 +14,13 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
  * A set of common functions for finding entities
  */
+@MethodsReturnNonnullByDefault
 public class RoboticsFinder {
 
     /** Search radius to use on client side */
@@ -57,7 +56,7 @@ public class RoboticsFinder {
     public static Collection<LivingEntity> getRobotics(Level level, Predicate<IRobot> condition) {
         if(level.isClientSide()) {
             Player player = Minecraft.getInstance().player;
-            if(player == null) return null;
+            if(player == null) return Collections.emptySet();
             Collection<LivingEntity> robots = new HashSet<>();
             for(Entity ent : level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {
                 if(ent instanceof LivingEntity living && testCondition(living, condition)) {
@@ -69,6 +68,7 @@ public class RoboticsFinder {
         return getRobotics(condition);
     }
 
+    @Nullable
     private static Entity getEntity(UUID uuid) {
         for(ServerLevel dimension : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
             Entity entity = dimension.getEntity(uuid);

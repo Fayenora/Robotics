@@ -14,6 +14,7 @@ import com.ignis.igrobotics.core.robot.CommandType;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.definitions.ModCommands;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetCommands;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -56,9 +57,13 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
         availableCommands = new ScrollableElement(leftPos + 132, topPos + 9, 116, 165);
 
         //Available Commands
+        List<CommandType> availableTypes = new ArrayList<>();
+        for(String typeString : RoboticsConfig.general.availableCommands.get()) {
+            availableTypes.add(ModCommands.byName(typeString));
+        }
         for(CommandType commandType : ModCommands.COMMAND_TYPES) {
             RobotCommand command = new RobotCommand(commandType);
-            //TODO: Only add enabled commands
+            if(!availableTypes.contains(commandType)) continue;
             availableCommands.addElement(new CommandElement(command, 0, 0, button -> {
                 selectedCommands.addElement(new CommandElement(command.clone(), 0, 0, button1 -> {
                     selectedCommands.removeComponent((IElement) button1);
