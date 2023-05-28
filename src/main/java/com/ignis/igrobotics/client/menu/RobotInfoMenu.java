@@ -2,9 +2,7 @@ package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
-import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.SignedMessageChain;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +13,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -43,12 +42,12 @@ public class RobotInfoMenu extends BaseMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int quickMovedSlotIndex) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(@NotNull Player pPlayer) {
         return !robot.isDeadOrDying();
     }
 }

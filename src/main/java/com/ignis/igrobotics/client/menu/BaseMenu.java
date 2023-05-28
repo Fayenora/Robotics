@@ -6,6 +6,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -37,7 +38,7 @@ public abstract class BaseMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int quickMovedSlotIndex) {
         Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
 
         if(!quickMovedSlot.hasItem()) return ItemStack.EMPTY;

@@ -13,7 +13,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 @FieldsAreNonnullByDefault
@@ -105,16 +104,6 @@ public class Machine<R extends Recipe<?>> {
             return this;
         }
         public Machine<R> build() {
-            boolean allValuesFilled = Arrays.stream(Machine.class.getDeclaredFields()).allMatch(field -> {
-                try {
-                    Object value = field.get(machine);
-                    return true;//field.isAnnotationPresent(Nullable.class) || value != null;
-                } catch (IllegalAccessException ignored) {}
-                return true;
-            });
-            if(!allValuesFilled) {
-                throw new IllegalStateException("All nonnull fields must be instantiated via the builder for the machine " + machine.getName());
-            }
             return machine;
         }
     }

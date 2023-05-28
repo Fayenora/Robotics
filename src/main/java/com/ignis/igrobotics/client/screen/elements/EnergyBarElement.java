@@ -1,23 +1,23 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.core.util.Lang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.function.Supplier;
 
+@MethodsReturnNonnullByDefault
 public class EnergyBarElement extends GuiElement {
 
-    private Supplier<Integer> energy, maxEnergy;
+    private final Supplier<Integer> energy, maxEnergy;
 
     public EnergyBarElement(int x, int y, int height, Supplier<Integer> energy, Supplier<Integer> maxEnergy) {
         this(Component.translatable("gui.energy_bar"), x, y, height, energy, maxEnergy);
@@ -35,12 +35,12 @@ public class EnergyBarElement extends GuiElement {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Reference.ENERGY_BAR);
         int k = scaleEnergy(height);
-        this.blit(poseStack, getX(), getY() + height - k, 0, height - k, width, k);
+        blit(poseStack, getX(), getY() + height - k, 0, height - k, width, k);
     }
 
     @Override
     public List<Component> getTooltip(int mouseX, int mouseY) {
-        List line = List.of(Lang.localise("stored_energy"), Component.literal(": "+ energy.get() + "/" + maxEnergy.get() + " RF"));
+        List<Component> line = List.of(Lang.localise("stored_energy"), Component.literal(": "+ energy.get() + "/" + maxEnergy.get() + " RF"));
         return List.of(ComponentUtils.formatList(line, CommonComponents.EMPTY));
     }
 

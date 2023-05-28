@@ -150,7 +150,7 @@ public class PermissionsScreen extends GuiElement {
         public final int row;
 
         public EntitySelectorWrapper(UUID selection, int row, int width, int height) {
-            super(new Selection<UUID>(selection), 0, 0);
+            super(new Selection<>(selection), 0, 0);
             this.row = row;
             this.width = width;
             this.height = height;

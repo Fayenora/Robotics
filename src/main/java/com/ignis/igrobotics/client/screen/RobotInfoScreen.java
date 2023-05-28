@@ -26,26 +26,27 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.ForgeMod;
 
-import java.awt.*;
-import java.text.DecimalFormat;
-import java.util.*;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_info.png");
@@ -189,15 +190,18 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     @Override
     public boolean keyPressed(int keyCode, int pScanCode, int pModifiers) {
         if(nameBar.isFocused()) {
-            switch(keyCode) {
-                case InputConstants.KEY_ESCAPE:
+            switch (keyCode) {
+                case InputConstants.KEY_ESCAPE -> {
                     return super.keyPressed(keyCode, pScanCode, pModifiers);
-                case InputConstants.KEY_RETURN:
+                }
+                case InputConstants.KEY_RETURN -> {
                     nameBar.setFocused(false);
                     renameRobot();
                     return true;
-                default:
+                }
+                default -> {
                     return nameBar.keyPressed(keyCode, pScanCode, pModifiers);
+                }
             }
 
         }
@@ -214,7 +218,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         Player player = Minecraft.getInstance().player;
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             boolean configureButtonsActive = access.hasPermission(player, EnumPermission.CONFIGURATION);
-            configureButtonsActive = configureButtonsActive && (RoboticsConfig.general.configShutdown.get() ? robot.isActive() : true);
+            configureButtonsActive = configureButtonsActive && (!RoboticsConfig.general.configShutdown.get() || robot.isActive());
             boolean pickUpToggleAble = robot.isActive() || !RoboticsConfig.general.pickUpShutdown.get();
             boolean chunkLoadingToggleable = robot.isActive() || !RoboticsConfig.general.chunkLoadShutdown.get();
             pickUpButton.setEnabled(configureButtonsActive && pickUpToggleAble);
@@ -242,7 +246,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
         //Don't
     }
 
@@ -300,9 +304,10 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
         private static Collection<LivingEntity> getPlayers() {
             //Ensure a safe connection
-            if(!Minecraft.getInstance().isLocalServer() && !Minecraft.getInstance().getConnection().getConnection().isEncrypted()) return null;
+            ClientPacketListener connection = Minecraft.getInstance().getConnection();
+            if(connection == null || (!Minecraft.getInstance().isLocalServer() && !connection.getConnection().isEncrypted())) return null;
 
-            Collection<PlayerInfo> networkInfo = Minecraft.getInstance().getConnection().getOnlinePlayers();
+            Collection<PlayerInfo> networkInfo = connection.getOnlinePlayers();
             ArrayList<LivingEntity> players = new ArrayList<>();
 
             for(PlayerInfo info : networkInfo) {

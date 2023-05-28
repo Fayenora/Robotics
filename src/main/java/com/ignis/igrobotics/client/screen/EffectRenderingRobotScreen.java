@@ -15,7 +15,7 @@ import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
 
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +59,7 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
             }
 
 
-            Iterable<MobEffectInstance> iterable = effects.stream().filter(ForgeHooksClient::shouldRenderEffect).sorted().collect(Collectors.toList());
+            Iterable<MobEffectInstance> iterable = effects.stream().filter(this::shouldRenderEffect).sorted().collect(Collectors.toList());
             this.renderBackgrounds(pPoseStack, i, k, iterable, compact);
             this.renderIcons(pPoseStack, i, k, iterable, compact);
             if (compact) {
@@ -85,6 +85,10 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         }
     }
 
+    private boolean shouldRenderEffect(MobEffectInstance effectInstance) {
+        return IClientMobEffectExtensions.of(effectInstance).isVisibleInInventory(effectInstance);
+    }
+
     private void renderBackgrounds(PoseStack pPoseStack, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean compact) {
         RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
         int i = this.topPos;
@@ -92,9 +96,9 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         for(MobEffectInstance ignored : pEffects) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             if (compact) {
-                this.blit(pPoseStack, pRenderX, i, 0, 166, 120, 32);
+                blit(pPoseStack, pRenderX, i, 0, 166, 120, 32);
             } else {
-                this.blit(pPoseStack, pRenderX, i, 0, 198, 32, 32);
+                blit(pPoseStack, pRenderX, i, 0, 198, 32, 32);
             }
 
             i += pYOffset;

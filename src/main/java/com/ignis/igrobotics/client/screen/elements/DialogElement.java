@@ -25,9 +25,9 @@ public class DialogElement extends GuiElement {
     /**
      * A dialogue box. Automatically takes the center of the component it is added on. <br>
      * Added components are automatically presented as options and aligned in the bottom {@link #OPTIONS_PART 45%} of the box.
-     * @param width
-     * @param height
-     * @param text
+     * @param width width of the box
+     * @param height height of the box
+     * @param text The text displayed in the box
      */
     public DialogElement(int width, int height, Component text) {
         super(0, 0, width, height);
@@ -59,8 +59,8 @@ public class DialogElement extends GuiElement {
 
     /**
      * Center component c on the rectangle r
-     * @param c
-     * @param r
+     * @param c the component
+     * @param r the rectangle
      */
     private static void center(IElement c, Rectangle r) {
         c.element$setX(r.x + (r.width / 2) - (c.getShape().width / 2));

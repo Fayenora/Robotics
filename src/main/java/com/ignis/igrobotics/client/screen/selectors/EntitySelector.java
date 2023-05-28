@@ -14,7 +14,6 @@ import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.IPacketDataReceiver;
 import com.ignis.igrobotics.network.messages.server.PacketRequestEntitySearch;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -27,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.awt.*;
 import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
@@ -90,6 +88,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			super(0, 0, 94, 56);
 			initTextureLocation(TEXTURE, 162, 144);
 			Player player = Minecraft.getInstance().player;
+			if(player == null) return;
 			textField = new EditBox(Minecraft.getInstance().font, getX() + 8, getY() + 8, 80, 15, Component.empty());
 			buttonSelect = new ButtonElement(getX() + 8, getY() + 16 + 15, 17, 17, button -> {
 				ItemStack stack = ItemStackUtils.searchPlayerForItem(player, ModItems.COMMANDER.get(), stack1 -> CommanderItem.getRememberedEntity(stack1) != null);

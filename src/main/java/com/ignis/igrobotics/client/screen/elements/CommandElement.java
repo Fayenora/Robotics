@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.RobotCommandScreen;
 import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.core.robot.RobotCommand;
@@ -14,8 +13,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 public class CommandElement extends ButtonElement {
@@ -24,8 +21,8 @@ public class CommandElement extends ButtonElement {
     public static final int OFFSET_FROM_TEXT = 2;
     public static final int TYPICAL_SELECTOR_WIDTH = 18;
 
-    private RobotCommand command;
-    private Font font;
+    private final RobotCommand command;
+    private final Font font;
 
     public CommandElement(RobotCommand command, int x, int y, Button.OnPress onPress) {
         super(x, y, 116, 25, onPress);
@@ -33,7 +30,7 @@ public class CommandElement extends ButtonElement {
         font = Minecraft.getInstance().font;
         initSingleTextureLocation(TEXTURE, 9, 182);
         int i = 0;
-        for(Selection selection : command.getSelectors()) {
+        for(Selection<?> selection : command.getSelectors()) {
             Optional<SelectorElement<?>> selector = SelectionType.createSelectionGui(selection, getX() + getOffsetToSelector(i++), getY() + 3);
             selector.ifPresent(this::addElement);
         }

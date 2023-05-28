@@ -3,13 +3,11 @@ package com.ignis.igrobotics.client.menu;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -18,11 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class FactoryMenu extends BaseMenu {
 
@@ -62,9 +56,9 @@ public class FactoryMenu extends BaseMenu {
         });
         addSlotListener(new ContainerListener() {
             @Override
-            public void slotChanged(AbstractContainerMenu menu, int p_39316_, ItemStack stack) {}
+            public void slotChanged(@NotNull AbstractContainerMenu menu, int p_39316_, @NotNull ItemStack stack) {}
             @Override
-            public void dataChanged(AbstractContainerMenu menu, int key, int value) {
+            public void dataChanged(@NotNull AbstractContainerMenu menu, int key, int value) {
                 //Listen to data changes on the server
                 if(key == MachineBlockEntity.DATA_INVENTORY) {
                     changeModuleSlots(value - SLOTS_MACHINE);
@@ -108,7 +102,7 @@ public class FactoryMenu extends BaseMenu {
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.ROBOT_FACTORY.get());
     }
 }

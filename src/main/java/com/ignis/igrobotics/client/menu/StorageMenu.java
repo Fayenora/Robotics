@@ -1,17 +1,19 @@
 package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.common.blockentity.WireCutterBlockEntity;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class StorageMenu extends AbstractContainerMenu {
 
@@ -32,12 +34,12 @@ public class StorageMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.ROBOT_STORAGE.get());
     }
 }

@@ -18,16 +18,17 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetCommands;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_commands.png");
@@ -81,7 +82,7 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     @Override

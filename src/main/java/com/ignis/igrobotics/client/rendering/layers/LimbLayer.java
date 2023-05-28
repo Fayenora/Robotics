@@ -28,8 +28,7 @@ public class LimbLayer extends GeoRenderLayer<RobotEntity> {
     @Override
     public void render(PoseStack poseStack, RobotEntity robot, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if(robot.isInvisible()) return;
-        IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS, null).orElse(null);
-        if(parts == null) return;
+        IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS);
 
         RobotPart limb = parts.getBodyPart(part);
 

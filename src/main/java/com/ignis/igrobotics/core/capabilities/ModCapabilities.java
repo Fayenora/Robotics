@@ -61,6 +61,7 @@ public class ModCapabilities {
 
     public static final BaseInventory EMPTY_INVENTORY = new BaseInventory(() -> BlockPos.ZERO, 0);
     public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
+    public static final IPartBuilt NO_PARTS = new PartsCapability();
     public static final IPerkMapCap NO_PERKS = new IPerkMapCap() {
         @Override
         public void updateAttributeModifiers() {}

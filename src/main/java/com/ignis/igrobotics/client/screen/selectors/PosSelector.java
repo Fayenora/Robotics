@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,7 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class PosSelector extends SelectorElement<BlockPos> {
 
-	public PosSelector(Selection sel, int x, int y) {
+	public PosSelector(Selection<BlockPos> sel, int x, int y) {
 		super(sel, x, y);
 	}
 
@@ -56,8 +57,10 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			textFieldX.setValue(Integer.toString(selection.get().getX()));
 			textFieldY.setValue(Integer.toString(selection.get().getY()));
 			textFieldZ.setValue(Integer.toString(selection.get().getZ()));
+			Player player = Minecraft.getInstance().player;
+			if(player == null) return;
 			buttonSelectPos = new ButtonElement(getX() + 8, getY() + height - 8 - 17, 17, 17, button -> {
-				ItemStack stack = ItemStackUtils.searchPlayerForItem(Minecraft.getInstance().player, ModItems.COMMANDER.get(), itemStack -> CommanderItem.getRememberedPos(itemStack) != null);
+				ItemStack stack = ItemStackUtils.searchPlayerForItem(player, ModItems.COMMANDER.get(), itemStack -> CommanderItem.getRememberedPos(itemStack) != null);
 				if(stack == null) return;
 				selection.set(CommanderItem.getRememberedPos(stack));
 				//TODO Using an entity to set the position would require contacting the server
@@ -68,7 +71,7 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			});
 			buttonSelectPos.setTooltip(Lang.localise("selector.pos.useCommander"));
 			buttonSelfPos = new ButtonElement(getX() + 12 + 17, getY() + height - 8 - 17, 17, 17, button -> {
-				selection.set(Minecraft.getInstance().player.getOnPos());
+				selection.set(player.getOnPos());
 				textFieldX.setValue(Integer.toString(selection.get().getX()));
 				textFieldY.setValue(Integer.toString(selection.get().getY()));
 				textFieldZ.setValue(Integer.toString(selection.get().getZ()));

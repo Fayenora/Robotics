@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.screen.base;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -7,8 +8,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BaseScreen extends Screen implements IElement {
 
     private int x, y;

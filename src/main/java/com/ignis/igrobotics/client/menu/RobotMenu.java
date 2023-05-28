@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class RobotMenu extends BaseMenu {
     public final LivingEntity robot;
@@ -53,7 +54,7 @@ public class RobotMenu extends BaseMenu {
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return !robot.isDeadOrDying();
     }
 }

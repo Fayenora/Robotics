@@ -6,12 +6,14 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
 public abstract class SelectorElement<A> extends ButtonElement {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/selectors.png");

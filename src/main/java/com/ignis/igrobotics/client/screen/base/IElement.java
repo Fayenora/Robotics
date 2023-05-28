@@ -51,9 +51,8 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 
 	default List<Component> getTooltip(int mouseX, int mouseY) {
 		for(GuiEventListener child : children()) {
-			if(!(child instanceof IElement))  continue;
-			IElement element = (IElement) child;
-			if(element.isMouseOver(mouseX, mouseY) && element.getTooltip(mouseX, mouseY) != null) {
+			if(!(child instanceof IElement element)) continue;
+			if(element.isMouseOver(mouseX, mouseY) && !element.getTooltip(mouseX, mouseY).isEmpty()) {
 				return element.getTooltip(mouseX, mouseY);
 			}
 		}
@@ -74,7 +73,7 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 			path.add(search);
 			search = search.getParentComponent();
 		}
-		return path.toArray(new IElement[path.size()]);
+		return path.toArray(new IElement[0]);
 	}
 
 	default IBaseGui getBaseGui() {

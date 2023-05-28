@@ -9,6 +9,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Direction;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class RobotFactoryRenderer implements BlockEntityRenderer<FactoryBlockEntity> {
 
     EntityRenderDispatcher entityRenderer;

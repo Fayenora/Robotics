@@ -14,8 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 
+@ParametersAreNonnullByDefault
 public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/assembler.png");
@@ -45,7 +47,7 @@ public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
         //Don't
     }
 

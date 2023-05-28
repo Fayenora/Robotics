@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.client.screen.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.util.Optional;
 import java.util.Stack;
@@ -21,9 +23,11 @@ import java.util.Stack;
  * Supports holding a stack of opened windows
  * @param <T>
  */
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IElement, IBaseGui {
 
-    private Stack<IElement> subGuis = new Stack<>();
+    private final Stack<IElement> subGuis = new Stack<>();
 
     public BaseContainerScreen(T menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
@@ -51,8 +55,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
         super.renderTooltip(poseStack, mouseX, mouseY);
         //Only show hovered tooltips of the current subGui (may be this gui itself)
         Optional<GuiEventListener> child = getSubGui().getChildAt(mouseX, mouseY);
-        if(child.isPresent() && child.get() instanceof IElement) {
-            IElement element = (IElement) child.get();
+        if(child.isPresent() && child.get() instanceof IElement element) {
             if(element.isEnabled()) {
                 renderTooltip(poseStack, element.getTooltip(mouseX, mouseY), Optional.empty(), mouseX, mouseY);
             }
@@ -69,7 +72,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    protected <T extends Renderable> T addRenderableOnly(T renderable) {
+    protected <R extends Renderable> R addRenderableOnly(R renderable) {
         if(renderable instanceof IElement element) {
             element.setParentComponent(this);
         }
@@ -77,7 +80,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    protected <T extends GuiEventListener & NarratableEntry> T addWidget(T widget) {
+    protected <W extends GuiEventListener & NarratableEntry> W addWidget(W widget) {
         if(widget instanceof IElement element) {
             element.setParentComponent(this);
         }

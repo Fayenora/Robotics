@@ -28,9 +28,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_factory.png");
@@ -92,7 +94,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         startButton.setEnabled(!MachineBlockEntity.isRunning(menu.data) && (factory.canStart() || (factory.hasCraftedRobotReady() && !nameBar.getValue().isEmpty())));
         switchColorLeft.setVisible(factory.getEntity().isPresent());
@@ -174,7 +176,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
         //Don't
     }
 }

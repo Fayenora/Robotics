@@ -25,7 +25,7 @@ public class SideBarSwitchElement extends GuiElement {
     /** For each button, saves at which row the designated texture is */
     int[] textureRows;
 
-    public SideBarSwitchElement(MenuType currentMenu, List<MenuType> possibleMenus, int x, int y, int width, int height, int entityId) {
+    public SideBarSwitchElement(MenuType<?> currentMenu, List<MenuType<?>> possibleMenus, int x, int y, int width, int height, int entityId) {
         super(x, y, width, height);
 
         for(int i = 0; i < POSSIBLE_TYPES.length; i++) {
@@ -51,7 +51,7 @@ public class SideBarSwitchElement extends GuiElement {
         }
 
         //Find out on which row the texture is and save it in textureRows
-        ArrayList<MenuType> buttonGuiIds = new ArrayList<>(possibleMenus);
+        ArrayList<MenuType<?>> buttonGuiIds = new ArrayList<>(possibleMenus);
         buttonGuiIds.remove(currentMenu);
         this.textureRows = new int[buttonGuiIds.size()];
         int i = 0, j = 0;

@@ -5,7 +5,6 @@ import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.RenderUtil;
-import com.ignis.igrobotics.core.util.StringUtil;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -13,6 +12,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class IntSelector extends SelectorElement<Integer> {
@@ -55,14 +55,14 @@ public class IntSelector extends SelectorElement<Integer> {
 				}
 
 				@Override
-				public void insertText(String text) {
-					String cleanedText = "";
+				public void insertText(@NotNull String text) {
+					StringBuilder cleanedText = new StringBuilder();
 					for(char c : text.toCharArray()) {
-						if((cleanedText.isEmpty() && getCursorPosition() == 0 && (c == '-' || c == '+')) || (c >= '0' && c <= '9')) {
-							cleanedText += c;
+						if(((cleanedText.length() == 0) && getCursorPosition() == 0 && (c == '-' || c == '+')) || (c >= '0' && c <= '9')) {
+							cleanedText.append(c);
 						}
 					}
-					super.insertText(cleanedText);
+					super.insertText(cleanedText.toString());
 				}
 			};
 			addElement(textField);

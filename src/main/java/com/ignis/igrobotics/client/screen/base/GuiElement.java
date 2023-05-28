@@ -2,6 +2,7 @@ package com.ignis.igrobotics.client.screen.base;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -19,6 +20,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@MethodsReturnNonnullByDefault
 public class GuiElement extends AbstractContainerEventHandler implements IElement, IGuiTexturable {
 
     private int x, y;
@@ -26,7 +28,7 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     private boolean enabled = true, visible = true;
     private final List<GuiEventListener> children = new CopyOnWriteArrayList<>();
     private IElement parentComponent;
-    private Component name;
+    private final Component name;
     protected ResourceLocation resource;
     protected Point textureLoc;
 

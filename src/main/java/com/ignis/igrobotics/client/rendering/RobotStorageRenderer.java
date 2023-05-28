@@ -11,6 +11,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import org.joml.Quaternionf;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class RobotStorageRenderer implements BlockEntityRenderer<StorageBlockEntity> {
 
     EntityRenderDispatcher entityRenderer;

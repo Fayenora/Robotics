@@ -240,7 +240,7 @@ public class RobotBehavior {
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setActivation(true));
     }
 
-    public static List<MenuType> possibleMenus(Entity entity) {
+    public static List<MenuType<?>> possibleMenus(Entity entity) {
         return List.of(ModMenuTypes.ROBOT.get(), ModMenuTypes.ROBOT_INFO.get(), ModMenuTypes.ROBOT_COMMANDS.get());
     }
 

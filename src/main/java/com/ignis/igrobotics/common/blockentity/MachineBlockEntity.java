@@ -37,13 +37,13 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
 
     protected EnergyStorage storage;
     protected MachineInventory inventory;
-    private final Machine machine;
+    private final Machine<?> machine;
     private final int[] inputs;
     private final int[] outputs;
 
     private int runTime;
     private int currentRunTime;
-    protected MachineRecipe currentRecipe;
+    protected MachineRecipe<?> currentRecipe;
     private ItemStack[] currentlyProcessedItems;
 
     private final List<MachineRecipe<?>> RECIPES;

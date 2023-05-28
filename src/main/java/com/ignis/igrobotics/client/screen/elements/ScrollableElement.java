@@ -17,7 +17,7 @@ public class ScrollableElement extends GuiElement {
     private int scrollDistanceX;
     private int scrollDistanceY;
     /** The total width of everything in the scrollable area. This implementation does not support extending this range */
-    private int scrollMaxX;
+    private final int scrollMaxX;
     /** The total height of everything in the scrollable area */
     private int scrollMaxY = 0;
 
@@ -47,7 +47,7 @@ public class ScrollableElement extends GuiElement {
 
     /**
      * This ensures only one element is removed at a time. To clear all elements use {@link #clear()}
-     * @param index
+     * @param index the index of the element to be removed
      */
     private void internalRemove(int index) {
         if(index > children().size()) return;

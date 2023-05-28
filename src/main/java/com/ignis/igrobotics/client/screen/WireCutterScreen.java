@@ -13,8 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 
+@ParametersAreNonnullByDefault
 public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/wire_cutter.png");
@@ -37,7 +39,7 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
         //Don't
     }
 }

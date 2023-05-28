@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common.blockentity;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
 import com.ignis.igrobotics.core.util.ContainerDataUtil;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -11,6 +12,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class AssemblerBlockEntity extends MachineBlockEntity {
 
     private int activeArrows = 0;

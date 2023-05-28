@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.client.menu;
 
-import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
