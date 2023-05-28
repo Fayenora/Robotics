@@ -19,7 +19,7 @@ public class FollowGoal extends Goal {
 
 	protected final Mob entity;
     protected Entity followingEntityCache, followingEntity;
-    private final double speedModifier;
+    private final double speedModifier = 1;
     private final PathNavigation navigation;
     private int timeToRecalculatePath;
     private final float stopDistance;
@@ -28,7 +28,6 @@ public class FollowGoal extends Goal {
 
     public FollowGoal(Mob follower, Entity toFollow, float distance, float area) {
         this.entity = follower;
-        this.speedModifier = follower.getAttributeValue(Attributes.MOVEMENT_SPEED);
         this.navigation = follower.getNavigation();
         this.followingEntityCache = toFollow;
         this.followingEntity = toFollow;
@@ -72,7 +71,7 @@ public class FollowGoal extends Goal {
 	public void tick() {
         if (this.followingEntityCache == null || this.entity.isLeashed()) return;
         //Don't make this conflict with other look tasks (should be handled by mutex bits, but can lead to weird head flickering)
-        this.entity.getLookControl().setLookAt(this.followingEntity, 10.0F, (float)this.entity.getMaxHeadXRot());
+        this.entity.getLookControl().setLookAt(this.followingEntityCache, 10.0F, (float)this.entity.getMaxHeadXRot());
 
         if (--this.timeToRecalculatePath > 0) return;
         

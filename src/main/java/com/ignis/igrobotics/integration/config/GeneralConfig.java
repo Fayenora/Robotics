@@ -14,7 +14,7 @@ public class GeneralConfig extends BaseConfig {
     public Supplier<DyeColor> startColor;
     public Supplier<Integer> moduleAmount;
     public Supplier<Long> robotEnergyCapacity, robotBaseConsumption;
-    public Supplier<Boolean> configShutdown, chunkLoadShutdown;
+    public Supplier<Boolean> configShutdown, pickUpShutdown, chunkLoadShutdown;
 
     public Supplier<Integer> robotAmountPerPlayerOnServer;
 
@@ -41,6 +41,7 @@ public class GeneralConfig extends BaseConfig {
         robotBaseConsumption = builder.defineInRange("Base Energy Consumption Per Tick", 100, Long.MIN_VALUE, Long.MAX_VALUE);
 
         configShutdown = builder.comment("Whether deactivated robots cease to be configurable").define("Config Shutdown", false);
+        pickUpShutdown = builder.comment("Whether deactivated robots are unable to pick up items").define("Pickup Shutdown", true);
         chunkLoadShutdown = builder.comment("Whether deactivated robots cease chunk loading capabilities").define("Chunk Loading Shutdown", true);
         builder.pop();
 

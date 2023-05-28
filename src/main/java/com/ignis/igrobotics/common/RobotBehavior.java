@@ -223,6 +223,7 @@ public class RobotBehavior {
         if(entity instanceof Mob mob) {
             mob.setPersistenceRequired();
             mob.setCanPickUpLoot(true);
+            mob.setLeftHanded(false);
         }
         //If the robot has no body parts, initialize with iron
         entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {

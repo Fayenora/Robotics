@@ -215,8 +215,10 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             boolean configureButtonsActive = access.hasPermission(player, EnumPermission.CONFIGURATION);
             configureButtonsActive = configureButtonsActive && (RoboticsConfig.general.configShutdown.get() ? robot.isActive() : true);
-            pickUpButton.setEnabled(configureButtonsActive);
-            chunkLoadingToggle.setEnabled(configureButtonsActive);
+            boolean pickUpToggleAble = robot.isActive() || !RoboticsConfig.general.pickUpShutdown.get();
+            boolean chunkLoadingToggleable = robot.isActive() || !RoboticsConfig.general.chunkLoadShutdown.get();
+            pickUpButton.setEnabled(configureButtonsActive && pickUpToggleAble);
+            chunkLoadingToggle.setEnabled(configureButtonsActive && chunkLoadingToggleable);
             soundToggle.setEnabled(configureButtonsActive);
         });
         permissionConfig.setEnabled(access.getOwner().equals(player.getUUID()));

@@ -3,8 +3,10 @@ package com.ignis.igrobotics.core.capabilities.robot;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
+import com.ignis.igrobotics.common.entity.ai.PickupGoal;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
@@ -16,13 +18,16 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -36,7 +41,6 @@ public class RobotCapability implements IRobot {
     private AccessConfig access = new AccessConfig();
 
     private NonNullList<ItemStack> modules;
-    private UUID owner = Reference.DEFAULT_UUID;
 
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
@@ -44,6 +48,8 @@ public class RobotCapability implements IRobot {
     private static final EntityDataAccessor<Integer> LOAD_CHUNK = RobotEntity.LOAD_CHUNK;
     private static final EntityDataAccessor<Integer> PICKUP_STATE = RobotEntity.PICKUPSTATE;
     private static final EntityDataAccessor<Integer> COMMAND_GROUP = RobotEntity.COMMAND_GROUP;
+
+    public PickupGoal pickUpGoal;
 
     public RobotCapability(Mob entity) {
         this.entity = entity;
@@ -86,10 +92,6 @@ public class RobotCapability implements IRobot {
         setOwner(nbt.getUUID("owner"));
     }
 
-    private void applyPickupTask() {
-        //TODO
-    }
-
     @Override
     public boolean isActive() {
         return dataManager.get(ACTIVATED);
@@ -108,8 +110,15 @@ public class RobotCapability implements IRobot {
         // NOTE Maybe make this fire as an event?
         dataManager.set(ACTIVATED, activation);
 
-        if(!activation && RoboticsConfig.general.chunkLoadShutdown.get()) {
-            setChunkLoading(0);
+        if(!activation) {
+            if(RoboticsConfig.general.pickUpShutdown.get() && entity instanceof Mob mob) {
+                mob.setCanPickUpLoot(false);
+            }
+            if(RoboticsConfig.general.chunkLoadShutdown.get()) {
+                setChunkLoading(0);
+            }
+        } else {
+            setPickUpState(getPickUpState());//Reapply the rule the robot had when active (if there is such a rule saved)
         }
 
         if(commands.isPresent() && entity instanceof Mob mob) {
@@ -225,7 +234,15 @@ public class RobotCapability implements IRobot {
     @Override
     public void setPickUpState(int state) {
         dataManager.set(PICKUP_STATE, state);
-        applyPickupTask();
+        //We can't add any goals while the entity is still being loaded/initialised
+        if(!(entity instanceof Mob mob)) return;
+        if(pickUpGoal == null) {
+            pickUpGoal = new PickupGoal(mob, 16);
+        }
+        mob.setCanPickUpLoot(state % 3 == 2);
+        if(state % 3 == 1) {
+            mob.goalSelector.addGoal(CommandCapability.MAX_NON_COMMAND_GOALS - 2, pickUpGoal);
+        } else mob.goalSelector.removeGoal(pickUpGoal);
     }
 
     @Override
@@ -263,12 +280,12 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void setOwner(UUID newOwner) {
-        owner = newOwner;
+        access.setOwner(newOwner);
     }
 
     @Override
     public @NonNull UUID getOwner() {
-        return owner;
+        return access.getOwner();
     }
 
     @Override

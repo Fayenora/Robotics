@@ -2,6 +2,7 @@ package com.ignis.igrobotics.common.entity;
 
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
+import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
@@ -21,11 +22,15 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -36,6 +41,7 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class RobotEntity extends PathfinderMob implements GeoEntity {
 
@@ -64,6 +70,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     public RobotEntity(Level pLevel, DyeColor color) {
         super(ModEntityTypes.ROBOT.get(), pLevel);
         getCapability(ModCapabilities.PARTS).ifPresent(part -> part.setColor(color));
+        //TODO: This has to be done on making any entity a robot
         Arrays.fill(this.armorDropChances, 0); //These would be randomly damaged
         Arrays.fill(this.handDropChances, 0); //These would be randomly damaged
     }
@@ -83,6 +90,21 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     @Override
     public void heal(float p_21116_) {
         //Prevent any health regeneration
+    }
+
+    @Override
+    public ItemStack equipItemIfPossible(ItemStack stack) {
+        //TODO Move this to a mixin/event
+        ItemStack pickedUpStack = super.equipItemIfPossible(stack);
+        if(!pickedUpStack.isEmpty()) return pickedUpStack;
+        if(getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
+            Optional<IItemHandler> inventory = getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+            if(inventory.isPresent()) {
+                stack.setCount(stack.getCount() - ItemStackUtils.insert(inventory.get(), stack, false).getCount());
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     /////////////////
