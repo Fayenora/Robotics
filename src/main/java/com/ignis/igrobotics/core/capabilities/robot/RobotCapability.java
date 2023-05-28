@@ -7,6 +7,7 @@ import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
+import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
@@ -32,7 +33,6 @@ public class RobotCapability implements IRobot {
 
     protected LivingEntity entity;
     protected SynchedEntityData dataManager;
-    protected IPerkMapCap perkMap;
     private AccessConfig access = new AccessConfig();
 
     private NonNullList<ItemStack> modules;
@@ -48,7 +48,6 @@ public class RobotCapability implements IRobot {
     public RobotCapability(Mob entity) {
         this.entity = entity;
         this.dataManager = entity.getEntityData();
-        this.perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
         modules = NonNullList.withSize(RoboticsConfig.general.moduleAmount.get(), ItemStack.EMPTY);
 
         dataManager.define(RENDER_OVERLAYS, 0);
@@ -159,7 +158,7 @@ public class RobotCapability implements IRobot {
         //Remove the modifiers and texture of the old module
         if(!modules.get(slot).isEmpty()) {
             RobotModule oldModule = RoboticsConfig.current().modules.get(modules.get(slot));
-            perkMap.diff(oldModule.getPerks());
+            entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldModule.getPerks()));
             if(RoboticsConfig.current().modules.overlays.contains(oldModule)) {
                 int overlayId = RoboticsConfig.current().modules.overlays.indexOf(oldModule);
                 removeRenderLayer(overlayId);
@@ -169,7 +168,7 @@ public class RobotCapability implements IRobot {
         //Add modifiers and texture of the new module
         if(!item.isEmpty()) {
             RobotModule module = RoboticsConfig.current().modules.get(item);
-            perkMap.merge(module.getPerks());
+            entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.merge(module.getPerks()));
             if(RoboticsConfig.current().modules.overlays.contains(module)) {
                 int overlayId = RoboticsConfig.current().modules.overlays.indexOf(module);
                 addRenderLayer(overlayId);
@@ -179,6 +178,7 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void setMaxModules(int amount) {
+        if(amount == modules.size()) return;
         NonNullList<ItemStack> newModules = NonNullList.<ItemStack>withSize(amount, ItemStack.EMPTY);
         //Copy old modules over to the new list
         for(int i = 0; i < Math.min(modules.size(), amount); i++) {
@@ -187,12 +187,13 @@ public class RobotCapability implements IRobot {
         //If some old modules didn't fit, remove their perks and drop them
         for(int i = amount; i < modules.size(); i++) {
             if(modules.get(i).isEmpty()) continue;
-            perkMap.diff(RoboticsConfig.current().modules.get(modules.get(i)).getPerks());
+            IPerkMap oldPerks = RoboticsConfig.current().modules.get(modules.get(i)).getPerks();
+            entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldPerks));
             ItemStackUtils.dropItem(entity.level, entity.xOld, entity.yOld, entity.zOld, modules.get(i));
         }
         modules = newModules;
 
-        perkMap.updateAttributeModifiers();
+        entity.getCapability(ModCapabilities.PERKS).ifPresent(IPerkMapCap::updateAttributeModifiers);
     }
 
     @Override

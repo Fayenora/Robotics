@@ -133,6 +133,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
         storedRobot.setRobotPart(part, material);
+        if(level.isClientSide()) return;
         storedRobot.getEntity().ifPresent(entity -> {
             entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                 if(!(entity instanceof LivingEntity living)) return;
