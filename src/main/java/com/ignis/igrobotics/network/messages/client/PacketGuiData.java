@@ -29,8 +29,8 @@ public class PacketGuiData implements IMessage {
 	@Override
 	public void encode(FriendlyByteBuf buf) {
 		buf.writeInt(gui_path.length);
-		for(int i = 0; i < gui_path.length; i++) {
-			buf.writeInt(gui_path[i]);
+		for(int j : gui_path) {
+			buf.writeInt(j);
 		}
 		BufferSerializers.writeObject(buf, data);
 	}
@@ -48,9 +48,8 @@ public class PacketGuiData implements IMessage {
 	@Override
 	public void handle(NetworkEvent.Context cxt) {
 		Screen currScreen = Minecraft.getInstance().screen;
-		if(!(currScreen instanceof IElement)) return;
+		if(!(currScreen instanceof IElement current)) return;
 
-		IElement current = (IElement) currScreen;
 		if(gui_path != null) { //If gui path is null, use current screen
 			for(int i = gui_path.length - 1; i >= 0; i--) {
 				for(GuiEventListener comp : current.children()) {
@@ -66,7 +65,7 @@ public class PacketGuiData implements IMessage {
 		receiver.receive(data);
 	}
 
-	public BufferSerializers.BufferSerializer getType() {
+	public BufferSerializers.BufferSerializer<?> getType() {
 		return BufferSerializers.getType(data);
 	}
 }

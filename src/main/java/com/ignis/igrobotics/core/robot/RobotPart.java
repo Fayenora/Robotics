@@ -25,10 +25,10 @@ public class RobotPart {
 	public static final String PARTS_PATH = PATH + "limbs/";
 	public static final String COLORS_PATH = PATH + "color/";
 	
-	private EnumRobotPart part;
-	private EnumRobotMaterial material;
+	private final EnumRobotPart part;
+	private final EnumRobotMaterial material;
 	
-	private IPerkMap perks = new PerkMap();
+	private final IPerkMap perks = new PerkMap();
 	
 	private RobotPart(EnumRobotPart part, EnumRobotMaterial material) {
 		this.part = part;
@@ -46,7 +46,7 @@ public class RobotPart {
 	public static RobotPart get(EnumRobotPart part, EnumRobotMaterial material) {
 		RobotPart robot_part = new RobotPart(part, material);
 		if(!RoboticsConfig.current().parts.PARTS.containsKey(part)) {
-			HashMap<EnumRobotMaterial, RobotPart> material_map = new HashMap<EnumRobotMaterial, RobotPart>();
+			HashMap<EnumRobotMaterial, RobotPart> material_map = new HashMap<>();
 			RoboticsConfig.current().parts.PARTS.put(part, material_map);
 		}
 		if(!RoboticsConfig.current().parts.PARTS.get(part).containsKey(material)) {

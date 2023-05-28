@@ -6,56 +6,54 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public enum EnumRobotMaterial {
-    NONE(0, "none", 0),
-    IRON(1, "iron", 1),
-    GOLD(2, "gold", 1),
-    COPPER(3, "copper", 1),
-    TIN(4, "tin", 1),
-    ALUMINIUM(5, "aluminium", 2),
-    NICKEL(6, "nickel", 2),
-    SILVER(7, "silver", 2),
-    LEAD(8, "lead", 5),
-    BRONZE(9, "bronze", 2),
-    CONSTANTAN(10, "constantan", 2),
-    STEEL(11, "steel", 3),
-    ELECTRUM(12, "electrum", 2),
+    NONE("none", 0),
+    IRON("iron", 1),
+    GOLD("gold", 1),
+    COPPER("copper", 1),
+    TIN("tin", 1),
+    ALUMINIUM("aluminium", 2),
+    NICKEL("nickel", 2),
+    SILVER("silver", 2),
+    LEAD("lead", 5),
+    BRONZE("bronze", 2),
+    CONSTANTAN("constantan", 2),
+    STEEL("steel", 3),
+    ELECTRUM("electrum", 2),
     //INVAR?
 
     //Thermal Series
-    PLATINUM(13, "platinum", 4),
-    IRIDIUM(14, "iridium", 5),
-    SIGNALUM(15, "signalum", 3),
-    LUMIUM(16, "lumium", 1),
+    PLATINUM("platinum", 4),
+    IRIDIUM("iridium", 5),
+    SIGNALUM("signalum", 3),
+    LUMIUM("lumium", 1),
 
     //Ender IO
-    DARK_STEEL(17, "dark_steel", 4),
-    END_STEEL(18, "end_steel", 5),
+    DARK_STEEL("dark_steel", 4),
+    END_STEEL("end_steel", 5),
 
     //Nuclear Craft
-    TOUGH_ALLOY(19, "tough_alloy", 4),
+    TOUGH_ALLOY("tough_alloy", 4),
 
     //Tinkers Construct
-    COBALT(20, "cobalt", 3),
-    ARDITE(21, "ardite", 3),
-    MANYULLIN(22, "manyullin", 4),
+    COBALT("cobalt", 3),
+    ARDITE("ardite", 3),
+    MANYULLIN("manyullin", 4),
 
     //Mekanism
-    OSMIUM(23, "osmium", 3),
+    OSMIUM("osmium", 3),
 
     //Psi
-    PSIMETAL(24, "psimetal", 3);
+    PSIMETAL("psimetal", 3);
 
     private final String name;
-    private final int id, stiffness;
+    private final int stiffness;
     private final TagKey<Item> metalTag;
 
     /**
-     * @param id
-     * @param name
+     * @param name the name of the material
      * @param stiffness used for energy processing costs in processing; range [0, 5]
      */
-    EnumRobotMaterial(int id, String name, int stiffness) {
-        this.id = id;
+    EnumRobotMaterial(String name, int stiffness) {
         this.name = name;
         this.stiffness = stiffness;
         this.metalTag = ItemTags.create(new ResourceLocation("forge", "ingots/" + name));
@@ -66,7 +64,7 @@ public enum EnumRobotMaterial {
     }
 
     public int getID() {
-        return this.id;
+        return this.ordinal();
     }
 
     public int getStiffness() {

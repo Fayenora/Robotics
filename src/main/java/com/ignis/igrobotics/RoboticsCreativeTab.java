@@ -25,7 +25,7 @@ public class RoboticsCreativeTab {
             builder.title(Component.translatable("item_group." + Robotics.MODID + ".items"))
                     .icon(() -> new ItemStack(ModItems.CIRCUIT.get()))
                     .displayItems((params, output) -> {
-                        Collection<RegistryObject<Item>> itemsWithoutMaterials = new ArrayList(ModItems.ITEMS.getEntries());
+                        Collection<RegistryObject<Item>> itemsWithoutMaterials = new ArrayList<>(ModItems.ITEMS.getEntries());
                         for(RegistryObject[] regs : ModItems.MATERIALS) {
                             itemsWithoutMaterials.removeAll(List.of(regs));
                         }

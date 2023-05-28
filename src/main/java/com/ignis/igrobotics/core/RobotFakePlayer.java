@@ -126,7 +126,7 @@ public class RobotFakePlayer extends FakePlayer {
     public void giveExperiencePoints(int p_9208_) {}
 
     /* Barely relevant
-    public Entity changeDimension(ServerLevel p_9180_, net.minecraftforge.common.util.ITeleporter teleporter);
+    public Entity changeDimension(ServerLevel p_9180_, ITeleporter teleporter);
     protected void onEffectAdded(MobEffectInstance p_143393_, @Nullable Entity p_143394_);
     protected void onEffectUpdated(MobEffectInstance p_143396_, boolean p_143397_, @Nullable Entity p_143398_);
     protected void onEffectRemoved(MobEffectInstance p_9184_);

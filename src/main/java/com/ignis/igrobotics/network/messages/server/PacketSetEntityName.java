@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.nio.charset.Charset;
@@ -34,6 +35,8 @@ public class PacketSetEntityName implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        cxt.getSender().level.getEntity(entityId).setCustomName(Component.literal(name));
+        Entity entity = cxt.getSender().level.getEntity(entityId);
+        if(entity == null) return;
+        entity.setCustomName(Component.literal(name));
     }
 }

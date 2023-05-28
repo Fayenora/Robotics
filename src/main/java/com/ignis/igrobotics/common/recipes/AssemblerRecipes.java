@@ -14,13 +14,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@ParametersAreNonnullByDefault
 public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
 
     public static final int INPUT_SIZE = 4;
@@ -28,7 +31,7 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
     public static List<MachineRecipe<?>> recipes = new ArrayList<>();
 
     @Override
-    public MachineRecipe fromJson(ResourceLocation loc, JsonObject json) {
+    public @NotNull MachineRecipe<?> fromJson(ResourceLocation loc, JsonObject json) {
         int processing_time = json.get("processing_time").getAsInt();
         int energy = json.get("energy").getAsInt();
         ItemStack result = CraftingHelper.getItemStack(json.getAsJsonObject("result"), true);
@@ -39,7 +42,7 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
         if(pattern.length() == 0)
             throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
         if(pattern.length() > INPUT_SIZE)
-            new JsonSyntaxException("Invalid pattern: should not exceed " + INPUT_SIZE + " items.");
+            throw new JsonSyntaxException("Invalid pattern: should not exceed " + INPUT_SIZE + " items.");
 
         // Put Ingredients in map
         Map<Character, Ingredient> ingMap = Maps.newHashMap();
@@ -58,12 +61,12 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
 
         // Ingredients
         int i = 0;
-        Ingredient[] ingr = new Ingredient[INPUT_SIZE];
+        Ingredient[] ingredients = new Ingredient[INPUT_SIZE];
         for (char chr : pattern.toCharArray()) {
             Ingredient ing = ingMap.get(chr);
             if (ing == null)
                 throw new JsonSyntaxException("Pattern references symbol '" + chr + "' but it's not defined in the key");
-            ingr[i] = ing;
+            ingredients[i] = ing;
             keys.remove(chr);
             i++;
         }
@@ -71,8 +74,8 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
         if (!keys.isEmpty())
             throw new JsonSyntaxException("Key defines symbols that aren't used in pattern: " + keys);
 
-        MachineRecipe recipe = new MachineRecipe.Builder(ModMachines.ASSEMBLER, loc)
-                .setInputs(ingr)
+        MachineRecipe<?> recipe = new MachineRecipe.Builder(ModMachines.ASSEMBLER, loc)
+                .setInputs(ingredients)
                 .setOutputs(new ItemStack[] {result})
                 .setEnergyRequirement(energy)
                 .setProcessingTime(processing_time).build();
@@ -81,7 +84,7 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
     }
 
     @Override
-    public @Nullable MachineRecipe fromNetwork(ResourceLocation loc, FriendlyByteBuf buf) {
+    public @Nullable MachineRecipe<?> fromNetwork(ResourceLocation loc, FriendlyByteBuf buf) {
         int energy = buf.readInt();
         int processing_time = buf.readInt();
         Ingredient[] inputs = new Ingredient[INPUT_SIZE];
@@ -104,8 +107,8 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
     public void toNetwork(FriendlyByteBuf buf, MachineRecipe recipe) {
         buf.writeInt(recipe.getEnergy());
         buf.writeInt(recipe.getProcessingTime());
-        for(Ingredient ingr : recipe.getInputs()) {
-            ingr.toNetwork(buf);
+        for(Ingredient ingredient : recipe.getInputs()) {
+            ingredient.toNetwork(buf);
         }
         for(ItemStack stack : recipe.getOutputs()) {
             buf.writeItem(stack);

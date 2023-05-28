@@ -1,14 +1,13 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
+
 import java.util.List;
 
 public class PacketSetCommands implements IMessage {
@@ -41,8 +40,9 @@ public class PacketSetCommands implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        Level level = cxt.getSender().level;
-        level.getEntity(entityId).getCapability(ModCapabilities.COMMANDS).ifPresent(robot -> {
+        Entity entity = cxt.getSender().level.getEntity(entityId);
+        if(entity == null) return;
+        entity.getCapability(ModCapabilities.COMMANDS).ifPresent(robot -> {
             robot.setCommands(commands);
         });
     }

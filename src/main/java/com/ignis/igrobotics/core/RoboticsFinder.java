@@ -10,11 +10,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -36,6 +37,7 @@ public class RoboticsFinder {
     public static Entity getEntity(Level level, UUID uuid) {
         if(level.isClientSide()) {
             Player player = Minecraft.getInstance().player;
+            if(player == null) return null;
             for (Entity ent : level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {
                 if (ent.getUUID().equals(uuid)) {
                     return ent;
@@ -55,11 +57,10 @@ public class RoboticsFinder {
     public static Collection<LivingEntity> getRobotics(Level level, Predicate<IRobot> condition) {
         if(level.isClientSide()) {
             Player player = Minecraft.getInstance().player;
+            if(player == null) return null;
             Collection<LivingEntity> robots = new HashSet<>();
             for(Entity ent : level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {
-                if(ent instanceof LivingEntity living
-                        && ent.getCapability(ModCapabilities.ROBOT).isPresent()
-                        && condition.test(ent.getCapability(ModCapabilities.ROBOT).resolve().get())) {
+                if(ent instanceof LivingEntity living && testCondition(living, condition)) {
                     robots.add(living);
                 }
             }
@@ -81,20 +82,24 @@ public class RoboticsFinder {
     private static Collection<LivingEntity> getRobotics(Predicate<IRobot> condition) {
         Collection<LivingEntity> robots = new HashSet<>();
         for(ServerLevel dimension : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
-            robots.addAll(dimension.getEntities(LIVING, living ->
-                    living.getCapability(ModCapabilities.ROBOT).isPresent() && condition.test(living.getCapability(ModCapabilities.ROBOT).resolve().get())));
+            robots.addAll(dimension.getEntities(LIVING, living -> testCondition(living, condition)));
         }
         return robots;
+    }
+
+    private static boolean testCondition(LivingEntity living, Predicate<IRobot> predicate) {
+        Optional<IRobot> robot = living.getCapability(ModCapabilities.ROBOT).resolve();
+        return robot.filter(predicate).isPresent();
     }
 
     public static final EntityTypeTest<Entity, LivingEntity> LIVING = new EntityTypeTest<>() {
         @Nullable
         @Override
-        public LivingEntity tryCast(Entity entity) {
-            return LivingEntity.class.isInstance(entity) ? (LivingEntity) entity : null;
+        public LivingEntity tryCast(@NotNull Entity entity) {
+            return entity instanceof LivingEntity ? (LivingEntity) entity : null;
         }
 
-        public Class<? extends LivingEntity> getBaseClass() {
+        public @NotNull Class<? extends LivingEntity> getBaseClass() {
             return LivingEntity.class;
         }
     };

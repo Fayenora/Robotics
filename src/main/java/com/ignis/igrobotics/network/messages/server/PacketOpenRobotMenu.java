@@ -9,12 +9,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class PacketOpenRobotMenu implements IMessage {
 
-    private MenuType type;
+    private MenuType<?> type;
     private int entityId;
 
     public PacketOpenRobotMenu() {}
 
-    public PacketOpenRobotMenu(MenuType type, int entityId) {
+    public PacketOpenRobotMenu(MenuType<?> type, int entityId) {
         this.type = type;
         this.entityId = entityId;
     }

@@ -20,7 +20,10 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.*;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -71,10 +74,10 @@ public class CommanderItem extends Item {
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if(player.level.isClientSide()) return InteractionResult.SUCCESS;
+        Optional<IRobot> optRobot = target.getCapability(ModCapabilities.ROBOT).resolve();
 
-        if(player.isShiftKeyDown() && target.getCapability(ModCapabilities.ROBOT).isPresent()) {
-            IRobot robot = target.getCapability(ModCapabilities.ROBOT).orElse(null);
-
+        if(player.isShiftKeyDown() && optRobot.isPresent()) {
+            IRobot robot = optRobot.get();
             if(!robot.hasAccess(player, EnumPermission.COMMANDS)) return InteractionResult.PASS;
 
             assignID(stack);

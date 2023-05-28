@@ -25,8 +25,7 @@ public class EnergyStorage extends net.minecraftforge.energy.EnergyStorage imple
 
 	@Override
 	public void deserializeNBT(Tag tag) {
-		if(!(tag instanceof CompoundTag)) return;
-		CompoundTag nbt = (CompoundTag) tag;
+		if(!(tag instanceof CompoundTag nbt)) return;
 		this.capacity = nbt.getInt("Capacity");
 		this.maxReceive = nbt.getInt("MaxReceive");
 		this.maxExtract = nbt.getInt("MaxExtract");

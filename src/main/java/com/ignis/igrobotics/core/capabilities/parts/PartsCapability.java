@@ -1,25 +1,21 @@
 package com.ignis.igrobotics.core.capabilities.parts;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
-
-import java.util.Random;
 
 public class PartsCapability implements IPartBuilt {
 
@@ -38,8 +34,8 @@ public class PartsCapability implements IPartBuilt {
 		this.dataManager = entity.getEntityData();
 
 		dataManager.define(COLOR, 0);
-		for(int i = 0; i < BODY_PARTS.length; i++) {
-			dataManager.define(BODY_PARTS[i], 0);
+		for (EntityDataAccessor<Integer> bodyPart : BODY_PARTS) {
+			dataManager.define(bodyPart, 0);
 		}
 	}
 
@@ -78,7 +74,7 @@ public class PartsCapability implements IPartBuilt {
 			return;
 		}
 		
-		IPerkMapCap perkMap = entity.getCapability(ModCapabilities.PERKS, null).orElse(null);
+		IPerkMapCap perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
 		
 		//Remove perks from previous part
 		RobotPart current = getBodyPart(part.getPart());
@@ -95,7 +91,7 @@ public class PartsCapability implements IPartBuilt {
 
 	@Override
 	public void destroyBodyPart(EnumRobotPart part) {
-		if(!RoboticsConfig.current().general.limbDestruction.get()) return;
+		if(!RoboticsConfig.general.limbDestruction.get()) return;
 		RobotPart robotPart = getBodyPart(part);
 		ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
 		entity.playSound(SoundEvents.ANVIL_FALL, 1, 1);
@@ -133,7 +129,7 @@ public class PartsCapability implements IPartBuilt {
 	
 	@Override
 	public DyeColor getColor() {
-		return DyeColor.byId(this.dataManager.get(COLOR).intValue() & 15);
+		return DyeColor.byId(this.dataManager.get(COLOR) & 15);
 	}
 	
 	@Override
@@ -143,6 +139,6 @@ public class PartsCapability implements IPartBuilt {
 	
 	@Override
 	public DyeColor getTemporaryColor() {
-		return DyeColor.byId(Math.floorDiv(dataManager.get(COLOR).intValue(), DyeColor.values().length) & 15);
+		return DyeColor.byId(Math.floorDiv(dataManager.get(COLOR), DyeColor.values().length) & 15);
 	}
 }

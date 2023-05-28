@@ -49,11 +49,6 @@ public class GeneralConfig extends BaseConfig {
     }
 
     @Override
-    public void reload() {
-
-    }
-
-    @Override
     public String getFileName() {
         return "robotics";
     }

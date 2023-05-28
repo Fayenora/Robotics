@@ -44,8 +44,8 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
 
     public FactoryScreen(FactoryMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
-        imageWidth = Reference.GUI_ROBOTFACTORY_DIMENSIONS.width;
-        imageHeight = Reference.GUI_ROBOTFACTORY_DIMENSIONS.height;
+        imageWidth = Reference.GUI_ROBOT_FACTORY_DIMENSIONS.width;
+        imageHeight = Reference.GUI_ROBOT_FACTORY_DIMENSIONS.height;
         this.factory = menu.blockEntity;
     }
 

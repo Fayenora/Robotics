@@ -42,8 +42,8 @@ public class PacketRequestEntitySearch implements IMessage {
 	
 	/**
 	 * Looks for an entity with this UUID on the server world. If none is found, look for any offline player with that UUID
-	 * @param parentGuiPath
-	 * @param uuid
+	 * @param parentGuiPath the gui path leading to the component requiring the information
+	 * @param uuid the uuid to look for
 	 */
 	public PacketRequestEntitySearch(IElement[] parentGuiPath, UUID uuid) {
 		this(parentGuiPath);
@@ -54,8 +54,8 @@ public class PacketRequestEntitySearch implements IMessage {
 	/**
 	 * Looks for an entity with this name on the server world. If none is found, look for any offline player with that name
 	 * <br><b> Extreme compute requirements </b>
-	 * @param parentGuiPath
-	 * @param name
+	 * @param parentGuiPath the gui path leading to the component requiring the information
+	 * @param name the name to look for
 	 */
 	public PacketRequestEntitySearch(IElement[] parentGuiPath, String name) {
 		this(parentGuiPath);
@@ -72,24 +72,22 @@ public class PacketRequestEntitySearch implements IMessage {
 	@Override
 	public void encode(FriendlyByteBuf buf) {
 		buf.writeInt(parentGuiPath.length);
-		for(int i = 0; i < parentGuiPath.length; i++) {
-			buf.writeInt(parentGuiPath[i]);
+		for(int j : parentGuiPath) {
+			buf.writeInt(j);
 		}
 
 		//Type specific information
 		buf.writeInt(type);
-		switch(type) {
-			case 1:
+		switch (type) {
+			case 1 -> {
 				buf.writeLong(uuid.getMostSignificantBits());
 				buf.writeLong(uuid.getLeastSignificantBits());
-				break;
-			case 2:
+			}
+			case 2 -> {
 				buf.writeInt(name.length());
 				buf.writeCharSequence(name, Charset.defaultCharset());
-				break;
-			case 3:
-				buf.writeInt(entityId);
-				break;
+			}
+			case 3 -> buf.writeInt(entityId);
 		}
 	}
 
@@ -137,7 +135,7 @@ public class PacketRequestEntitySearch implements IMessage {
 				//FIXME: If the client requires a EntityLiving, but a not living entity matching the search is closer to the player, the search will yield the not living entity, causing the client to believe no entity matches the search
 				float min_distance = Float.MAX_VALUE;
 				for(Entity ent : server.getAllEntities()) {
-					if(ent.getName().equals(name)) {
+					if(ent.getName().getString().equals(name)) {
 						float distance = player.distanceTo(ent);
 						if(distance < min_distance) {
 							result = ent;

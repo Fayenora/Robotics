@@ -1,17 +1,14 @@
 package com.ignis.igrobotics.common.blocks;
 
-import com.ignis.igrobotics.common.items.CommanderItem;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModMachines;
-import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.definitions.ModSounds;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +32,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class StorageBlock extends MachineBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;

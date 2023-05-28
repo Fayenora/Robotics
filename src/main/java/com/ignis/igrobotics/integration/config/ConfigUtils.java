@@ -2,7 +2,6 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.annotation.Nullable;
@@ -14,6 +13,9 @@ public class ConfigUtils {
         try {
             String path = "data/" + Robotics.MODID + "/configs/" + defaultConfigFile;
             InputStream in = Robotics.class.getClassLoader().getResourceAsStream(path);
+            if(in == null) {
+                throw new RuntimeException("Unable to copy file! No file found at " + path);
+            }
             FileOutputStream out = new FileOutputStream(to);
             IOUtils.copy(in, out);
             in.close();
@@ -24,7 +26,7 @@ public class ConfigUtils {
     }
 
     @Nullable
-    public static Object readJson(Gson gson, File file, Class type) {
+    public static Object readJson(Gson gson, File file, Class<?> type) {
         Object obj = null;
         try {
             FileReader reader = new FileReader(file);

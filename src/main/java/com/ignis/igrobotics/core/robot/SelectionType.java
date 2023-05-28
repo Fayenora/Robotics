@@ -3,14 +3,11 @@ package com.ignis.igrobotics.core.robot;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.selectors.*;
-import com.ignis.igrobotics.common.CommonSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +24,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Class gui) {
+public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Class<?> gui) {
 
     public static final List<SelectionType<?>> TYPES = new ArrayList<>();
 
@@ -36,7 +33,7 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
         tag.putString("value", ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
         return tag;
     }, tag -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(tag.getString("value"))), EntityTypeSelector.class);
-    public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, () -> Items.IRON_SWORD.getDefaultInstance(), ItemStack::serializeNBT, ItemStack::of, ItemSelector.class);
+    public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of, ItemSelector.class);
     public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, null);
     public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, PosSelector.class);
     public static final SelectionType<Integer> INTEGER = register("<Int>", Integer.class, () -> 0, number -> {
@@ -50,9 +47,9 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
         return tag;
     }, (tag) -> tag.getUUID("value"), EntitySelector.class);
 
-    public static Optional<SelectorElement<?>> createSelectionGui(Selection selection, int x, int y) {
+    public static Optional<SelectorElement<?>> createSelectionGui(Selection<?> selection, int x, int y) {
         try {
-            Constructor constructor = selection.getType().gui().getConstructor(Selection.class, int.class, int.class);
+            Constructor<?> constructor = selection.getType().gui().getConstructor(Selection.class, int.class, int.class);
             return Optional.of((SelectorElement<?>) constructor.newInstance(selection, x, y));
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException |
                  InvocationTargetException | ClassCastException e) {
@@ -62,15 +59,15 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
         }
     }
 
-    public static <T> SelectionType<T> register(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Class gui) {
+    public static <T> SelectionType<T> register(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Class<?> gui) {
         SelectionType<T> selectionType = new SelectionType<>(identifier, type, defaultsTo, writer, reader, gui);
         TYPES.add(selectionType);
         return selectionType;
     }
 
     @Nullable
-    public static SelectionType byClass(Class clazz) {
-        for(SelectionType type : TYPES) {
+    public static SelectionType byClass(Class<?> clazz) {
+        for(SelectionType<?> type : TYPES) {
             if(type.type().isAssignableFrom(clazz)) {
                 return type;
             }
@@ -83,7 +80,7 @@ public record SelectionType<T>(String identifier, Class<T> type, Supplier<T> def
     }
 
     @Nullable
-    public static SelectionType byId(int id) {
+    public static SelectionType<?> byId(int id) {
         return TYPES.get(id);
     }
 }

@@ -4,8 +4,6 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.core.MachineRecipe;
-import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -17,15 +15,14 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 
-import java.util.ArrayList;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class AssemblerRecipeCategory extends MachineRecipeCategory {
 	
 	private static final int animation_time = 50;

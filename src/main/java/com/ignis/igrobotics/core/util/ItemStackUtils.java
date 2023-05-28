@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
-import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -39,9 +38,9 @@ public class ItemStackUtils {
 	
 	/**
 	 * Try to insert the given itemstack in the inventory
-	 * @param inventory
-	 * @param stack
-	 * @param simulate
+	 * @param inventory the inventory to insert the stack into
+	 * @param stack the itemstack
+	 * @param simulate whether to actually perform the operation, or just calculate the return value
 	 * @return the remainder. If this is empty, the entire stack fits in the inventory
 	 */
 	public static ItemStack insert(IItemHandler inventory, ItemStack stack, boolean simulate) {
@@ -50,10 +49,10 @@ public class ItemStackUtils {
 	
 	/**
 	 * Try to insert the given itemstack in the inventory
-	 * @param inventory
-	 * @param startSlot
-	 * @param stack
-	 * @param simulate
+	 * @param inventory the inventory to insert the stack into
+	 * @param startSlot only attempt to insert the stack from this slot onwards
+	 * @param stack the itemstack
+	 * @param simulate whether to actually perform the operation, or just calculate the return value
 	 * @return the remainder. If this is empty, the entire stack fits in the inventory
 	 */
 	public static ItemStack insert(IItemHandler inventory, int startSlot, ItemStack stack, boolean simulate) {
@@ -62,11 +61,11 @@ public class ItemStackUtils {
 	
 	/**
 	 * Try to insert the given itemstack in the inventory
-	 * @param inventory
-	 * @param startSlot
-	 * @param endSlot
-	 * @param stack
-	 * @param simulate
+	 * @param inventory the inventory to insert the stack into
+	 * @param startSlot only attempt to insert the stack from this slot onwards
+	 * @param endSlot only attempt to insert the stack up to this slot
+	 * @param stack the itemstack
+	 * @param simulate whether to actually perform the operation, or just calculate the return value
 	 * @return the remainder. If this is empty, the entire stack fits in the inventory
 	 */
 	public static ItemStack insert(IItemHandler inventory, int startSlot, int endSlot, ItemStack stack, boolean simulate) {
@@ -87,12 +86,12 @@ public class ItemStackUtils {
 		return true;
 	}
 	
-	public static boolean areItemsEqual(ItemStack[] stacksa, ItemStack[] stacksb) {
-		if(stacksa.length != stacksb.length) {
+	public static boolean areItemsEqual(ItemStack[] stacks, ItemStack[] otherStacks) {
+		if(stacks.length != otherStacks.length) {
 			return false;
 		}
-		for(int i = 0; i < stacksa.length; i++) {
-			if(!stacksa[i].getItem().equals(stacksb[i].getItem())) {
+		for(int i = 0; i < stacks.length; i++) {
+			if(!stacks[i].getItem().equals(otherStacks[i].getItem())) {
 				return false;
 			}
 		}
@@ -108,7 +107,7 @@ public class ItemStackUtils {
 		return true;
 	}
 
-	public static CompoundTag saveAllItems(CompoundTag tag, NonNullList<ItemStack> list, String key) {
+	public static void saveAllItems(CompoundTag tag, NonNullList<ItemStack> list, String key) {
 		ListTag nbtList = new ListTag();
 
 		for (int i = 0; i < list.size(); ++i) {
@@ -121,7 +120,6 @@ public class ItemStackUtils {
 			}
 		}
 		tag.put(key, nbtList);
-		return tag;
 	}
 
 	public static void loadAllItems(CompoundTag tag, NonNullList<ItemStack> list, String key) {
@@ -131,7 +129,7 @@ public class ItemStackUtils {
 			CompoundTag compound = nbtList.getCompound(i);
 			int j = compound.getByte("Slot") & 255;
 
-			if (j >= 0 && j < nbtList.size()) {
+			if (j < nbtList.size()) {
 				list.set(j, ItemStack.of(compound));
 			}
 		}
@@ -139,14 +137,14 @@ public class ItemStackUtils {
 	
 	/**
 	 * Search for the next feasible ItemStack in the players inventory. Held items and hotbar are prioritized
-	 * @param player
-	 * @param search_for
-	 * @param pred Optional predicate the ItemStack must fulfill
+	 * @param player the player to search
+	 * @param searchFor the item type to search for
+	 * @param predicate Optional additional predicate the ItemStack must fulfill
 	 * @return The found ItemStack. Null if the item is not present in the players inventory
 	 */
 	@Nullable
-	public static ItemStack searchPlayerForItem(Player player, Item search_for, Predicate<ItemStack> pred) {
-		ArrayList<ItemStack> stacksToSearch = new ArrayList<ItemStack>();
+	public static ItemStack searchPlayerForItem(Player player, Item searchFor, Predicate<ItemStack> predicate) {
+		ArrayList<ItemStack> stacksToSearch = new ArrayList<>();
 		//Add held items
 		stacksToSearch.add(player.getMainHandItem());
 		stacksToSearch.add(player.getOffhandItem());
@@ -154,7 +152,7 @@ public class ItemStackUtils {
 		stacksToSearch.addAll(player.getInventory().items);
 		
 		for(ItemStack stack : stacksToSearch) {
-			if(stack.getItem() == search_for && (pred == null || pred.test(stack))) {
+			if(stack.getItem() == searchFor && (predicate == null || predicate.test(stack))) {
 				return stack;
 			}
 		}
@@ -176,8 +174,8 @@ public class ItemStackUtils {
 		return toReturn;
 	}
 	
-	public static int getCount(Ingredient ingr) {
-		return ingr.getItems()[0].getCount();
+	public static int getCount(Ingredient ingredient) {
+		return ingredient.getItems()[0].getCount();
 	}
 	
 	public static Ingredient getIngredient(Item item, int amount) {
@@ -185,14 +183,14 @@ public class ItemStackUtils {
 	}
 
 	public static Ingredient fromJson(JsonElement json) {
-		Ingredient ingr = Ingredient.fromJson(json);
+		Ingredient ingredient = Ingredient.fromJson(json);
 		if(json.isJsonObject() && json.getAsJsonObject().has("amount")) {
 			int amount = json.getAsJsonObject().get("amount").getAsInt();
-			for(ItemStack stack : ingr.getItems()) {
+			for(ItemStack stack : ingredient.getItems()) {
 				stack.setCount(amount);
 			}
 		}
-		return ingr;
+		return ingredient;
 	}
 
 }

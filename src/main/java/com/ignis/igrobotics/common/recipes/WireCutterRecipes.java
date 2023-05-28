@@ -11,11 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class WireCutterRecipes implements IRecipeSerializer<MachineRecipe<?>> {
 
     public static final int INPUT_SIZE = 2;
@@ -28,16 +31,16 @@ public class WireCutterRecipes implements IRecipeSerializer<MachineRecipe<?>> {
     }
 
     @Override
-    public MachineRecipe<?> fromJson(ResourceLocation loc, JsonObject json) {
+    public @NotNull MachineRecipe<?> fromJson(ResourceLocation loc, JsonObject json) {
         int processing_time = json.get("processing_time").getAsInt();
         int energy = json.get("energy").getAsInt();
-        Ingredient ingr = ItemStackUtils.fromJson(json.get("ingredient"));
+        Ingredient ingredient = ItemStackUtils.fromJson(json.get("ingredient"));
         ItemStack result = CraftingHelper.getItemStack(json.getAsJsonObject("result"), true);
 
-        MachineRecipe recipe = new MachineRecipe.Builder(ModMachines.WIRE_CUTTER, loc)
+        MachineRecipe<?> recipe = new MachineRecipe.Builder(ModMachines.WIRE_CUTTER, loc)
                 .setProcessingTime(processing_time)
                 .setEnergyRequirement(energy)
-                .setInputs(new Ingredient[] {Ingredient.of(ModItems.IRON_ROD.get()), ingr})
+                .setInputs(new Ingredient[] {Ingredient.of(ModItems.IRON_ROD.get()), ingredient})
                 .setOutput(result).build();
         recipes.add(recipe);
         return recipe;
@@ -67,8 +70,8 @@ public class WireCutterRecipes implements IRecipeSerializer<MachineRecipe<?>> {
     public void toNetwork(FriendlyByteBuf buf, MachineRecipe<?> recipe) {
         buf.writeInt(recipe.getEnergy());
         buf.writeInt(recipe.getProcessingTime());
-        for(Ingredient ingr : recipe.getInputs()) {
-            ingr.toNetwork(buf);
+        for(Ingredient ingredient : recipe.getInputs()) {
+            ingredient.toNetwork(buf);
         }
         for(ItemStack stack : recipe.getOutputs()) {
             buf.writeItem(stack);

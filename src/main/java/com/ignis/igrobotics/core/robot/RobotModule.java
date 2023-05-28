@@ -15,7 +15,7 @@ public class RobotModule {
 
     public static final String TEXTURE_PATH = Robotics.MODID + ":textures/robot/modules/";
 
-    private Ingredient item;
+    private final Ingredient item;
     private IPerkMap perks;
 
     /** A cooldown of 0 indicates a passive module */

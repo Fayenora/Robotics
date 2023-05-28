@@ -17,7 +17,7 @@ public class ModuleConfig implements IJsonConfig {
 	public final HashMap<Item, RobotModule> MODULES = new HashMap<>();
 	/** A list of modules with texture overlays. This way each textured module is assigned an id (position in this list), 
 	 * which can be sent to clients */
-	public final LinkedList<RobotModule> overlays = new LinkedList();
+	public final LinkedList<RobotModule> overlays = new LinkedList<>();
 	
 	@Override
 	public void load(File file) {

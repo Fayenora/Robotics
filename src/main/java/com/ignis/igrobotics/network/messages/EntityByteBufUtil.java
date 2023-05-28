@@ -66,7 +66,7 @@ public class EntityByteBufUtil implements IBufferSerializable {
 		if(entityType.isPresent()) {
 			try {
 				Entity ent = entityType.get().create(level);
-				if(ent == null || !(ent instanceof LivingEntity)) return null;
+				if(!(ent instanceof LivingEntity)) return null;
 				ent.deserializeNBT(nbt);
 				ent.setId(entityId);
 				return (LivingEntity) ent;

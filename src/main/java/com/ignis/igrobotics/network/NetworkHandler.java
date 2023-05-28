@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 public class NetworkHandler {
 
-    private static SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
+    private static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(Robotics.MODID, "packets"))
             .networkProtocolVersion(() -> "1.0")
             .clientAcceptedVersions(s -> true)
@@ -80,15 +80,15 @@ public class NetworkHandler {
     }
 
     private static <MSG extends IMessage>  BiConsumer<MSG, FriendlyByteBuf> defaultEncoder() {
-        return (msg, buf) -> msg.encode(buf);
+        return IMessage::encode;
     }
 
     private static <MSG extends IMessage> Function<FriendlyByteBuf, MSG> defaultDecoder(Class<MSG> clazz) {
         try {
-            Constructor constr = clazz.getConstructor();
+            Constructor<?> constructor = clazz.getConstructor();
             return (buf) -> {
                 try {
-                    MSG msg = clazz.cast(constr.newInstance());
+                    MSG msg = clazz.cast(constructor.newInstance());
                     msg.decode(buf);
                     return msg;
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -103,33 +103,31 @@ public class NetworkHandler {
     }
 
     private static <MSG extends IMessage> BiConsumer<MSG, Supplier<NetworkEvent.Context>> defaultHandler(NetworkDirection dir) {
-        switch(dir.getReceptionSide()) {
-            case CLIENT: return (msg, cxt) -> {
+        return switch (dir.getReceptionSide()) {
+            case CLIENT -> (msg, cxt) -> {
                 cxt.get().enqueueWork(() -> {
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> msg.handle(cxt.get()));
                 });
                 cxt.get().setPacketHandled(true);
             };
-            case SERVER: return (msg, cxt) -> {
+            case SERVER -> (msg, cxt) -> {
                 cxt.get().enqueueWork(() -> msg.handle(cxt.get()));
                 cxt.get().setPacketHandled(true);
             };
-            default: return (msg, cxt) -> {};
-        }
+        };
     }
 
     private static <MSG extends IMessage> BiConsumer<MSG, Supplier<NetworkEvent.Context>> handleOnMsgThread(NetworkDirection dir) {
-        switch(dir.getReceptionSide()) {
-            case CLIENT: return (msg, cxt) -> {
+        return switch (dir.getReceptionSide()) {
+            case CLIENT -> (msg, cxt) -> {
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> msg.handle(cxt.get()));
                 cxt.get().setPacketHandled(true);
             };
-            case SERVER: return (msg, cxt) -> {
+            case SERVER -> (msg, cxt) -> {
                 msg.handle(cxt.get());
                 cxt.get().setPacketHandled(true);
             };
-            default: return (msg, cxt) -> {};
-        }
+        };
     }
 
 }

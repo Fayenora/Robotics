@@ -37,7 +37,7 @@ import java.util.Optional;
 public class StorageBlockEntity extends BlockEntity implements MenuProvider {
 
     public static final int MACHINE_TO_ROBOT_ENERGY_TRANSFER = 1000;
-    private static final Machine MACHINE = ModMachines.ROBOT_STORAGE;
+    private static final Machine<?> MACHINE = ModMachines.ROBOT_STORAGE;
 
     private final EntityLevelStorage storedRobot;
     private final EnergyStorage energy;

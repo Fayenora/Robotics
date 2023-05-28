@@ -17,7 +17,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
@@ -32,7 +31,7 @@ public class Perk {
 	public static final int UNSTACKABLE_MAX_LEVEL = 20;
 	
 	private final String unlocalizedName;
-	private int maxLevel = Integer.MAX_VALUE;
+	private int maxLevel;
 	private TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
 	private boolean visible = true;
 	private boolean stackable = false;

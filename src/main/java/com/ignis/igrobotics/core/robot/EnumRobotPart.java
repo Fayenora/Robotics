@@ -1,23 +1,21 @@
 package com.ignis.igrobotics.core.robot;
 
 public enum EnumRobotPart {
-    HEAD(0, "head"),
-    BODY(1, "body"),
-    LEFT_ARM(2, "left_arm"),
-    RIGHT_ARM(3, "right_arm"),
-    LEFT_LEG(4, "left_leg"),
-    RIGHT_LEG(5, "right_leg");
+    HEAD("head"),
+    BODY("body"),
+    LEFT_ARM("left_arm"),
+    RIGHT_ARM("right_arm"),
+    LEFT_LEG("left_leg"),
+    RIGHT_LEG("right_leg");
 
-    private String name;
-    private int id;
+    private final String name;
 
-    EnumRobotPart(int id, String name) {
-        this.id = id;
+    EnumRobotPart(String name) {
         this.name = name;
     }
 
     public int getID() {
-        return id;
+        return this.ordinal();
     }
 
     public static EnumRobotPart byId(int id) {

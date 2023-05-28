@@ -2,20 +2,19 @@ package com.ignis.igrobotics.core.capabilities.inventory;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 public class BaseInventory extends ItemStackHandler implements ModifiableInventory {
 
 	private Level world;
-	private Supplier<BlockPos> pos;
+	private final Supplier<BlockPos> pos;
 	
 	public BaseInventory(Supplier<BlockPos> pos, int size) {
 		super(size);
@@ -60,16 +59,12 @@ public class BaseInventory extends ItemStackHandler implements ModifiableInvento
 	}
 
 	public void clear() {
-		for(int i = 0; i < stacks.size(); i++) {
-			stacks.set(i, ItemStack.EMPTY);
-		}
+		Collections.fill(stacks, ItemStack.EMPTY);
 	}
 
 	public NonNullList<ItemStack> subList(int from, int to) {
 		NonNullList<ItemStack> list = NonNullList.create();
-		for(ItemStack stack : stacks.subList(from, to)) {
-			list.add(stack);
-		}
+		list.addAll(stacks.subList(from, to));
 		return list;
 	}
 

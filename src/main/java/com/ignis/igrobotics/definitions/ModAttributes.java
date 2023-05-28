@@ -1,33 +1,22 @@
 package com.ignis.igrobotics.definitions;
 
-import com.google.common.collect.Maps;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
-import com.ignis.igrobotics.core.capabilities.inventory.BaseInventory;
 import com.ignis.igrobotics.core.capabilities.inventory.ModifiableInventory;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.*;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
@@ -65,7 +54,7 @@ public class ModAttributes {
     }
 
     @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    class ModAttributeChanges {
+    static class ModAttributeChanges {
         @SubscribeEvent
         public static void onEquipmentChanged(LivingEquipmentChangeEvent event) {
             for(Attribute attribute : event.getTo().getAttributeModifiers(event.getSlot()).keys()) {

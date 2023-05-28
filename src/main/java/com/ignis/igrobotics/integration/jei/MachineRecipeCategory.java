@@ -18,7 +18,7 @@ public abstract class MachineRecipeCategory implements IRecipeCategory<MachineRe
 	IGuiHelper guiHelper;
 	protected final Machine<?> machine;
 	protected final ResourceLocation texture;
-	private final RecipeType recipeType;
+	private final RecipeType<?> recipeType;
 	
 	public MachineRecipeCategory(IGuiHelper guiHelper, Machine<?> machine) {
 		this.guiHelper = guiHelper;
@@ -28,7 +28,7 @@ public abstract class MachineRecipeCategory implements IRecipeCategory<MachineRe
 	}
 
 	@Override
-	public RecipeType<MachineRecipe<?>> getRecipeType() {
+	public RecipeType getRecipeType() {
 		return recipeType;
 	}
 

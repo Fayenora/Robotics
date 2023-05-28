@@ -2,8 +2,8 @@ package com.ignis.igrobotics.common.entity.ai;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.common.EntityInteractionManager;
+import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.mojang.authlib.GameProfile;
@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -21,14 +20,13 @@ import java.util.*;
 
 public class BreakBlocksGoal extends Goal {
 
-    public static final GameProfile FAKE_PROFILE = new GameProfile(Reference.DEFAULT_UUID, "[" + Robotics.MODID + "]");
     public static final int MAX_ALLOWED_BLOCKS = 256;
 
     protected Mob entity;
     protected BlockPos pos1, pos2;
-    private int minX, maxX, minY, maxY, minZ, maxZ;
+    private final int minX, maxX, minY, maxY, minZ, maxZ;
 
-    private EntityInteractionManager interactionManager;
+    private final EntityInteractionManager interactionManager;
 
     /** Hash of all blocks in the area to mine */
     private int hash;

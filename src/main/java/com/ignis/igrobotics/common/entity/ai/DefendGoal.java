@@ -15,7 +15,7 @@ public class DefendGoal extends TargetGoal {
     private int timestamp;
 
     public DefendGoal(Mob defender, LivingEntity toDefend, boolean checkSight) {
-        super(defender, true);
+        super(defender, checkSight);
         this.toDefend = toDefend;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
     }

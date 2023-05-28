@@ -2,7 +2,6 @@ package com.ignis.igrobotics.common.entity.ai;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
@@ -19,7 +18,6 @@ public class FollowGoal extends Goal {
 
 	protected final Mob entity;
     protected Entity followingEntityCache, followingEntity;
-    private final double speedModifier = 1;
     private final PathNavigation navigation;
     private int timeToRecalculatePath;
     private final float stopDistance;
@@ -79,7 +77,7 @@ public class FollowGoal extends Goal {
         double d3 = entity.distanceToSqr(followingEntityCache);
 
         if (d3 > this.stopDistance * this.stopDistance) {
-            this.navigation.moveTo(this.followingEntityCache, this.speedModifier);
+            this.navigation.moveTo(this.followingEntityCache, 1);
         } else {
             this.navigation.stop();
 
@@ -93,7 +91,7 @@ public class FollowGoal extends Goal {
             if (d3 <= this.stopDistance || (followingEntityCache instanceof Mob && lookX == this.entity.getX() && lookY == this.entity.getY() && lookZ == this.entity.getZ())) {
                 double d4 = this.followingEntityCache.getX() - this.entity.getX();
                 double d5 = this.followingEntityCache.getZ() - this.entity.getZ();
-                this.navigation.moveTo(this.entity.getX() - d4, this.entity.getY(), this.entity.getZ() - d5, this.speedModifier);
+                this.navigation.moveTo(this.entity.getX() - d4, this.entity.getY(), this.entity.getZ() - d5, 1);
             }
         }
     }

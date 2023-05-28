@@ -9,7 +9,7 @@ public enum EnumPermission {
 	
 	public static final int DEFAULT_PERMISSIONS = (int) (Math.pow(2, values().length) - 1);
 	
-	private int flag;
+	private final int flag;
 	
 	EnumPermission(int flag) {
 		this.flag = flag;

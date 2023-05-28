@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.access.WorldAccessData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 
 public class WorldData extends SavedData {
 
@@ -14,10 +15,10 @@ public class WorldData extends SavedData {
     public static final String KEY_ACCESS_CONFIG = "access_config";
 
     private int numberOfCommandGroups = 0;
-    private WorldAccessData accessData = new WorldAccessData();
+    private final WorldAccessData accessData = new WorldAccessData();
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public @NotNull CompoundTag save(CompoundTag tag) {
         tag.putInt(KEY_COMMAND_MODULE_COUNT, numberOfCommandGroups);
         tag.put(KEY_ACCESS_CONFIG, accessData.serializeNBT());
         return tag;

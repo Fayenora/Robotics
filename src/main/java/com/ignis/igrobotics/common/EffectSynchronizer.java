@@ -24,7 +24,7 @@ public class EffectSynchronizer {
     public static void onEffectChanged(LivingEntity entity, MobEffectInstance instance, boolean toAdd) {
         if(entity.level.isClientSide()) return;
         if(!entitiesToSynchronize.containsKey(entity.getId())) return;
-        Collection<MobEffectInstance> effectInstances = new ArrayList(entity.getActiveEffects());
+        Collection<MobEffectInstance> effectInstances = new ArrayList<>(entity.getActiveEffects());
         if(toAdd) {
             effectInstances.add(instance);
         } else effectInstances.remove(instance);

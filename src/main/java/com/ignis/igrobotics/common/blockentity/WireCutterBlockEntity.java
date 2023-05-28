@@ -2,6 +2,7 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.client.menu.WireCutterMenu;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class WireCutterBlockEntity extends MachineBlockEntity {
 
     public WireCutterBlockEntity(BlockPos pos, BlockState state) {

@@ -85,7 +85,7 @@ public class PacketSetEntityEffects implements IMessage {
         }
 
         Iterator<MobEffectInstance> iterator = living.getActiveEffects().iterator();
-        for(; iterator.hasNext(); ) {
+        while(iterator.hasNext()) {
             iterator.next();
             iterator.remove();
         }

@@ -2,6 +2,7 @@ package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.core.RobotFakePlayerFactory;
+import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 
@@ -31,6 +33,8 @@ import java.lang.ref.WeakReference;
  * The code is taken from {@link net.minecraft.server.level.ServerPlayerGameMode}
  * NOTE: This should be kept up to date with vanilla code
  */
+@FieldsAreNonnullByDefault
+@SuppressWarnings("Argument might be null")
 public class EntityInteractionManager {
 
     protected ServerLevel level;

@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.robot;
 
-import com.ignis.igrobotics.common.entity.RobotEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -13,17 +12,17 @@ import java.util.List;
 
 public class RobotCommand {
 
-    private CommandType type;
-    protected List<Selection> selectors = new ArrayList<>();
+    private final CommandType type;
+    protected List<Selection<?>> selectors = new ArrayList<>();
 
     public RobotCommand(CommandType commandType) {
         this.type = commandType;
-        for(SelectionType type : commandType.getSelectionTypes()) {
-            selectors.add(new Selection(type));
+        for(SelectionType<?> type : commandType.getSelectionTypes()) {
+            selectors.add(new Selection<>(type));
         }
     }
 
-    private RobotCommand(CommandType command_type, List<Selection> selections) {
+    private RobotCommand(CommandType command_type, List<Selection<?>> selections) {
         this(command_type);
         for(int i = 0; i < selections.size(); i++) {
             selectors.set(i, selections.get(i).clone());
@@ -42,7 +41,7 @@ public class RobotCommand {
         return type.getDescription();
     }
 
-    public List<Selection> getSelectors() {
+    public List<Selection<?>> getSelectors() {
         return selectors;
     }
 
@@ -66,7 +65,7 @@ public class RobotCommand {
 
             //Individual selections of the command
             ListTag selectorList = new ListTag();
-            for(Selection sel : command.getSelectors()) {
+            for(Selection<?> sel : command.getSelectors()) {
                 selectorList.add(sel.serializeNBT());
             }
             commandTag.put("selectors", selectorList);
@@ -82,17 +81,17 @@ public class RobotCommand {
 
         List<RobotCommand> commands = new ArrayList<>();
 
-        for(int i = 0; i < list.size(); i++) {
-            CompoundTag com = (CompoundTag) list.get(i);
+        for (Tag tag : list) {
+            CompoundTag com = (CompoundTag) tag;
 
             //Type of command
             int id = com.getInt("id");
 
             //Individual selections of the command
             ListTag selectorList = com.getList("selectors", Tag.TAG_COMPOUND);
-            ArrayList<Selection> selections = new ArrayList<Selection>();
-            for(int j = 0; j < selectorList.size(); j++) {
-                selections.add(new Selection((CompoundTag) selectorList.get(j)));
+            ArrayList<Selection<?>> selections = new ArrayList<>();
+            for(Tag value : selectorList) {
+                selections.add(new Selection<>((CompoundTag) value));
             }
 
             //Instantiate command

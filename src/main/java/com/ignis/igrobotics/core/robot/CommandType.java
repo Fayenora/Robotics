@@ -21,11 +21,11 @@ public class CommandType {
 
     private final String name;
     private final List<SelectionType<?>> selectionTypes = new ArrayList<>();
-    private BiFunction<Mob, Selection[], Goal> applyToEntity;
+    private BiFunction<Mob, Selection<?>[], Goal> applyToEntity;
 
-    public CommandType(String name, Class... selectionClasses) {
+    public CommandType(String name, Class<?>... selectionClasses) {
         this.name = name;
-        for(Class clazz : selectionClasses) {
+        for(Class<?> clazz : selectionClasses) {
             SelectionType<?> type = SelectionType.byClass(clazz);
             if(type != null) {
                 this.selectionTypes.add(type);
@@ -33,12 +33,12 @@ public class CommandType {
         }
     }
 
-    public void setAISupplier(BiFunction<Mob, Selection[], Goal> applyToEntity) {
+    public void setAISupplier(BiFunction<Mob, Selection<?>[], Goal> applyToEntity) {
         this.applyToEntity = applyToEntity;
     }
 
     @Nullable
-    public Goal getGoal(List<Selection> selectors, Mob robot) {
+    public Goal getGoal(List<Selection<?>> selectors, Mob robot) {
         if(robot.level.isClientSide()) return null;
         try {
             return applyToEntity.apply(robot, selectors.toArray(new Selection[0]));

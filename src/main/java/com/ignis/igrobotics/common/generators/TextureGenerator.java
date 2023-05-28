@@ -37,7 +37,7 @@ public class TextureGenerator implements DataProvider {
         event.getGenerator().addProvider(event.includeClient(), (Factory<TextureGenerator>) TextureGenerator::new);
     }
 
-    private PackOutput.PathProvider pathProvider;
+    private final PackOutput.PathProvider pathProvider;
 
     public TextureGenerator(PackOutput packOutput) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "textures");

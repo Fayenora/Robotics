@@ -30,7 +30,7 @@ public class ConfigJsonSerializer {
 		return gson.create();
 	}
 
-	public static final BaseSerializer<Perk> PERK = new BaseSerializer<Perk>() {
+	public static final BaseSerializer<Perk> PERK = new BaseSerializer<>() {
 		@Override
 		public Type getType() {
 			return Perk.class;
@@ -45,7 +45,7 @@ public class ConfigJsonSerializer {
 		}
 	};
 	
-	public static final BaseSerializer<RobotModule> MODULE = new BaseSerializer<RobotModule>() {
+	public static final BaseSerializer<RobotModule> MODULE = new BaseSerializer<>() {
 		@Override
 		public Type getType() {
 			return RobotModule.class;
@@ -60,7 +60,7 @@ public class ConfigJsonSerializer {
 		}
 	};
 	
-	public static final BaseSerializer<RobotPart> PART = new BaseSerializer<RobotPart>() {
+	public static final BaseSerializer<RobotPart> PART = new BaseSerializer<>() {
 		@Override
 		public Type getType() {
 			return RobotPart.class;

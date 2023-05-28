@@ -24,9 +24,7 @@ public class NetworkInfo implements IBufferSerializable {
 	}
 	
 	public NetworkInfo(BlockPos pos) {
-		this.dataX = pos.getX();
-		this.dataY = pos.getY();
-		this.dataZ = pos.getZ();
+		this(pos.getX(), pos.getY(), pos.getZ());
 	}
 	
 	public NetworkInfo(Entity ent) {

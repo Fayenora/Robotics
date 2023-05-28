@@ -11,7 +11,7 @@ import java.nio.file.Path;
 
 public class RoboticsConfig {
 
-    private static RoboticsConfig LOCAL = new RoboticsConfig();
+    private static final RoboticsConfig LOCAL = new RoboticsConfig();
     private static RoboticsConfig SERVER = null;
 
     public static RoboticsConfig current() {

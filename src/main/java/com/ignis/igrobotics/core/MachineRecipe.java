@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.StringUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -16,19 +17,22 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MachineRecipe<T extends Container> implements Recipe<T> {
 
-	protected final Machine machine;
+	protected final Machine<?> machine;
 	protected final ResourceLocation id;
 	public Ingredient[] inputs;
 	public ItemStack[] outputs;
 	public int processingTime = 20;
 	public int energy = 0;
 	
-	public MachineRecipe(Machine machine, ResourceLocation id) {
+	public MachineRecipe(Machine<?> machine, ResourceLocation id) {
 		this.machine = machine;
 		this.id = id;
 	}
@@ -125,9 +129,9 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 	}
 
 	public static class Builder {
-		private final MachineRecipe recipe;
-		public Builder(Machine machine, ResourceLocation id) {
-			recipe = new MachineRecipe(machine, id);
+		private final MachineRecipe<?> recipe;
+		public Builder(Machine<?> machine, ResourceLocation id) {
+			recipe = new MachineRecipe<>(machine, id);
 		}
 		public Builder setOutputs(ItemStack[] outputs) {
 			recipe.outputs = outputs;
@@ -148,7 +152,7 @@ public class MachineRecipe<T extends Container> implements Recipe<T> {
 			recipe.processingTime = processingTime;
 			return this;
 		}
-		public MachineRecipe build() {
+		public MachineRecipe<?> build() {
 			return recipe;
 		}
 	}

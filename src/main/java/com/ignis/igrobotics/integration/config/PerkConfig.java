@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class PerkConfig implements IJsonConfig {
 	
-	public final HashMap<String, Perk> PERKS = new HashMap<String, Perk>();
+	public final HashMap<String, Perk> PERKS = new HashMap<>();
 
 	public Perk PERK_LUMINOUS;
 
@@ -42,8 +42,10 @@ public class PerkConfig implements IJsonConfig {
 		Gson gson = ConfigJsonSerializer.initGson();
 		if(!file.exists()) ConfigUtils.copyFromDefault("perks.json", file);
 		Perk[] perks = (Perk[]) ConfigUtils.readJson(gson, file, Perk[].class);
-		for(Perk perk : perks) {
-			PERKS.put(perk.getUnlocalizedName(), perk);
+		if(perks != null) {
+			for(Perk perk : perks) {
+				PERKS.put(perk.getUnlocalizedName(), perk);
+			}
 		}
 	}
 	

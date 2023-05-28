@@ -2,11 +2,7 @@ package com.ignis.igrobotics.common.entity.ai;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
-
-import java.util.Iterator;
 
 public class QuickMoveToBlock extends MoveToBlockGoal {
 

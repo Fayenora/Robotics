@@ -12,7 +12,7 @@ public interface IPacketDataReceiver {
     default void receive(AccessConfig config) {}
 
     default void receive(Object data) {
-        BufferSerializers.BufferSerializer type = BufferSerializers.getType(data);
+        BufferSerializers.BufferSerializer<?> type = BufferSerializers.getType(data);
         if(type.equals(BufferSerializers.ENTITY)) receive((LivingEntity) data);
         if(type.equals(BufferSerializers.ENTITIES)) receive((LivingEntity[]) data);
         if(type.equals(BufferSerializers.CONFIG)) receive((AccessConfig) data);

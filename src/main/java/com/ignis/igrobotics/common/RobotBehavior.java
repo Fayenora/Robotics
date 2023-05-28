@@ -13,7 +13,6 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
@@ -54,9 +53,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -120,7 +121,7 @@ public class RobotBehavior {
     /**
      * Damage Armor for entities that are robotic but don't do it themselves
      * NOTE: Code taken from {@link net.minecraft.world.entity.player.Inventory#hurtArmor(DamageSource, float, int[])}
-     * @param event
+     * @param event The event
      */
     @SubscribeEvent
     public static void afterRobotDamaged(LivingDamageEvent event) {
@@ -178,7 +179,7 @@ public class RobotBehavior {
         openRobotMenu(player, ModMenuTypes.ROBOT.get(), target);
     }
 
-    public static void openRobotMenu(Player player, MenuType type, Entity target) {
+    public static void openRobotMenu(Player player, MenuType<?> type, Entity target) {
         if(!(player instanceof ServerPlayer serverPlayer)) return;
         if(!target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
         if(!hasAccess(player, target, EnumPermission.VIEW)) return;
@@ -293,21 +294,12 @@ public class RobotBehavior {
         }
 
         if (entity.hasEffect(MobEffects.DIG_SLOWDOWN)) {
-            float f1;
-            switch (entity.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) {
-                case 0:
-                    f1 = 0.3F;
-                    break;
-                case 1:
-                    f1 = 0.09F;
-                    break;
-                case 2:
-                    f1 = 0.0027F;
-                    break;
-                case 3:
-                default:
-                    f1 = 8.1E-4F;
-            }
+            float f1 = switch (entity.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) {
+                case 0 -> 0.3F;
+                case 1 -> 0.09F;
+                case 2 -> 0.0027F;
+                default -> 8.1E-4F;
+            };
 
             f *= f1;
         }
@@ -320,21 +312,22 @@ public class RobotBehavior {
         return new ContainerData() {
             @Override
             public int get(int key) {
-                switch(key) {
-                    case 0: return entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getEnergyStored();
-                    case 1: return entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getMaxEnergyStored();
-                    default: return 0;
-                }
+                return switch (key) {
+                    case 0 -> entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getEnergyStored();
+                    case 1 -> entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getMaxEnergyStored();
+                    default -> 0;
+                };
             }
 
             @Override
             public void set(int key, int value) {
-                IEnergyStorage storage = entity.getCapability(ForgeCapabilities.ENERGY).orElse(null);
-                if(!(storage instanceof ModifiableEnergyStorage energy)) return;
-                switch(key) {
-                    case 0 -> energy.setEnergy(value);
-                    case 1 -> energy.setMaxEnergyStored(value);
-                }
+                entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> {
+                    if(!(storage instanceof ModifiableEnergyStorage energy)) return;
+                    switch(key) {
+                        case 0 -> energy.setEnergy(value);
+                        case 1 -> energy.setMaxEnergyStored(value);
+                    }
+                });
             }
 
             @Override

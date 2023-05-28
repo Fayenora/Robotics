@@ -21,14 +21,14 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 		deserializeNBT(tag);
 	}
 	
-	public static CompoundTag writeNBT(Selection sel) {
+	public static CompoundTag writeNBT(Selection<?> sel) {
 		CompoundTag tag = (CompoundTag) sel.getType().writer().apply(sel.get());
 		tag.putInt("type", sel.getType().getId());
 		return tag;
 	}
 	
-	public static Selection readNBT(CompoundTag tag) {
-		Selection sel = new Selection(SelectionType.byId(tag.getInt("type")));
+	public static Selection<?> readNBT(CompoundTag tag) {
+		Selection sel = new Selection<>(SelectionType.byId(tag.getInt("type")));
 		sel.target = sel.getType().reader().apply(tag);
 		return sel;
 	}
@@ -47,8 +47,8 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	}
 	
 	@Override
-	public Selection clone() {
-		return new Selection<A>(target);
+	public Selection<A> clone() {
+		return new Selection<>(target);
 	}
 
 	@Override

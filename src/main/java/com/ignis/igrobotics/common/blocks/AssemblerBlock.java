@@ -12,6 +12,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class AssemblerBlock extends MachineBlock {
     public AssemblerBlock() {
         super(Properties.of(Material.HEAVY_METAL).strength(5f));

@@ -18,8 +18,8 @@ public class PartConfig implements IJsonConfig {
 		clearPerks();
 		Gson gson = ConfigJsonSerializer.initGson();
 		if(!file.exists()) ConfigUtils.copyFromDefault("robot_parts.json", file);
-		RobotPart[] parts = (RobotPart[]) ConfigUtils.readJson(gson, file, RobotPart[].class);
-		//NOTE Parts SHOULD be registered here, but the json reading takes case of that case as there may be read perks for multiple parts in one 'part' to deserialize
+		ConfigUtils.readJson(gson, file, RobotPart[].class);
+		//NOTE: Parts SHOULD be registered here, but the json reading takes case of that case as there may be read perks for multiple parts in one 'part' to deserialize
 	}
 
 	private void clearPerks() {
@@ -38,17 +38,6 @@ public class PartConfig implements IJsonConfig {
 	@Override
 	public void fromNetwork(FriendlyByteBuf buffer) {
 		// TODO Auto-generated method stub
-	}
-
-	public RobotPart[] getDefaultParts() {
-		return new RobotPart[] {
-			RobotPart.get(EnumRobotPart.HEAD, EnumRobotMaterial.IRON),
-			RobotPart.get(EnumRobotPart.BODY, EnumRobotMaterial.IRON),
-			RobotPart.get(EnumRobotPart.LEFT_ARM, EnumRobotMaterial.IRON),
-			RobotPart.get(EnumRobotPart.RIGHT_ARM, EnumRobotMaterial.IRON),
-			RobotPart.get(EnumRobotPart.LEFT_LEG, EnumRobotMaterial.IRON),
-			RobotPart.get(EnumRobotPart.RIGHT_LEG, EnumRobotMaterial.IRON)
-		};
 	}
 
 }

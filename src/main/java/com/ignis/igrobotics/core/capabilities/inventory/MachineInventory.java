@@ -4,8 +4,10 @@ import com.google.common.primitives.Ints;
 import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,12 +21,12 @@ public class MachineInventory extends BaseInventory {
     Map<Direction, List<Integer>> accessibleSlotPerFace = new HashMap<>();
 
     public MachineInventory(MachineBlockEntity machine, int size) {
-        super(() -> machine.getBlockPos(), size);
+        super(machine::getBlockPos, size);
         this.machine = machine;
     }
 
     @Override
-    public void setStackInSlot(int index, ItemStack stack) {
+    public void setStackInSlot(int index, @NotNull ItemStack stack) {
         super.setStackInSlot(index, stack);
         machine.startMachine(1);
     }
@@ -32,8 +34,7 @@ public class MachineInventory extends BaseInventory {
     public int[] getSlotsForFace(@Nullable Direction side) {
         List<Integer> defaultSlots = accessibleSlotPerFace.get(null); //The default slots can be retrieved with the null key
         if(defaultSlots == null) {
-            defaultSlots = new LinkedList<>();
-            defaultSlots.addAll(outputSlots);
+            defaultSlots = new LinkedList<>(outputSlots);
         }
         return Ints.toArray(accessibleSlotPerFace.getOrDefault(side, defaultSlots));
     }

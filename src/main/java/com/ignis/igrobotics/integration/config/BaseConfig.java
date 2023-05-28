@@ -1,9 +1,6 @@
 package com.ignis.igrobotics.integration.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
-
-import java.io.File;
 
 public abstract class BaseConfig implements IConfig {
 

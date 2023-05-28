@@ -11,6 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+@SuppressWarnings("unused")
 public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Robotics.MODID);
@@ -35,7 +36,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> ROBOT_SPAWN_EGG = ITEMS.register("robot_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.ROBOT, 0x000000, 0xffa500, new Item.Properties()));
 
-    public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", () -> new CommanderItem());
+    public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", CommanderItem::new);
 
     public static final RegistryObject<Item>[] WIRES = new RegistryObject[Reference.WIRE_METALS.length];
     public static final RegistryObject<Item>[] PLATES = new RegistryObject[EnumRobotMaterial.valuesWithoutEmpty().length];

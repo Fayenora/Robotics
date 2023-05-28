@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 public class SimpleDataManager {
 	
-	private HashMap<String, Integer> values;
+	private final HashMap<String, Integer> values;
 	
 	public SimpleDataManager() {
 		values = new HashMap<>();

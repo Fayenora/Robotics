@@ -32,7 +32,7 @@ public class ModCommands {
     static {
         STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (BlockPos) selections[0].get()));
         GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (BlockPos) selections[0].get()));
-        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
+        ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal<>(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;
             Entity entity = server.getEntity((UUID) selections[0].get());

@@ -17,8 +17,8 @@ public class BufferSerializers {
     public static final BufferSerializer<LivingEntity> ENTITY = new BufferSerializer<>(1, LivingEntity.class, EntityByteBufUtil::writeEntity, EntityByteBufUtil::readEntity);
     public static final BufferSerializer<LivingEntity[]> ENTITIES = new BufferSerializer<>(2, LivingEntity[].class, (entities, buf) -> {
         buf.writeInt(entities.length);
-        for(int i = 0; i < entities.length; i++) {
-            EntityByteBufUtil.writeEntity(entities[i], buf);
+        for(LivingEntity entity : entities) {
+            EntityByteBufUtil.writeEntity(entity, buf);
         }
     }, buf -> {
         LivingEntity[] entities = new LivingEntity[buf.readInt()];
@@ -66,5 +66,5 @@ public class BufferSerializers {
         }
     }
 
-    private class Dummy {}
+    private static class Dummy {}
 }

@@ -7,10 +7,7 @@ import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.definitions.ModAttributes;
-import com.ignis.igrobotics.definitions.ModItems;
-import com.ignis.igrobotics.integration.config.ModuleConfig;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +37,7 @@ public class FactoryInventory extends MachineInventory {
     }
 
     @Override
-    public void setStackInSlot(int index, ItemStack stack) {
+    public void setStackInSlot(int index, @NotNull ItemStack stack) {
         if(factory.hasCraftedRobotReady()) return;
         super.setStackInSlot(index, stack);
     }

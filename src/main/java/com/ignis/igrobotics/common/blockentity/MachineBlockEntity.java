@@ -6,11 +6,11 @@ import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.MachineInventory;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.Containers;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -28,11 +28,14 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class MachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible {
 
     protected EnergyStorage storage;
@@ -167,14 +170,15 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
      * @return the recipe this machine would craft, if the specified inputStacks would be inputted right now
      * @param inputStacks the inputted items
      */
-    protected MachineRecipe getRecipe(ItemStack[] inputStacks) {
+    @Nullable
+    protected MachineRecipe<?> getRecipe(ItemStack[] inputStacks) {
         ItemStack[] outputStacks = getStacks(outputs);
 
         if(!ItemStackUtils.areBeneathMaxStackSize(outputStacks) || inputStacks.length == 0) {
             return null;
         }
 
-        for(MachineRecipe recipe : RECIPES) {
+        for(MachineRecipe<?> recipe : RECIPES) {
             if(recipe.matches(this, level) && (ItemStackUtils.areEmpty(outputStacks) || ItemStackUtils.areItemsEqual(outputStacks, recipe.getOutputs()))) {
                 return recipe;
             }
@@ -185,7 +189,8 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     /**
      * @return the recipe this machine would craft if it starts now
      */
-    private MachineRecipe getRecipe() {
+    @Nullable
+    private MachineRecipe<?> getRecipe() {
         return getRecipe(getStacks(inputs));
     }
 
@@ -198,7 +203,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         setChanged();
     }
 
-    protected void consumeInputs(MachineRecipe recipe) {
+    protected void consumeInputs(MachineRecipe<?> recipe) {
         for(int i = 0; i < inputs.length; i++) {
             int amount = 0;
             currentlyProcessedItems[i] = getStacks(inputs)[i].copy();
@@ -212,7 +217,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         }
     }
 
-    protected void craftItem(MachineRecipe recipe) {
+    protected void craftItem(MachineRecipe<?> recipe) {
         int max = Math.min(recipe.getOutputs().length, outputs.length);
 
         for(int i = 0; i < max; i++) {
@@ -230,12 +235,11 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         }
     }
 
-    protected void consumeEnergy(@Nonnull MachineRecipe recipe) {
+    protected void consumeEnergy(MachineRecipe<?> recipe) {
         this.storage.extractEnergy((recipe.getEnergyPerTick()), false);
     }
 
-    @Nonnull
-    protected boolean hasEnoughEnergy(@Nonnull MachineRecipe recipe) {
+    protected boolean hasEnoughEnergy(MachineRecipe<?> recipe) {
         int extractable = this.storage.extractEnergy(recipe.getEnergyPerTick(), true);
         int recipeRequirement = recipe.getEnergyPerTick();
         return extractable == recipeRequirement;
@@ -273,7 +277,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     LazyOptional<? extends IEnergyStorage> energy_cap = LazyOptional.of(() -> storage);
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if(remove) return super.getCapability(cap, side);
         if(cap == ForgeCapabilities.ITEM_HANDLER) {
             if(side == null) return inventory_cap.cast();
@@ -289,7 +293,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     public void invalidateCaps() {
         super.invalidateCaps();
         energy_cap.invalidate();
-        for(LazyOptional cap : inventory_caps) {
+        for(LazyOptional<?> cap : inventory_caps) {
             cap.invalidate();
         }
     }
@@ -326,7 +330,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         this.currentRunTime = compound.getInt("currentRunTime");
 
         ListTag tagList = compound.getList("ProcessedItems", new CompoundTag().getId());
-        if(tagList == null || tagList.size() == 0) {
+        if(tagList.size() == 0) {
             currentlyProcessedItems = ItemStackUtils.full(inputs.length, ItemStack.EMPTY);
         } else {
             for(int i = 0; i < Math.min(tagList.size(), currentlyProcessedItems.length); i++) {
@@ -374,8 +378,8 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
 
     @Override
     public void setRecipeUsed(@Nullable Recipe<?> recipe) {
-        if(!(recipe instanceof MachineRecipe)) return;
-        this.currentRecipe = (MachineRecipe) recipe;
+        if(!(recipe instanceof MachineRecipe<?> machineRecipe)) return;
+        this.currentRecipe = machineRecipe;
     }
 
     private ItemStack[] getStacks(int[] indices) {

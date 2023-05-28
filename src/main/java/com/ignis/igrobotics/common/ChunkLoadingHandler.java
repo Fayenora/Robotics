@@ -109,9 +109,7 @@ public class ChunkLoadingHandler {
 
 
                 ListTag uuids = new ListTag();
-                entry.getValue().forEach(uuid -> {
-                    uuids.add(StringTag.valueOf(uuid.toString()));
-                });
+                entry.getValue().forEach(uuid -> uuids.add(StringTag.valueOf(uuid.toString())));
                 chunkTag.put("uuids", uuids);
 
                 nbt.put(entry.getKey().x + ";" + entry.getKey().z, chunkTag);
@@ -126,8 +124,8 @@ public class ChunkLoadingHandler {
                 ChunkPos chunk = new ChunkPos(chunkTag.getInt("chunkX"), chunkTag.getInt("chunkY"));
 
                 ListTag uuids = chunkTag.getList("uuids", Tag.TAG_STRING);
-                for(int i = 0; i < uuids.size(); i++) {
-                    StringTag tag = (StringTag) uuids.get(i);
+                for (Tag value : uuids) {
+                    StringTag tag = (StringTag) value;
                     UUID uuid = UUID.fromString(tag.getAsString());
                     pending.add(new Tuple<>(chunk, uuid));
                 }

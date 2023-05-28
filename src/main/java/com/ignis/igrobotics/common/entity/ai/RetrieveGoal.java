@@ -18,6 +18,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.lang.ref.WeakReference;
 import java.util.EnumSet;
+import java.util.Optional;
 
 public class RetrieveGoal extends Goal {
 	
@@ -155,17 +156,18 @@ public class RetrieveGoal extends Goal {
 		}
 		return result;
 	}
-	
+
 	public IItemHandler openContainer(BlockPos pos) {
 		if(openedInventory != null) return openedInventory;
 		BlockEntity tile = entity.level.getBlockEntity(pos);
 		if(!canInteractWith(tile)) return null;
-		IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+		Optional<IItemHandler> handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
+		if(handler.isEmpty()) return null;
 		if(tile instanceof Container container && openedContainer == null) {
 			openedContainer = container;
 			container.startOpen(getFakePlayer());
 		}
-		return handler;
+		return handler.get();
 	}
 	
 	public void closeContainer() {

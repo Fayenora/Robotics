@@ -29,7 +29,6 @@ public class RenderUtil {
     }
 
     public static void drawString(PoseStack poseStack, String text, int x, int y, int color, float scale) {
-        Font font = Minecraft.getInstance().font;
         poseStack.pushPose();
         poseStack.scale(scale, scale, 1);
         GuiComponent.drawString(poseStack, Minecraft.getInstance().font, text, (int) (x / scale), (int) (y / scale), color);
@@ -99,9 +98,9 @@ public class RenderUtil {
 
     public static void drawEntityOnScreen(PoseStack poseStack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
         Component f1 = ent.getCustomName();
-        ent.setCustomName(null);
+        if(!renderNameTag) ent.setCustomName(null);
         InventoryScreen.renderEntityInInventoryFollowsMouse(poseStack, posX, posY, scale, mouseX, mouseY, ent);
-        ent.setCustomName(f1);
+        if(!renderNameTag) ent.setCustomName(f1);
     }
 
     public static void drawRotatingEntity(PoseStack posestack1, int posX, int posY, int scale, LivingEntity entity, float angle) {

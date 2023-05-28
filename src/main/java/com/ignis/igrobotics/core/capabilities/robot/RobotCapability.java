@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
-import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
 import com.ignis.igrobotics.common.entity.ai.PickupGoal;
@@ -18,16 +17,13 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -46,7 +42,7 @@ public class RobotCapability implements IRobot {
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
     private static final EntityDataAccessor<Boolean> MUTED = RobotEntity.MUTED;
     private static final EntityDataAccessor<Integer> LOAD_CHUNK = RobotEntity.LOAD_CHUNK;
-    private static final EntityDataAccessor<Integer> PICKUP_STATE = RobotEntity.PICKUPSTATE;
+    private static final EntityDataAccessor<Integer> PICKUP_STATE = RobotEntity.PICKUP_STATE;
     private static final EntityDataAccessor<Integer> COMMAND_GROUP = RobotEntity.COMMAND_GROUP;
 
     public PickupGoal pickUpGoal;
@@ -188,7 +184,7 @@ public class RobotCapability implements IRobot {
     @Override
     public void setMaxModules(int amount) {
         if(amount == modules.size()) return;
-        NonNullList<ItemStack> newModules = NonNullList.<ItemStack>withSize(amount, ItemStack.EMPTY);
+        NonNullList<ItemStack> newModules = NonNullList.withSize(amount, ItemStack.EMPTY);
         //Copy old modules over to the new list
         for(int i = 0; i < Math.min(modules.size(), amount); i++) {
             newModules.set(i, modules.get(i));

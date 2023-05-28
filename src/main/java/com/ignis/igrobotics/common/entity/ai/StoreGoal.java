@@ -55,7 +55,7 @@ public class StoreGoal extends RetrieveGoal {
 				for(int j = 0; j < inventory.getSlots(); j++) {
 					stack = inventory.insertItem(j, stack, false);
 				}
-				//Take the stack back, if it doesnt fit into the container
+				//Take the stack back, if it doesn't fit into the container
 				if(stack.getCount() > 0) {
 					entityInventory.insertItem(i, stack, false);
 				}

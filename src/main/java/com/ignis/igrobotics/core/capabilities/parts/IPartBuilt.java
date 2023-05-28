@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.capabilities.parts;
 
-import com.ignis.igrobotics.core.*;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
@@ -12,30 +11,30 @@ import net.minecraftforge.common.util.INBTSerializable;
 @AutoRegisterCapability
 public interface IPartBuilt extends INBTSerializable<CompoundTag> {
 	
-	public RobotPart[] getBodyParts();
+	RobotPart[] getBodyParts();
 	
-	public RobotPart getBodyPart(EnumRobotPart part);
+	RobotPart getBodyPart(EnumRobotPart part);
 	
-	public void setBodyPart(RobotPart part);
+	void setBodyPart(RobotPart part);
 	
-	public void destroyBodyPart(EnumRobotPart part);
+	void destroyBodyPart(EnumRobotPart part);
 	
-	public default void setBodyPart(EnumRobotPart part, EnumRobotMaterial material) {
+	default void setBodyPart(EnumRobotPart part, EnumRobotMaterial material) {
 		setBodyPart(RobotPart.get(part, material));
 	}
 	
-	public default boolean hasBodyPart(EnumRobotPart part) {
+	default boolean hasBodyPart(EnumRobotPart part) {
 		return getBodyPart(part).getMaterial() != EnumRobotMaterial.NONE;
 	}
 	
-	public default boolean hasAnyBodyPart() {
+	default boolean hasAnyBodyPart() {
 		for(RobotPart part : getBodyParts()) {
 			if(hasBodyPart(part.getPart())) return true;
 		}
 		return false;
 	}
 	
-	public default void clear() {
+	default void clear() {
 		for(RobotPart part : getBodyParts()) {
 			RobotPart newPart = RobotPart.get(part.getPart(), EnumRobotMaterial.NONE);
 			setBodyPart(newPart);
@@ -44,14 +43,14 @@ public interface IPartBuilt extends INBTSerializable<CompoundTag> {
 	
 	/**
 	 * Changes both the temporary and permanent color
-	 * @param color
+	 * @param color the new permanent color
 	 */
-	public void setColor(DyeColor color);
+	void setColor(DyeColor color);
 	
-	public DyeColor getColor();
+	DyeColor getColor();
 	
-	public void setTemporaryColor(DyeColor color);
+	void setTemporaryColor(DyeColor color);
 	
-	public DyeColor getTemporaryColor();
+	DyeColor getTemporaryColor();
 
 }

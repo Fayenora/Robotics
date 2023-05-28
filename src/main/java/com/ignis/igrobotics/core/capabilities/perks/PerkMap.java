@@ -1,16 +1,17 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ignis.igrobotics.core.util.Tuple;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
 public class PerkMap implements IPerkMap {
 	
-	HashMap<String, Perk> perks = new HashMap<String, Perk>();
-	HashMap<String, Integer> levels = new HashMap<String, Integer>();
+	HashMap<String, Perk> perks = new HashMap<>();
+	HashMap<String, Integer> levels = new HashMap<>();
 	
 	@Override
 	public void add(Perk perk, int level) {
@@ -57,9 +58,9 @@ public class PerkMap implements IPerkMap {
 
 	@Override
 	public Iterator<Tuple<Perk, Integer>> iterator() {
-		Iterator<Tuple<Perk, Integer>> it = new Iterator<Tuple<Perk, Integer>>() {
-			Iterator<Perk> perkIt = perks.values().iterator();
-			Iterator<Integer> levelIt = levels.values().iterator();
+		return new Iterator<>() {
+			final Iterator<Perk> perkIt = perks.values().iterator();
+			final Iterator<Integer> levelIt = levels.values().iterator();
 
 			@Override
 			public boolean hasNext() {
@@ -70,10 +71,9 @@ public class PerkMap implements IPerkMap {
 			public Tuple<Perk, Integer> next() {
 				Perk perk = perkIt.next();
 				int effectiveLevel = Math.min(perk.getMaxLevel(), levelIt.next());
-				return new Tuple<Perk, Integer>(perk, effectiveLevel);
+				return new Tuple<>(perk, effectiveLevel);
 			}
 		};
-		return it;
 	}
 	
 	public static JsonElement serialize(IPerkMap src) {
