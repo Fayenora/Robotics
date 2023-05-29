@@ -40,8 +40,7 @@ public class PerkMassProduced extends Perk {
 	}
 	
 	@Override
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
-		if(!(entity instanceof Mob mob)) return;
+	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
 			if(!robot.isActive()) return;
 
@@ -73,7 +72,7 @@ public class PerkMassProduced extends Perk {
 			for(MobEffect effect : effectStrengths.keySet()) {
 				int amplifier = effectStrengths.get(effect)[level - 1][allies];
 				if(amplifier <= 0) continue;
-				mob.addEffect(new MobEffectInstance(effect, duration_ticks, amplifier, true, false));
+				entity.addEffect(new MobEffectInstance(effect, duration_ticks, amplifier, true, false));
 			}
 		});
 	}

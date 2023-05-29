@@ -6,6 +6,7 @@ import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 
 public class PerkRobust extends Perk {
 
@@ -14,7 +15,7 @@ public class PerkRobust extends Perk {
 	}
 	
 	@Override
-	public float damageEntity(int level, Entity robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+	public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
 		if(dmgSource.is(DamageTypeTags.BYPASSES_EFFECTS)) return damage;
 		return damage - level;
 	}

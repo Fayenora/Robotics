@@ -4,6 +4,7 @@ package com.ignis.igrobotics.common.perks;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 
 public class PerkStrength extends Perk {
 
@@ -12,7 +13,7 @@ public class PerkStrength extends Perk {
 	}
 	
 	@Override
-	public float attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
+	public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
 		return level;
 	}
 

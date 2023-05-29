@@ -21,8 +21,7 @@ public class PerkAcceleration extends Perk {
 	}
 	
 	@Override
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
-		if(!(entity instanceof Mob mob)) return;
+	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		float currentAcc = Math.min(values.get(ACCELERATION), MAX_ACC_TICKS);
 		if(entity.moveDist > 0.15) {
 			values.increment(ACCELERATION);
@@ -35,8 +34,8 @@ public class PerkAcceleration extends Perk {
 		float scalar =  (float) (0.45 * (acceleration / MAX_ACC_TICKS) - 0.15);
 		//TODO: This rapid changing of attribute modifiers might cause efficiency or instability issues
 		//Try to more intelligently only reapply when the values actually change
-		mob.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).removeModifier(MODIFIER_UUID);
-		mob.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).addTransientModifier(new AttributeModifier(MODIFIER_UUID, ACCELERATION, scalar, AttributeModifier.Operation.MULTIPLY_BASE));
+		entity.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).removeModifier(MODIFIER_UUID);
+		entity.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).addTransientModifier(new AttributeModifier(MODIFIER_UUID, ACCELERATION, scalar, AttributeModifier.Operation.MULTIPLY_BASE));
 	}
 
 }

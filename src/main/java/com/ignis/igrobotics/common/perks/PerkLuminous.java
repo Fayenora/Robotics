@@ -16,9 +16,8 @@ public class PerkLuminous extends Perk {
 	}
 	
 	@Override
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
-		if(!(entity instanceof Mob mob)) return;
-		mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, PerkBehavior.PERK_TICK_RATE * 2, 0, true, false));
+	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
+		entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, PerkBehavior.PERK_TICK_RATE * 2, 0, true, false));
 	}
 
 }

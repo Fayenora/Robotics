@@ -16,26 +16,25 @@ public class PerkCharge extends Perk {
 	}
 	
 	@Override
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
-		if(!(entity instanceof Mob mob)) return;
+	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		if(entity.moveDist > 0.1) {
 			values.increment(CHARGE);
 		}
 		if(values.get(CHARGE) > 100) {
-			mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10, 0));
-			mob.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 10, 1));
+			entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10, 0));
+			entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 10, 1));
 			values.set(CHARGE, 0);
 			//TODO Play a sound here
 		}
 	}
 	
 	@Override
-	public void onEntityJump(int level, Entity entity, SimpleDataManager values) {
+	public void onEntityJump(int level, Mob entity, SimpleDataManager values) {
 		values.set(CHARGE, values.get(CHARGE) + 5);
 	}
 	
 	@Override
-	public float attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
+	public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
 		values.set(CHARGE, values.get(CHARGE) + 10);
 		return super.attackEntityAsMob(level, attacker, toAttack, values);
 	}

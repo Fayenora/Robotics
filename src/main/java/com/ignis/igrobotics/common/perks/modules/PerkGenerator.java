@@ -3,10 +3,9 @@ package com.ignis.igrobotics.common.perks.modules;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.util.Lang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -29,7 +28,7 @@ public class PerkGenerator extends Perk {
 	}
 	
 	@Override
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
+	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		Optional<IEnergyStorage> optionalEnergy = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
 		Optional<IItemHandler> optionalInventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 		if(!entity.getCapability(ForgeCapabilities.ENERGY).isPresent()) return;

@@ -3,12 +3,13 @@ package com.ignis.igrobotics.core.capabilities.perks;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 
 public interface PerkHooks {
 
-    default void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {}
+    default void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {}
 
-    default void onEntityJump(int level, Entity entity, SimpleDataManager values) {}
+    default void onEntityJump(int level, Mob entity, SimpleDataManager values) {}
 
     /**
      * Executed when a robot with this perk damages another entity
@@ -16,7 +17,7 @@ public interface PerkHooks {
      * @param toAttack entity that is attacked
      * @return knockback to add
      */
-    default float attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
+    default float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
         return 0;
     }
 
@@ -27,7 +28,7 @@ public interface PerkHooks {
      * @param damage amount of damage
      * @return adjusted damage
      */
-    default float damageEntity(int level, Entity robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+    default float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         return damage;
     }
 }

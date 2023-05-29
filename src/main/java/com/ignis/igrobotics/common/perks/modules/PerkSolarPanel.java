@@ -12,10 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.DaylightDetectorBlock;
-import net.minecraft.world.level.block.entity.DaylightDetectorBlockEntity;
 
 import java.util.UUID;
 
@@ -30,11 +27,10 @@ public class PerkSolarPanel extends Perk {
 	}
 	
 	@Override
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
-		if(!(entity instanceof Mob mob)) return;
+	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		int skylight = entity.level.getBrightness(LightLayer.SKY, entity.blockPosition().above()) - entity.level.getSkyDarken();
 		int energy_gain = skylight * 10 * level;
-		AttributeInstance energy_attribute = mob.getAttributes().getInstance(ModAttributes.ENERGY_CONSUMPTION);
+		AttributeInstance energy_attribute = entity.getAttributes().getInstance(ModAttributes.ENERGY_CONSUMPTION);
 		//TODO: This rapid changing of attribute modifiers might cause efficiency or instability issues
 		//Try to more intelligently only reapply when the values actually change
 		energy_attribute.removeModifier(MODIFIER_UUID);
