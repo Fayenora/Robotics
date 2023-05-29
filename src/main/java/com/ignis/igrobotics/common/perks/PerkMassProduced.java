@@ -14,7 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 
@@ -61,7 +60,7 @@ public class PerkMassProduced extends Perk {
 				Optional<IPerkMapCap> perkMap = entity.getCapability(ModCapabilities.PERKS).resolve();
 				if(otherRobot.isEmpty() || !otherRobot.get().isActive()) return false;
 				if(!RobotBehavior.hasAccess(robot.getOwner(), ent, EnumPermission.ALLY)) return false;
-				return perkMap.isPresent() && perkMap.get().contains(RoboticsConfig.current().perks.PERK_MASSPRODUCED);
+				return perkMap.isPresent() && perkMap.get().contains(RoboticsConfig.current().perks.PERK_MASS_PRODUCED);
 			}).size();
 
 			if(allies <= 1) return; //No allies but itself

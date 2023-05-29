@@ -248,4 +248,8 @@ public class Perk implements PerkHooks {
 		return this;
 	}
 
+	public Perk setDisplayColor(ChatFormatting displayColor) {
+		return setDisplayColor(TextColor.fromLegacyFormat(displayColor));
+	}
+
 }

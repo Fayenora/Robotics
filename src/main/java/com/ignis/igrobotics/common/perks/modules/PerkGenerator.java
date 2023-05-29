@@ -12,15 +12,15 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class PerkGenerator extends Perk {
 	
-	Function<ItemStack, Integer> validInputs;
+	BiFunction<ItemStack, Mob, Integer> validInputs;
 	public final String COOLDOWN;
 	public final int ENERGY_GENERATION_RATE;
 	
-	public PerkGenerator(String name, int energy_generation, Function<ItemStack, Integer> validInputs) {
+	public PerkGenerator(String name, int energy_generation, BiFunction<ItemStack, Mob, Integer> validInputs) {
 		super(name, 1);
 		this.validInputs = validInputs;
 		COOLDOWN = name + ".cooldown";
@@ -41,7 +41,7 @@ public class PerkGenerator extends Perk {
 		for(int i = 0; i < inventory.getSlots(); i++) {
 			ItemStack stack = inventory.extractItem(i, 1, true);
 			if(stack.isEmpty()) continue;
-			int energyToRestore = validInputs.apply(stack);
+			int energyToRestore = validInputs.apply(stack, entity);
 			if(energyToRestore == 0) continue;
 			if(energy.receiveEnergy(energyToRestore, true) != energyToRestore) continue; //Don't waste any precious energy!
 			

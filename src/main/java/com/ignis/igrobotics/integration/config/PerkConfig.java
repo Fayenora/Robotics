@@ -3,12 +3,15 @@ package com.ignis.igrobotics.integration.config;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import com.ignis.igrobotics.common.perks.PerkMassProduced;
-import com.ignis.igrobotics.common.perks.PerkUnreliable;
+import com.ignis.igrobotics.common.perks.*;
+import com.ignis.igrobotics.common.perks.modules.PerkGenerator;
+import com.ignis.igrobotics.common.perks.modules.PerkSolarPanel;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Items;
 
 import java.io.File;
 import java.util.HashMap;
@@ -17,29 +20,38 @@ public class PerkConfig implements IJsonConfig {
 	
 	public final HashMap<String, Perk> PERKS = new HashMap<>();
 
-	public Perk PERK_LUMINOUS;
-
 	public final Perk PERK_UNRELIABLE = new PerkUnreliable("perk.unreliable").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
-	public final Perk PERK_MASSPRODUCED = new PerkMassProduced("perk.mass_produced").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY));
-	/*
-	public final Perk PERK_STRENGTH = new PerkStrength(this, "perk.strength");
-	public final Perk PERK_IMPACT = new PerkImpact(this, "perk.impact");
-	public final Perk PERK_ROBUST = new PerkRobust(this, "perk.robust");
-	public final Perk PERK_LUMINOUS = new PerkLuminous(this, "perk.luminous").setDisplayColor(TextFormatting.YELLOW);
+	public final Perk PERK_MASS_PRODUCED = new PerkMassProduced("perk.mass_produced").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY));
+	public final Perk PERK_STRENGTH = new PerkStrength("perk.strength");
+	public final Perk PERK_IMPACT = new PerkImpact("perk.impact");
+	public final Perk PERK_ROBUST = new PerkRobust("perk.robust");
+	public final Perk PERK_LUMINOUS = new PerkLuminous("perk.luminous").setDisplayColor(ChatFormatting.YELLOW);
 
-	public final Perk PERK_GLOWING = new PerkGlowing(this, "perk.glowing").setDisplayColor(TextFormatting.YELLOW);
-	public final Perk PERK_ACCELERATION = new PerkAcceleration(this, "perk.acceleration");
-	public final Perk PERK_CHARGE = new PerkCharge(this, "perk.charge");
-	public final Perk PERK_SOLAR_PANEL = new PerkSolarPanel(this, "perk.solar_panel");
-	public final Perk PERK_COAL_GENERATOR = new PerkGenerator(this, "perk.coal_generator", 2000, (stack) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
-	public final Perk PERK_BIO_GENERATOR = new PerkGenerator(this, "perk.bio_generator", 1500, (stack) -> {
-		if(!(stack.getItem() instanceof ItemFood)) return 0;
-		ItemFood food = (ItemFood) stack.getItem();
-		int foodRestore = food.getHealAmount(stack);
-		float saturationRestore = food.getSaturationModifier(stack);
-		return (int) (foodRestore * 200 + Math.pow(saturationRestore, 1.5) * 100);
+	public final Perk PERK_GLOWING = new PerkGlowing("perk.glowing").setDisplayColor(ChatFormatting.YELLOW);
+	public final Perk PERK_ACCELERATION = new PerkAcceleration("perk.acceleration");
+	public final Perk PERK_CHARGE = new PerkCharge("perk.charge");
+	public final Perk PERK_SOLAR_PANEL = new PerkSolarPanel("perk.solar_panel");
+	public final Perk PERK_COAL_GENERATOR = new PerkGenerator("perk.coal_generator", 2000, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
+	public final Perk PERK_BIO_GENERATOR = new PerkGenerator("perk.bio_generator", 1500, (stack, entity) -> {
+		FoodProperties stats = stack.getItem().getFoodProperties(stack, entity);
+		if(stats == null) return 0;
+		return (int) (stats.getNutrition() * 200 + Math.pow(stats.getSaturationModifier(), 1.5) * 100);
 	});
-	 */
+
+	{
+		register(PERK_UNRELIABLE);
+		register(PERK_MASS_PRODUCED);
+		register(PERK_STRENGTH);
+		register(PERK_IMPACT);
+		register(PERK_ROBUST);
+		register(PERK_LUMINOUS);
+		register(PERK_GLOWING);
+		register(PERK_ACCELERATION);
+		register(PERK_CHARGE);
+		register(PERK_SOLAR_PANEL);
+		register(PERK_COAL_GENERATOR);
+		register(PERK_BIO_GENERATOR);
+	}
 	
 	@Override
 	public void load(File file) {
@@ -72,6 +84,10 @@ public class PerkConfig implements IJsonConfig {
 			Perk perk = Perk.deserialize(array.get(i));
 			PERKS.put(perk.getUnlocalizedName(), perk);
 		}
+	}
+
+	private void register(Perk perk) {
+		PERKS.put(perk.getUnlocalizedName(), perk);
 	}
 
 }
