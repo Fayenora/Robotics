@@ -50,6 +50,10 @@ public interface IRobot extends INBTSerializable<CompoundTag> {
     }
 
     default boolean hasAccess(Player player, EnumPermission permission) {
+        return hasAccess(player.getUUID(), permission);
+    }
+
+    default boolean hasAccess(UUID player, EnumPermission permission) {
         return getAccess().hasPermission(player, permission);
     }
 

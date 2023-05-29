@@ -68,6 +68,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -249,6 +250,10 @@ public class RobotBehavior {
     }
 
     public static boolean hasAccess(Player player, Entity entity, EnumPermission permission) {
+        return hasAccess(player.getUUID(), entity, permission);
+    }
+
+    public static boolean hasAccess(UUID player, Entity entity, EnumPermission permission) {
         AtomicBoolean access = new AtomicBoolean(false);
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> access.set(robot.hasAccess(player, permission)));
         return access.get();

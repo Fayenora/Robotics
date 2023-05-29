@@ -1,0 +1,33 @@
+package com.ignis.igrobotics.core.capabilities.perks;
+
+import com.ignis.igrobotics.core.SimpleDataManager;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+
+public interface PerkHooks {
+
+    default void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {}
+
+    default void onEntityJump(int level, Entity entity, SimpleDataManager values) {}
+
+    /**
+     * Executed when a robot with this perk damages another entity
+     * @param level of the perk
+     * @param toAttack entity that is attacked
+     * @return knockback to add
+     */
+    default float attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
+        return 0;
+    }
+
+    /**
+     * Executed when a robot with this perk gets damaged
+     * @param level of the perk
+     * @param dmgSource damage source
+     * @param damage amount of damage
+     * @return adjusted damage
+     */
+    default float damageEntity(int level, Entity robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+        return damage;
+    }
+}

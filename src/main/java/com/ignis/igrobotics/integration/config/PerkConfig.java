@@ -3,8 +3,12 @@ package com.ignis.igrobotics.integration.config;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.ignis.igrobotics.common.perks.PerkMassProduced;
+import com.ignis.igrobotics.common.perks.PerkUnreliable;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextColor;
 
 import java.io.File;
 import java.util.HashMap;
@@ -15,13 +19,14 @@ public class PerkConfig implements IJsonConfig {
 
 	public Perk PERK_LUMINOUS;
 
+	public final Perk PERK_UNRELIABLE = new PerkUnreliable("perk.unreliable").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
+	public final Perk PERK_MASSPRODUCED = new PerkMassProduced("perk.mass_produced").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY));
 	/*
 	public final Perk PERK_STRENGTH = new PerkStrength(this, "perk.strength");
 	public final Perk PERK_IMPACT = new PerkImpact(this, "perk.impact");
 	public final Perk PERK_ROBUST = new PerkRobust(this, "perk.robust");
-	public final Perk PERK_UNRELIABLE = new PerkUnrelieable(this, "perk.unreliable").setDisplayColor(TextFormatting.RED);
 	public final Perk PERK_LUMINOUS = new PerkLuminous(this, "perk.luminous").setDisplayColor(TextFormatting.YELLOW);
-	public final Perk PERK_MASSPRODUCED = new PerkMassProduced(this, "perk.mass_produced").setDisplayColor(TextFormatting.DARK_GRAY);
+
 	public final Perk PERK_GLOWING = new PerkGlowing(this, "perk.glowing").setDisplayColor(TextFormatting.YELLOW);
 	public final Perk PERK_ACCELERATION = new PerkAcceleration(this, "perk.acceleration");
 	public final Perk PERK_CHARGE = new PerkCharge(this, "perk.charge");

@@ -32,10 +32,13 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 	}
 	
 	public boolean hasPermission(Player player, EnumPermission permission) {
-		UUID uuid = player.getUUID();
-		if(uuid.equals(owner)) return true;
-		if(permissions.containsKey(uuid)) {
-			return permission.fulfills(permissions.get(uuid));
+		return hasPermission(player.getUUID(), permission);
+	}
+
+	public boolean hasPermission(UUID player, EnumPermission permission) {
+		if(player.equals(owner)) return true;
+		if(permissions.containsKey(player)) {
+			return permission.fulfills(permissions.get(player));
 		}
 		return permission.fulfills(permissions.get(Reference.DEFAULT_UUID));
 	}

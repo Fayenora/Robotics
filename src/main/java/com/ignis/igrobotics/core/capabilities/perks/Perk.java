@@ -6,15 +6,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class Perk {
+public class Perk implements PerkHooks {
 	
 	/** Perks that do not stack should have a lower max level for efficiency reasons. 
 	 * Since these obviously cannot stack, it just limits components to have a maximum level of this value */
@@ -32,7 +29,7 @@ public class Perk {
 	
 	private final String unlocalizedName;
 	private int maxLevel;
-	private TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
+	protected TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
 	private boolean visible = true;
 	private boolean stackable = false;
 	
@@ -53,35 +50,6 @@ public class Perk {
 	public Perk(String name, int maxLevel) {
 		this.unlocalizedName = name;
 		this.maxLevel = maxLevel;
-	}
-	
-	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
-		//NO-OP
-	}
-	
-	public void onEntityJump(int level, Entity entity, SimpleDataManager values) {
-		//NO-OP
-	}
-	
-	/**
-	 * Executed when a robot with this perk damages another entity
-	 * @param level of the perk
-	 * @param toAttack entity that is attacked
-	 * @return knockback to add
-	 */
-	public float attackEntityAsMob(int level, Entity attacker, Entity toAttack, SimpleDataManager values) {
-		return 0;
-	}
-	
-	/**
-	 * Executed when a robot with this perk gets damaged
-	 * @param level of the perk
-	 * @param dmgSource damage source
-	 * @param damage amount of damage
-	 * @return adjusted damage
-	 */
-	public float damageEntity(int level, Entity robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
-		return damage;
 	}
 	
 	//////////////////////////////////
