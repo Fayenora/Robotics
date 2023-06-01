@@ -127,6 +127,7 @@
   "igrobotics.perk.battery": "Battery",
   "igrobotics.perk.steady": "Steady",
   "igrobotics.perk.speedy": "Swift",
+  "igrobotics.perk.movementSpeed": "Swift",
   "igrobotics.perk.robust": "Robust",
   "igrobotics.perk.durable": "Durable",
   "igrobotics.perk.persistent": "Persistent",
@@ -141,6 +142,7 @@
   "igrobotics.perk.glowing": "Glowing",
   "igrobotics.perk.acceleration": "Acceleration",
   "igrobotics.perk.charge": "Charge",
+
 
   "igrobotics.command.stay": "Stay at",
   "igrobotics.command.go": "Go",

@@ -1,0 +1,80 @@
+[
+{
+	"items": {
+		"item": "igrobotics:battery"
+	},
+	"perks": [
+	{
+		"level": 2, 
+		"name": "perk.battery"
+	}
+	]
+}, 
+{
+	"items": {
+		"item": "igrobotics:inventory_module"
+	},
+	"perks": [
+	{
+		"level": 1, 
+		"name": "perk.inventory"
+	}
+	]
+}, 
+{
+	"items": {
+		"item": "igrobotics:solar_panel"
+	},
+	"texture": "solar_panel.png", 
+	"perks": [
+	{
+		"level": 1, 
+		"name": "perk.solar_panel"
+	}
+	]
+},
+{
+	"items": {
+		"item": "nuclearcraft:rtg_uranium"
+	},
+	"perks": [
+	{
+		"level": 4, 
+		"name": "perk.energy_generation"
+	}
+	]
+}, 
+{
+	"items": {
+		"item": "nuclearcraft:rtg_americium"
+	},
+	"perks": [
+	{
+		"level": 50, 
+		"name": "perk.energy_generation"
+	}
+	]
+}, 
+{
+	"items": {
+		"item": "nuclearcraft:rtg_plutonium"
+	},
+	"perks": [
+	{
+		"level": 100, 
+		"name": "perk.energy_generation"
+	}
+	]
+}, 
+{
+	"items": {
+		"item": "nuclearcraft:rtg_californium"
+	},
+	"perks": [
+	{
+		"level": 400, 
+		"name": "perk.energy_generation"
+	}
+	]
+}
+]

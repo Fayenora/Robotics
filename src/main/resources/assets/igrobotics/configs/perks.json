@@ -1,0 +1,198 @@
+[
+	{
+		"name": "perk.health", 
+		"stackable": true,
+		"attributes": [
+		{
+			"name": "generic.max_health",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 1
+			}
+			]
+		}
+		]
+	},
+	{
+		"name": "perk.movementSpeed",
+		"stackable": true,
+		"attributes": [
+		{
+			"name": "generic.movement_speed",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 0.15
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.destructive", 
+		"stackable": true,
+		"maxLevel": 5, 
+		"attributes": [
+		{
+			"name": "generic.attack_damage",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 0.5
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.durable", 
+		"stackable": true,
+		"maxLevel": 10, 
+		"attributes": [
+		{
+			"name": "generic.armor", 
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 1
+			}
+			]
+		}
+		]
+	},
+	{
+		"name": "perk.persistent", 
+		"stackable": true,
+		"maxLevel": 5, 
+		"attributes": [
+		{
+			"name": "generic.armor_toughness",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 1
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.steady", 
+		"stackable": true,
+		"displayColor": "dark_aqua",
+		"maxLevel": 5, 
+		"attributes": [
+		{
+			"name": "generic.knockback_resistance",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0,
+				"scalar": 0.2
+			}
+			]
+		}
+		]
+	},
+	{
+		"name": "perk.speedy", 
+		"maxLevel": 3, 
+		"attributes": [
+		{
+			"name": "generic.movement_speed",
+			"modifiers": [
+			{
+				"value": [0.15, 0.25, 0.30], 
+				"operation": 1
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.efficient", 
+		"displayColor": "yellow",
+		"maxLevel": 3, 
+		"attributes": [
+		{
+			"name": "igrobotics:robot.energy_consumption",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 1, 
+				"scalar": -0.20
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.modular", 
+		"displayColor": "white",
+		"maxLevel": 1, 
+		"attributes": [
+		{
+			"name": "igrobotics:robot.module_slots",
+			"modifiers": [
+			{
+				"value": 1, 
+				"operation": 0
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.battery", 
+		"stackable": true,
+		"attributes": [
+		{
+			"name": "igrobotics:robot.energy_capacity",
+			"modifiers": [
+			{
+				"value": 200000, 
+				"operation": 0
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.inventory", 
+		"stackable": true, 
+		"attributes": [
+		{
+			"name": "igrobotics:robot.inventory_slots",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": 8
+			}
+			]
+		}
+		]
+	}, 
+	{
+		"name": "perk.energy_generation", 
+		"stackable": true, 
+		"attributes": [
+		{
+			"name": "igrobotics:robot.energy_consumption",
+			"modifiers": [
+			{
+				"value": 0, 
+				"operation": 0, 
+				"scalar": -1
+			}
+			]
+		}
+		]
+	}
+]
