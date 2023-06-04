@@ -180,6 +180,9 @@ dependencies {
     runtimeOnly(fg.deobf("curse.maven:McJtyLib-233105:4501793"))
     runtimeOnly(fg.deobf("curse.maven:RFToolsBase-326041:4474182"))
     runtimeOnly(fg.deobf("curse.maven:RFToolsPower-290209:4462358"))
+
+    testImplementation(platform('org.junit:junit-bom:5.9.3'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
 }
 
 mixin {
@@ -223,4 +226,11 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
