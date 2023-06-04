@@ -4,7 +4,6 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.IBaseGui;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
-import com.ignis.igrobotics.client.screen.elements.DialogElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;

@@ -4,9 +4,10 @@ import com.ignis.igrobotics.Robotics;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.loading.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class RoboticsConfig {
@@ -42,7 +43,7 @@ public class RoboticsConfig {
     }
 
     public void loadJsonConfigs() {
-        Path configDir = FileUtils.getOrCreateDirectory(FMLPaths.CONFIGDIR.get().resolve(Robotics.MODNAME), Robotics.MODNAME);
+        Path configDir = getOrCreateDirectory(FMLPaths.CONFIGDIR.get().resolve(Robotics.MODNAME));
         perks.load(new File(configDir.toString(), "perks.json"));
         modules.load(new File(configDir.toString(), "robot_modules.json"));
         parts.load(new File(configDir.toString(), "robot_parts.json"));
@@ -51,6 +52,17 @@ public class RoboticsConfig {
     private static void registerConfig(ModContainer container, IConfig config) {
         RoboticsModConfig modConfig = new RoboticsModConfig(container, config);
         container.addConfig(modConfig);
+    }
+
+    public static Path getOrCreateDirectory(Path dirPath) {
+        if (!Files.isDirectory(dirPath)) {
+            try {
+                Files.createDirectories(dirPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Problem creating directory", e);
+            }
+        }
+        return dirPath;
     }
 
 }

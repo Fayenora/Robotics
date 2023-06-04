@@ -1,12 +1,9 @@
 package com.ignis.igrobotics.common.entity.ai;
 
-import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.EntityInteractionManager;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
 import com.ignis.igrobotics.core.util.MathUtil;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Mob;

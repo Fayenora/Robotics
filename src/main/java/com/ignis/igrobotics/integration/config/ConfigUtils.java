@@ -2,10 +2,8 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.annotation.Nullable;

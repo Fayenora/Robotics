@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
 import com.ignis.igrobotics.core.util.ContainerDataUtil;
+import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -6,7 +6,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 

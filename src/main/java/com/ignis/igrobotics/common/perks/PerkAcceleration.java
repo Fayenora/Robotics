@@ -2,7 +2,6 @@ package com.ignis.igrobotics.common.perks;
 
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;

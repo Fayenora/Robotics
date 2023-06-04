@@ -1,9 +1,6 @@
 package com.ignis.igrobotics.common.perks;
 
-import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-
-import javax.swing.text.html.parser.Entity;
 
 public class PerkGlowing extends Perk {
 

@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.awt.*;

@@ -10,7 +10,6 @@ import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -30,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;

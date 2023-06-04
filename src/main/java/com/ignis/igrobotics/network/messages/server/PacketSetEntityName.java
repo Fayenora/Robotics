@@ -7,8 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.nio.charset.Charset;
-
 public class PacketSetEntityName implements IMessage {
 
     private int entityId;

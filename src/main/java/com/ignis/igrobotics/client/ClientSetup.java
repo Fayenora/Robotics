@@ -1,13 +1,13 @@
 package com.ignis.igrobotics.client;
 
-import com.ignis.igrobotics.client.rendering.RobotFactoryRenderer;
-import com.ignis.igrobotics.client.screen.*;
-import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.rendering.RobotFactoryRenderer;
 import com.ignis.igrobotics.client.rendering.RobotRenderer;
-import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.client.rendering.RobotStorageRenderer;
+import com.ignis.igrobotics.client.screen.*;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
+import com.ignis.igrobotics.definitions.ModMachines;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;

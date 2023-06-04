@@ -6,7 +6,6 @@ import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 
 public class PerkLuminous extends Perk {

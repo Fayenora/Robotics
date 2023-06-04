@@ -3,7 +3,6 @@ package com.ignis.igrobotics.core.robot;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.selectors.*;
-import com.ignis.igrobotics.network.proxy.ServerProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
