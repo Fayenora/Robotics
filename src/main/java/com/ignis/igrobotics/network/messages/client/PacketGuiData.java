@@ -1,12 +1,8 @@
 package com.ignis.igrobotics.network.messages.client;
 
-import com.ignis.igrobotics.client.screen.base.IElement;
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.messages.BufferSerializers;
 import com.ignis.igrobotics.network.messages.IMessage;
-import com.ignis.igrobotics.network.messages.IPacketDataReceiver;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -15,21 +11,21 @@ import net.minecraftforge.network.NetworkEvent;
  * @author Ignis
  */
 public class PacketGuiData implements IMessage {
-	
-	private int[] gui_path;
+
+	private int[] guiPath;
 	private Object data;
-	
+
 	public PacketGuiData() {}
-	
-	public PacketGuiData(int[] gui_path, Object data) {
-		this.gui_path = gui_path;
+
+	public PacketGuiData(int[] guiPath, Object data) {
+		this.guiPath = guiPath;
 		this.data = data;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buf) {
-		buf.writeInt(gui_path.length);
-		for(int j : gui_path) {
+		buf.writeInt(guiPath.length);
+		for(int j : guiPath) {
 			buf.writeInt(j);
 		}
 		BufferSerializers.writeObject(buf, data);
@@ -38,31 +34,16 @@ public class PacketGuiData implements IMessage {
 	@Override
 	public void decode(FriendlyByteBuf buf) {
 		int size = buf.readInt();
-		gui_path = new int[size];
+		guiPath = new int[size];
 		for(int i = 0; i < size; i++) {
-			gui_path[i] = buf.readInt();
+			guiPath[i] = buf.readInt();
 		}
 		data = BufferSerializers.readObject(buf);
 	}
 
 	@Override
 	public void handle(NetworkEvent.Context cxt) {
-		Screen currScreen = Minecraft.getInstance().screen;
-		if(!(currScreen instanceof IElement current)) return;
-
-		if(gui_path != null) { //If gui path is null, use current screen
-			for(int i = gui_path.length - 1; i >= 0; i--) {
-				for(GuiEventListener comp : current.children()) {
-					if(comp.hashCode() == gui_path[i] && comp instanceof IElement element) {
-						current = element;
-						break;
-					}
-				}
-			}
-		}
-
-		if(!(current instanceof IPacketDataReceiver receiver)) return;
-		receiver.receive(data);
+		Robotics.proxy.handleGuiData(guiPath, data);
 	}
 
 	public BufferSerializers.BufferSerializer<?> getType() {

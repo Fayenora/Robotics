@@ -3,6 +3,7 @@ package com.ignis.igrobotics.network.proxy;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -29,7 +30,15 @@ public class ServerProxy implements IProxy {
     }
 
     @Override
+    public void handleGuiData(int[] guiPath, Object data) {}
+
+    @Override
     public Player getPlayer() {
         return null;
+    }
+
+    @Override
+    public ResourceManager getResourceManager() {
+        return ServerLifecycleHooks.getCurrentServer().getResourceManager();
     }
 }

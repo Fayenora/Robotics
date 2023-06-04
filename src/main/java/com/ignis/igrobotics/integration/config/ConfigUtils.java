@@ -5,6 +5,7 @@ import com.ignis.igrobotics.Robotics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.annotation.Nullable;
@@ -17,7 +18,7 @@ public class ConfigUtils {
         try {
             ResourceLocation path = new ResourceLocation(Robotics.MODID, "configs/" + defaultConfigFile);
             //FIXME: Servers need to read the file from a data pack!
-            Optional<Resource> resource = Minecraft.getInstance().getResourceManager().getResource(path);
+            Optional<Resource> resource = Robotics.proxy.getResourceManager().getResource(path);
             if(resource.isEmpty()) {
                 throw new RuntimeException("Unable to copy file! No file found at " + path);
             }

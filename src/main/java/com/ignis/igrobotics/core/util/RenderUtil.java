@@ -13,12 +13,15 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.awt.*;
 
+@OnlyIn(Dist.CLIENT)
 public class RenderUtil {
 
     public static void enableScissor(Rectangle rect) {

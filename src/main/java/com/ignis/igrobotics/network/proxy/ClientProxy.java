@@ -1,12 +1,17 @@
 package com.ignis.igrobotics.network.proxy;
 
+import com.ignis.igrobotics.client.screen.base.IElement;
+import com.ignis.igrobotics.network.messages.IPacketDataReceiver;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -61,5 +66,31 @@ public class ClientProxy extends ServerProxy {
     @Override
     public Player getPlayer() {
         return Minecraft.getInstance().player;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public ResourceManager getResourceManager() {
+        return Minecraft.getInstance().getResourceManager();
+    }
+
+    @Override
+    public void handleGuiData(int[] guiPath, Object data) {
+        Screen currScreen = Minecraft.getInstance().screen;
+        if(!(currScreen instanceof IElement current)) return;
+
+        if(guiPath != null) { //If gui path is null, use current screen
+            for(int i = guiPath.length - 1; i >= 0; i--) {
+                for(GuiEventListener comp : current.children()) {
+                    if(comp.hashCode() == guiPath[i] && comp instanceof IElement element) {
+                        current = element;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(!(current instanceof IPacketDataReceiver receiver)) return;
+        receiver.receive(data);
     }
 }

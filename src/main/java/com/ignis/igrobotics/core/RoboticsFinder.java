@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.core;
 
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,7 +35,7 @@ public class RoboticsFinder {
     @Nullable
     public static Entity getEntity(Level level, UUID uuid) {
         if(level.isClientSide()) {
-            Player player = Minecraft.getInstance().player;
+            Player player = Robotics.proxy.getPlayer();
             if(player == null) return null;
             for (Entity ent : level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {
                 if (ent.getUUID().equals(uuid)) {
@@ -55,7 +55,7 @@ public class RoboticsFinder {
      */
     public static Collection<LivingEntity> getRobotics(Level level, Predicate<IRobot> condition) {
         if(level.isClientSide()) {
-            Player player = Minecraft.getInstance().player;
+            Player player = Robotics.proxy.getPlayer();
             if(player == null) return Collections.emptySet();
             Collection<LivingEntity> robots = new HashSet<>();
             for(Entity ent : level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS))) {

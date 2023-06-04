@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.core.util;
 
 import net.minecraft.client.gui.Font;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,8 @@ public class StringUtil {
 		}
 		return toReturn;
 	}
-	
+
+	@OnlyIn(Dist.CLIENT)
 	public static List<String> calculateStringSplit(Font font, String string, int maxWidth) {
 		ArrayList<String> parts = new ArrayList<String>();
 		String remainder = string;
