@@ -6,12 +6,15 @@ import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class ScrollableElement extends GuiElement {
 
     private int scrollDistanceX;

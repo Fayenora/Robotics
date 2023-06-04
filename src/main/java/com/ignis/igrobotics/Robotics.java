@@ -1,5 +1,6 @@
 package com.ignis.igrobotics;
 
+import com.ignis.igrobotics.core.robot.SelectionType;
 import com.ignis.igrobotics.definitions.*;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
@@ -7,6 +8,7 @@ import com.ignis.igrobotics.network.proxy.ClientProxy;
 import com.ignis.igrobotics.network.proxy.IProxy;
 import com.ignis.igrobotics.network.proxy.ServerProxy;
 import com.mojang.logging.LogUtils;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,6 +32,10 @@ public class Robotics {
     public static final Random RANDOM = new Random();
 
     public static IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+
+    static {
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> SelectionType::loadGuis);
+    }
 
     public Robotics() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

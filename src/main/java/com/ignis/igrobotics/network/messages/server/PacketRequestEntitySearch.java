@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.nio.charset.Charset;
@@ -32,7 +34,8 @@ public class PacketRequestEntitySearch implements IMessage {
 	int[] parentGuiPath;
 	
 	public PacketRequestEntitySearch() {}
-	
+
+	@OnlyIn(Dist.CLIENT)
 	private PacketRequestEntitySearch(IElement[] parentGuiPath) {
 		this.parentGuiPath = new int[parentGuiPath.length];
 		for(int i = 0; i < parentGuiPath.length; i++) {
@@ -45,6 +48,7 @@ public class PacketRequestEntitySearch implements IMessage {
 	 * @param parentGuiPath the gui path leading to the component requiring the information
 	 * @param uuid the uuid to look for
 	 */
+	@OnlyIn(Dist.CLIENT)
 	public PacketRequestEntitySearch(IElement[] parentGuiPath, UUID uuid) {
 		this(parentGuiPath);
 		this.uuid = uuid;
@@ -57,12 +61,14 @@ public class PacketRequestEntitySearch implements IMessage {
 	 * @param parentGuiPath the gui path leading to the component requiring the information
 	 * @param name the name to look for
 	 */
+	@OnlyIn(Dist.CLIENT)
 	public PacketRequestEntitySearch(IElement[] parentGuiPath, String name) {
 		this(parentGuiPath);
 		this.name = name;
 		type = 2;
 	}
-	
+
+	@OnlyIn(Dist.CLIENT)
 	public PacketRequestEntitySearch(IElement[] parentGuiPath, int entityId) {
 		this(parentGuiPath);
 		this.entityId = entityId;

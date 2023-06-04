@@ -8,11 +8,14 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class SideBarSwitchElement extends GuiElement {
 
     public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/sidebar.png");

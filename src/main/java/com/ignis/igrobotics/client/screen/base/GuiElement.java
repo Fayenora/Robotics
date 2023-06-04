@@ -14,12 +14,15 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@OnlyIn(Dist.CLIENT)
 @MethodsReturnNonnullByDefault
 public class GuiElement extends AbstractContainerEventHandler implements IElement, IGuiTexturable {
 

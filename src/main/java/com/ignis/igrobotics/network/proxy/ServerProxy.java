@@ -27,4 +27,9 @@ public class ServerProxy implements IProxy {
     public boolean isTexturePresent(ResourceLocation resourceLocation) {
         return true;
     }
+
+    @Override
+    public Player getPlayer() {
+        return null;
+    }
 }

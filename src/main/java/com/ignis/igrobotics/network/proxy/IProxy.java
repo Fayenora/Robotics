@@ -13,5 +13,7 @@ public interface IProxy {
 
     Level getLevel();
 
+    Player getPlayer();
+
     boolean isTexturePresent(ResourceLocation resourceLocation);
 }

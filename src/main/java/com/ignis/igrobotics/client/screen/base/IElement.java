@@ -9,6 +9,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -20,6 +22,7 @@ import java.util.List;
  * In contrast to {@link net.minecraft.client.gui.components.AbstractWidget} this can hold children components which are handled properly
  * @author Ignis
  */
+@OnlyIn(Dist.CLIENT)
 @MethodsReturnNonnullByDefault
 public interface IElement extends ContainerEventHandler, Renderable, NarratableEntry {
 

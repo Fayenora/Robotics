@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.network.proxy;
 
-import com.ignis.igrobotics.Robotics;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -10,6 +9,8 @@ import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -20,11 +21,13 @@ import java.util.UUID;
  */
 public class ClientProxy extends ServerProxy {
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public Level getLevel() {
         return Minecraft.getInstance().level;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public WeakReference<Player> createFakePlayer(Level level, GameProfile profile) {
         if(level instanceof ClientLevel clientLevel) {
@@ -33,6 +36,7 @@ public class ClientProxy extends ServerProxy {
         return super.createFakePlayer(level, profile);
     }
 
+    @OnlyIn(Dist.CLIENT)
     public WeakReference<Player> createFakePlayer(Level level, UUID uuid) {
         //Ensure a safe connection
         if(!Minecraft.getInstance().isLocalServer() && !Minecraft.getInstance().getConnection().getConnection().isEncrypted()) return null;
@@ -42,6 +46,7 @@ public class ClientProxy extends ServerProxy {
         return createFakePlayer(level, networkInfo.getProfile());
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public boolean isTexturePresent(ResourceLocation resourceLocation) {
         try(SimpleTexture texture = new SimpleTexture(resourceLocation)) {
@@ -50,5 +55,11 @@ public class ClientProxy extends ServerProxy {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public Player getPlayer() {
+        return Minecraft.getInstance().player;
     }
 }

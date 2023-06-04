@@ -5,12 +5,15 @@ import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
 import static com.ignis.igrobotics.client.screen.selectors.SelectorElement.BOUNDS;
 import static com.ignis.igrobotics.client.screen.selectors.SelectorElement.TEXTURE;
 
+@OnlyIn(Dist.CLIENT)
 public class EntityElement extends ButtonElement {
 
     LivingEntity living;

@@ -12,6 +12,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -21,6 +23,7 @@ import software.bernie.geckolib.renderer.layer.ItemArmorGeoLayer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@OnlyIn(Dist.CLIENT)
 public class ArmorRenderer<T extends LivingEntity & GeoAnimatable> extends ItemArmorGeoLayer<T> {
 
     protected static final String LEFT_BOOT = "leftFoot";
