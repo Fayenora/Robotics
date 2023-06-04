@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import org.apache.commons.compress.utils.IOUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -22,7 +21,7 @@ public class ConfigUtils {
             }
             InputStream in = resource.get().open();
             FileOutputStream out = new FileOutputStream(to);
-            IOUtils.copy(in, out);
+            out.write(in.readAllBytes());
             in.close();
             out.close();
         } catch (IOException e) {
