@@ -1,20 +1,19 @@
 package com.ignis.igrobotics.core.robot;
 
-import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
+import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.HashMap;
-
 /**
  * Logic behind a robot part (not the item) as the combination of a {@link EnumRobotPart specific part of the robot} and a {@link EnumRobotMaterial material}. <br>
- * Each part has associated perks loaded in with the config during pre-init. <br>
+ * Each part has associated perks loaded in with the config during pre-server startup. <br>
  * There should only exist a single instance for each unique combination, saved in the current {@link com.ignis.igrobotics.integration.config.PartConfig}.<br>
  * To retrieve an instance, use {@link #get(EnumRobotPart, EnumRobotMaterial)}
  * @author Ignis
@@ -44,16 +43,11 @@ public class RobotPart {
 	}
 	
 	public static RobotPart get(EnumRobotPart part, EnumRobotMaterial material) {
-		RobotPart robot_part = new RobotPart(part, material);
-		if(!RoboticsConfig.current().parts.PARTS.containsKey(part)) {
-			HashMap<EnumRobotMaterial, RobotPart> material_map = new HashMap<>();
-			RoboticsConfig.current().parts.PARTS.put(part, material_map);
+		Tuple<EnumRobotPart, EnumRobotMaterial> key = new Tuple<>(part, material);
+		if(!RoboticsConfig.current().parts.PARTS.containsKey(key)) {
+			RoboticsConfig.current().parts.PARTS.put(key, new RobotPart(part, material));
 		}
-		if(!RoboticsConfig.current().parts.PARTS.get(part).containsKey(material)) {
-			RoboticsConfig.current().parts.PARTS.get(part).put(material, robot_part);
-			return robot_part;
-		}
-		return RoboticsConfig.current().parts.PARTS.get(part).get(material);
+		return RoboticsConfig.current().parts.PARTS.get(key);
 	}
 
 	public static RobotPart getFromItem(Item item) {

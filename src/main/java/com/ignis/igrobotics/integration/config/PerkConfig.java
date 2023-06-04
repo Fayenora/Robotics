@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.ignis.igrobotics.common.perks.*;
 import com.ignis.igrobotics.common.perks.modules.PerkGenerator;
 import com.ignis.igrobotics.common.perks.modules.PerkSolarPanel;
@@ -68,20 +66,18 @@ public class PerkConfig implements IJsonConfig {
 	
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer) {
-		//TODO Write the perks individually here
-		JsonArray array = new JsonArray();
+		buffer.writeInt(PERKS.size());
 		for(Perk perk : PERKS.values()) {
-			array.add(Perk.serialize(perk));
+			Perk.write(buffer, perk);
 		}
-		buffer.writeBytes(array.toString().getBytes());
 	}
 	
 	@Override
 	public void fromNetwork(FriendlyByteBuf buffer) {
-		//TODO Read the perks individually here
-		JsonArray array = (JsonArray) JsonParser.parseString(new String(buffer.array()));
-		for(int i = 0; i < array.size(); i++) {
-			Perk perk = Perk.deserialize(array.get(i));
+		PERKS.clear();
+		int perkAmount = buffer.readInt();
+		for(int i = 0; i < perkAmount; i++) {
+			Perk perk = Perk.read(buffer);
 			PERKS.put(perk.getUnlocalizedName(), perk);
 		}
 	}

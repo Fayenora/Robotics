@@ -7,6 +7,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -88,6 +89,26 @@ public class RobotModule {
             Robotics.LOGGER.warn("Failed to register module: " + e.getLocalizedMessage());
             return null;
         }
+    }
+
+    public static void write(FriendlyByteBuf buffer, RobotModule module) {
+        if(!(module.perks instanceof PerkMap perkMap)) return;
+        module.item.toNetwork(buffer);
+        PerkMap.write(buffer, perkMap);
+        buffer.writeBoolean(module.hasOverlay());
+        if(module.hasOverlay()) {
+            buffer.writeResourceLocation(module.overlay);
+        }
+    }
+
+    public static RobotModule read(FriendlyByteBuf buffer) {
+        Ingredient ingredient = Ingredient.fromNetwork(buffer);
+        RobotModule module = new RobotModule(ingredient);
+        module.perks = PerkMap.read(buffer);
+        if(buffer.readBoolean()) {
+            module.overlay = buffer.readResourceLocation();
+        }
+        return module;
     }
 
     public static boolean isModule(ItemStack stack) {

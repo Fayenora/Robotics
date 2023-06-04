@@ -10,7 +10,9 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -22,40 +24,40 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Perk implements PerkHooks {
-	
-	/** Perks that do not stack should have a lower max level for efficiency reasons. 
+
+	/** Perks that do not stack should have a lower max level for efficiency reasons.
 	 * Since these obviously cannot stack, it just limits components to have a maximum level of this value */
 	public static final int UNSTACKABLE_MAX_LEVEL = 20;
-	
+
 	private final String unlocalizedName;
 	private int maxLevel;
 	protected TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
 	private boolean visible = true;
 	private boolean stackable = false;
-	
+
 	/**
 	 * AttributeModifiers to be later applied f.e. to a robot. Maps {@link Attribute#getDescriptionId()}  Attribute Names} to modifiers affecting this attribute
 	 */
 	private final Multimap<Attribute, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
-	
-	/** 
+
+	/**
 	 * Maps attribute+operation to an array of scalars. There are the following possibilities: <p>
 	 * <i> 1. The array contains 1 element: </i> The element is understood as a multiplier to the level of the perk <br>
 	 * <i> 2. The array contains less than {@link #maxLevel} elements: </i><b> Invalid state </b><br>
-	 * <i> 3. The array contains equal or more than {@link #maxLevel} elements: </i> The elements are understood as absolute values 
-	 *    replacing the values in {@link #modifiers} with the according level 
+	 * <i> 3. The array contains equal or more than {@link #maxLevel} elements: </i> The elements are understood as absolute values
+	 *    replacing the values in {@link #modifiers} with the according level
 	 **/
 	private final Map<Tuple<Attribute, Integer>, double[]> scalars = new HashMap<>();
-	
+
 	public Perk(String name, int maxLevel) {
 		this.unlocalizedName = name;
 		this.maxLevel = maxLevel;
 	}
-	
+
 	//////////////////////////////////
 	// Relevant Getters & Setters
 	//////////////////////////////////
-	
+
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(int level) {
 		Multimap<Attribute, AttributeModifier> scaledModifiers = MultimapBuilder.hashKeys().arrayListValues().build();
 		modifiers.forEach((attribute, u) -> {
@@ -75,11 +77,11 @@ public class Perk implements PerkHooks {
 		});
 		return scaledModifiers;
 	}
-	
+
 	public double[] getScalars(Attribute attribute, int operation) {
 		return scalars.get(new Tuple<>(attribute, operation));
 	}
-	
+
 	/**
 	 * Whether the perk name should be drawn. If not, and the perk is visible, the attributes will be shown
 	 * @return whether the raw name should be drawn
@@ -87,9 +89,9 @@ public class Perk implements PerkHooks {
 	public boolean showPerk() {
 		return maxLevel != Integer.MAX_VALUE || !stackable;
 	}
-	
+
 	/**
-	 * Only has an effect if the perk is actually {@link #showPerk() shown}. 
+	 * Only has an effect if the perk is actually {@link #showPerk() shown}.
 	 * Otherwise it's attributes are simply displayed
 	 * @return the text to be displayed for this perk
 	 */
@@ -104,16 +106,16 @@ public class Perk implements PerkHooks {
 		display.setStyle(display.getStyle().withColor(displayColor));
 		return display;
 	}
-	
+
 	@Override
 	public String toString() {
 		return Lang.localise(unlocalizedName).getString();
 	}
-	
+
 	//////////////////////////////////
 	// Serialization
 	//////////////////////////////////
-	
+
 	public static JsonElement serialize(Perk perk) {
 		JsonObject obj = new JsonObject();
 		obj.addProperty("name", perk.unlocalizedName);
@@ -121,7 +123,7 @@ public class Perk implements PerkHooks {
 		obj.addProperty("displayColor", perk.displayColor.serialize());
 		obj.addProperty("visible", perk.visible);
 		obj.addProperty("stackable", perk.stackable);
-		
+
 		JsonArray attr = new JsonArray();
 		for(Attribute attribute : perk.modifiers.keys()) {
 			JsonObject attr_obj = new JsonObject();
@@ -129,7 +131,7 @@ public class Perk implements PerkHooks {
 			for(AttributeModifier modifier : perk.modifiers.get(attribute)) {
 				JsonObject mod_obj = new JsonObject();
 				mod_obj.addProperty("operation", modifier.getOperation().toValue());
-				
+
 				//Values and/or Scalars
 				double[] scalars = perk.getScalars(attribute, modifier.getOperation().toValue());
 				if(scalars == null) {
@@ -149,15 +151,15 @@ public class Perk implements PerkHooks {
 			}
 			attr_obj.addProperty("name", attribute.getDescriptionId());
 			attr_obj.add("modifiers", mod_list);
-			
+
 			attr.add(attr_obj);
 		}
-		
+
 		obj.add("attributes", attr);
-		
+
 		return obj;
 	}
-	
+
 	public static Perk deserialize(JsonElement json) {
 		JsonObject obj = json.getAsJsonObject();
 		String unlocalizedName = obj.get("name").getAsString();
@@ -170,12 +172,11 @@ public class Perk implements PerkHooks {
 		if(config.perks.PERKS.containsKey(unlocalizedName)) {
 			result = config.perks.PERKS.get(unlocalizedName);
 		}
-		
-		if(obj.has("visible")) result.visible = obj.get("visible").getAsBoolean();
-		if(obj.has("stackable")) result.stackable = obj.get("stackable").getAsBoolean();
-		if(!result.stackable) result.maxLevel = Math.min(UNSTACKABLE_MAX_LEVEL, result.maxLevel);
-		if(obj.has("displayColor")) result.displayColor = TextColor.parseColor(obj.get("displayColor").getAsString());
-		
+
+		if(obj.has("visible")) result.setVisible(obj.get("visible").getAsBoolean());
+		if(obj.has("stackable")) result.setStackable(obj.get("stackable").getAsBoolean());
+		if(obj.has("displayColor")) result.setDisplayColor(TextColor.parseColor(obj.get("displayColor").getAsString()));
+
 		int i = 0;
 		if(obj.has("attributes")) {
 			for(JsonElement attribute : obj.get("attributes").getAsJsonArray()) {
@@ -190,7 +191,7 @@ public class Perk implements PerkHooks {
 				}
 				for(JsonElement modifier : ((JsonObject) attribute).get("modifiers").getAsJsonArray()) {
 					JsonObject jsonModifier = ((JsonObject) modifier);
-					
+
 					int operation = jsonModifier.get("operation").getAsInt();
 					double amount;
 					if(!jsonModifier.get("value").isJsonArray()) {
@@ -208,41 +209,112 @@ public class Perk implements PerkHooks {
 						result.scalars.put(new Tuple<>(attributeType, operation), scalars);
 						amount = scalars[0];
 					}
-					
+
 					AttributeModifier mod = new AttributeModifier("modifier_" + (i++), amount, AttributeModifier.Operation.fromValue(operation));
 					result.modifiers.put(attributeType, mod);
 				}
-				
+
 			}
 		}
-		
+
 		return result;
 	}
-	
+
+	public static void write(FriendlyByteBuf buffer, Perk perk) {
+		buffer.writeUtf(perk.unlocalizedName);
+		buffer.writeInt(perk.maxLevel);
+		buffer.writeBoolean(perk.visible);
+		buffer.writeBoolean(perk.stackable);
+		buffer.writeInt(perk.displayColor.getValue());
+
+		buffer.writeShort(perk.modifiers.keys().size());
+		for(Attribute attr : perk.modifiers.keySet()) {
+			buffer.writeResourceKey(ForgeRegistries.ATTRIBUTES.getResourceKey(attr).get());
+			buffer.writeShort(perk.modifiers.get(attr).size());
+			for(AttributeModifier modifier : perk.modifiers.get(attr)) {
+				buffer.writeByte(modifier.getOperation().toValue());
+				buffer.writeDouble(modifier.getAmount());
+			}
+		}
+
+		buffer.writeShort(perk.scalars.size());
+		for(Tuple<Attribute, Integer> key : perk.scalars.keySet()) {
+			buffer.writeResourceKey(ForgeRegistries.ATTRIBUTES.getResourceKey(key.first).get());
+			buffer.writeByte(key.second);
+			buffer.writeShort(perk.scalars.get(key).length);
+			for(double d : perk.scalars.get(key)) {
+				buffer.writeDouble(d);
+			}
+		}
+	}
+
+	public static Perk read(FriendlyByteBuf buffer) {
+		String name = buffer.readUtf();
+		int maxLevel = buffer.readInt();
+		Perk result = new Perk(name, maxLevel);
+
+		result.setVisible(buffer.readBoolean());
+		result.setStackable(buffer.readBoolean());
+		result.setDisplayColor(TextColor.fromRgb(buffer.readInt()));
+
+		short nAttributes = buffer.readShort();
+		for(int i = 0; i < nAttributes; i++) {
+			ResourceKey<Attribute> resourceKey = buffer.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
+			Attribute attribute = ForgeRegistries.ATTRIBUTES.getDelegateOrThrow(resourceKey).get();
+			short nModifiers = buffer.readShort();
+			for(int j = 0; j < nModifiers; j++) {
+				byte operation = buffer.readByte();
+				double amount = buffer.readDouble();
+				AttributeModifier modifier = new AttributeModifier("modifier_" + (j++), amount, AttributeModifier.Operation.fromValue(operation));
+				result.modifiers.put(attribute, modifier);
+			}
+		}
+
+		short nScalars = buffer.readShort();
+		for(int i = 0; i < nScalars; i++) {
+			ResourceKey<Attribute> resourceKey = buffer.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
+			Attribute attribute = ForgeRegistries.ATTRIBUTES.getDelegateOrThrow(resourceKey).get();
+			int operation = buffer.readByte();
+			short arrSize = buffer.readShort();
+			double[] arr = new double[arrSize];
+			for(int j = 0; j < arrSize; j++) {
+				arr[j] = buffer.readDouble();
+			}
+			result.scalars.put(new Tuple<>(attribute, operation), arr);
+		}
+
+		return result;
+	}
+
 	//////////////////////////////////
 	// Simple Getters & Setters
 	//////////////////////////////////
-	
+
 	public boolean isStackable() {
 		return stackable;
 	}
-	
+
 	protected void setStackable(boolean stackable) {
 		this.stackable = stackable;
+		if(!stackable) maxLevel = Math.min(UNSTACKABLE_MAX_LEVEL, maxLevel);
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}
-	
+
+	protected void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	public String getUnlocalizedName() {
 		return unlocalizedName;
 	}
-	
+
 	public int getMaxLevel() {
 		return maxLevel;
 	}
-	
+
 	public Perk setDisplayColor(TextColor displayColor) {
 		this.displayColor = displayColor;
 		return this;

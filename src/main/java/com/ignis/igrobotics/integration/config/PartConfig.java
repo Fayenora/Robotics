@@ -1,18 +1,20 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
+import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.io.File;
 import java.util.HashMap;
 
 public class PartConfig implements IJsonConfig {
-	
-	public final HashMap<EnumRobotPart, HashMap<EnumRobotMaterial, RobotPart>> PARTS = new HashMap<>();
-	
+
+	public final HashMap<Tuple<EnumRobotPart, EnumRobotMaterial>, RobotPart> PARTS = new HashMap<>();
+
 	@Override
 	public void load(File file) {
 		clearPerks();
@@ -29,15 +31,25 @@ public class PartConfig implements IJsonConfig {
 			}
 		}
 	}
-	
+
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer) {
-		// TODO Auto-generated method stub
+		for(Tuple<EnumRobotPart, EnumRobotMaterial> key : PARTS.keySet()) {
+			buffer.writeShort(key.first.getID());
+			buffer.writeShort(key.second.getID());
+			if(!(PARTS.get(key).getPerks() instanceof PerkMap perkMap)) throw new RuntimeException("Something went wrong receiving the part config from the server! This is a bug, report it to the mod author!");
+			PerkMap.write(buffer, perkMap);
+		}
 	}
-	
+
 	@Override
 	public void fromNetwork(FriendlyByteBuf buffer) {
-		// TODO Auto-generated method stub
+		PARTS.clear();
+		while(buffer.isReadable()) {
+			EnumRobotPart part = EnumRobotPart.byId(buffer.readShort());
+			EnumRobotMaterial material = EnumRobotMaterial.byId(buffer.readShort());
+			RobotPart.registerPerks(part, material, PerkMap.read(buffer));
+		}
 	}
 
 }

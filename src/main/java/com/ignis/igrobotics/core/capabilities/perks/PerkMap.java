@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ignis.igrobotics.core.util.Tuple;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,5 +105,23 @@ public class PerkMap implements IPerkMap {
 
 	public JsonElement serializeNBT() {
 		return serialize(this);
+	}
+
+	public static void write(FriendlyByteBuf buffer, PerkMap perkMap) {
+		for(String perkName : perkMap.perks.keySet()) {
+			Perk.write(buffer, perkMap.perks.get(perkName));
+			buffer.writeInt(perkMap.levels.get(perkName));
+		}
+	}
+
+	public static PerkMap read(FriendlyByteBuf buffer) {
+		PerkMap perkMap = new PerkMap();
+		while(buffer.isReadable()) {
+			Perk perk = Perk.read(buffer);
+			int level = buffer.readInt();
+			perkMap.perks.put(perk.getUnlocalizedName(), perk);
+			perkMap.levels.put(perk.getUnlocalizedName(), level);
+		}
+		return perkMap;
 	}
 }

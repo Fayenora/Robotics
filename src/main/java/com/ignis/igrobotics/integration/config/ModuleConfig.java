@@ -12,20 +12,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ModuleConfig implements IJsonConfig {
-	
+
 	/** Actual list of modules loaded from the json config file. Filled during config reading */
 	public final HashMap<Item, RobotModule> MODULES = new HashMap<>();
-	/** A list of modules with texture overlays. This way each textured module is assigned an id (position in this list), 
+	/** A list of modules with texture overlays. This way each textured module is assigned an id (position in this list),
 	 * which can be sent to clients */
 	public final LinkedList<RobotModule> overlays = new LinkedList<>();
-	
+
 	@Override
 	public void load(File file) {
 		MODULES.clear();
 		overlays.clear();
 		Gson gson = ConfigJsonSerializer.initGson();
 		if(!file.exists()) ConfigUtils.copyFromDefault("robot_modules.json", file);
-		
+
 		RobotModule[] modules = (RobotModule[]) ConfigUtils.readJson(gson, file, RobotModule[].class);
 
 		if(modules == null) return;
@@ -49,40 +49,41 @@ public class ModuleConfig implements IJsonConfig {
 						+ "If you need more module textures, contact the mod author!");
 				return;
 			}
+			//Validate the texture on clients
+			if(!Robotics.proxy.isTexturePresent(module.getOverlay())) {
+				Robotics.LOGGER.error("Did not find specified texture " + module.getOverlay());
+				return;
+			}
 			Robotics.LOGGER.debug("Registered texture for module: " + module.getOverlay());
 			overlays.push(module);
 		}
 	}
-	
+
 	public RobotModule get(Item item) {
 		return MODULES.get(item);
 	}
-	
+
 	public RobotModule get(ItemStack stack) {
 		return MODULES.get(stack.getItem());
 	}
-	
+
 	public boolean isModule(Item item) {
 		return MODULES.containsKey(item);
 	}
-	
+
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer) {
-		// TODO Auto-generated method stub
+		for(RobotModule module : MODULES.values()) {
+			RobotModule.write(buffer, module);
+		}
 	}
-	
+
 	@Override
 	public void fromNetwork(FriendlyByteBuf buffer) {
-		// TODO Auto-generated method stub
-		// TODO Validate received textures like this. Remember to do this in the proxy!
-		/*
-		SimpleTexture texture = new SimpleTexture(module.getOverlay());
-		try {
-			texture.loadTexture(Minecraft.getMinecraft().getResourceManager());
-		} catch (IOException e) {
-			Robotics.logger.error("Did not find specified texture " + module.getOverlay());
+		MODULES.clear();
+		while(buffer.isReadable()) {
+			registerModule(RobotModule.read(buffer));
 		}
-		 */
 	}
 
 }
