@@ -108,6 +108,7 @@ public class PerkMap implements IPerkMap {
 	}
 
 	public static void write(FriendlyByteBuf buffer, PerkMap perkMap) {
+		buffer.writeShort(perkMap.perks.size());
 		for(String perkName : perkMap.perks.keySet()) {
 			Perk.write(buffer, perkMap.perks.get(perkName));
 			buffer.writeInt(perkMap.levels.get(perkName));
@@ -116,7 +117,8 @@ public class PerkMap implements IPerkMap {
 
 	public static PerkMap read(FriendlyByteBuf buffer) {
 		PerkMap perkMap = new PerkMap();
-		while(buffer.isReadable()) {
+		int nPerks = buffer.readShort();
+		for(int i = 0; i < nPerks; i++) {
 			Perk perk = Perk.read(buffer);
 			int level = buffer.readInt();
 			perkMap.perks.put(perk.getUnlocalizedName(), perk);

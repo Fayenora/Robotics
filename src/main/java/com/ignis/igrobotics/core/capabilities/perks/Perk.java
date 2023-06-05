@@ -6,10 +6,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceKey;
@@ -21,6 +23,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class Perk implements PerkHooks {
@@ -260,7 +263,12 @@ public class Perk implements PerkHooks {
 		short nAttributes = buffer.readShort();
 		for(int i = 0; i < nAttributes; i++) {
 			ResourceKey<Attribute> resourceKey = buffer.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
-			Attribute attribute = ForgeRegistries.ATTRIBUTES.getDelegateOrThrow(resourceKey).get();
+			Optional<Holder.Reference<Attribute>> attrHolder = ForgeRegistries.ATTRIBUTES.getDelegate(resourceKey);
+			if(attrHolder.isEmpty()) {
+				Robotics.LOGGER.warn("Could not identify Attribute " + resourceKey + ". Modifiers using this attribute are skipped");
+				continue;
+			}
+			Attribute attribute = attrHolder.get().get();
 			short nModifiers = buffer.readShort();
 			for(int j = 0; j < nModifiers; j++) {
 				byte operation = buffer.readByte();
@@ -273,7 +281,12 @@ public class Perk implements PerkHooks {
 		short nScalars = buffer.readShort();
 		for(int i = 0; i < nScalars; i++) {
 			ResourceKey<Attribute> resourceKey = buffer.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
-			Attribute attribute = ForgeRegistries.ATTRIBUTES.getDelegateOrThrow(resourceKey).get();
+			Optional<Holder.Reference<Attribute>> attrHolder = ForgeRegistries.ATTRIBUTES.getDelegate(resourceKey);
+			if(attrHolder.isEmpty()) {
+				Robotics.LOGGER.warn("Could not identify Attribute " + resourceKey + ". Modifiers using this attribute are skipped");
+				continue;
+			}
+			Attribute attribute = attrHolder.get().get();
 			int operation = buffer.readByte();
 			short arrSize = buffer.readShort();
 			double[] arr = new double[arrSize];

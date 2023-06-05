@@ -18,6 +18,8 @@ public interface IProxy {
 
     ResourceManager getResourceManager();
 
+    boolean isLocalServer();
+
     boolean isTexturePresent(ResourceLocation resourceLocation);
 
     void handleGuiData(int[] guiPath, Object data);

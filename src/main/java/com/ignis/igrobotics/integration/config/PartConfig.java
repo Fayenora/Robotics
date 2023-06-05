@@ -17,23 +17,16 @@ public class PartConfig implements IJsonConfig {
 
 	@Override
 	public void load(File file) {
-		clearPerks();
+		PARTS.clear();
 		Gson gson = ConfigJsonSerializer.initGson();
-		if(!file.exists()) ConfigUtils.copyFromDefault("robot_parts.json", file);
-		ConfigUtils.readJson(gson, file, RobotPart[].class);
+		if(!file.exists()) FileUtils.copyFromDefault("robot_parts.json", file);
+		FileUtils.readJson(gson, file, RobotPart[].class);
 		//NOTE: Parts SHOULD be registered here, but the json reading takes case of that case as there may be read perks for multiple parts in one 'part' to deserialize
-	}
-
-	private void clearPerks() {
-		for(EnumRobotPart part : EnumRobotPart.values()) {
-			for(EnumRobotMaterial material : EnumRobotMaterial.values()) {
-				RobotPart.get(part, material).getPerks().clear();
-			}
-		}
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer) {
+		buffer.writeShort(PARTS.size());
 		for(Tuple<EnumRobotPart, EnumRobotMaterial> key : PARTS.keySet()) {
 			buffer.writeShort(key.first.getID());
 			buffer.writeShort(key.second.getID());
@@ -45,10 +38,14 @@ public class PartConfig implements IJsonConfig {
 	@Override
 	public void fromNetwork(FriendlyByteBuf buffer) {
 		PARTS.clear();
-		while(buffer.isReadable()) {
+		int size = buffer.readShort();
+		for(int i = 0; i < size; i++) {
 			EnumRobotPart part = EnumRobotPart.byId(buffer.readShort());
 			EnumRobotMaterial material = EnumRobotMaterial.byId(buffer.readShort());
-			RobotPart.registerPerks(part, material, PerkMap.read(buffer));
+			Tuple<EnumRobotPart, EnumRobotMaterial> key = new Tuple<>(part, material);
+			RobotPart robotPart = RobotPart.get(this, part, material);
+			robotPart.getPerks().merge(PerkMap.read(buffer));
+			PARTS.put(key, robotPart);
 		}
 	}
 

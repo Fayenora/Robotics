@@ -74,6 +74,12 @@ public class ClientProxy extends ServerProxy {
         return Minecraft.getInstance().getResourceManager();
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public boolean isLocalServer() {
+        return Minecraft.getInstance().isLocalServer();
+    }
+
     @Override
     public void handleGuiData(int[] guiPath, Object data) {
         Screen currScreen = Minecraft.getInstance().screen;

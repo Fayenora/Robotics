@@ -41,4 +41,9 @@ public class ServerProxy implements IProxy {
     public ResourceManager getResourceManager() {
         return ServerLifecycleHooks.getCurrentServer().getResourceManager();
     }
+
+    @Override
+    public boolean isLocalServer() {
+        return false;
+    }
 }

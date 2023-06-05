@@ -18,25 +18,44 @@ public class PerkConfig implements IJsonConfig {
 	
 	public final HashMap<String, Perk> PERKS = new HashMap<>();
 
-	public final Perk PERK_UNRELIABLE = new PerkUnreliable("perk.unreliable").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
-	public final Perk PERK_MASS_PRODUCED = new PerkMassProduced("perk.mass_produced").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY));
-	public final Perk PERK_STRENGTH = new PerkStrength("perk.strength");
-	public final Perk PERK_IMPACT = new PerkImpact("perk.impact");
-	public final Perk PERK_ROBUST = new PerkRobust("perk.robust");
-	public final Perk PERK_LUMINOUS = new PerkLuminous("perk.luminous").setDisplayColor(ChatFormatting.YELLOW);
+	public Perk PERK_UNRELIABLE;
+	public Perk PERK_MASS_PRODUCED;
+	public Perk PERK_STRENGTH;
+	public Perk PERK_IMPACT;
+	public Perk PERK_ROBUST;
+	public Perk PERK_LUMINOUS;
 
-	public final Perk PERK_GLOWING = new PerkGlowing("perk.glowing").setDisplayColor(ChatFormatting.YELLOW);
-	public final Perk PERK_ACCELERATION = new PerkAcceleration("perk.acceleration");
-	public final Perk PERK_CHARGE = new PerkCharge("perk.charge");
-	public final Perk PERK_SOLAR_PANEL = new PerkSolarPanel("perk.solar_panel");
-	public final Perk PERK_COAL_GENERATOR = new PerkGenerator("perk.coal_generator", 2000, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
-	public final Perk PERK_BIO_GENERATOR = new PerkGenerator("perk.bio_generator", 1500, (stack, entity) -> {
-		FoodProperties stats = stack.getItem().getFoodProperties(stack, entity);
-		if(stats == null) return 0;
-		return (int) (stats.getNutrition() * 200 + Math.pow(stats.getSaturationModifier(), 1.5) * 100);
-	});
+	public Perk PERK_GLOWING;
+	public Perk PERK_ACCELERATION;
+	public Perk PERK_CHARGE;
+	public Perk PERK_SOLAR_PANEL;
+	public Perk PERK_COAL_GENERATOR;
+	public Perk PERK_BIO_GENERATOR;
 
-	{
+	public PerkConfig() {
+		PERK_UNRELIABLE = new PerkUnreliable("perk.unreliable").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
+		PERK_MASS_PRODUCED = new PerkMassProduced("perk.mass_produced").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY));
+		PERK_STRENGTH = new PerkStrength("perk.strength");
+		PERK_IMPACT = new PerkImpact("perk.impact");
+		PERK_ROBUST = new PerkRobust("perk.robust");
+		PERK_LUMINOUS = new PerkLuminous("perk.luminous").setDisplayColor(ChatFormatting.YELLOW);
+		PERK_GLOWING = new PerkGlowing("perk.glowing").setDisplayColor(ChatFormatting.YELLOW);
+		PERK_ACCELERATION = new PerkAcceleration("perk.acceleration");
+		PERK_CHARGE = new PerkCharge("perk.charge");
+		PERK_SOLAR_PANEL = new PerkSolarPanel("perk.solar_panel");
+		PERK_COAL_GENERATOR = new PerkGenerator("perk.coal_generator", 2000, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
+		PERK_BIO_GENERATOR = new PerkGenerator("perk.bio_generator", 1500, (stack, entity) -> {
+			FoodProperties stats = stack.getItem().getFoodProperties(stack, entity);
+			if(stats == null) return 0;
+			return (int) (stats.getNutrition() * 200 + Math.pow(stats.getSaturationModifier(), 1.5) * 100);
+		});
+	}
+
+	public PerkConfig(File file) {
+		load(file);
+	}
+
+	private void registerDefaultPerks() {
 		register(PERK_UNRELIABLE);
 		register(PERK_MASS_PRODUCED);
 		register(PERK_STRENGTH);
@@ -54,9 +73,10 @@ public class PerkConfig implements IJsonConfig {
 	@Override
 	public void load(File file) {
 		PERKS.clear();
+		registerDefaultPerks();
 		Gson gson = ConfigJsonSerializer.initGson();
-		if(!file.exists()) ConfigUtils.copyFromDefault("perks.json", file);
-		Perk[] perks = (Perk[]) ConfigUtils.readJson(gson, file, Perk[].class);
+		if(!file.exists()) FileUtils.copyFromDefault("perks.json", file);
+		Perk[] perks = (Perk[]) FileUtils.readJson(gson, file, Perk[].class);
 		if(perks != null) {
 			for(Perk perk : perks) {
 				PERKS.put(perk.getUnlocalizedName(), perk);

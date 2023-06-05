@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModItems;
+import com.ignis.igrobotics.integration.config.PartConfig;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -43,11 +44,15 @@ public class RobotPart {
 	}
 	
 	public static RobotPart get(EnumRobotPart part, EnumRobotMaterial material) {
+		return get(RoboticsConfig.current().parts, part, material);
+	}
+
+	public static RobotPart get(PartConfig config, EnumRobotPart part, EnumRobotMaterial material) {
 		Tuple<EnumRobotPart, EnumRobotMaterial> key = new Tuple<>(part, material);
-		if(!RoboticsConfig.current().parts.PARTS.containsKey(key)) {
-			RoboticsConfig.current().parts.PARTS.put(key, new RobotPart(part, material));
+		if(!config.PARTS.containsKey(key)) {
+			config.PARTS.put(key, new RobotPart(part, material));
 		}
-		return RoboticsConfig.current().parts.PARTS.get(key);
+		return config.PARTS.get(key);
 	}
 
 	public static RobotPart getFromItem(Item item) {
