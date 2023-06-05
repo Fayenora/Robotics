@@ -5,6 +5,8 @@ import com.ignis.igrobotics.common.perks.*;
 import com.ignis.igrobotics.common.perks.modules.PerkGenerator;
 import com.ignis.igrobotics.common.perks.modules.PerkSolarPanel;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.core.robot.JsonSerializers;
+import com.ignis.igrobotics.core.util.FileUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextColor;
@@ -74,7 +76,7 @@ public class PerkConfig implements IJsonConfig {
 	public void load(File file) {
 		PERKS.clear();
 		registerDefaultPerks();
-		Gson gson = ConfigJsonSerializer.initGson();
+		Gson gson = JsonSerializers.initGson();
 		if(!file.exists()) FileUtils.copyFromDefault("perks.json", file);
 		Perk[] perks = (Perk[]) FileUtils.readJson(gson, file, Perk[].class);
 		if(perks != null) {

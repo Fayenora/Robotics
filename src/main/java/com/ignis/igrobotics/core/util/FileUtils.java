@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.integration.config;
+package com.ignis.igrobotics.core.util;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.util.Optional;
 
-public class ConfigUtils {
+public class FileUtils {
 
     public static void copyFromDefault(String defaultConfigFile, File to) {
         try {

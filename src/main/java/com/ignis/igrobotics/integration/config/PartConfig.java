@@ -2,9 +2,11 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
+import com.ignis.igrobotics.core.robot.JsonSerializers;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.core.util.FileUtils;
 import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -18,7 +20,7 @@ public class PartConfig implements IJsonConfig {
 	@Override
 	public void load(File file) {
 		PARTS.clear();
-		Gson gson = ConfigJsonSerializer.initGson();
+		Gson gson = JsonSerializers.initGson();
 		if(!file.exists()) FileUtils.copyFromDefault("robot_parts.json", file);
 		FileUtils.readJson(gson, file, RobotPart[].class);
 		//NOTE: Parts SHOULD be registered here, but the json reading takes case of that case as there may be read perks for multiple parts in one 'part' to deserialize

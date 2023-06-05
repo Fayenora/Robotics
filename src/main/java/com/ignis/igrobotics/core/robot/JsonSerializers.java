@@ -1,13 +1,9 @@
-package com.ignis.igrobotics.integration.config;
+package com.ignis.igrobotics.core.robot;
 
 import com.google.gson.*;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.robot.RobotPart;
 
 import java.lang.reflect.Type;
 
@@ -15,7 +11,7 @@ import java.lang.reflect.Type;
  * Json Serializers for {@link Perk Perks}, {@link RobotPart Robot Parts} and {@link RobotModule Modules}
  * @author Ignis
  */
-public class ConfigJsonSerializer {
+public class JsonSerializers {
 	
 	public static Gson initGson() {
 		GsonBuilder gson = new GsonBuilder();
@@ -122,7 +118,7 @@ public class ConfigJsonSerializer {
 
 }
 
-abstract class BaseSerializer<T> implements JsonSerializer<T>, JsonDeserializer<T> {
+abstract class BaseSerializer<T> implements com.google.gson.JsonSerializer<T>, JsonDeserializer<T> {
 	
 	public abstract Type getType();
 	

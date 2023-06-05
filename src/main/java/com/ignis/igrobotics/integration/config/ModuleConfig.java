@@ -2,7 +2,9 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.robot.JsonSerializers;
 import com.ignis.igrobotics.core.robot.RobotModule;
+import com.ignis.igrobotics.core.util.FileUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,10 +25,10 @@ public class ModuleConfig implements IJsonConfig {
 	public void load(File file) {
 		MODULES.clear();
 		overlays.clear();
-		Gson gson = ConfigJsonSerializer.initGson();
-		if(!file.exists()) ConfigUtils.copyFromDefault("robot_modules.json", file);
+		Gson gson = JsonSerializers.initGson();
+		if(!file.exists()) FileUtils.copyFromDefault("robot_modules.json", file);
 
-		RobotModule[] modules = (RobotModule[]) ConfigUtils.readJson(gson, file, RobotModule[].class);
+		RobotModule[] modules = (RobotModule[]) FileUtils.readJson(gson, file, RobotModule[].class);
 
 		if(modules == null) return;
 		for(RobotModule module : modules) {
