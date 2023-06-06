@@ -24,15 +24,11 @@ public class RoboticsConfig {
     }
 
     public static void receiveConfig(RoboticsConfig config) {
-        /* We currently don't have a client config
-        if(config != null) {
-            config.client = LOCAL.client;
-        }
-         */
         SERVER = config;
     }
 
     public static final GeneralConfig general = new GeneralConfig();
+    public static final ClientConfig client = new ClientConfig();
     public PerkConfig perks = new PerkConfig();
     public ModuleConfig modules = new ModuleConfig();
     public PartConfig parts = new PartConfig();
@@ -40,6 +36,7 @@ public class RoboticsConfig {
     public static void registerConfigs(ModLoadingContext cxt) {
         ModContainer container = cxt.getActiveContainer();
         registerConfig(container, general);
+        registerConfig(container, client);
     }
 
     public void loadJsonConfigs() {
