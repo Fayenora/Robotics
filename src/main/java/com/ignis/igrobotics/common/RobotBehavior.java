@@ -49,6 +49,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
@@ -147,16 +148,18 @@ public class RobotBehavior {
     public static void onRobotDeath(LivingDeathEvent event) {
         if(event.getEntity().level.isClientSide()) return;
         Entity entity = event.getEntity();
-        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
-                entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
+        if(event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
+                    entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
                         if(inventory instanceof RobotInventory robotInv) {
                             robotInv.dropItems();
                         }
                         for(ItemStack stack : robot.getModules()) {
                             ItemStackUtils.dropItem(entity, stack);
                         }
-                })
-        );
+                    })
+            );
+        }
         if(entity instanceof Mob mob && mob.getCapability(ModCapabilities.COMMANDS).isPresent()) {
             for(WrappedGoal goal : mob.goalSelector.getAvailableGoals()) {
                 if(goal.getGoal() instanceof RetrieveGoal retrieveGoal) {
