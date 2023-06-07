@@ -128,7 +128,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
                 ++machine.currentRunTime;
                 machine.consumeEnergy(machine.currentRecipe);
 
-                if (machine.currentRunTime == machine.runTime) {
+                if (machine.currentRunTime >= machine.runTime) {
                     machine.craftItem(machine.currentRecipe);
                     machine.onItemCrafted();
 

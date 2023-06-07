@@ -146,7 +146,8 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         if(startButton.isHovered()) {
             List<Component> tooltip = new ArrayList<>();
             if(MachineBlockEntity.isRunning(menu.data)) {
-                Component timeDisplay = Component.literal(": " + StringUtil.getTimeDisplay(menu.data.get(1) - menu.data.get(2)));
+                int remainingTime = Math.max(0, menu.data.get(1) - menu.data.get(2));
+                Component timeDisplay = Component.literal(": " + StringUtil.getTimeDisplay(remainingTime));
                 tooltip.add(ComponentUtils.formatList(List.of(Lang.localise("remaining_time"), timeDisplay), Component.empty()));
             } else if(!startButton.isEnabled()) {
                 tooltip.add(Lang.localise("requires"));
