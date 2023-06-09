@@ -29,7 +29,7 @@ public class WireCutterBlock extends MachineBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if(level.isClientSide()) return null;
+        if(level.isClientSide()) return createTickerHelper(type, ModMachines.WIRE_CUTTER.getBlockEntityType(), MachineBlockEntity::clientTick);
         return createTickerHelper(type, ModMachines.WIRE_CUTTER.getBlockEntityType(), MachineBlockEntity::serverTick);
     }
 }

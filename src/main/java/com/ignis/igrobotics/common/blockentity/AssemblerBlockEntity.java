@@ -3,14 +3,17 @@ package com.ignis.igrobotics.common.blockentity;
 import com.ignis.igrobotics.client.menu.AssemblerMenu;
 import com.ignis.igrobotics.core.util.ContainerDataUtil;
 import com.ignis.igrobotics.definitions.ModMachines;
+import com.ignis.igrobotics.definitions.ModSounds;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -57,6 +60,16 @@ public class AssemblerBlockEntity extends MachineBlockEntity {
     @Override
     protected void onMachineStart() {
         setActiveArrows();
+    }
+
+    @Override
+    public @Nullable SoundEvent getRunningSound() {
+        return ModSounds.ASSEMBLER.get();
+    }
+
+    @Override
+    public float getVolume() {
+        return 0.25f;
     }
 
     private void setActiveArrows() {

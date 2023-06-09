@@ -20,14 +20,14 @@
         "sounds": [ "igrobotics:entity/robot/kill_command" ]
     }, 
     
-    "machine.assembler.running":{
+    "machine.assembler":{
         "category": "block",
-        "subtitle": "machine.assembler.running",
+        "subtitle": "machine.assembler",
         "sounds": [{"name": "igrobotics:machine/assembler", "stream": true}]
     }, 
-    "machine.wire_cutter.running":{
+    "machine.wire_cutter":{
         "category": "block",
-        "subtitle": "machine.wire_cutter.running",
+        "subtitle": "machine.wire_cutter",
         "sounds": [{"name": "igrobotics:machine/wire_cutter", "stream": true}]
     }
 }

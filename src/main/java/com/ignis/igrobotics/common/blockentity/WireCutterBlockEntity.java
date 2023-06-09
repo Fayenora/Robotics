@@ -2,13 +2,16 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.menu.WireCutterMenu;
 import com.ignis.igrobotics.definitions.ModMachines;
+import com.ignis.igrobotics.definitions.ModSounds;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -31,6 +34,16 @@ public class WireCutterBlockEntity extends MachineBlockEntity {
     @Override
     protected void onMachineStart() {
         //NO-OP
+    }
+
+    @Override
+    public @Nullable SoundEvent getRunningSound() {
+        return ModSounds.WIRE_CUTTER.get();
+    }
+
+    @Override
+    public float getVolume() {
+        return 0.5f;
     }
 
     @Override

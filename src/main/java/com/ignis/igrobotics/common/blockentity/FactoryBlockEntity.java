@@ -21,6 +21,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -176,6 +177,11 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         tag.putBoolean("builtRobot", builtRobot);
         tag.put("inventory", inventory.serializeNBT());
         return tag;
+    }
+
+    @Override
+    public @Nullable SoundEvent getRunningSound() {
+        return null;
     }
 
     @Override

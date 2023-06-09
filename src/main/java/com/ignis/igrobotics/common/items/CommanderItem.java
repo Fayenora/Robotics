@@ -145,8 +145,8 @@ public class CommanderItem extends Item {
         if(spawnedEntity.get() instanceof Mob mob) {
             mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, to));
         }
-        if(spawnedEntity.get() instanceof RobotEntity) {
-            spawnedEntity.get().playSound(ModSounds.ROBOT_KILL_COMMAND.get(), 1, 1);
+        if(spawnedEntity.get() instanceof RobotEntity robot) {
+            RobotBehavior.playAggressionSound(robot);
         }
         return true;
     }

@@ -1,16 +1,22 @@
 package com.ignis.igrobotics.common.blockentity;
 
+import com.ignis.igrobotics.client.SoundHandler;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.MachineInventory;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -22,6 +28,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -50,6 +58,10 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     private ItemStack[] currentlyProcessedItems;
 
     private final List<MachineRecipe<?>> RECIPES;
+
+    @OnlyIn(Dist.CLIENT)
+    SoundInstance activeSound;
+    int soundCooldown;
 
     public static final int DATA_INVENTORY = 0;
     protected ContainerData dataAccess = new ContainerData() {
@@ -135,8 +147,16 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
                     //Evaluate the next recipe
                     machine.currentRecipe = machine.getRecipe();
                     machine.currentlyProcessedItems = ItemStackUtils.full(machine.inputs.length, ItemStack.EMPTY);
-                    machine.currentRunTime = 0;
-                    machine.runTime = machine.currentRecipe != null ? machine.currentRecipe.getProcessingTime() : 0;
+                    if(machine.hasRecipe()) { //Directly head to the next recipe, if present
+                        machine.onMachineStart();
+                        machine.consumeEnergy(machine.currentRecipe);
+                        machine.consumeInputs(machine.currentRecipe);
+                        machine.runTime = machine.currentRecipe.getProcessingTime();
+                        machine.currentRunTime = 1;
+                    } else { //Shut down the machine
+                        machine.runTime = 0;
+                        machine.currentRunTime = 0;
+                    }
 
                     flag1 = true;
                 }
@@ -160,6 +180,10 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         if (flag1) {
             setChanged(level, pos, state);
         }
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, MachineBlockEntity machine) {
+        machine.updateSound();
     }
 
     protected abstract void onItemCrafted();
@@ -246,7 +270,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     }
 
     public boolean isRunning() {
-        return this.currentRunTime > 0;
+        return level != null && level.isClientSide() ? getBlockState().getValue(MachineBlock.RUNNING) : this.currentRunTime > 0;
     }
 
     public boolean hasRecipe() {
@@ -358,6 +382,55 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     public CompoundTag getUpdateTag() {
         return toSaveAndSync(super.getUpdateTag());
     }
+
+    //////////////////////////
+    // Sounds
+    //////////////////////////
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        if(level.isClientSide) {
+            updateSound();
+        }
+    }
+
+    protected boolean canPlaySound() {
+        return isRunning() && !isRemoved();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void updateSound() {
+        if(!RoboticsConfig.client.machineSoundsEnabled.get() || getRunningSound() == null) return;
+        if(canPlaySound()) {
+            // If sounds are being muted, we can attempt to start them on every tick, only to have them
+            // denied by the event bus, so use a cooldown period that ensures we're only trying once every
+            // second or so to start a sound.
+            if(--soundCooldown > 0) {
+                return;
+            }
+
+            // If this machine isn't fully muffled, and we don't seem to be playing a sound for it, go ahead and
+            // play it
+            if(activeSound == null || !Minecraft.getInstance().getSoundManager().isActive(activeSound)) {
+                activeSound = SoundHandler.startTileSound(getRunningSound(), SoundSource.BLOCKS, getVolume(), level.getRandom(), getBlockPos());
+            }
+            // Always reset the cooldown; either we just attempted to play a sound or we're fully muffled; either way
+            // we don't want to try again
+            soundCooldown = 20;
+        } else if(activeSound != null) {
+            SoundHandler.stopTileSound(getBlockPos());
+            activeSound = null;
+            soundCooldown = 0;
+        }
+    }
+
+    public float getVolume() {
+        return 1;
+    }
+
+    @Nullable
+    public abstract SoundEvent getRunningSound();
 
     //////////////////////////
     // Getters & Setters

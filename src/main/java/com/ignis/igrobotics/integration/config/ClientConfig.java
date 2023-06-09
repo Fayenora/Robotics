@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 public class ClientConfig extends BaseConfig {
 
+    public Supplier<Boolean> machineSoundsEnabled;
+
     public Supplier<List<? extends Integer>> heartColors;
     public Supplier<List<? extends Integer>> armorColors;
 
@@ -25,6 +27,8 @@ public class ClientConfig extends BaseConfig {
 
     @Override
     public ForgeConfigSpec define(ForgeConfigSpec.Builder builder) {
+
+        machineSoundsEnabled = builder.define("Machine Sounds Enabled", true);
 
         heartColors = builder.comment("Colors for drawing the hearts in the robot gui for values higher than 10. Loops back around. You can choose colors easily here https://www.mathsisfun.com/hexadecimal-decimal-colors.html (use the decimal form)").
                 defineList("Heart Colors", defaultHeartColors, color -> color instanceof Integer integer && integer >= 0 && integer <= 0xFFFFFF);
