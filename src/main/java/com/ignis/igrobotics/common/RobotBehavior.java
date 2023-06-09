@@ -277,7 +277,7 @@ public class RobotBehavior {
         Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
         if(robot.isPresent() && !robot.get().isActive()) return;
         if(entity instanceof RobotEntity) {
-            entity.playSound(ModSounds.ROBOT_KILL_COMMAND.get(), 1, 1);
+            entity.playSound(ModSounds.ROBOT_KILL_COMMAND.get());
         } else if(entity instanceof Mob mob) {
             mob.playAmbientSound();
         }
