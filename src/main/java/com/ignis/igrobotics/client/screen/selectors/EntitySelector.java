@@ -5,6 +5,7 @@ import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.common.items.CommanderItem;
+import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
@@ -53,7 +54,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 		}
 		if(!cached) {
 			//TODO: Don't overkill and ask the server instantly, look on the client first
-			NetworkHandler.sendToServer(new PacketRequestEntitySearch(getParentGuiPath(), selection.get()));
+			NetworkHandler.sendToServer(new PacketRequestEntitySearch(getParentGuiPath(), new EntitySearch(selection.get())));
 			return;
 		}
 		if(cachedEntity != null && currentGuiActive()) {
@@ -112,7 +113,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 					getBaseGui().removeSubGui();
 					return;
 				}
-				NetworkHandler.sendToServer(new PacketRequestEntitySearch(EntitySelector.this.getParentGuiPath(), textField.getValue()));
+				NetworkHandler.sendToServer(new PacketRequestEntitySearch(EntitySelector.this.getParentGuiPath(), new EntitySearch(textField.getValue())));
 				getBaseGui().removeSubGui();
 			});
 			buttonSelect.initTextureLocation(Reference.MISC, 0, 187);
