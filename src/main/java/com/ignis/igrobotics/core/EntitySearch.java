@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.messages.IBufferSerializable;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +23,7 @@ import java.util.function.Predicate;
 /**
  * A search for an entity by specific means (by UUID, name, etc.).
  */
-public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializable {
+public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializable, INBTSerializable<CompoundTag> {
 
     //Which criteria to use
     private byte flags;
@@ -39,18 +41,15 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
     public EntitySearch() {}
 
     public EntitySearch(@NotNull UUID uuid) {
-        this.uuid = uuid;
-        flags |= 1;
+        setUUID(uuid);
     }
 
     public EntitySearch(@NotNull String name) {
-        this.name = name;
-        flags |= 2;
+        setName(name);
     }
 
     public EntitySearch(int entityId) {
-        this.entityId = entityId;
-        flags |= 4;
+        setEntityId(entityId);
     }
 
     /**
@@ -122,4 +121,43 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
         if(name != null) buf.writeUtf(name);
         if(entityId != 0) buf.writeInt(entityId);
     }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        if(uuid != null) nbt.putUUID("uuid", uuid);
+        if(name != null) nbt.putString("name", name);
+        if(entityId != 0) nbt.putInt("entityId", entityId);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        if(nbt.contains("uuid")) setUUID(nbt.getUUID("uuid"));
+        if(nbt.contains("name")) setName(nbt.getString("name"));
+        if(nbt.contains("entityId")) setEntityId(nbt.getInt("entityId"));
+    }
+
+    public static EntitySearch of(CompoundTag nbt) {
+        EntitySearch search = new EntitySearch();
+        search.deserializeNBT(nbt);
+        return search;
+    }
+
+    public void setUUID(@NotNull UUID uuid) {
+        this.uuid = uuid;
+        flags |= 1;
+    }
+
+    public void setName(@NotNull String name) {
+        this.name = name;
+        flags |= 2;
+    }
+
+    public void setEntityId(int entityId) {
+        if(entityId == 0) return;
+        this.entityId = entityId;
+        flags |= 4;
+    }
+
 }

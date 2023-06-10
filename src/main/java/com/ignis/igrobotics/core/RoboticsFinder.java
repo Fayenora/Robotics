@@ -27,7 +27,7 @@ public class RoboticsFinder {
     public static final int SEARCH_RADIUS = 100;
 
     /**
-     * Find an entity with specified UUID across all dimensions. Only call on server-side
+     * Find an entity with specified UUID across all dimensions on server-side. On client-side only search entities in the vicinity
      * @param level is only used for determining the side
      * @param uuid UUID
      * @return Entity with specified UUID, if it is loaded anywhere on the server
@@ -48,7 +48,7 @@ public class RoboticsFinder {
     }
 
     /**
-     * Find all robotic entities which fulfill the condition. Only call on server-side
+     * Find all robotic entities which fulfill the condition on the server-side. On client-side only search entities in the vicinity
      * @param level is only used for determining the side
      * @param condition which should apply to all robots
      * @return all loaded entities matching the condition
