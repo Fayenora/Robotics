@@ -2,6 +2,7 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.common.entity.ai.*;
+import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.robot.CommandType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -13,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ModCommands {
 
@@ -22,9 +22,9 @@ public class ModCommands {
     public static final CommandType STAY = register("stay", BlockPos.class);
     public static final CommandType GO = register("go", BlockPos.class);
     public static final CommandType ATTACK = register("attack", EntityType.class);
-    public static final CommandType ATTACK_SPECIFIC = register("attack_specific", UUID.class);
-    public static final CommandType DEFEND = register("defend", UUID.class);
-    public static final CommandType FOLLOW = register("follow", UUID.class, Integer.class);
+    public static final CommandType ATTACK_SPECIFIC = register("attack_specific", EntitySearch.class);
+    public static final CommandType DEFEND = register("defend", EntitySearch.class);
+    public static final CommandType FOLLOW = register("follow", EntitySearch.class, Integer.class);
     public static final CommandType RETRIEVE = register("retrieve", ItemStack.class, BlockPos.class);
     public static final CommandType STORE = register("store", ItemStack.class, BlockPos.class);
     public static final CommandType BREAK = register("break", BlockPos.class, BlockPos.class);
@@ -35,20 +35,23 @@ public class ModCommands {
         ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal<>(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;
-            Entity entity = server.getEntity((UUID) selections[0].get());
+            EntitySearch search = (EntitySearch) selections[0].get();
+            Entity entity = search.commence(server, robot.blockPosition());
             if(!(entity instanceof LivingEntity)) return null;
             return new HuntGoal(robot, (LivingEntity) entity);
         });
         DEFEND.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;
-            Entity entity = server.getEntity((UUID) selections[0].get());
+            EntitySearch search = (EntitySearch) selections[0].get();
+            Entity entity = search.commence(server, robot.blockPosition());
             if(!(entity instanceof LivingEntity)) return null;
             return new DefendGoal(robot, (LivingEntity) entity, false);
         });
         FOLLOW.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;
-            Entity entity = server.getEntity((UUID) selections[0].get());
+            EntitySearch search = (EntitySearch) selections[0].get();
             int range = (int) selections[1].get();
+            Entity entity = search.commence(server, robot.blockPosition());
             if(!(entity instanceof LivingEntity)) return null;
             double followRange = robot.getAttributeValue(Attributes.FOLLOW_RANGE);
             return new FollowGoal(robot, entity, range, (float) followRange);

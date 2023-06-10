@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.robot;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.selectors.*;
+import com.ignis.igrobotics.core.EntitySearch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -48,6 +49,7 @@ public class SelectionType<T> {
         tag.putUUID("value", uuid);
         return tag;
     }, tag -> tag.getUUID("value"));
+    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::new, EntitySearch::serializeNBT, EntitySearch::of);
 
     private final String identifier;
     private final Class<T> type;
@@ -63,6 +65,7 @@ public class SelectionType<T> {
         ENTITY_TYPE.gui = EntityTypeSelector.class;
         INTEGER.gui = IntSelector.class;
         ENTITY.gui = EntitySelector.class;
+        ENTITY_PREDICATE.gui = EntitySearchSelector.class;
     }
 
     @Nullable
