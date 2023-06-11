@@ -96,6 +96,10 @@ public class FollowGoal extends Goal {
         }
     }
 
+    public Entity following() {
+        return followingEntity;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof FollowGoal followGoal)) return false;

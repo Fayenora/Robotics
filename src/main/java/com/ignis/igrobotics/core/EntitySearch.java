@@ -16,6 +16,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -23,7 +25,7 @@ import java.util.function.Predicate;
 /**
  * A search for an entity by specific means (by UUID, name, etc.).
  */
-public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializable, INBTSerializable<CompoundTag> {
+public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INBTSerializable<CompoundTag> {
 
     //Which criteria to use
     private byte flags;
@@ -33,6 +35,9 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
     @Nullable
     private String name;
     private int entityId;
+
+    private Entity cache;
+    private final Collection<SearchListener> listeners = new HashSet<>();
 
     // For future use?
     private boolean searchAllLevels;
@@ -60,6 +65,9 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
      */
     @Nullable
     public Entity commence(ServerLevel level, BlockPos origin) {
+        if(cache != null) {
+            return cache;
+        }
         if((flags & 1) == 1 && uuid != null) return level.getEntity(uuid);
         if((flags & 2) == 2 && name != null) {
             //Greedily search for the closest entity
@@ -93,7 +101,7 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
     }
 
     @Override
-    public boolean test(LivingEntity livingEntity) {
+    public boolean test(Entity livingEntity) {
         if((flags & 1) == 1 && !livingEntity.getUUID().equals(uuid)) {
             return false;
         }
@@ -102,6 +110,10 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
         }
         if((flags & 4) == 4 && livingEntity.getId() != entityId) {
             return false;
+        }
+        // The entity matches our search! Notify any listeners and return true
+        for(SearchListener listener : listeners) {
+            listener.onSearchFoundNewResult(livingEntity);
         }
         return true;
     }
@@ -158,6 +170,18 @@ public class EntitySearch implements Predicate<LivingEntity>, IBufferSerializabl
         if(entityId == 0) return;
         this.entityId = entityId;
         flags |= 4;
+    }
+
+    public void addListener(SearchListener listener) {
+        listeners.add(listener);
+    }
+
+    public void setCache(Entity entity) {
+        this.cache = entity;
+    }
+
+    public interface SearchListener {
+        void onSearchFoundNewResult(Entity newResult);
     }
 
 }

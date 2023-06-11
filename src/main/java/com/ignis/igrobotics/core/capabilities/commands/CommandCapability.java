@@ -1,17 +1,18 @@
 package com.ignis.igrobotics.core.capabilities.commands;
 
+import com.ignis.igrobotics.common.CommandBehavior;
+import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotCommand;
+import com.ignis.igrobotics.core.robot.Selection;
+import com.ignis.igrobotics.core.robot.SelectionType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class CommandCapability implements ICommandable {
 
@@ -19,10 +20,10 @@ public class CommandCapability implements ICommandable {
     public static final int MAX_COMMANDS = 50;
 
     protected final Mob entity;
-    /** The goal selector to use for commands */
-    private List<RobotCommand> commands = new ArrayList<>();
+    /** Contains all active commands in order. Additionally, maps them to the goal they are currently contributing to the entity */
+    private final LinkedHashMap<RobotCommand, Goal> commands = new LinkedHashMap<>();
 
-    private List<RobotCommand> inactiveCommands;
+    private Set<RobotCommand> inactiveCommands;
     private Set<WrappedGoal> inactiveGoals;
     private Set<WrappedGoal> inactiveTargets;
 
@@ -33,60 +34,100 @@ public class CommandCapability implements ICommandable {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        RobotCommand.writeToNBT(nbt, commands);
+        RobotCommand.writeToNBT(nbt, commands.keySet());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        setCommands(RobotCommand.readFromNBT(nbt));
-    }
-
-    /**
-     * Clear any goals provided by commands from the goals of the entity
-     */
-    protected void clearCommands() {
-        if(entity.level.isClientSide()) return;
-        //If commands are changed in any way, the entity should always reconsider what to do next
-        entity.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
-        for(RobotCommand command : commands) {
-            entity.goalSelector.removeAllGoals(command.getGoal(entity)::equals);
+        for(RobotCommand command : RobotCommand.readFromNBT(nbt)) {
+            commands.put(command, null);
+            onApplied(command);
         }
     }
 
     /**
-     * Add goals provided by currently selected commands to the entity, making the entity perform them
+     * Clear all commands and goals provided by them
+     */
+    protected void clearCommands() {
+        if(!entity.level.isClientSide()) {
+            //If commands are changed in any way, the entity should always reconsider what to do next
+            entity.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
+            for(Map.Entry<RobotCommand, Goal> entry : commands.entrySet()) {
+                if(entry.getValue() == null) continue;
+                entity.goalSelector.removeGoal(entry.getValue());
+                onRemoved(entry.getKey());
+            }
+        }
+        commands.clear();
+    }
+
+    /**
+     * Add goals provided by currently selected commands to the entity, making the entity perform them.
+     * Does not re-evaluate the commands.
      */
     protected void applyCommands() {
         if(entity.level.isClientSide()) return;
+        Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
+        if(robot.isPresent() && !robot.get().isActive()) return;
         int i = 0;
-        for(RobotCommand command : commands) {
-            Goal goal = command.getGoal(entity);
+        for(Goal goal : commands.values()) {
+            if(goal == null) continue;
             int priority = MAX_NON_COMMAND_GOALS + i++;
             entity.goalSelector.addGoal(priority, goal);
         }
     }
 
+    /**
+     * Removes the goal currently provided by given command. Reevaluates the command and applies the goal it provides
+     * @param command the command to reapply
+     */
     @Override
-    public void setCommands(List<RobotCommand> commands) {
+    public void reapplyCommand(RobotCommand command) {
+        if(entity.level.isClientSide()) return;
+        if(!commands.containsKey(command)) return;
+        //Stop
+        Goal goal = commands.get(command);
+        if(goal != null) {
+            entity.goalSelector.getRunningGoals().filter(wrappedGoal -> goal.equals(wrappedGoal.getGoal())).forEach(WrappedGoal::stop);
+            entity.goalSelector.removeAllGoals(goal::equals);
+        }
+
+        //Reapply
+        Goal reEvaluatedGoal = command.getGoal(entity);
+        int priority = MAX_NON_COMMAND_GOALS + commands.keySet().stream().toList().indexOf(command);
+        if(reEvaluatedGoal == null) return;
+        entity.goalSelector.addGoal(priority, reEvaluatedGoal);
+    }
+
+    /**
+     * Sets and evaluates the commands
+     * @param commands to set
+     */
+    @Override
+    public void setCommands(Collection<RobotCommand> commands) {
         clearCommands();
-        this.commands = commands;
-        Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
-        if(robot.isPresent() && !robot.get().isActive()) return;
+        for(RobotCommand command : commands) {
+            this.commands.put(command, command.getGoal(entity));
+            onApplied(command);
+        }
         applyCommands();
     }
 
     @Override
     public void removeCommand(RobotCommand command) {
-        //If this command is currently running, stop it
-        entity.goalSelector.getRunningGoals().filter(wrappedGoal -> command.getGoal(entity).equals(wrappedGoal.getGoal())).forEach(WrappedGoal::stop);
-        entity.goalSelector.removeAllGoals(command.getGoal(entity)::equals);
+        Goal goal = commands.get(command);
+        if(goal == null) return;
+        //If this goal is currently running, stop it
+        entity.goalSelector.getRunningGoals().filter(wrappedGoal -> goal.equals(wrappedGoal.getGoal())).forEach(WrappedGoal::stop);
+        entity.goalSelector.removeAllGoals(goal::equals);
         commands.remove(command);
+        onRemoved(command);
     }
 
     @Override
-    public List<RobotCommand> getCommands() {
-        return commands;
+    public Collection<RobotCommand> getCommands() {
+        return commands.keySet();
     }
 
     @Override
@@ -99,8 +140,8 @@ public class CommandCapability implements ICommandable {
             entity.goalSelector.disableControlFlag(flag);
             entity.targetSelector.disableControlFlag(flag);
         }
-        inactiveCommands = commands;
-        commands = new ArrayList<>();
+        inactiveCommands = commands.keySet();
+        commands.clear();
     }
 
     @Override
@@ -115,6 +156,32 @@ public class CommandCapability implements ICommandable {
             entity.goalSelector.enableControlFlag(flag);
             entity.targetSelector.enableControlFlag(flag);
         }
-        commands = inactiveCommands;
+        setCommands(inactiveCommands);
+    }
+
+    private void onApplied(RobotCommand command) {
+        if(entity.level.isClientSide) return;
+        // Register the Entity Predicates of this command to the CommandBehavior
+        for(Selection<?> selector : command.getSelectors()) {
+            if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
+                EntitySearch search = (EntitySearch) selector.get();
+                search.addListener(newResult -> {
+                    //TODO Instead of reevaluating the command, we could maybe insert the new result directly (This way the entity needs to be searched again)
+                    search.setCache(newResult);
+                    reapplyCommand(command);
+                });
+                CommandBehavior.SEARCHES.put(entity.getLevel(), search);
+            }
+        }
+    }
+
+    private void onRemoved(RobotCommand command) {
+        if(entity.level.isClientSide) return;
+        for(Selection<?> selector : command.getSelectors()) {
+            if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
+                EntitySearch search = (EntitySearch) selector.get();
+                CommandBehavior.SEARCHES.remove(entity.getLevel(), search);
+            }
+        }
     }
 }

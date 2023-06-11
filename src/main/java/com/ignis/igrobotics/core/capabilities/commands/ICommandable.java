@@ -5,14 +5,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.util.List;
+import java.util.Collection;
 
 @AutoRegisterCapability
 public interface ICommandable extends INBTSerializable<CompoundTag> {
 
-    void setCommands(List<RobotCommand> commands);
+    void setCommands(Collection<RobotCommand> commands);
 
-    List<RobotCommand> getCommands();
+    Collection<RobotCommand> getCommands();
+
+    void reapplyCommand(RobotCommand command);
 
     void removeCommand(RobotCommand command);
 

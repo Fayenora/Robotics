@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class RobotCommand {
@@ -56,7 +57,7 @@ public class RobotCommand {
      * Serialization
      */
 
-    public static void writeToNBT(CompoundTag comp, List<RobotCommand> commands) {
+    public static void writeToNBT(CompoundTag comp, Collection<RobotCommand> commands) {
         ListTag list = new ListTag();
 
         for(RobotCommand command : commands) {

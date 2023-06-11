@@ -1,0 +1,5 @@
+# Test Cases to consider
+
+- Robot follows player into new dimension
+- Robots can defend themselves
+- Removal of a command implies goal removal
