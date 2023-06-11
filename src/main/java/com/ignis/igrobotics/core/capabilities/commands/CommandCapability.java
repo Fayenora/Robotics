@@ -40,10 +40,7 @@ public class CommandCapability implements ICommandable {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        for(RobotCommand command : RobotCommand.readFromNBT(nbt)) {
-            commands.put(command, null);
-            onApplied(command);
-        }
+        setCommands(RobotCommand.readFromNBT(nbt));
     }
 
     /**
