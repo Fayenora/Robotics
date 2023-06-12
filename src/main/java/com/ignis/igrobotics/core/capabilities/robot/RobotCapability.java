@@ -19,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -119,6 +120,7 @@ public class RobotCapability implements IRobot {
 
         if(commands.isPresent() && entity instanceof Mob mob) {
             if(activation) {
+                mob.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
                 mob.goalSelector.removeAllGoals(goal -> goal instanceof LookDownGoal);
                 commands.get().reapplyAllTasks();
             } else {

@@ -23,10 +23,6 @@ public class CommandCapability implements ICommandable {
     /** Contains all active commands in order. Additionally, maps them to the goal they are currently contributing to the entity */
     private final LinkedHashMap<RobotCommand, Goal> commands = new LinkedHashMap<>();
 
-    private Set<RobotCommand> inactiveCommands;
-    private Set<WrappedGoal> inactiveGoals;
-    private Set<WrappedGoal> inactiveTargets;
-
     public CommandCapability(Mob entity) {
         this.entity = entity;
     }
@@ -129,31 +125,20 @@ public class CommandCapability implements ICommandable {
 
     @Override
     public void removeAllTasks() {
-        inactiveGoals = entity.goalSelector.getAvailableGoals();
-        inactiveTargets = entity.targetSelector.getAvailableGoals();
-        entity.goalSelector.removeAllGoals(goal -> true);
-        entity.targetSelector.removeAllGoals(goal -> true);
+        entity.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
+        entity.targetSelector.getRunningGoals().forEach(WrappedGoal::stop);
         for(Goal.Flag flag : Goal.Flag.values()) {
             entity.goalSelector.disableControlFlag(flag);
             entity.targetSelector.disableControlFlag(flag);
         }
-        inactiveCommands = commands.keySet();
-        commands.clear();
     }
 
     @Override
     public void reapplyAllTasks() {
-        for(WrappedGoal goal : inactiveGoals) {
-            entity.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
-        }
-        for(WrappedGoal goal : inactiveTargets) {
-            entity.targetSelector.addGoal(goal.getPriority(), goal.getGoal());
-        }
         for(Goal.Flag flag : Goal.Flag.values()) {
             entity.goalSelector.enableControlFlag(flag);
             entity.targetSelector.enableControlFlag(flag);
         }
-        setCommands(inactiveCommands);
     }
 
     private void onApplied(RobotCommand command) {
@@ -163,7 +148,6 @@ public class CommandCapability implements ICommandable {
             if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
                 EntitySearch search = (EntitySearch) selector.get();
                 search.addListener(newResult -> {
-                    //TODO Instead of reevaluating the command, we could maybe insert the new result directly (This way the entity needs to be searched again)
                     search.setCache(newResult);
                     reapplyCommand(command);
                 });
