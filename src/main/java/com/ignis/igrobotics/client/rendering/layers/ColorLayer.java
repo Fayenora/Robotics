@@ -40,10 +40,10 @@ public class ColorLayer extends GeoRenderLayer<RobotEntity> {
         }
 
         ResourceLocation texture = limb.getColorResourceLocation(parts.getTemporaryColor());
-        RenderType armorRenderType = RenderType.armorCutoutNoCull(texture);
+        RenderType armorRenderType = RenderType.entityCutoutNoCull(texture);
 
         getRenderer().reRender(getDefaultBakedModel(robot), poseStack, bufferSource, robot, armorRenderType,
-                bufferSource.getBuffer(armorRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
+                bufferSource.getBuffer(armorRenderType), partialTick, packedLight, packedOverlay,
                 1, 1, 1, 1);
     }
 }
