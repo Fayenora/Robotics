@@ -35,9 +35,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -126,9 +127,18 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     // Animations
     /////////////////
 
+    private <T extends GeoAnimatable> PlayState getAnimation(AnimationState<T> animationState) {
+        if(animationState.isMoving()) {
+            animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.walk", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+        animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.idle", Animation.LoopType.LOOP));
+        return PlayState.CONTINUE;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "idle", 5, state -> state.setAndContinue(DefaultAnimations.IDLE)));
+        controllers.add(new AnimationController<>(this, "controller", 0, this::getAnimation));
     }
 
     @Override

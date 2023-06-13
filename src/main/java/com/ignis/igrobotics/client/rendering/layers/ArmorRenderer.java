@@ -43,7 +43,7 @@ public class ArmorRenderer<T extends LivingEntity & GeoAnimatable> extends ItemA
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-         animatable.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+        animatable.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
             hasLeftArm = parts.hasBodyPart(EnumRobotPart.LEFT_ARM);
             hasRightArm = parts.hasBodyPart(EnumRobotPart.RIGHT_ARM);
             hasLeftLeg = parts.hasBodyPart(EnumRobotPart.LEFT_LEG);
@@ -102,10 +102,8 @@ public class ArmorRenderer<T extends LivingEntity & GeoAnimatable> extends ItemA
     @Override
     protected void prepModelPartForRender(PoseStack poseStack, GeoBone bone, ModelPart sourcePart) {
         super.prepModelPartForRender(poseStack, bone, sourcePart);
-        if(bone.getName().equals(HELMET)) {
-            sourcePart.xRot = 0;
-            sourcePart.yRot = 0;
-            sourcePart.zRot = 0;
-        }
+        sourcePart.xRot = 0;
+        sourcePart.yRot = 0;
+        sourcePart.zRot = 0;
     }
 }
