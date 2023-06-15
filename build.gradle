@@ -158,6 +158,14 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        // CC Tweaked
+        url = "https://squiddev.cc/maven/"
+        content {
+            includeGroup("cc.tweaked")
+            includeModule("org.squiddev", "Cobalt")
+        }
+    }
 }
 
 dependencies {
@@ -168,15 +176,18 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    // compile against the JEI API but do not include it at runtime
+    // JEI
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
-    // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
-    //Geckolib
+    // CC Tweaked
+    compileOnly("cc.tweaked:cc-tweaked-${mc_version}-core-api:${cct_version}")
+    compileOnly(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge-api:${cct_version}"))
+    runtimeOnly(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge:${cct_version}"))
+    // Geckolib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${geckolib_version}")
 
-    //RFTools at runtime
+    // RFTools at runtime
     runtimeOnly(fg.deobf("curse.maven:McJtyLib-233105:4501793"))
     runtimeOnly(fg.deobf("curse.maven:RFToolsBase-326041:4474182"))
     runtimeOnly(fg.deobf("curse.maven:RFToolsPower-290209:4462358"))
