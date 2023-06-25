@@ -1,0 +1,10 @@
+package com.ignis.igrobotics.integration.cc;
+
+import dan200.computercraft.shared.computer.core.ServerComputer;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+
+@AutoRegisterCapability
+public interface IComputerized {
+
+    ServerComputer getComputer();
+}

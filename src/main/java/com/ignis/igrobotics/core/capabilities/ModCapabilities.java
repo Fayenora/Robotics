@@ -21,6 +21,8 @@ import com.ignis.igrobotics.core.capabilities.perks.PerkMapCapability;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.integration.cc.ComputerCapability;
+import com.ignis.igrobotics.integration.cc.IComputerized;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
@@ -49,6 +51,7 @@ public class ModCapabilities {
     public static final Capability<ICommandable> COMMANDS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IChunkLoader> CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<ChunkLoadingHandler.ChunkTracker> CHUNK_TRACKER = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IComputerized> COMPUTERIZED = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static final ResourceLocation LOC_ROBOT = new ResourceLocation(Robotics.MODID, "robot");
     public static final ResourceLocation LOC_INVENTORY = new ResourceLocation(Robotics.MODID, "inventory");
@@ -58,6 +61,7 @@ public class ModCapabilities {
     public static final ResourceLocation LOC_COMMANDS = new ResourceLocation(Robotics.MODID, "commands");
     public static final ResourceLocation LOC_LOADER = new ResourceLocation(Robotics.MODID, "chunk_loader");
     public static final ResourceLocation LOC_TRACKER = new ResourceLocation(Robotics.MODID, "chunk_tracker");
+    public static final ResourceLocation LOC_COMPUTERIZED = new ResourceLocation(Robotics.MODID, "computerized");
 
     public static final BaseInventory EMPTY_INVENTORY = new BaseInventory(() -> BlockPos.ZERO, 0);
     public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
@@ -122,6 +126,9 @@ public class ModCapabilities {
 
         RobotCapability robotCapability = new RobotCapability(robot);
         event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
+
+        ComputerCapability computerCapability = new ComputerCapability(robot);
+        event.addCapability(LOC_COMPUTERIZED, new AlwaysProvideAndSave<>(COMPUTERIZED, computerCapability));
     }
 
     @SubscribeEvent

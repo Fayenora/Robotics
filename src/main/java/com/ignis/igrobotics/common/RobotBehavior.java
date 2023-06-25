@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.common;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.menu.ProgrammingMenu;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
@@ -25,6 +27,7 @@ import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
+import dan200.computercraft.shared.network.container.ComputerContainerData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -48,6 +51,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,15 +65,13 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -79,7 +81,8 @@ public class RobotBehavior {
             ModMenuTypes.ROBOT,
             ModMenuTypes.ROBOT_INFO,
             ModMenuTypes.ROBOT_INVENTORY,
-            ModMenuTypes.ROBOT_COMMANDS
+            ModMenuTypes.ROBOT_COMMANDS,
+            ModMenuTypes.COMPUTER
     };
 
     @SubscribeEvent
@@ -222,6 +225,19 @@ public class RobotBehavior {
                         });
             });
         }
+        if(type == ModMenuTypes.COMPUTER.get()) {
+            if(!hasAccess(player, target, EnumPermission.COMMANDS)) return;
+            target.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
+                NetworkHooks.openScreen(serverPlayer,
+                        new SimpleMenuProvider(
+                                (id, playerInv, f3) -> new ProgrammingMenu(id, playerInv, target, p -> hasAccess(p, target, EnumPermission.COMMANDS), computer.getComputer()),
+                                Lang.localise("container.computer")),
+                        buf -> {
+                            new ComputerContainerData(computer.getComputer(), Items.APPLE.getDefaultInstance()).toBytes(buf);
+                            buf.writeInt(target.getId());
+                        });
+            });
+        }
     }
 
     public static void onRobotCreated(LivingEntity entity) {
@@ -249,7 +265,14 @@ public class RobotBehavior {
     }
 
     public static List<MenuType<?>> possibleMenus(Entity entity) {
-        return List.of(ModMenuTypes.ROBOT.get(), ModMenuTypes.ROBOT_INFO.get(), ModMenuTypes.ROBOT_COMMANDS.get());
+        ArrayList<MenuType<?>> menus = new ArrayList<>();
+        menus.add(ModMenuTypes.ROBOT.get());
+        menus.add(ModMenuTypes.ROBOT_INFO.get());
+        menus.add(ModMenuTypes.ROBOT_COMMANDS.get());
+        if(ModList.get().isLoaded(Reference.CC_MOD_ID)) {
+            menus.add(ModMenuTypes.COMPUTER.get());
+        }
+        return menus;
     }
 
     public static boolean hasAccess(Player player, Entity entity, EnumPermission permission) {

@@ -18,6 +18,8 @@ import java.util.UUID;
 import static com.ignis.igrobotics.core.robot.EnumRobotMaterial.*;
 
 public class Reference {
+
+	public static final String CC_MOD_ID = "computercraft";
 	
 	public static final ResourceLocation MISC = new ResourceLocation(Robotics.MODID + ":textures/gui/buttons.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("minecraft", "textures/gui/icons.png");
