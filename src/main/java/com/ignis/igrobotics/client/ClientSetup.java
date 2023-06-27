@@ -8,6 +8,7 @@ import com.ignis.igrobotics.client.screen.*;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;

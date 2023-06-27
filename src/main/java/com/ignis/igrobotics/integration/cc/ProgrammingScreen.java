@@ -1,7 +1,6 @@
-package com.ignis.igrobotics.client.screen;
+package com.ignis.igrobotics.integration.cc;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.ProgrammingMenu;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.definitions.ModMenuTypes;

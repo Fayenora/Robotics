@@ -2,6 +2,7 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.*;
+import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;

@@ -2,7 +2,8 @@ package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.ProgrammingMenu;
+import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
+import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
@@ -93,22 +94,32 @@ public class RobotBehavior {
 
     @SubscribeEvent
     public static void onRobotTick(LivingEvent.LivingTickEvent event) {
-        if(event.getEntity().level.isClientSide()) return;
-        event.getEntity().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                event.getEntity().getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
-                        if(energy.getEnergyStored() <= 0) {
-                            robot.setActivation(false);
-                        }
+        LivingEntity entity = event.getEntity();
+        if(entity.level.isClientSide()) return;
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+            entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+                    if(energy.getEnergyStored() <= 0) {
+                        robot.setActivation(false);
+                    }
 
-                        if(!robot.isActive()) return;
-                        double consumption = event.getEntity().getAttributeValue(ModAttributes.ENERGY_CONSUMPTION);
-                        if(consumption > 0) {
-                            float configMultiplier = RoboticsConfig.general.robotBaseConsumption.get() / 100f;
-                            energy.extractEnergy((int) (consumption * configMultiplier), false);
-                        } else {
-                            energy.receiveEnergy((int) -consumption, false);
+                    //Keep the Computer alive
+                    entity.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
+                        if(computer.hasComputer()) {
+                            ComputerizedBehavior.onComputerTick(robot, computer.getComputer());
                         }
                     });
+
+                    if(!robot.isActive()) return;
+
+                    //Consume/Receive Energy through passive sources
+                    double consumption = entity.getAttributeValue(ModAttributes.ENERGY_CONSUMPTION);
+                    if(consumption > 0) {
+                        float configMultiplier = RoboticsConfig.general.robotBaseConsumption.get() / 100f;
+                        energy.extractEnergy((int) (consumption * configMultiplier), false);
+                    } else {
+                        energy.receiveEnergy((int) -consumption, false);
+                    }
+                });
             });
     }
 

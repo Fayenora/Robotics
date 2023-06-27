@@ -4,12 +4,12 @@ import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerContext;
 import dan200.computercraft.shared.util.IDAssigner;
-import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class ComputerCapability implements IComputerized, INBTSerializable<IntTag> {
+public class ComputerCapability implements IComputerized, INBTSerializable<CompoundTag> {
 
     private final LivingEntity entity;
     private EntityComputer computer;
@@ -19,6 +19,11 @@ public class ComputerCapability implements IComputerized, INBTSerializable<IntTa
 
     public ComputerCapability(LivingEntity entity) {
         this.entity = entity;
+    }
+
+    @Override
+    public boolean hasComputer() {
+        return computer != null;
     }
 
     @Override
@@ -63,12 +68,16 @@ public class ComputerCapability implements IComputerized, INBTSerializable<IntTa
     }
 
     @Override
-    public IntTag serializeNBT() {
-        return IntTag.valueOf(instanceID);
+    public CompoundTag serializeNBT() {
+        CompoundTag compound = new CompoundTag();
+        compound.putInt("instanceID", instanceID);
+        compound.putInt("computerID", computerID);
+        return compound;
     }
 
     @Override
-    public void deserializeNBT(IntTag nbt) {
-        instanceID = nbt.getAsInt();
+    public void deserializeNBT(CompoundTag compound) {
+        instanceID = compound.getInt("instanceID");
+        computerID = compound.getInt("computerID");
     }
 }

@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.integration.cc;
 
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
