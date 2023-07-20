@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.selectors.*;
 import com.ignis.igrobotics.core.EntitySearch;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -31,21 +32,23 @@ public class SelectionType<T> {
 
     public static final List<SelectionType<?>> TYPES = new ArrayList<>();
 
-    public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of, string -> new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(string))));
-    public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, string -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(string)));
-    public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, SelectionType::parseBlockPos);
+    // TODO: This type of abstraction may have made sense when selection types did not have that much responsibility.
+    //  SelectionTypes should now probably be implemented in subclasses, as this is just ugly to look at
+    public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of, string -> new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(string))), stack -> ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
+    public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, string -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(string)), block -> ForgeRegistries.BLOCKS.getKey(block).toString());
+    public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, SelectionType::parseBlockPos, Vec3i::toString);
     public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
         CompoundTag tag = new CompoundTag();
         tag.putString("value", ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
         return tag;
     }, tag -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(tag.getString("value"))),
-       string -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(string)));
+       string -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(string)), type -> ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
     public static final SelectionType<Integer> INTEGER = register("<Int>", Integer.class, () -> 0, number -> {
         CompoundTag tag = new CompoundTag();
         tag.putInt("value", number);
         return tag;
-    }, tag -> tag.getInt("value"), string -> Integer.valueOf(Arrays.stream(string.split("\\D")).filter(s -> s.length() > 0).findFirst().get()));
-    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::new, EntitySearch::serializeNBT, EntitySearch::of, EntitySearch::new);
+    }, tag -> tag.getInt("value"), string -> Integer.valueOf(Arrays.stream(string.split("\\D")).filter(s -> s.length() > 0).findFirst().get()), Object::toString);
+    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::new, EntitySearch::serializeNBT, EntitySearch::of, EntitySearch::new, EntitySearch::toString);
 
     private final String identifier;
     private final Class<T> type;
@@ -53,6 +56,7 @@ public class SelectionType<T> {
     private final Function<T, CompoundTag> writer;
     private final Function<CompoundTag, T> reader;
     private final Function<String, T> parser;
+    private final Function<T, String> toString;
     @OnlyIn(Dist.CLIENT)
     private Class<?> gui;
 
@@ -83,17 +87,18 @@ public class SelectionType<T> {
         return TYPES.get(id);
     }
 
-    private SelectionType(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Function<String, T> parser) {
+    private SelectionType(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Function<String, T> parser, Function<T, String> toString) {
         this.identifier = identifier;
         this.type = type;
         this.defaultsTo = defaultsTo;
         this.writer = writer;
         this.reader = reader;
         this.parser = parser;
+        this.toString = toString;
     }
 
-    public static <T> SelectionType<T> register(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Function<String, T> parser) {
-        SelectionType<T> selectionType = new SelectionType<>(identifier, type, defaultsTo, writer, reader, parser);
+    public static <T> SelectionType<T> register(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Function<String, T> parser, Function<T, String> toString) {
+        SelectionType<T> selectionType = new SelectionType<>(identifier, type, defaultsTo, writer, reader, parser, toString);
         TYPES.add(selectionType);
         return selectionType;
     }
@@ -133,6 +138,10 @@ public class SelectionType<T> {
 
     public T parse(String string) {
         return parser.apply(string);
+    }
+
+    public String toString(T selection) {
+        return toString.apply(selection);
     }
 
     @Override

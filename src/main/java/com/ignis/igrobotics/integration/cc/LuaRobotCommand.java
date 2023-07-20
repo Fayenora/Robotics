@@ -22,7 +22,7 @@ public class LuaRobotCommand {
     public final String[] getSelections() {
         String[] selections = new String[command.getSelectors().size()];
         for(int i = 0; i < selections.length; i++) {
-            selections[i] = command.getSelectors().get(i).get().toString();
+            selections[i] = command.getSelectors().get(i).toString();
         }
         return selections;
     }

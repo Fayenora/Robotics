@@ -9,7 +9,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -184,4 +183,10 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         void onSearchFoundNewResult(Entity newResult);
     }
 
+    @Override
+    public String toString() {
+        if(name != null) return name;
+        if(uuid != null) return uuid.toString();
+        return super.toString();
+    }
 }

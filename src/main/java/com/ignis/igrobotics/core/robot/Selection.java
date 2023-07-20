@@ -61,5 +61,9 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 		this.type = readNBT(nbt).getType();
 		this.target = (A) readNBT(nbt).target;
 	}
-	
+
+	@Override
+	public String toString() {
+		return type.toString(target);
+	}
 }
