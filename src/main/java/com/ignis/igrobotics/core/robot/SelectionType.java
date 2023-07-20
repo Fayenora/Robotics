@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.robot;
 
-import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.selectors.*;
 import com.ignis.igrobotics.core.EntitySearch;
@@ -21,41 +20,39 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SelectionType<T> {
 
     public static final List<SelectionType<?>> TYPES = new ArrayList<>();
 
-    public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of);
-    public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null);
-    public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos);
+    public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of, string -> new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(string))));
+    public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, string -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(string)));
+    public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, SelectionType::parseBlockPos);
     public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
         CompoundTag tag = new CompoundTag();
         tag.putString("value", ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
         return tag;
-    }, tag -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(tag.getString("value"))));
+    }, tag -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(tag.getString("value"))),
+       string -> ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.tryParse(string)));
     public static final SelectionType<Integer> INTEGER = register("<Int>", Integer.class, () -> 0, number -> {
         CompoundTag tag = new CompoundTag();
         tag.putInt("value", number);
         return tag;
-    }, tag -> tag.getInt("value"));
-    public static final SelectionType<UUID> ENTITY = register("<Entity>", UUID.class, () -> Reference.DEFAULT_UUID, uuid -> {
-        CompoundTag tag = new CompoundTag();
-        tag.putUUID("value", uuid);
-        return tag;
-    }, tag -> tag.getUUID("value"));
-    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::new, EntitySearch::serializeNBT, EntitySearch::of);
+    }, tag -> tag.getInt("value"), string -> Integer.valueOf(Arrays.stream(string.split("\\D")).filter(s -> s.length() > 0).findFirst().get()));
+    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::new, EntitySearch::serializeNBT, EntitySearch::of, EntitySearch::new);
 
     private final String identifier;
     private final Class<T> type;
     private final Supplier<T> defaultsTo;
     private final Function<T, CompoundTag> writer;
     private final Function<CompoundTag, T> reader;
+    private final Function<String, T> parser;
     @OnlyIn(Dist.CLIENT)
     private Class<?> gui;
 
@@ -64,7 +61,6 @@ public class SelectionType<T> {
         POS.gui = PosSelector.class;
         ENTITY_TYPE.gui = EntityTypeSelector.class;
         INTEGER.gui = IntSelector.class;
-        ENTITY.gui = EntitySelector.class;
         ENTITY_PREDICATE.gui = EntitySearchSelector.class;
     }
 
@@ -87,16 +83,17 @@ public class SelectionType<T> {
         return TYPES.get(id);
     }
 
-    private SelectionType(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader) {
+    private SelectionType(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Function<String, T> parser) {
         this.identifier = identifier;
         this.type = type;
         this.defaultsTo = defaultsTo;
         this.writer = writer;
         this.reader = reader;
+        this.parser = parser;
     }
 
-    public static <T> SelectionType<T> register(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader) {
-        SelectionType<T> selectionType = new SelectionType<>(identifier, type, defaultsTo, writer, reader);
+    public static <T> SelectionType<T> register(String identifier, Class<T> type, Supplier<T> defaultsTo, Function<T, CompoundTag> writer, Function<CompoundTag, T> reader, Function<String, T> parser) {
+        SelectionType<T> selectionType = new SelectionType<>(identifier, type, defaultsTo, writer, reader, parser);
         TYPES.add(selectionType);
         return selectionType;
     }
@@ -134,4 +131,21 @@ public class SelectionType<T> {
         return reader;
     }
 
+    public T parse(String string) {
+        return parser.apply(string);
+    }
+
+    @Override
+    public String toString() {
+        return identifier.substring(1, identifier.length() - 1);
+    }
+
+    private static BlockPos parseBlockPos(String string) {
+        //Find and separate all consequent digits ( = numbers) in the string
+        Object[] list = Arrays.stream(string.split("\\D")).filter(Predicate.not(String::isBlank)).map(Integer::parseInt).toArray();
+        if(list.length >= 3 && list[0] instanceof Integer && list[1] instanceof Integer && list[2] instanceof Integer) {
+            return new BlockPos((Integer) list[0], (Integer) list[1], (Integer) list[2]);
+        }
+        return null;
+    }
 }

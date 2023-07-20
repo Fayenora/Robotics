@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.integration.cc;
 
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerContext;
@@ -35,13 +36,17 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
     }
 
     private EntityComputer createComputer(int computerId) {
-        return new EntityComputer(
+        EntityComputer computer = new EntityComputer(
                 (ServerLevel) entity.level,
                 entity, computerId,
                 entity.getName().getString(),
                 ComputerFamily.ADVANCED,
                 39,
                 13);
+        if(entity.getCapability(ModCapabilities.COMMANDS).isPresent()) {
+            computer.addAPI(new CommandAPI(computer.getAPIEnvironment(), entity.getCapability(ModCapabilities.COMMANDS).resolve().get()));
+        }
+        return computer;
     }
 
     private EntityComputer createEntityComputer() {

@@ -29,6 +29,6 @@ public class HuntGoal extends TargetGoal {
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof HuntGoal huntGoal)) return false;
-		return mob.equals(huntGoal.mob) && targetMob.equals(huntGoal.targetMob);
+		return mob.equals(huntGoal.mob) && (targetMob == huntGoal.targetMob || targetMob.equals(huntGoal.targetMob));
 	}
 }
