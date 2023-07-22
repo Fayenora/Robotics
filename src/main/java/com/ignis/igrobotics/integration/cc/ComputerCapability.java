@@ -1,6 +1,11 @@
 package com.ignis.igrobotics.integration.cc;
 
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.integration.cc.apis.CommandAPI;
+import com.ignis.igrobotics.integration.cc.apis.RobotAPI;
+import com.ignis.igrobotics.integration.cc.apis.SensorAPI;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerContext;
@@ -8,7 +13,12 @@ import dan200.computercraft.shared.util.IDAssigner;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.energy.IEnergyStorage;
+
+import java.util.Optional;
 
 public class ComputerCapability implements IComputerized, INBTSerializable<CompoundTag> {
 
@@ -43,8 +53,17 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
                 ComputerFamily.ADVANCED,
                 39,
                 13);
-        if(entity.getCapability(ModCapabilities.COMMANDS).isPresent()) {
-            computer.addAPI(new CommandAPI(computer.getAPIEnvironment(), entity.getCapability(ModCapabilities.COMMANDS).resolve().get()));
+        if(entity instanceof Mob mob) {
+            computer.addAPI(new SensorAPI(computer.getAPIEnvironment(), mob));
+        }
+        Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
+        Optional<IEnergyStorage> energy = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
+        Optional<ICommandable> commands = entity.getCapability(ModCapabilities.COMMANDS).resolve();
+        if(robot.isPresent() && energy.isPresent()) {
+            computer.addAPI(new RobotAPI(computer.getAPIEnvironment(), robot.get(), energy.get()));
+        }
+        if(commands.isPresent()) {
+            computer.addAPI(new CommandAPI(computer.getAPIEnvironment(), commands.get()));
         }
         return computer;
     }

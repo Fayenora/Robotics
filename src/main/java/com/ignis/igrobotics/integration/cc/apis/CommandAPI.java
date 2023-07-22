@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.integration.cc;
+package com.ignis.igrobotics.integration.cc.apis;
 
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.robot.CommandType;

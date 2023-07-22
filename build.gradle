@@ -130,6 +130,11 @@ minecraft {
                 }
             }
         }
+
+        configureEach {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+        }
     }
 }
 

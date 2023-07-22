@@ -136,6 +136,10 @@ public class SelectionType<T> {
         return reader;
     }
 
+    public Function<T, String> stringifier() {
+        return toString;
+    }
+
     public T parse(String string) {
         return parser.apply(string);
     }
