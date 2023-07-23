@@ -2,8 +2,6 @@ package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
-import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
@@ -23,8 +21,12 @@ import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModAttributes;
+import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
+import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
+import com.ignis.igrobotics.integration.cc.PeripheralMenu;
+import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
@@ -52,7 +54,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
@@ -83,7 +84,8 @@ public class RobotBehavior {
             ModMenuTypes.ROBOT_INFO,
             ModMenuTypes.ROBOT_INVENTORY,
             ModMenuTypes.ROBOT_COMMANDS,
-            ModMenuTypes.COMPUTER
+            ModMenuTypes.COMPUTER,
+            ModMenuTypes.PERIPHERALS
     };
 
     @SubscribeEvent
@@ -244,7 +246,19 @@ public class RobotBehavior {
                                 (id, playerInv, f3) -> new ProgrammingMenu(id, playerInv, target, p -> hasAccess(p, target, EnumPermission.COMMANDS), computer.getComputer()),
                                 Lang.localise("container.computer")),
                         buf -> {
-                            new ComputerContainerData(computer.getComputer(), Items.APPLE.getDefaultInstance()).toBytes(buf);
+                            new ComputerContainerData(computer.getComputer(), ModItems.MATERIALS[0][0].get().getDefaultInstance()).toBytes(buf);
+                            buf.writeInt(target.getId());
+                        });
+            });
+        }
+        if(type == ModMenuTypes.PERIPHERALS.get()) {
+            if(!hasAccess(player, target, EnumPermission.COMMANDS)) return;
+            target.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
+                NetworkHooks.openScreen(serverPlayer,
+                        new SimpleMenuProvider(
+                                (id, playerInv, f3) -> new PeripheralMenu(id, playerInv, target, computer.getComputer()),
+                                Lang.localise("container.computer")),
+                        buf -> {
                             buf.writeInt(target.getId());
                         });
             });
@@ -282,6 +296,7 @@ public class RobotBehavior {
         menus.add(ModMenuTypes.ROBOT_COMMANDS.get());
         if(ModList.get().isLoaded(Reference.CC_MOD_ID)) {
             menus.add(ModMenuTypes.COMPUTER.get());
+            menus.add(ModMenuTypes.PERIPHERALS.get());
         }
         return menus;
     }

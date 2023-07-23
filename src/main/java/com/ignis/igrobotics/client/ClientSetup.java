@@ -8,6 +8,7 @@ import com.ignis.igrobotics.client.screen.*;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.cc.PeripheralScreen;
 import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -32,6 +33,7 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.ROBOT_COMMANDS.get(), RobotCommandScreen::new);
             MenuScreens.register(ModMenuTypes.COMMANDER.get(), CommanderScreen::new);
             MenuScreens.register(ModMenuTypes.COMPUTER.get(), ProgrammingScreen::new);
+            MenuScreens.register(ModMenuTypes.PERIPHERALS.get(), PeripheralScreen::new);
         });
     }
 

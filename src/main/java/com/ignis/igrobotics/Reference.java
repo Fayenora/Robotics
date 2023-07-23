@@ -56,6 +56,7 @@ public class Reference {
 	public static final Dimension GUI_ROBOT_FACTORY_DIMENSIONS = new Dimension(229, 219);
 	public static final Dimension GUI_ROBOT_DIMENSIONS = new Dimension(GUI_DEFAULT_DIMENSIONS.width, 175);
 	public static final Dimension GUI_ROBOT_COMMANDS_DIMENSION = new Dimension(256, 182);
+	public static final Dimension GUI_ROBOT_PERIPHERALS_DIMENSION = new Dimension(176, 160);
 	
 	public static final UUID DEFAULT_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 	public static final GameProfile PROFILE = new GameProfile(DEFAULT_UUID, "[" + Robotics.MODID + "]");

@@ -2,6 +2,7 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.*;
+import com.ignis.igrobotics.integration.cc.PeripheralMenu;
 import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -25,6 +26,7 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<RobotCommandMenu>> ROBOT_COMMANDS = registerMenuType(RobotCommandMenu::new, "robot_command_menu");
     public static final RegistryObject<MenuType<CommanderMenu>> COMMANDER = registerMenuType(CommanderMenu::new , "commander_menu");
     public static final RegistryObject<MenuType<ProgrammingMenu>> COMPUTER = registerMenuType(ProgrammingMenu::new, "computer_menu");
+    public static final RegistryObject<MenuType<PeripheralMenu>> PERIPHERALS = registerMenuType(PeripheralMenu::new, "peripheral_menu");
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));

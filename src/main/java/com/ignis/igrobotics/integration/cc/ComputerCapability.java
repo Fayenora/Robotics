@@ -17,6 +17,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Optional;
 
@@ -24,12 +26,14 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
 
     private final LivingEntity entity;
     private EntityComputer computer;
+    private ItemStackHandler peripherals;
 
     int computerID = -1;
     int instanceID = -1;
 
     public ComputerCapability(LivingEntity entity) {
         this.entity = entity;
+        peripherals = new PeripheralInventory(this::getComputer);
     }
 
     @Override
@@ -43,6 +47,11 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
             computer = createEntityComputer();
         }
         return computer;
+    }
+
+    @Override
+    public IItemHandler getPeripherals() {
+        return peripherals;
     }
 
     private EntityComputer createComputer(int computerId) {
@@ -96,6 +105,7 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
         CompoundTag compound = new CompoundTag();
         compound.putInt("instanceID", instanceID);
         compound.putInt("computerID", computerID);
+        compound.put("peripherals", peripherals.serializeNBT());
         return compound;
     }
 
@@ -103,5 +113,6 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
     public void deserializeNBT(CompoundTag compound) {
         instanceID = compound.getInt("instanceID");
         computerID = compound.getInt("computerID");
+        peripherals.deserializeNBT(compound.getCompound("peripherals"));
     }
 }
