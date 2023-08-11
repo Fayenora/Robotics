@@ -105,7 +105,7 @@ public class RobotBehavior {
                     //Keep the Computer alive
                     entity.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
                         if(computer.hasComputer()) {
-                            ComputerizedBehavior.onComputerTick(robot, computer.getComputer());
+                            ComputerizedBehavior.onComputerTick(entity, robot, computer.getComputer());
                         }
                     });
 

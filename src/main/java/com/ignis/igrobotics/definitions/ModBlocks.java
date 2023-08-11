@@ -5,6 +5,7 @@ import com.ignis.igrobotics.common.blocks.AssemblerBlock;
 import com.ignis.igrobotics.common.blocks.FactoryBlock;
 import com.ignis.igrobotics.common.blocks.StorageBlock;
 import com.ignis.igrobotics.common.blocks.WireCutterBlock;
+import com.ignis.igrobotics.integration.cc.RedstoneInterface;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +23,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> WIRE_CUTTER = registerBlock("wire_cutter", WireCutterBlock::new);
     public static final RegistryObject<Block> ROBOT_STORAGE = registerBlock("robot_storage", StorageBlock::new);
     public static final RegistryObject<Block> ROBOT_FACTORY = registerBlock("robot_factory", FactoryBlock::new);
+    public static final RegistryObject<Block> REDSTONE_INTEGRATOR = registerBlock("redstone_integrator", RedstoneInterface::new);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
