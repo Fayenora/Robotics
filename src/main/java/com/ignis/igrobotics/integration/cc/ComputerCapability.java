@@ -34,7 +34,7 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
 
     @Override
     public boolean hasComputer() {
-        return computer != null;
+        return instanceID >= 0;
     }
 
     @Override
