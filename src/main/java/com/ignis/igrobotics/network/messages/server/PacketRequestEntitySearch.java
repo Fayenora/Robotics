@@ -1,24 +1,17 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.client.PacketGuiData;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
-
-import java.nio.charset.Charset;
-import java.util.Optional;
-import java.util.UUID;
 
 public class PacketRequestEntitySearch implements IMessage {
 

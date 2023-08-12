@@ -2,9 +2,9 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
-import com.ignis.igrobotics.core.robot.JsonSerializers;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.JsonSerializers;
 import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.util.FileUtils;
 import com.ignis.igrobotics.core.util.Tuple;

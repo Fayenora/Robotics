@@ -1,12 +1,5 @@
 package com.ignis.igrobotics.integration.cc;
 
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
-import com.ignis.igrobotics.core.capabilities.robot.IRobot;
-import com.ignis.igrobotics.integration.cc.apis.CommandAPI;
-import com.ignis.igrobotics.integration.cc.apis.InventoryAPI;
-import com.ignis.igrobotics.integration.cc.apis.RobotAPI;
-import com.ignis.igrobotics.integration.cc.apis.SensorAPI;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerContext;
@@ -14,14 +7,7 @@ import dan200.computercraft.shared.util.IDAssigner;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.Optional;
 
 public class ComputerCapability implements IComputerized, INBTSerializable<CompoundTag> {
 

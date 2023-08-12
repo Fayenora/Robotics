@@ -2,8 +2,6 @@ package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
-import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import com.ignis.igrobotics.client.menu.RobotCommandMenu;
 import com.ignis.igrobotics.client.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.menu.RobotMenu;
@@ -25,6 +23,8 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
+import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
+import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
