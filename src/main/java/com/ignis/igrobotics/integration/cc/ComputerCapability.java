@@ -4,6 +4,7 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.integration.cc.apis.CommandAPI;
+import com.ignis.igrobotics.integration.cc.apis.InventoryAPI;
 import com.ignis.igrobotics.integration.cc.apis.RobotAPI;
 import com.ignis.igrobotics.integration.cc.apis.SensorAPI;
 import dan200.computercraft.api.ComputerCraftAPI;
@@ -17,6 +18,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Optional;
 
@@ -46,26 +49,13 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
     }
 
     private EntityComputer createComputer(int computerId) {
-        EntityComputer computer = new EntityComputer(
+        return new EntityComputer(
                 (ServerLevel) entity.level,
                 entity, computerId,
                 entity.getName().getString(),
                 ComputerFamily.ADVANCED,
                 39,
                 13);
-        if(entity instanceof Mob mob) {
-            computer.addAPI(new SensorAPI(computer.getAPIEnvironment(), mob));
-        }
-        Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
-        Optional<IEnergyStorage> energy = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
-        Optional<ICommandable> commands = entity.getCapability(ModCapabilities.COMMANDS).resolve();
-        if(robot.isPresent() && energy.isPresent()) {
-            computer.addAPI(new RobotAPI(computer.getAPIEnvironment(), robot.get(), energy.get()));
-        }
-        if(commands.isPresent()) {
-            computer.addAPI(new CommandAPI(computer.getAPIEnvironment(), commands.get()));
-        }
-        return computer;
     }
 
     private EntityComputer createEntityComputer() {
