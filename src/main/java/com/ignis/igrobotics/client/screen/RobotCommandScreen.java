@@ -103,9 +103,11 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
-        if(entity == null) return;
+    public void removed() {
+        if(entity == null) {
+            super.removed();
+            return;
+        }
 
         List<RobotCommand> commands = new ArrayList<>();
         for(var child : selectedCommands.children()) {
@@ -121,5 +123,6 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
             if(robot.getCommands().isEmpty() && commands.isEmpty()) return;
             NetworkHandler.sendToServer(new PacketSetCommands(entity.getId(), commands));
         });
+        super.removed();
     }
 }
