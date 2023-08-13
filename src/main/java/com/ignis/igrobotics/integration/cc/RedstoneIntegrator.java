@@ -1,7 +1,6 @@
-package com.ignis.igrobotics.common.blockentity;
+package com.ignis.igrobotics.integration.cc;
 
 import com.ignis.igrobotics.definitions.ModMachines;
-import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

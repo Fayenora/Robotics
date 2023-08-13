@@ -2,11 +2,15 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.blockentity.*;
+import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
+import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.blockentity.WireCutterBlockEntity;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.IRecipeSerializer;
 import com.ignis.igrobotics.core.Machine;
+import com.ignis.igrobotics.integration.cc.RedstoneIntegrator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

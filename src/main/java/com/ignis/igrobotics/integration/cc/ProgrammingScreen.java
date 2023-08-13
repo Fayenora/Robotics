@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
 
 public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
@@ -23,9 +24,9 @@ public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
 
     private final LivingEntity entity;
 
-    public ProgrammingScreen(ProgrammingMenu menu, Inventory playerInv, Component title) {
-        super(menu, playerInv, title, 12);
-        entity = menu.robot;
+    public ProgrammingScreen(AbstractContainerMenu menu, Inventory playerInv, Component title) {
+        super((ProgrammingMenu) menu, playerInv, title, 12);
+        entity = ((ProgrammingMenu) menu).robot;
         imageWidth = 256 + AbstractComputerMenu.SIDEBAR_WIDTH;
         imageHeight = 139;
     }

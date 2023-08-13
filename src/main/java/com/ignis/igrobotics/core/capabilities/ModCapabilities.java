@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.capabilities;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.ChunkLoadingHandler;
 import com.ignis.igrobotics.common.entity.RobotEntity;
@@ -35,6 +36,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -127,8 +129,10 @@ public class ModCapabilities {
         RobotCapability robotCapability = new RobotCapability(robot);
         event.addCapability(LOC_ROBOT, new AlwaysProvideAndSave<>(ROBOT, robotCapability));
 
-        ComputerCapability computerCapability = new ComputerCapability(robot);
-        event.addCapability(LOC_COMPUTERIZED, new AlwaysProvideAndSave<>(COMPUTERIZED, computerCapability));
+        if(ModList.get().isLoaded(Reference.CC_MOD_ID)) {
+            ComputerCapability computerCapability = new ComputerCapability(robot);
+            event.addCapability(LOC_COMPUTERIZED, new AlwaysProvideAndSave<>(COMPUTERIZED, computerCapability));
+        }
     }
 
     @SubscribeEvent

@@ -24,7 +24,7 @@ import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
-import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
+import com.ignis.igrobotics.integration.cc.vanilla.ScreenInvokator;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
@@ -103,11 +103,13 @@ public class RobotBehavior {
                     }
 
                     //Keep the Computer alive
-                    entity.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
-                        if(computer.hasComputer()) {
-                            ComputerizedBehavior.onComputerTick(entity, robot, computer.getComputer());
-                        }
-                    });
+                    if(ModList.get().isLoaded(Reference.CC_MOD_ID)) {
+                        entity.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
+                            if(computer.hasComputer()) {
+                                ComputerizedBehavior.onComputerTick(entity, robot, computer.getComputer());
+                            }
+                        });
+                    }
 
                     if(!robot.isActive()) return;
 
@@ -238,10 +240,11 @@ public class RobotBehavior {
         }
         if(type == ModMenuTypes.COMPUTER.get()) {
             if(!hasAccess(player, target, EnumPermission.COMMANDS)) return;
+            if(!ModList.get().isLoaded(Reference.CC_MOD_ID)) return;
             target.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
                 NetworkHooks.openScreen(serverPlayer,
                         new SimpleMenuProvider(
-                                (id, playerInv, f3) -> new ProgrammingMenu(id, playerInv, target, p -> hasAccess(p, target, EnumPermission.COMMANDS), computer.getComputer()),
+                                ScreenInvokator.invokeProgrammingMenu(target, computer),
                                 Lang.localise("container.computer")),
                         buf -> {
                             new ComputerContainerData(computer.getComputer(), Items.APPLE.getDefaultInstance()).toBytes(buf);

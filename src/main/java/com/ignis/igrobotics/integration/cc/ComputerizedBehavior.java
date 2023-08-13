@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.integration.cc;
 
-import com.ignis.igrobotics.common.blockentity.RedstoneIntegrator;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import dan200.computercraft.api.peripheral.IPeripheral;

@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.rendering.RobotFactoryRenderer;
 import com.ignis.igrobotics.client.rendering.RobotRenderer;
@@ -9,11 +10,17 @@ import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
+import com.ignis.igrobotics.integration.cc.vanilla.VProgrammingScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -31,7 +38,17 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.ROBOT_INFO.get(), RobotInfoScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT_COMMANDS.get(), RobotCommandScreen::new);
             MenuScreens.register(ModMenuTypes.COMMANDER.get(), CommanderScreen::new);
-            MenuScreens.register(ModMenuTypes.COMPUTER.get(), ProgrammingScreen::new);
+            //This is horrendous. Please look away
+            if(ModList.get().isLoaded(Reference.CC_MOD_ID)) {
+                MenuScreens.register(ModMenuTypes.COMPUTER.get(), new MenuScreens.ScreenConstructor() {
+                    @Override
+                    public AbstractContainerScreen<?> create(AbstractContainerMenu menu, Inventory inv, Component title) {
+                        return new ProgrammingScreen(menu, inv, title);
+                    }
+                });
+            } else {
+                MenuScreens.register(ModMenuTypes.COMPUTER.get(), VProgrammingScreen::new);
+            }
         });
     }
 

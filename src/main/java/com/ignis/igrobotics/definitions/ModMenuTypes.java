@@ -1,11 +1,14 @@
 package com.ignis.igrobotics.definitions;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.*;
 import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
+import com.ignis.igrobotics.integration.cc.vanilla.VProgrammingMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,9 +27,13 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<AbstractContainerMenu>> ROBOT_INVENTORY = registerMenuType((id, inv, buf) -> null, "robot_inventory_menu");
     public static final RegistryObject<MenuType<RobotCommandMenu>> ROBOT_COMMANDS = registerMenuType(RobotCommandMenu::new, "robot_command_menu");
     public static final RegistryObject<MenuType<CommanderMenu>> COMMANDER = registerMenuType(CommanderMenu::new , "commander_menu");
-    public static final RegistryObject<MenuType<ProgrammingMenu>> COMPUTER = registerMenuType(ProgrammingMenu::new, "computer_menu");
+    public static RegistryObject<MenuType<? extends AbstractContainerMenu>> COMPUTER = registerCompatMenuType(ModList.get().isLoaded(Reference.CC_MOD_ID) ? ProgrammingMenu::new : VProgrammingMenu::new, "computer_menu");
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
+        return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));
+    }
+
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<? extends AbstractContainerMenu>> registerCompatMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));
     }
 }
