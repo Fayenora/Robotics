@@ -164,7 +164,7 @@ public class RobotBehavior {
     public static void onRobotDeath(LivingDeathEvent event) {
         if(event.getEntity().level.isClientSide()) return;
         Entity entity = event.getEntity();
-        if(event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if(event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
                     entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
                         if(inventory instanceof RobotInventory robotInv) {
