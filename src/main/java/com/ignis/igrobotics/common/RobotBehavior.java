@@ -356,6 +356,14 @@ public class RobotBehavior {
         return f;
     }
 
+    public static int swingSpeed(LivingEntity entity) {
+        if (MobEffectUtil.hasDigSpeed(entity)) {
+            return 6 - (1 + MobEffectUtil.getDigSpeedAmplification(entity));
+        } else {
+            return entity.hasEffect(MobEffects.DIG_SLOWDOWN) ? 6 + (1 + entity.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) * 2 : 6;
+        }
+    }
+
     private static ContainerData constructContainerData(Entity entity) {
         return new ContainerData() {
             @Override

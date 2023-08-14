@@ -1,19 +1,23 @@
 package com.ignis.igrobotics.client.rendering.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
+import software.bernie.geckolib.util.RenderUtils;
 
 import javax.annotation.Nullable;
 
@@ -46,9 +50,21 @@ public class HeldItemRenderer<T extends LivingEntity & GeoAnimatable> extends Bl
         };
     }
 
-    // Do some quick render modifications depending on what the item is
+    //NOTE: This is a copy of the super method. It needs to be kept up to date!
     @Override
-    protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, T animatable, MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+    public void renderForBone(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        ItemStack stack = getStackForBone(bone, animatable);
+        BlockState blockState = getBlockForBone(bone, animatable);
+
+        if (stack == null && blockState == null)
+            return;
+
+        poseStack.pushPose();
+
+        // ROBOTICS START
+        //First, translate to the pivot point
+        RenderUtils.translateToPivotPoint(poseStack, bone);
+        //Then, translate to the hand
         if (stack == animatable.getMainHandItem()) {
             poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
             poseStack.translate(0.1, 0.125, -0.6);
@@ -65,7 +81,17 @@ public class HeldItemRenderer<T extends LivingEntity & GeoAnimatable> extends Bl
                 poseStack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
+        //Then rotate
+        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+        //ROBOTICS END
 
-        super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+        if (stack != null)
+            renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+
+        if (blockState != null)
+            renderBlockForBone(poseStack, bone, blockState, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+
+        bufferSource.getBuffer(renderType);
+        poseStack.popPose();
     }
 }

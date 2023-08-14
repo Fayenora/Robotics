@@ -73,6 +73,48 @@
 					}
 				}
 			}
+		},
+		"animation.robot.interactRight": {
+			"animation_length": 0.3,
+			"bones": {
+				"rightArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1": {
+							"vector": [-45, 40, 0]
+						},
+						"0.2": {
+							"vector": [-45, -40, 0]
+						},
+						"0.3": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.robot.interactLeft": {
+			"animation_length": 0.3,
+			"bones": {
+				"leftArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1": {
+							"vector": [-45, -40, 0]
+						},
+						"0.2": {
+							"vector": [-45, 40, 0]
+						},
+						"0.3": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
 		}
 	}
 }

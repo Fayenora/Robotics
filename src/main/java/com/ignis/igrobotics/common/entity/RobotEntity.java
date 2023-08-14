@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity;
 
+import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
@@ -65,6 +66,8 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    private int swingTime = 0;
+
     public RobotEntity(Level level) {
         this(level, RoboticsConfig.general.startColor.get());
     }
@@ -126,9 +129,24 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     // Animations
     /////////////////
 
+
+    @Override
+    public void swing(InteractionHand p_21012_, boolean p_21013_) {
+        swingTime = RobotBehavior.swingSpeed(this) * 3;
+        super.swing(p_21012_, p_21013_);
+    }
+
     private <T extends GeoAnimatable> PlayState getAnimation(AnimationState<T> animationState) {
         if(animationState.isMoving()) {
             animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.walk", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+        if(swingTime-- > 0) {
+            Animation.LoopType animationType = swingTime > RobotBehavior.swingSpeed(this) * 3 / 2 ? Animation.LoopType.LOOP : Animation.LoopType.PLAY_ONCE;
+            switch(swingingArm) {
+                case MAIN_HAND -> animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.interactRight", animationType));
+                case OFF_HAND -> animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.interactLeft", animationType));
+            }
             return PlayState.CONTINUE;
         }
         animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.idle", Animation.LoopType.LOOP));
