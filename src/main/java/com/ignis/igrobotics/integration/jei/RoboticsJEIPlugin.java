@@ -10,6 +10,7 @@ import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
@@ -76,6 +77,12 @@ public class RoboticsJEIPlugin implements IModPlugin {
             @Override
             public List<Rect2i> getGuiExtraAreas(BaseContainerScreen containerScreen) {
                 return containerScreen.getBlockingAreas();
+            }
+        });
+        registration.addGuiContainerHandler(ProgrammingScreen.class, new IGuiContainerHandler<>() {
+            @Override
+            public List<Rect2i> getGuiExtraAreas(ProgrammingScreen programmingScreen) {
+                return programmingScreen.getBlockingAreas();
             }
         });
     }

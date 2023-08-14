@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.integration.cc;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
@@ -11,12 +12,16 @@ import dan200.computercraft.client.gui.widgets.ComputerSidebar;
 import dan200.computercraft.client.gui.widgets.TerminalWidget;
 import dan200.computercraft.shared.computer.inventory.AbstractComputerMenu;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
 
@@ -51,5 +56,15 @@ public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
     @Override
     protected TerminalWidget createTerminal() {
         return new TerminalWidget(terminalData, input, leftPos + 9 + AbstractComputerMenu.SIDEBAR_WIDTH, topPos + 9);
+    }
+
+    public List<Rect2i> getBlockingAreas() {
+        List<Rect2i> blockedAreas = new ArrayList<>();
+        for(var comp : children()) {
+            if(comp instanceof IElement element) {
+                blockedAreas.addAll(element.getBlockingAreas());
+            }
+        }
+        return blockedAreas;
     }
 }

@@ -92,9 +92,12 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 
 	default List<Rect2i> getBlockingAreas() {
 		List<Rect2i> blockedAreas = new ArrayList<>();
+		if(!(this instanceof BaseContainerScreen)) {
+			blockedAreas.add(new Rect2i(getShape().x, getShape().y, getShape().width, getShape().height));
+		}
 		for(var comp : children()) {
 			if(comp instanceof IElement element) {
-				blockedAreas.add(new Rect2i(element.getShape().x - 7, element.getShape().y - 4, element.getShape().width, element.getShape().height));
+				blockedAreas.addAll(element.getBlockingAreas());
 			}
 		}
 		return blockedAreas;
