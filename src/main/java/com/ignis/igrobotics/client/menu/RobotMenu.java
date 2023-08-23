@@ -6,11 +6,16 @@ import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +55,29 @@ public class RobotMenu extends BaseMenu {
                 }
             });
         });
+    }
+
+    @Override
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int quickMovedSlotIndex) {
+        Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
+
+        if(!quickMovedSlot.hasItem()) return ItemStack.EMPTY;
+
+        ItemStack rawStack = quickMovedSlot.getItem(); //Stack inside the slot
+
+        if(quickMovedSlotIndex < 36) {
+            if(!rawStack.getAttributeModifiers(EquipmentSlot.OFFHAND).isEmpty() || rawStack.getItem() instanceof ShieldItem) {
+                if(!this.moveItemStackTo(rawStack, 53, 54, false)) {
+                    return super.quickMoveStack(player, quickMovedSlotIndex);
+                }
+            }
+            if(!rawStack.getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
+                if(!this.moveItemStackTo(rawStack, 52, 54, false)) {
+                    return super.quickMoveStack(player, quickMovedSlotIndex);
+                }
+            }
+        }
+        return super.quickMoveStack(player, quickMovedSlotIndex);
     }
 
     @Override
