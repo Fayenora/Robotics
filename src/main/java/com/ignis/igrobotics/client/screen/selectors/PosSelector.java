@@ -109,6 +109,7 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 			textFieldX.setValue(Integer.toString(selection.get().pos().getX()));
 			textFieldY.setValue(Integer.toString(selection.get().pos().getY()));
 			textFieldZ.setValue(Integer.toString(selection.get().pos().getZ()));
+			dimensionSelection.setDim(selection.get().dimension());
 		}
 
 		@Override
@@ -145,7 +146,7 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 		public DimensionSelectElement(int pX, int pY, int pWidth, int pHeight, ResourceKey<Level> selectedLevel) {
 			super(pX, pY, pWidth, pHeight);
 			levels = ServerLifecycleHooks.getCurrentServer().levelKeys().stream().toList();
-			currentIndex = levels.indexOf(selectedLevel);
+			setDim(selectedLevel);
 		}
 
 		@Override
@@ -156,6 +157,10 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 
 		public ResourceKey<Level> currentDim() {
 			return levels.get(currentIndex);
+		}
+
+		public void setDim(ResourceKey<Level> dim) {
+			currentIndex = levels.indexOf(dim);
 		}
 
 		@Override
