@@ -1,0 +1,59 @@
+package com.ignis.igrobotics.core.util;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.server.ServerLifecycleHooks;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+public class PosUtil {
+
+    public static GlobalPos parseBlockPos(String string) {
+        //Find and separate all consequent digits ( = numbers) in the string
+        String resourceKey = string.split(" ")[0].split("\\[")[1].split("]")[0];
+        ResourceLocation registry = ResourceLocation.tryParse(resourceKey.split("/")[0]);
+        ResourceLocation location = ResourceLocation.tryParse(resourceKey.split("/")[1]);
+        BlockPos pos = BlockPos.ZERO;
+        Object[] list = Arrays.stream(string.split("\\D")).filter(Predicate.not(String::isBlank)).map(Integer::parseInt).toArray();
+        if(list.length >= 3 && list[0] instanceof Integer && list[1] instanceof Integer && list[2] instanceof Integer) {
+            pos = new BlockPos((Integer) list[0], (Integer) list[1], (Integer) list[2]);
+        }
+        Optional<ResourceKey<Level>> dim = getLevelKey(registry, location);
+        return GlobalPos.of(dim.orElse(ServerLifecycleHooks.getCurrentServer().overworld().dimension()), pos);
+    }
+
+    public static Optional<ResourceKey<Level>> getLevelKey(ResourceLocation registry, ResourceLocation location) {
+        return ServerLifecycleHooks.getCurrentServer().levelKeys().stream().filter(key -> key.registry().equals(registry) && key.location().equals(location)).findFirst();
+    }
+
+    public static GlobalPos readPos(CompoundTag tag) {
+        ResourceLocation registry = ResourceLocation.tryParse(tag.getString("levelReg"));
+        ResourceLocation location = ResourceLocation.tryParse(tag.getString("levelLoc"));
+        Optional<ResourceKey<Level>> dim = getLevelKey(registry, location);
+        return GlobalPos.of(dim.orElse(ServerLifecycleHooks.getCurrentServer().overworld().dimension()), NbtUtils.readBlockPos(tag));
+    }
+
+    public static CompoundTag writePos(GlobalPos pos) {
+        CompoundTag tag = NbtUtils.writeBlockPos(pos.pos());
+        tag.putString("levelReg", pos.dimension().registry().toString());
+        tag.putString("levelLoc", pos.dimension().location().toString());
+        return tag;
+    }
+
+    public static Component prettyPrint(GlobalPos pos) {
+        List<Component> components = List.of(
+                Lang.localiseExisting(pos.dimension().location().toString()),
+                Component.literal(pos.pos().getX() + " " + pos.pos().getY() + " " + pos.pos().getZ()));
+        return ComponentUtils.formatList(components, Component.literal(" "));
+    }
+}

@@ -4,9 +4,11 @@ import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.common.blocks.StorageBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -22,26 +24,39 @@ import java.util.EnumSet;
 public class MoveToBlockGoal extends Goal {
 
     protected final Mob mob;
+    private final DimensionNavigator navigator;
     /** Controls task execution delay */
     protected int nextStartTick;
     protected int tryTicks;
     protected int maxStayTicks;
     /** Block to move to */
-    protected BlockPos blockPos;
+    protected GlobalPos blockPos;
     @Nullable
-    private BlockPos storagePos;
-    private boolean reachedTarget;
+    private GlobalPos storagePos;
 
-    public MoveToBlockGoal(Mob mob, BlockPos target) {
+    private MoveToBlockGoal(Mob mob) {
         this.mob = mob;
-        this.blockPos = determineEnterPosition(mob.level.getBlockState(target), target);
+        navigator = new DimensionNavigator(mob, 16, 16, 1);
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP));
     }
 
-    private BlockPos determineEnterPosition(BlockState state, BlockPos pos) {
+    public MoveToBlockGoal(Mob mob, BlockPos target) {
+        this(mob);
+        this.blockPos = determineEnterPosition(mob.level.getBlockState(target), GlobalPos.of(mob.level.dimension(), target));
+    }
+
+    public MoveToBlockGoal(Mob mob, GlobalPos target) {
+        this(mob);
+        Level targetDimension = mob.getServer().getLevel(target.dimension());
+        if(targetDimension != null) {
+            this.blockPos = determineEnterPosition(targetDimension.getBlockState(target.pos()), target);
+        } else blockPos = target;
+    }
+
+    private GlobalPos determineEnterPosition(BlockState state, GlobalPos pos) {
         if(!StorageBlock.class.isAssignableFrom(state.getBlock().getClass())) return pos;
-        this.storagePos = pos.below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 1 : 0);
-        return pos.below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 2 : 1).relative(state.getValue(MachineBlock.FACING));
+        this.storagePos = GlobalPos.of(pos.dimension(), pos.pos().below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 1 : 0));
+        return GlobalPos.of(pos.dimension(), pos.pos().below(state.getValue(StorageBlock.HALF) == DoubleBlockHalf.UPPER ? 2 : 1).relative(state.getValue(MachineBlock.FACING)));
     }
 
     public boolean canUse() {
@@ -66,17 +81,13 @@ public class MoveToBlockGoal extends Goal {
      */
     public void start() {
         double speed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
-        this.mob.getNavigation().moveTo(this.blockPos.getX() + 0.5D, this.blockPos.getY() + 1, this.blockPos.getZ() + 0.5D, speed);
+        navigator.navigateTo(blockPos);
         this.tryTicks = 0;
         this.maxStayTicks = this.mob.getRandom().nextInt(this.mob.getRandom().nextInt(1200) + 1200) + 1200;
     }
 
     public double acceptedDistance() {
         return 1.0D;
-    }
-
-    protected BlockPos getMoveToTarget() {
-        return this.blockPos.above();
     }
 
     public boolean requiresUpdateEveryTick() {
@@ -87,27 +98,21 @@ public class MoveToBlockGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        if(storagePos != null) {
-            if(mob.distanceToSqr(storagePos.getCenter()) < 12) {
-                BlockEntity tile = mob.level.getBlockEntity(storagePos);
-                if(tile instanceof StorageBlockEntity storage) {
-                    storage.enterStorage(mob);
-                }
+        if(storagePos != null && mob.level.dimension().equals(storagePos.dimension()) && mob.distanceToSqr(storagePos.pos().getCenter()) < 12) {
+            BlockEntity tile = mob.level.getBlockEntity(storagePos.pos());
+            if(tile instanceof StorageBlockEntity storage) {
+                storage.enterStorage(mob);
             }
         }
-        BlockPos blockpos = this.getMoveToTarget();
-        if (!blockpos.closerToCenterThan(this.mob.position(), this.acceptedDistance())) {
-            this.reachedTarget = false;
+        if (!hasReachedTarget()) {
             ++this.tryTicks;
             if (this.shouldRecalculatePath()) {
                 double speed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
-                this.mob.getNavigation().moveTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, speed);
+                navigator.navigateTo(blockPos);
             }
         } else {
-            this.reachedTarget = true;
             --this.tryTicks;
         }
-
     }
 
     public boolean shouldRecalculatePath() {
@@ -115,7 +120,7 @@ public class MoveToBlockGoal extends Goal {
     }
 
     public boolean hasReachedTarget() {
-        return reachedTarget;
+        return mob.level.dimension().equals(blockPos.dimension()) && blockPos.pos().closerToCenterThan(this.mob.position(), this.acceptedDistance());
     }
 
     @Override

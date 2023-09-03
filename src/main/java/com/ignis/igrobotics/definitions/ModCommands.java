@@ -5,6 +5,7 @@ import com.ignis.igrobotics.common.entity.ai.*;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.robot.CommandType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,19 +20,19 @@ public class ModCommands {
 
     public static final List<CommandType> COMMAND_TYPES = new ArrayList<>();
 
-    public static final CommandType STAY = register("stay", BlockPos.class);
-    public static final CommandType GO = register("go", BlockPos.class);
+    public static final CommandType STAY = register("stay", GlobalPos.class);
+    public static final CommandType GO = register("go", GlobalPos.class);
     public static final CommandType ATTACK = register("attack", EntityType.class);
     public static final CommandType ATTACK_SPECIFIC = register("attack_specific", EntitySearch.class);
     public static final CommandType DEFEND = register("defend", EntitySearch.class);
     public static final CommandType FOLLOW = register("follow", EntitySearch.class, Integer.class);
-    public static final CommandType RETRIEVE = register("retrieve", ItemStack.class, BlockPos.class);
-    public static final CommandType STORE = register("store", ItemStack.class, BlockPos.class);
-    public static final CommandType BREAK = register("break", BlockPos.class, BlockPos.class);
+    public static final CommandType RETRIEVE = register("retrieve", ItemStack.class, GlobalPos.class);
+    public static final CommandType STORE = register("store", ItemStack.class, GlobalPos.class);
+    public static final CommandType BREAK = register("break", GlobalPos.class, GlobalPos.class);
 
     static {
-        STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (BlockPos) selections[0].get()));
-        GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (BlockPos) selections[0].get()));
+        STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (GlobalPos) selections[0].get()));
+        GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (GlobalPos) selections[0].get()));
         ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal<>(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;

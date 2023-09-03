@@ -3,10 +3,10 @@ package com.ignis.igrobotics.core.robot;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.selectors.*;
 import com.ignis.igrobotics.core.EntitySearch;
+import com.ignis.igrobotics.core.util.PosUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
@@ -25,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SelectionType<T> {
@@ -36,7 +36,7 @@ public class SelectionType<T> {
     //  SelectionTypes should now probably be implemented in subclasses, as this is just ugly to look at
     public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of, string -> new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(string))), stack -> ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
     public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, string -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(string)), block -> ForgeRegistries.BLOCKS.getKey(block).toString());
-    public static final SelectionType<BlockPos> POS = register("<Pos>", BlockPos.class, () -> BlockPos.ZERO, NbtUtils::writeBlockPos, NbtUtils::readBlockPos, SelectionType::parseBlockPos, Vec3i::toString);
+    public static final SelectionType<GlobalPos> POS = register("<Pos>", GlobalPos.class, () -> GlobalPos.of(ServerLifecycleHooks.getCurrentServer().overworld().dimension(), BlockPos.ZERO), PosUtil::writePos, PosUtil::readPos, PosUtil::parseBlockPos, GlobalPos::toString);
     public static final SelectionType<EntityType> ENTITY_TYPE = register("<Entity-Type>", EntityType.class, () -> EntityType.CREEPER, type -> {
         CompoundTag tag = new CompoundTag();
         tag.putString("value", ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
@@ -151,14 +151,5 @@ public class SelectionType<T> {
     @Override
     public String toString() {
         return identifier.substring(1, identifier.length() - 1);
-    }
-
-    private static BlockPos parseBlockPos(String string) {
-        //Find and separate all consequent digits ( = numbers) in the string
-        Object[] list = Arrays.stream(string.split("\\D")).filter(Predicate.not(String::isBlank)).map(Integer::parseInt).toArray();
-        if(list.length >= 3 && list[0] instanceof Integer && list[1] instanceof Integer && list[2] instanceof Integer) {
-            return new BlockPos((Integer) list[0], (Integer) list[1], (Integer) list[2]);
-        }
-        return null;
     }
 }

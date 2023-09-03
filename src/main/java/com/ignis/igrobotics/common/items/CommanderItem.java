@@ -10,12 +10,12 @@ import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,9 +32,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -101,11 +103,11 @@ public class CommanderItem extends Item {
     public InteractionResult useOn(UseOnContext cxt) {
         ItemStack stack = cxt.getItemInHand();
         Level level = cxt.getLevel();
-        BlockPos pos = cxt.getClickedPos();
+        GlobalPos pos = GlobalPos.of(level.dimension(), cxt.getClickedPos());
         
         if(level.isClientSide()) return InteractionResult.SUCCESS;
 
-        BlockPos saved_pos = getRememberedPos(stack);
+        GlobalPos savedPos = getRememberedPos(stack);
         LivingEntity living = getRememberedEntity(level, stack);
 
         //If the commander remembers a robot, make it move here
@@ -119,14 +121,18 @@ public class CommanderItem extends Item {
             });
             return InteractionResult.CONSUME;
         }
+
         //If the commander is pointing towards a robot in storage, make it exit and move here
-        if(saved_pos != null) {
-            //FIXME: Handle trans-dimensional positions
-            //If the currently remembered BlockPos points towards a valid robot in storage make it exit and move here
-            if(level.getBlockState(saved_pos).getBlock() == ModBlocks.ROBOT_STORAGE.get()) {
-                BlockEntity storage = level.getBlockEntity(level.getBlockState(saved_pos).getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER ? saved_pos.below() : saved_pos);
-                if(orderEntityOutOfStorage(storage, pos)) {
-                    return InteractionResult.CONSUME;
+
+        if(savedPos != null) {
+            Level savedLevel = ServerLifecycleHooks.getCurrentServer().getLevel(savedPos.dimension());
+            if(savedLevel != null) {
+                BlockState state = savedLevel.getBlockState(savedPos.pos());
+                if(state.getBlock() == ModBlocks.ROBOT_STORAGE.get()) {
+                    BlockEntity storage = savedLevel.getBlockEntity(state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER ? savedPos.pos().below() : savedPos.pos());
+                    if(orderEntityOutOfStorage(storage, pos)) {
+                        return InteractionResult.CONSUME;
+                    }
                 }
             }
         }
@@ -137,7 +143,7 @@ public class CommanderItem extends Item {
         return InteractionResult.CONSUME;
     }
 
-    private boolean orderEntityOutOfStorage(@Nullable BlockEntity blockEntity, BlockPos to) {
+    private boolean orderEntityOutOfStorage(@Nullable BlockEntity blockEntity, GlobalPos to) {
         if(!(blockEntity instanceof StorageBlockEntity storage)) return false;
         Optional<Entity> spawnedEntity = storage.exitStorage();
         if(spawnedEntity.isEmpty()) return false;
@@ -194,9 +200,9 @@ public class CommanderItem extends Item {
         }
     }
 
-    public static void rememberPos(ItemStack stack, BlockPos pos) {
+    public static void rememberPos(ItemStack stack, GlobalPos pos) {
         clearRememberedEntity(stack);
-        getTagCompound(stack).put(NBT_POS, NbtUtils.writeBlockPos(pos));
+        getTagCompound(stack).put(NBT_POS, PosUtil.writePos(pos));
     }
 
     public static void rememberEntity(ItemStack stack, LivingEntity entity) {
@@ -222,9 +228,9 @@ public class CommanderItem extends Item {
     }
 
     @Nullable
-    public static BlockPos getRememberedPos(ItemStack stack) {
+    public static GlobalPos getRememberedPos(ItemStack stack) {
         if(!getTagCompound(stack).contains(NBT_POS)) return null;
-        return NbtUtils.readBlockPos(getTagCompound(stack).getCompound(NBT_POS));
+        return PosUtil.readPos(getTagCompound(stack).getCompound(NBT_POS));
     }
 
     @Nullable

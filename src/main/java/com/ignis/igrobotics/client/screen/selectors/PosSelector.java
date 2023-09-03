@@ -17,16 +17,22 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.server.ServerLifecycleHooks;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class PosSelector extends SelectorElement<BlockPos> {
+public class PosSelector extends SelectorElement<GlobalPos> {
 
-	public PosSelector(Selection<BlockPos> sel, int x, int y) {
+	public PosSelector(Selection<GlobalPos> sel, int x, int y) {
 		super(sel, x, y);
 	}
 
@@ -38,12 +44,13 @@ public class PosSelector extends SelectorElement<BlockPos> {
 	@Override
 	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 		float fontSize = 0.5f;
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR, fontSize, 16);
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR, fontSize, 16);
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().pos().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().pos().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().pos().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR, fontSize, 16);
 	}
-	
+
 	class GuiSelectPos extends GuiElement {
+		DimensionSelectElement dimensionSelection;
 		EditBox textFieldX, textFieldY, textFieldZ;
 		ButtonElement buttonSelectPos, buttonSelfPos, buttonConfirm;
 
@@ -51,12 +58,12 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			super(0, 0, 94, 113);
 			initTextureLocation(TEXTURE, 162, 0);
 			Font font = Minecraft.getInstance().font;
-			textFieldX = new EditBox(font, getX() + width - 68, getY() + 8, 60, 15, Component.literal("text_box_x"));
-			textFieldY = new EditBox(font, getX() + width - 68, getY() + 38, 60, 15, Component.literal("text_box_y"));
+			dimensionSelection = new DimensionSelectElement(getX() + 8, getY() + 6, 79, 14, selection.get().dimension());
+			dimensionSelection.initTextureLocation(TEXTURE, 0, 242);
+			textFieldX = new EditBox(font, getX() + width - 68, getY() + 24, 60, 15, Component.literal("text_box_x"));
+			textFieldY = new EditBox(font, getX() + width - 68, getY() + 46, 60, 15, Component.literal("text_box_y"));
 			textFieldZ = new EditBox(font, getX() + width - 68, getY() + 68, 60, 15, Component.literal("text_box_z"));
-			textFieldX.setValue(Integer.toString(selection.get().getX()));
-			textFieldY.setValue(Integer.toString(selection.get().getY()));
-			textFieldZ.setValue(Integer.toString(selection.get().getZ()));
+			updateTextFields();
 			Player player = Minecraft.getInstance().player;
 			if(player == null) return;
 			buttonSelectPos = new ButtonElement(getX() + 8, getY() + height - 8 - 17, 17, 17, button -> {
@@ -65,21 +72,20 @@ public class PosSelector extends SelectorElement<BlockPos> {
 				selection.set(CommanderItem.getRememberedPos(stack));
 				//TODO Using an entity to set the position would require contacting the server
 
-				textFieldX.setValue(Integer.toString(selection.get().getX()));
-				textFieldY.setValue(Integer.toString(selection.get().getY()));
-				textFieldZ.setValue(Integer.toString(selection.get().getZ()));
+				updateTextFields();
 			});
 			buttonSelectPos.setTooltip(Lang.localise("selector.pos.useCommander"));
 			buttonSelfPos = new ButtonElement(getX() + 12 + 17, getY() + height - 8 - 17, 17, 17, button -> {
-				selection.set(player.getOnPos());
-				textFieldX.setValue(Integer.toString(selection.get().getX()));
-				textFieldY.setValue(Integer.toString(selection.get().getY()));
-				textFieldZ.setValue(Integer.toString(selection.get().getZ()));
+				selection.set(GlobalPos.of(player.level.dimension(), player.getOnPos()));
+				updateTextFields();
 			});
 			buttonSelfPos.setTooltip(Lang.localise("selector.pos.useSelf"));
 			buttonConfirm = new ButtonElement(getX() + width - 8 - 17, getY() + height - 8 - 17, 17, 17, button -> {
 				try {
-					selection.set(new BlockPos(Integer.parseInt(textFieldX.getValue()), Integer.parseInt(textFieldY.getValue()), Integer.parseInt(textFieldZ.getValue())));
+					int x = Integer.parseInt(textFieldX.getValue());
+					int y = Integer.parseInt(textFieldY.getValue());
+					int z = Integer.parseInt(textFieldZ.getValue());
+					selection.set(GlobalPos.of(dimensionSelection.currentDim(), new BlockPos(x, y, z)));
 				} catch(NumberFormatException e) {
 					//Parsing failed, leave position as it was
 				}
@@ -89,6 +95,7 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			buttonSelfPos.initTextureLocation(Reference.MISC, 0, 0);
 			buttonConfirm.initTextureLocation(Reference.MISC, 0, 170);
 
+			addElement(dimensionSelection);
 			addElement(textFieldX);
 			addElement(textFieldY);
 			addElement(textFieldZ);
@@ -96,6 +103,12 @@ public class PosSelector extends SelectorElement<BlockPos> {
 			addElement(buttonSelfPos);
 			addElement(buttonConfirm);
 			setFocused(textFieldX);
+		}
+
+		private void updateTextFields() {
+			textFieldX.setValue(Integer.toString(selection.get().pos().getX()));
+			textFieldY.setValue(Integer.toString(selection.get().pos().getY()));
+			textFieldZ.setValue(Integer.toString(selection.get().pos().getZ()));
 		}
 
 		@Override
@@ -117,11 +130,39 @@ public class PosSelector extends SelectorElement<BlockPos> {
 		public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
 			super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 			Font font = Minecraft.getInstance().font;
-			drawString(pPoseStack, font, "X:", getX() + 11, getY() + 12, Reference.FONT_COLOR);
-			drawString(pPoseStack, font, "Y:", getX() + 11, getY() + 42, Reference.FONT_COLOR);
+			drawString(pPoseStack, font, "X:", getX() + 11, getY() + 28, Reference.FONT_COLOR);
+			drawString(pPoseStack, font, "Y:", getX() + 11, getY() + 50, Reference.FONT_COLOR);
 			drawString(pPoseStack, font, "Z:", getX() + 11, getY() + 72, Reference.FONT_COLOR);
 		}
-		
+
+	}
+
+	static class DimensionSelectElement extends ButtonElement {
+
+		private final List<ResourceKey<Level>> levels;
+		private int currentIndex;
+
+		public DimensionSelectElement(int pX, int pY, int pWidth, int pHeight, ResourceKey<Level> selectedLevel) {
+			super(pX, pY, pWidth, pHeight);
+			levels = ServerLifecycleHooks.getCurrentServer().levelKeys().stream().toList();
+			currentIndex = levels.indexOf(selectedLevel);
+		}
+
+		@Override
+		public void onPress() {
+			super.onPress();
+			currentIndex = (currentIndex + 1) % levels.size();
+		}
+
+		public ResourceKey<Level> currentDim() {
+			return levels.get(currentIndex);
+		}
+
+		@Override
+		public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+			super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
+			RenderUtil.drawString(poseStack, Lang.localiseExisting(currentDim().location().toString()), getX() + 6, getY() + 4, Reference.FONT_COLOR, 0.8f);
+		}
 	}
 
 }
