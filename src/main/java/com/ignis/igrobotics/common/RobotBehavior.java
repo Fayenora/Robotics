@@ -196,7 +196,27 @@ public class RobotBehavior {
         InteractionHand hand = event.getHand();
         if(event.getTarget().interact(player, hand).consumesAction()) return;
         if(target instanceof LivingEntity living && stack.getItem().interactLivingEntity(stack, player, living, hand).consumesAction()) return;
+
+        if(target instanceof Mob mob) {
+            if(equipIfPossible(mob, player, hand, EquipmentSlot.HEAD, stack) ||
+                    equipIfPossible(mob, player, hand, EquipmentSlot.CHEST, stack) ||
+                    equipIfPossible(mob, player, hand, EquipmentSlot.LEGS, stack) ||
+                    equipIfPossible(mob, player, hand, EquipmentSlot.FEET, stack)) {
+                return;
+            }
+        }
         openRobotMenu(player, ModMenuTypes.ROBOT.get(), target);
+    }
+
+    private static boolean equipIfPossible(Mob mob, Player player, InteractionHand hand, EquipmentSlot slot, ItemStack stack) {
+        if(!stack.getAttributeModifiers(slot).isEmpty()) {
+            if(!player.isCreative()) {
+                player.setItemInHand(hand, mob.getItemBySlot(slot));
+            }
+            mob.setItemSlot(slot, stack);
+            return true;
+        }
+        return false;
     }
 
     public static void openRobotMenu(Player player, MenuType<?> type, Entity target) {
