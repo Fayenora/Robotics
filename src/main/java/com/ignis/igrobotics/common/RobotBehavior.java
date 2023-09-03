@@ -30,6 +30,7 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
 import dan200.computercraft.shared.network.container.ComputerContainerData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -328,6 +329,11 @@ public class RobotBehavior {
     public static boolean canReach(LivingEntity entity, BlockPos pos) {
         double reach = entity.getAttributes().hasAttribute(ForgeMod.BLOCK_REACH.get()) ? entity.getAttributes().getValue(ForgeMod.BLOCK_REACH.get()) : 4.5;
         return entity.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
+    }
+
+    public static boolean canReach(LivingEntity entity, GlobalPos pos) {
+        if(!entity.level.dimension().equals(pos.dimension())) return false;
+        return canReach(entity, pos.pos());
     }
 
     public static void playAggressionSound(LivingEntity entity) {

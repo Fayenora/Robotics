@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.core.util.ItemStackUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -10,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StoreGoal extends RetrieveGoal {
 
-	public StoreGoal(Mob mob, BlockPos from, ItemStack toStore, int time, int maxStay, int minAway) {
+	public StoreGoal(Mob mob, GlobalPos from, ItemStack toStore, int time, int maxStay, int minAway) {
 	 	super(mob, from, toStore, time, maxStay, minAway);
 	}
 	

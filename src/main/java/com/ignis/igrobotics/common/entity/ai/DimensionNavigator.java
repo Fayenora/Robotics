@@ -37,15 +37,19 @@ public class DimensionNavigator {
     }
 
     public boolean navigateTo(GlobalPos pos) {
-        if(mob.getLevel().dimension().equals(pos.dimension())) {
-            return mob.getNavigation().moveTo(pos.pos().getX() + 0.5, pos.pos().getY() + 0.5, pos.pos().getZ() + 0.5, speedMod);
-        }
         Level level = mob.getServer().getLevel(pos.dimension());
         if(level == null) return false;
+        return navigateTo(level, pos.pos());
+    }
+
+    public boolean navigateTo(Level level, BlockPos pos) {
+        if(mob.getLevel().equals(level)) {
+            return mob.getNavigation().moveTo(pos.getX(), pos.getY(), pos.getZ(), speedMod);
+        }
         Block portal = getPortalBlock(level.dimensionTypeId());
         BlockPos portalPos = findNearestBlock(portal);
         if(portalPos == null) return false;
-        return mob.getNavigation().moveTo(portalPos.getX() + 0.5, portalPos.getY() + 0.5, portalPos.getZ() + 0.5, speedMod);
+        return mob.getNavigation().moveTo(portalPos.getX(), portalPos.getY(), portalPos.getZ(), speedMod);
     }
 
     private Block getPortalBlock(ResourceKey<DimensionType> targetDimension) {

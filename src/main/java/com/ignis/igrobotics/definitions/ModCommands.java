@@ -57,9 +57,9 @@ public class ModCommands {
             double followRange = robot.getAttributeValue(Attributes.FOLLOW_RANGE);
             return new FollowGoal(robot, entity, range, (float) followRange);
         });
-        RETRIEVE.setAISupplier((robot, s) -> new RetrieveGoal(robot, (BlockPos) s[1].get(), (ItemStack) s[0].get(), 20, 400, 200));
-        STORE.setAISupplier((robot, s) -> new StoreGoal(robot, (BlockPos) s[1].get(), (ItemStack) s[0].get(), 20, 400, 200));
-        BREAK.setAISupplier((robot, s) -> new BreakBlocksGoal(robot, (BlockPos) s[0].get(), (BlockPos) s[1].get()));
+        RETRIEVE.setAISupplier((robot, s) -> new RetrieveGoal(robot, (GlobalPos) s[1].get(), (ItemStack) s[0].get(), 20, 400, 200));
+        STORE.setAISupplier((robot, s) -> new StoreGoal(robot, (GlobalPos) s[1].get(), (ItemStack) s[0].get(), 20, 400, 200));
+        BREAK.setAISupplier((robot, s) -> new BreakBlocksGoal(robot, (GlobalPos) s[0].get(), (GlobalPos) s[1].get()));
     }
 
     public static CommandType register(String name, Class<?>... selectionClasses) {

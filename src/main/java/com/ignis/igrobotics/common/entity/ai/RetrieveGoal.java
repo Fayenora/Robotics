@@ -2,14 +2,15 @@ package com.ignis.igrobotics.common.entity.ai;
 
 import com.ignis.igrobotics.common.RobotBehavior;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -21,10 +22,11 @@ import java.util.EnumSet;
 import java.util.Optional;
 
 public class RetrieveGoal extends Goal {
-	
-	final Mob entity;
+
+	protected final Mob entity;
+	protected final DimensionNavigator navigator;
 	private final WeakReference<Player> fakePlayer;
-	BlockPos target, adjacent;
+	GlobalPos target, adjacent;
 	ItemStack toTake;
 	boolean taskFinished;
 	private int tickCounter, takeItemsCounter, awayCounter;
@@ -32,7 +34,7 @@ public class RetrieveGoal extends Goal {
 	private final int maxStay, minAway;
 	IItemHandler openedInventory;
 	Container openedContainer;
-	
+
 	/**
 	 * AI Task for an entity to walk to a storage container and take out the specified ItemStacks
 	 * @param mob the entity that should interact with the storage
@@ -42,8 +44,9 @@ public class RetrieveGoal extends Goal {
 	 * @param maxStay maximum ticks to stay at a location when no operation is possible
 	 * @param minAway Minimum ticks to stay away from the chest and do other tasks after this task ran out
 	 */
-	public RetrieveGoal(Mob mob, BlockPos from, ItemStack toTake, int time, int maxStay, int minAway) {
+	public RetrieveGoal(Mob mob, GlobalPos from, ItemStack toTake, int time, int maxStay, int minAway) {
 		this.entity = mob;
+		navigator = new DimensionNavigator(mob, 16, 16, 1);
 		fakePlayer = new WeakReference<>(FakePlayerFactory.getMinecraft((ServerLevel) entity.level));
 		this.target = from;
 		this.toTake = toTake;
@@ -59,19 +62,18 @@ public class RetrieveGoal extends Goal {
 		taskFinished = false;
 		return awayCounter++ > minAway;
 	}
-	
+
 	@Override
 	public boolean canContinueToUse() {
 		return !taskFinished;
 	}
-	
+
 	@Override
 	public void start() {
 		adjacent = findBestPosNextTo(target);
-		double speed = entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
-		this.entity.getNavigation().moveTo(adjacent.getX() + 0.5, adjacent.getY() + 0.5, adjacent.getZ() + 0.5, speed);
+		navigator.navigateTo(adjacent);
 	}
-	
+
 	@Override
 	public void tick() {
 		if(!RobotBehavior.canReach(entity, target)) {
@@ -79,9 +81,8 @@ public class RetrieveGoal extends Goal {
             takeItemsCounter = 0;
 
             if (this.tickCounter % 40 == 0) {
-            	adjacent = findBestPosNextTo(target);
-				double speed = entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
-                this.entity.getNavigation().moveTo((adjacent.getX()) + 0.5D, adjacent.getY() + 0.5, adjacent.getZ() + 0.5D, speed);
+				adjacent = findBestPosNextTo(target);
+				navigator.navigateTo(adjacent);
             }
             return;
         }
@@ -90,15 +91,15 @@ public class RetrieveGoal extends Goal {
 			taskFinished = true;
 			return;
 		}
-		
-        takeItemsCounter++;
+
+		takeItemsCounter++;
         interactWithContainer(openedInventory, takeItemsCounter);
 
 		if(takeItemsCounter > maxStay) {
 			taskFinished = true;
 		}
 	}
-	
+
 	@Override
 	public void stop() {
 		//NOTE: {@link RobotBehavior} handles the case the entity dies while having the container opened
@@ -139,27 +140,32 @@ public class RetrieveGoal extends Goal {
 			taskFinished = true;
 		});
 	}
-	
-	private BlockPos findBestPosNextTo(BlockPos pos) {
+
+	private GlobalPos findBestPosNextTo(GlobalPos pos) {
 		if(adjacent != null) return adjacent;
+		Level level = entity.getServer().getLevel(pos.dimension());
+		if(level == null) return pos;
 		double distance = Double.MAX_VALUE;
-		BlockPos result = pos;
+		BlockPos result = pos.pos();
+		BlockPos.MutableBlockPos considered_pos = result.mutable();
 		for(int i = -1; i <= 1; i += 2) {
 			for(int j = -1; j <= 1; j += 2) {
-				BlockPos considered_pos = pos.offset(i, 0, j);
-				boolean isFullBlock = entity.level.getBlockState(considered_pos.above()).isCollisionShapeFullBlock(entity.level, considered_pos.above());
+				considered_pos.setWithOffset(pos.pos(), i, 0, j);
+				boolean isFullBlock = level.getBlockState(considered_pos.above()).isCollisionShapeFullBlock(level, considered_pos.above());
 				if(entity.distanceToSqr(considered_pos.getCenter()) < distance && !isFullBlock) {
 					distance = entity.distanceToSqr(considered_pos.getCenter());
 					result = considered_pos;
 				}
 			}
 		}
-		return result;
+		return GlobalPos.of(pos.dimension(), result);
 	}
 
-	public IItemHandler openContainer(BlockPos pos) {
+	public IItemHandler openContainer(GlobalPos pos) {
 		if(openedInventory != null) return openedInventory;
-		BlockEntity tile = entity.level.getBlockEntity(pos);
+		Level level = entity.getServer().getLevel(pos.dimension());
+		if(level == null) return null;
+		BlockEntity tile = level.getBlockEntity(pos.pos());
 		if(!canInteractWith(tile)) return null;
 		Optional<IItemHandler> handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 		if(handler.isEmpty()) return null;
@@ -169,14 +175,14 @@ public class RetrieveGoal extends Goal {
 		}
 		return handler.get();
 	}
-	
+
 	public void closeContainer() {
 		if(openedContainer == null) return;
 		openedContainer.stopOpen(getFakePlayer());
 		openedContainer = null;
 		openedInventory = null;
 	}
-	
+
 	private boolean canInteractWith(BlockEntity tile) {
 		if(tile == null) return false;
 		if(!tile.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) return false;

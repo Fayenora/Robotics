@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
@@ -18,6 +19,11 @@ public class HuntGoal extends TargetGoal {
 	@Override
 	public void start() {
 		super.start();
+		if(targetMob != null && !mob.level.dimension().equals(targetMob.level.dimension())) {
+			DimensionNavigator nav = new DimensionNavigator(mob, 16, 16, 1);
+			GlobalPos pos = GlobalPos.of(targetMob.level.dimension(), targetMob.blockPosition());
+			nav.navigateTo(pos);
+		}
 		mob.setTarget(targetMob);
 	}
 
