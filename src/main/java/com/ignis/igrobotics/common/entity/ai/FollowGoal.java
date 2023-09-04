@@ -103,6 +103,6 @@ public class FollowGoal extends Goal {
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof FollowGoal followGoal)) return false;
-        return entity.equals(followGoal.entity) && followingEntity.equals(followGoal.followingEntity);
+        return entity.equals(followGoal.entity) && followingEntity.equals(followGoal.followingEntity) && stopDistance == followGoal.stopDistance;
     }
 }
