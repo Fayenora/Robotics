@@ -8,19 +8,24 @@ import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
+import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -38,6 +43,10 @@ public class RoboticsJEIPlugin implements IModPlugin {
     public static IJeiRuntime JEI_RUNTIME;
     private MachineRecipeCategory assemblerCategory, wireCutterCategory;
 
+    public static final IIngredientType<Perk> INGREDIENT_PERK = () -> Perk.class;
+    public static IModIngredientRegistration ingredientRegistration;
+    public static IRecipeRegistration recipeRegistration;
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
@@ -46,6 +55,14 @@ public class RoboticsJEIPlugin implements IModPlugin {
         wireCutterCategory = new WireCutterRecipeCategory(guiHelper);
         registration.addRecipeCategories(assemblerCategory);
         registration.addRecipeCategories(wireCutterCategory);
+    }
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registration) {
+        ingredientRegistration = registration;
+        if(Minecraft.getInstance().isLocalServer()) {
+            registerPerkIngredientType(RoboticsConfig.current());
+        }
     }
 
     @Override
@@ -58,6 +75,10 @@ public class RoboticsJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(assemblerCategory.getRecipeType(), AssemblerRecipes.recipes);
         registration.addRecipes(wireCutterCategory.getRecipeType(), WireCutterRecipes.recipes);
+        recipeRegistration = registration;
+        if(Minecraft.getInstance().isLocalServer()) {
+            registerPerkDescriptions(RoboticsConfig.current());
+        }
     }
 
     @Override
@@ -85,6 +106,18 @@ public class RoboticsJEIPlugin implements IModPlugin {
                 return programmingScreen.getBlockingAreas();
             }
         });
+    }
+
+    public static void registerPerkIngredientType(RoboticsConfig config) {
+        ingredientRegistration.register(INGREDIENT_PERK, config.perks.PERKS.values(), new IngredientPerk(), new IngredientPerk());
+    }
+
+    public static void registerPerkDescriptions(RoboticsConfig config) {
+        for(Perk perk : config.perks.PERKS.values()) {
+            Component descriptionText = perk.getDescriptionText();
+            if(descriptionText == null) continue;
+            recipeRegistration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
+        }
     }
 
     private void addRecipeClickArea(IGuiHandlerRegistration registration, Class<? extends AbstractContainerScreen<?>> screenClass, Rectangle clickArea, RecipeType<?> recipeType) {

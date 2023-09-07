@@ -8,9 +8,11 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,23 +23,24 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class PerkMassProduced extends Perk {
-	
+
 	public static final int UPDATE_RATE = 9;
 	public static final int MAX_ALLIES = 6;
+	public static final int AREA_SIZE = 8;
 	public static final String TICK_COUNTER = "mass_produced:past_ticks";
 	public static final HashMap<MobEffect, Integer[][]> effectStrengths = new HashMap<>();
-	
+
 	static {
 		effectStrengths.put(MobEffects.DAMAGE_BOOST, new Integer[][] {{1, 1, 2, 2}, {1, 2, 2, 3}, {1, 2, 3, 4}});
 		effectStrengths.put(MobEffects.MOVEMENT_SPEED, new Integer[][] {{0, 1, 1, 2}, {0, 1, 2, 3}, {1, 2, 3, 3}});
 		effectStrengths.put(MobEffects.DAMAGE_RESISTANCE, new Integer[][] {{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 2}});
 		//TODO: Custom regeneration effect?
 	}
-	
+
 	public PerkMassProduced(String name) {
 		super(name, 3);
 	}
-	
+
 	@Override
 	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
@@ -50,12 +53,10 @@ public class PerkMassProduced extends Perk {
 				return;
 			}
 
-			int area_size = 2 + 4 * level;
-			BlockPos lower = entity.blockPosition().relative(Direction.DOWN, area_size).relative(Direction.SOUTH, area_size).relative(Direction.EAST, area_size);
-			BlockPos upper = entity.blockPosition().relative(Direction.UP, area_size).relative(Direction.NORTH, area_size).relative(Direction.WEST, area_size);
+			BlockPos lower = entity.blockPosition().relative(Direction.DOWN, AREA_SIZE).relative(Direction.SOUTH, AREA_SIZE).relative(Direction.EAST, AREA_SIZE);
+			BlockPos upper = entity.blockPosition().relative(Direction.UP, AREA_SIZE).relative(Direction.NORTH, AREA_SIZE).relative(Direction.WEST, AREA_SIZE);
 			AABB area = new AABB(lower, upper);
 			int allies = entity.level.getEntities(entity, area, ent -> {
-				//TODO: Ownership
 				Optional<IRobot> otherRobot = entity.getCapability(ModCapabilities.ROBOT).resolve();
 				Optional<IPerkMapCap> perkMap = entity.getCapability(ModCapabilities.PERKS).resolve();
 				if(otherRobot.isEmpty() || !otherRobot.get().isActive()) return false;
@@ -76,4 +77,8 @@ public class PerkMassProduced extends Perk {
 		});
 	}
 
+	@Override
+	public Component getDescriptionText() {
+		return Lang.localise("perk.mass_produced.desc", MAX_ALLIES, AREA_SIZE);
+	}
 }

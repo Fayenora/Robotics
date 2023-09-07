@@ -37,6 +37,7 @@ public class Perk implements PerkHooks {
 	protected TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
 	private boolean visible = true;
 	private boolean stackable = false;
+	private final ResourceLocation iconTexture;
 
 	/**
 	 * AttributeModifiers to be later applied f.e. to a robot. Maps {@link Attribute#getDescriptionId()}  Attribute Names} to modifiers affecting this attribute
@@ -55,6 +56,7 @@ public class Perk implements PerkHooks {
 	public Perk(String name, int maxLevel) {
 		this.unlocalizedName = name;
 		this.maxLevel = maxLevel;
+		iconTexture = new ResourceLocation(Robotics.MODID, "textures/perk/" + unlocalizedName.split("\\.")[1].toLowerCase() + ".png");
 	}
 
 	//////////////////////////////////
@@ -110,9 +112,24 @@ public class Perk implements PerkHooks {
 		return display;
 	}
 
+	public Component getDescriptionText() {
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		return Lang.localise(unlocalizedName).getString();
+	}
+
+	@Override
+	public Perk clone() {
+		Perk otherPerk = new Perk(unlocalizedName, maxLevel);
+		otherPerk.displayColor = displayColor;
+		otherPerk.visible = visible;
+		otherPerk.stackable = stackable;
+		otherPerk.scalars.putAll(scalars);
+		otherPerk.modifiers.putAll(modifiers);
+		return otherPerk;
 	}
 
 	//////////////////////////////////
@@ -335,6 +352,14 @@ public class Perk implements PerkHooks {
 
 	public Perk setDisplayColor(ChatFormatting displayColor) {
 		return setDisplayColor(TextColor.fromLegacyFormat(displayColor));
+	}
+
+	public TextColor getDisplayColor() {
+		return displayColor;
+	}
+
+	public ResourceLocation getIconTexture() {
+		return iconTexture;
 	}
 
 }

@@ -16,22 +16,6 @@
 		]
 	},
 	{
-		"name": "perk.movementSpeed",
-		"stackable": true,
-		"attributes": [
-		{
-			"name": "generic.movement_speed",
-			"modifiers": [
-			{
-				"value": 0, 
-				"operation": 0, 
-				"scalar": 0.15
-			}
-			]
-		}
-		]
-	}, 
-	{
 		"name": "perk.destructive", 
 		"stackable": true,
 		"maxLevel": 5, 
@@ -101,7 +85,7 @@
 		]
 	},
 	{
-		"name": "perk.speedy", 
+		"name": "perk.swift",
 		"maxLevel": 3, 
 		"attributes": [
 		{

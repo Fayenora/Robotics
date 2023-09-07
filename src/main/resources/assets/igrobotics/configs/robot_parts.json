@@ -29,7 +29,7 @@
 		"part": "leg", 
 		"perks": [
 		{
-			"name": "perk.movementSpeed", 
+			"name": "perk.swift",
 			"level": 1
 		}
 		]

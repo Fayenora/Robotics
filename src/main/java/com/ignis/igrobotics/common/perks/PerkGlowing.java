@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.common.perks;
 
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.core.util.Lang;
+import net.minecraft.network.chat.Component;
 
 public class PerkGlowing extends Perk {
 
@@ -8,7 +10,7 @@ public class PerkGlowing extends Perk {
 		super(name, 1);
 	}
 
-	/*
+    /*
 	@Override
 	public void onEntityUpdate(int level, Entity entity, SimpleDataManager values) {
 		entity.world.setLightFor(EnumSkyBlock.BLOCK, entity.getPosition(), 15);
@@ -22,4 +24,8 @@ public class PerkGlowing extends Perk {
 	}
 	*/
 
+	@Override
+	public Component getDescriptionText() {
+		return Lang.localise("perk.glowing.desc");
+	}
 }

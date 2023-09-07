@@ -1,6 +1,8 @@
 package com.ignis.igrobotics.network.messages.client;
 
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.integration.jei.IngredientPerk;
+import com.ignis.igrobotics.integration.jei.RoboticsJEIPlugin;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -35,5 +37,7 @@ public class PacketSyncConfigs implements IMessage {
     @Override
     public void handle(NetworkEvent.Context cxt) {
         RoboticsConfig.receiveConfig(config);
+        RoboticsJEIPlugin.registerPerkIngredientType(config);
+        RoboticsJEIPlugin.registerPerkDescriptions(config);
     }
 }

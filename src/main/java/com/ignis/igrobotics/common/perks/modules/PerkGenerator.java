@@ -18,13 +18,13 @@ public class PerkGenerator extends Perk {
 	
 	BiFunction<ItemStack, Mob, Integer> validInputs;
 	public final String COOLDOWN;
-	public final int ENERGY_GENERATION_RATE;
+	public final int energyGenerationRate;
 	
-	public PerkGenerator(String name, int energy_generation, BiFunction<ItemStack, Mob, Integer> validInputs) {
+	public PerkGenerator(String name, int energyGeneration, BiFunction<ItemStack, Mob, Integer> validInputs) {
 		super(name, 1);
 		this.validInputs = validInputs;
 		COOLDOWN = name + ".cooldown";
-		ENERGY_GENERATION_RATE = energy_generation;
+		energyGenerationRate = energyGeneration;
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class PerkGenerator extends Perk {
 			
 			energy.receiveEnergy(energyToRestore, false);
 			inventory.extractItem(i, 1, false);
-			values.set(COOLDOWN, energyToRestore / ENERGY_GENERATION_RATE); //Put in some cooldown
+			values.set(COOLDOWN, energyToRestore / this.energyGenerationRate); //Put in some cooldown
 			break;
 		}
 	}
@@ -55,5 +55,10 @@ public class PerkGenerator extends Perk {
 	@Override
 	public Component getDisplayText(int level) {
 		return Lang.localise(getUnlocalizedName()).withStyle(Style.EMPTY.withColor(displayColor));
+	}
+
+	@Override
+	public Component getDescriptionText() {
+		return Lang.localise("perk.generator.desc", energyGenerationRate);
 	}
 }
