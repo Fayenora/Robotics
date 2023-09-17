@@ -54,6 +54,12 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 				modifiers.putAll(perk.getAttributeModifiers(tup.getSecond()));
 			}
 		}
+		tooltip.addAll(createAttributeTooltip(modifiers));
+		return tooltip;
+	}
+
+	static ArrayList<Component> createAttributeTooltip(Multimap<Attribute, AttributeModifier> modifiers) {
+		ArrayList<Component> tooltip = new ArrayList<>();
 		for(Attribute attribute : modifiers.keySet()) {
 			double amount = 0;
 			double multiplier = 0;
@@ -75,7 +81,7 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 		return tooltip;
 	}
 
-	private Component combine(Component prefix, Component comp) {
+	static Component combine(Component prefix, Component comp) {
 		return ComponentUtils.formatList(List.of(prefix, comp), Component.empty());
 	}
 

@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
@@ -20,10 +21,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 public class Perk implements PerkHooks {
@@ -113,7 +111,45 @@ public class Perk implements PerkHooks {
 	}
 
 	public Component getDescriptionText() {
-		return null;
+		ArrayList<Component> tooltip = new ArrayList<>();
+		tooltip.add(Lang.localise("perk.desc"));
+		for(Tuple<Attribute, Integer> attrOperation : scalars.keySet()) {
+			TextColor color = Reference.ATTRIBUTE_COLORS.getOrDefault(attrOperation.first, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
+			Component attr_name = Component.translatable(attrOperation.first.getDescriptionId()).withStyle(Style.EMPTY.withColor(color));
+
+			StringBuilder literal = new StringBuilder();
+			if(scalars.get(attrOperation).length == 1) {
+				double value = scalars.get(attrOperation)[0];
+				literal.append(switch (attrOperation.second) {
+					case 0 -> Reference.FORMAT.format(value);
+					case 1 -> Reference.FORMAT.format(value) + "%";
+					case 2 -> "x" + String.format("%.2f", value);
+					default -> throw new IllegalStateException("Unexpected value: " + attrOperation.second);
+				});
+				literal.append("x").append(Lang.localise("level").getString()).append(" ");
+			} else {
+				literal.append(attrOperation.second == 2 ? "x" : "");
+				for(int i = 0; i < scalars.get(attrOperation).length; i++) {
+					double scalar = scalars.get(attrOperation)[i];
+					if(i != 0) {
+						literal.append("/");
+					}
+					literal.append(switch (attrOperation.second) {
+						case 0 -> Reference.FORMAT.format(scalar);
+						case 1 -> Reference.FORMAT.format(scalar * 100);
+						case 2 -> String.format("%.2f", scalar);
+						default -> throw new IllegalStateException("Unexpected value: " + attrOperation.second);
+					});
+				}
+				literal.append(attrOperation.second == 1 ? "% " : " ");
+			}
+			tooltip.add(combine(Component.literal(literal.toString()), attr_name));
+		}
+		return ComponentUtils.formatList(tooltip, Component.literal("\n"));
+	}
+
+	static Component combine(Component prefix, Component comp) {
+		return ComponentUtils.formatList(List.of(prefix, comp), Component.empty());
 	}
 
 	@Override

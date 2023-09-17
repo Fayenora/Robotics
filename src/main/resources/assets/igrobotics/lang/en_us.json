@@ -4,6 +4,7 @@
   "none": "None",
   "create": "Create",
   "start": "Start",
+  "igrobotics.level": "[Level]",
 
   "minecraft:overworld": "Overworld",
   "minecraft:the_nether": "The Nether",
@@ -77,6 +78,7 @@
   "attribute.name.robot.energy_consumption": "Energy Consumption",
   "attribute.name.robot.inventory_slots": "Inventory Slots",
   "attribute.name.robot.module_slots": "Module Slots",
+  "igrobotics.perks": "Perks",
   "igrobotics.perk.health": "Health",
   "igrobotics.perk.battery": "Battery",
   "igrobotics.perk.steady": "Steady",
@@ -102,6 +104,7 @@
   "igrobotics.perk.coal_generator": "Coal Generator",
   "igrobotics.perk.bio_generator": "Bio Generator",
 
+  "igrobotics.perk.desc": "Increases the stats of the robot: ",
   "igrobotics.perk.robust.desc": "Every damage the robot receives is reduced by %s * [Level]",
   "igrobotics.perk.strength.desc": "Every attack of the robot deals %s * [Level] extra damage",
   "igrobotics.perk.impact.desc": "Every attack of the robot deals %s * [Level] extra damage, that ignores armor or any other protection",

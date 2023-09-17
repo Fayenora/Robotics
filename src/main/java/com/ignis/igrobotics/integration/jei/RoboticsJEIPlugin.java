@@ -9,6 +9,8 @@ import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
@@ -41,7 +43,8 @@ public class RoboticsJEIPlugin implements IModPlugin {
     public static final ResourceLocation LOCATION = new ResourceLocation(Robotics.MODID, "jei");
 
     public static IJeiRuntime JEI_RUNTIME;
-    private MachineRecipeCategory assemblerCategory, wireCutterCategory;
+    private static MachineRecipeCategory assemblerCategory, wireCutterCategory;
+    private static PerkRecipeCategory perkCategory;
 
     public static final IIngredientType<Perk> INGREDIENT_PERK = () -> Perk.class;
     public static IModIngredientRegistration ingredientRegistration;
@@ -53,8 +56,10 @@ public class RoboticsJEIPlugin implements IModPlugin {
 
         assemblerCategory = new AssemblerRecipeCategory(guiHelper);
         wireCutterCategory = new WireCutterRecipeCategory(guiHelper);
+        perkCategory = new PerkRecipeCategory(guiHelper);
         registration.addRecipeCategories(assemblerCategory);
         registration.addRecipeCategories(wireCutterCategory);
+        registration.addRecipeCategories(perkCategory);
     }
 
     @Override
@@ -117,6 +122,12 @@ public class RoboticsJEIPlugin implements IModPlugin {
             Component descriptionText = perk.getDescriptionText();
             if(descriptionText == null) continue;
             recipeRegistration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
+
+        }
+        for(RobotPart part : config.parts.PARTS.values()) {
+            for(Tuple<Perk, Integer> perk : part.getPerks()) {
+                recipeRegistration.addRecipes(perkCategory.getRecipeType(), List.of(new PerkRecipeCategory.PartPerkTuple(perk.first, part)));
+            }
         }
     }
 
