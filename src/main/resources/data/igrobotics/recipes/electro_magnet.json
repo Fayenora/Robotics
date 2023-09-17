@@ -6,7 +6,7 @@
             "tag": "forge:rods/iron"
         }, 
 		"w": {
-            "tag": "forge:wires/copper"
+            "item": "igrobotics:copper_wire"
         }
     }, 
 	"energy": 10000,

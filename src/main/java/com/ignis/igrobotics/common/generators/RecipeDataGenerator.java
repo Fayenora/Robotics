@@ -71,25 +71,25 @@ public class RecipeDataGenerator extends RecipeProvider {
                     .pattern("pgp")
                     .save(writer);
 
-            defineLimb(material, EnumRobotPart.LEFT_ARM)
-                    .pattern("mp ")
-                    .pattern("pwp")
-                    .pattern(" pm")
-                    .save(writer);
-
             defineLimb(material, EnumRobotPart.RIGHT_ARM)
+                    .pattern("mp ")
+                    .pattern("pwp")
+                    .pattern(" pm")
+                    .save(writer);
+
+            defineLimb(material, EnumRobotPart.LEFT_ARM)
                     .pattern(" pm")
                     .pattern("pwp")
                     .pattern("mp ")
                     .save(writer);
 
-            defineLimb(material, EnumRobotPart.LEFT_LEG)
+            defineLimb(material, EnumRobotPart.RIGHT_LEG)
                     .pattern(" mp")
                     .pattern("wmp")
                     .pattern("pp ")
                     .save(writer);
 
-            defineLimb(material, EnumRobotPart.RIGHT_LEG)
+            defineLimb(material, EnumRobotPart.LEFT_LEG)
                     .pattern("pm ")
                     .pattern("pmw")
                     .pattern(" pp")
