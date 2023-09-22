@@ -222,7 +222,7 @@ public class RobotBehavior {
 
     public static void openRobotMenu(Player player, MenuType<?> type, Entity target) {
         if(!(player instanceof ServerPlayer serverPlayer)) return;
-        if(!target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
+        if(target == null || !target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
         if(!hasAccess(player, target, EnumPermission.VIEW)) return;
         if(type == ModMenuTypes.ROBOT.get()) {
             NetworkHooks.openScreen(serverPlayer,

@@ -22,8 +22,7 @@ public class CommanderScreen extends BaseContainerScreen<CommanderMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/command_module.png");
 
-    public ScrollableElement robotList;
-    public ButtonElement smallList, largeList;
+    private ButtonElement smallList, largeList;
 
     public CommanderScreen(CommanderMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
@@ -34,7 +33,7 @@ public class CommanderScreen extends BaseContainerScreen<CommanderMenu> {
     @Override
     protected void init() {
         super.init();
-        robotList = new ScrollableElement(leftPos + 15, topPos + 25, 147, 131);
+        ScrollableElement robotList = new ScrollableElement(leftPos + 15, topPos + 25, 147, 131);
         smallList = new ButtonElement(leftPos + 148, topPos + 16, 6, 5, 0, 2, ign -> largeList.nextState());
         largeList = new ButtonElement(leftPos + 156, topPos + 16, 6, 5, 1, 2, ign -> smallList.nextState());
         smallList.initTextureLocation(TEXTURE, 177, 0);
