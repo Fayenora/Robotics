@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -37,16 +38,16 @@ public class PosUtil {
     }
 
     public static GlobalPos readPos(CompoundTag tag) {
-        ResourceLocation registry = ResourceLocation.tryParse(tag.getString("levelReg"));
-        ResourceLocation location = ResourceLocation.tryParse(tag.getString("levelLoc"));
-        Optional<ResourceKey<Level>> dim = getLevelKey(registry, location);
-        return GlobalPos.of(dim.orElse(ServerLifecycleHooks.getCurrentServer().overworld().dimension()), NbtUtils.readBlockPos(tag));
+        ResourceKey<Level> dim = NBTUtils.deserializeKey(Registries.DIMENSION, tag.get("dim"));
+        if(dim == null) {
+            dim = ServerLifecycleHooks.getCurrentServer().overworld().dimension();
+        }
+        return GlobalPos.of(dim, NbtUtils.readBlockPos(tag));
     }
 
     public static CompoundTag writePos(GlobalPos pos) {
         CompoundTag tag = NbtUtils.writeBlockPos(pos.pos());
-        tag.putString("levelReg", pos.dimension().registry().toString());
-        tag.putString("levelLoc", pos.dimension().location().toString());
+        tag.put("dim", NBTUtils.serializeKey(pos.dimension()));
         return tag;
     }
 

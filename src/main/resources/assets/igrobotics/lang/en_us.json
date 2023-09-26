@@ -65,6 +65,9 @@
   "igrobotics.requirement.energy": "At least %s",
   "igrobotics.requirement.body": "A body",
   "igrobotics.requirement.head": "A head",
+  "igrobotics.IN_WORLD": "Online",
+  "igrobotics.IN_STORAGE": "In storage",
+  "igrobotics.OFFLINE": "Offline",
 
   "igrobotics.found_no_selection": "No command unit in inventory has selected an entity!",
   "igrobotics.max_commands": "This robot cannot handle more tasks!",

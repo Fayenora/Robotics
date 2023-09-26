@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
+import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
 import com.ignis.igrobotics.common.entity.ai.PickupGoal;
@@ -222,6 +223,12 @@ public class RobotCapability implements IRobot {
     @Override
     public void setCommandGroup(int group) {
         dataManager.set(COMMAND_GROUP, group);
+        WorldData data = WorldData.get();
+        if(group == 0) {
+            data.releaseRobotFromCommandGroup(entity);
+        } else {
+            data.cacheRobotForCommandGroup(group, entity);
+        }
     }
 
     @Override

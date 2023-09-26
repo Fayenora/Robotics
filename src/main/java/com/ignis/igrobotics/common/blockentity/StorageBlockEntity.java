@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.menu.StorageMenu;
+import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
@@ -15,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -112,11 +114,13 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void clearEntity() {
+        storedRobot.getEntity().ifPresent(ent -> WorldData.get().releaseRobotFromCommandGroup(ent));
         storedRobot.clearEntity();
         sync();
     }
 
     public void enterStorage(Entity entity) {
+        WorldData.get().rememberRobotStorage(getBlockPos(), entity);
         storedRobot.enterStorage(entity);
         sync();
     }

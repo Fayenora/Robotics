@@ -1,10 +1,17 @@
 package com.ignis.igrobotics.client.screen.elements;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.robot.RobotView;
+import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.core.util.PosUtil;
+import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,13 +23,17 @@ public class RobotElement extends ButtonElement {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/command_module.png");
 
+    RobotView view;
     LivingEntity robot;
 
-    public RobotElement(LivingEntity robot, int pX, int pY) {
+    public RobotElement(RobotView view, int pX, int pY) {
         super(pX, pY, 147, 26);
-        this.robot = robot;
+        this.view = view;
+        if(view.getEntity() instanceof LivingEntity living) {
+            this.robot = living;
+            setNetworkAction(() -> new PacketOpenRobotMenu(ModMenuTypes.ROBOT.get(), robot.getId()));
+        }
         initSingleTextureLocation(TEXTURE, 0, 183);
-        setNetworkAction(() -> new PacketOpenRobotMenu(ModMenuTypes.ROBOT.get(), robot.getId()));
     }
 
     @Override
@@ -30,5 +41,7 @@ public class RobotElement extends ButtonElement {
         super.render(poseStack, pMouseX, pMouseY, pPartialTick);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         InventoryScreen.renderEntityInInventoryFollowsAngle(poseStack, getX() + 10, getY() + 23, 10, 0, 0, robot);
+        RenderUtil.drawString(poseStack, Lang.localise(view.getState().toString()), getX() + 100, getY() + 3, Reference.FONT_COLOR, 0.6f);
+        RenderUtil.drawString(poseStack, PosUtil.prettyPrint(view.getLastKnownPosition()), getX() + 100, getY() + 9, Reference.FONT_COLOR, 0.6f);
     }
 }

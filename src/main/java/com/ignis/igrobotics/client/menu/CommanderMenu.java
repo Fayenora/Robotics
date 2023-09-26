@@ -1,9 +1,8 @@
 package com.ignis.igrobotics.client.menu;
 
+import com.ignis.igrobotics.core.robot.RobotView;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
-import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,13 +13,13 @@ import java.util.Collection;
 
 public class CommanderMenu extends AbstractContainerMenu {
 
-    Collection<LivingEntity> robots;
+    Collection<RobotView> robots;
 
     public CommanderMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, EntityByteBufUtil.readEntities(extraData));
+        this(id, RobotView.readViews(extraData));
     }
 
-    public CommanderMenu(int id, Collection<LivingEntity> robots) {
+    public CommanderMenu(int id, Collection<RobotView> robots) {
         super(ModMenuTypes.COMMANDER.get(), id);
         this.robots = robots;
     }
@@ -35,7 +34,7 @@ public class CommanderMenu extends AbstractContainerMenu {
         return true;
     }
 
-    public Collection<LivingEntity> getRobots() {
+    public Collection<RobotView> getRobots() {
         return robots;
     }
 }

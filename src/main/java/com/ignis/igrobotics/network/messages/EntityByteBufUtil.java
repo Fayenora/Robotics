@@ -86,7 +86,7 @@ public class EntityByteBufUtil implements IBufferSerializable {
 		return null;
 	}
 
-	public static void writeEntity(LivingEntity entity, FriendlyByteBuf buf) {
+	public static void writeEntity(Entity entity, FriendlyByteBuf buf) {
 		new EntityByteBufUtil(entity).write(buf);
 	}
 

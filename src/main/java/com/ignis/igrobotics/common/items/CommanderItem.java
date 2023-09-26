@@ -10,6 +10,7 @@ import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.robot.RobotView;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
@@ -178,10 +179,10 @@ public class CommanderItem extends Item {
 
         assignID(stack);
         int commandGroup = getID(stack);
-        Collection<LivingEntity> robotsOfCommandGroup = RoboticsFinder.getRobotics(level, robot -> robot.getCommandGroup() == commandGroup);
+        Collection<RobotView> robotsOfCommandGroupView = WorldData.get().getRobotsOfCommandGroup(commandGroup);
         NetworkHooks.openScreen((ServerPlayer) player,
-                new SimpleMenuProvider((id, ign1, ign2) -> new CommanderMenu(id, robotsOfCommandGroup), stack.getHoverName().copy().withStyle(Style.EMPTY)),
-                buf -> EntityByteBufUtil.writeEntities(robotsOfCommandGroup, buf));
+                new SimpleMenuProvider((id, ign1, ign2) -> new CommanderMenu(id, robotsOfCommandGroupView), stack.getHoverName().copy().withStyle(Style.EMPTY)),
+                buf -> RobotView.writeViews(buf, robotsOfCommandGroupView));
 
         return InteractionResultHolder.consume(stack);
     }

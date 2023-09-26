@@ -7,12 +7,12 @@ import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.RobotElement;
 import com.ignis.igrobotics.client.screen.elements.ScrollableElement;
+import com.ignis.igrobotics.core.robot.RobotView;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -39,7 +39,7 @@ public class CommanderScreen extends BaseContainerScreen<CommanderMenu> {
         smallList.initTextureLocation(TEXTURE, 177, 0);
         largeList.initTextureLocation(TEXTURE, 177, 10);
 
-        for(LivingEntity robot : menu.getRobots()) {
+        for(RobotView robot : menu.getRobots()) {
             robotList.addElement(new RobotElement(robot, 0, 0));
         }
 
