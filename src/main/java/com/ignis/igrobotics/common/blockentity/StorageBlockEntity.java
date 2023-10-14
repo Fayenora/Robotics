@@ -16,11 +16,12 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
+import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -133,6 +135,13 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
 
     public Optional<Entity> getEntity() {
         return storedRobot.getEntity();
+    }
+
+    @Override
+    public void saveToItem(ItemStack p_187477_) {
+        CompoundTag tag = saveWithoutMetadata();
+        tag.getCompound("entity").putUUID("UUID", UUID.randomUUID()); //Assign a new UUID to allow for the copied entity to also enter the world. Note: It will not be in the same command category
+        BlockItem.setBlockEntityData(p_187477_, this.getType(), tag);
     }
 
     /////////////////////

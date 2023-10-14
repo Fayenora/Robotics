@@ -90,7 +90,6 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
                 entity.lerpHeadTo(0, 0);
             }
         }
-        //entity.setUUID(UUID.randomUUID());
         level.addFreshEntity(entity);
         clearEntity();
 
@@ -174,7 +173,6 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
 
     private Optional<Entity> copyEntity(Entity toCopy) {
         CompoundTag tag = toCopy.serializeNBT();
-        //tag.remove(Entity.UUID_TAG);
         return EntityType.create(tag, level);
     }
 }
