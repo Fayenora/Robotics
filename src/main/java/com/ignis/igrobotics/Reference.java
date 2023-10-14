@@ -27,7 +27,7 @@ public class Reference {
 	
 	public static final int MAX_ROBOT_NAME_LENGTH = 35;
 	
-	/** Absolute maximum for module count. Needs to be present at compile time */
+	/** Absolute maximum for module count per slot. Needs to be present at compile time */
 	public static final int MAX_MODULES = 8;
 	public static final int MAX_INVENTORY_SIZE = 36;
 

@@ -6,10 +6,13 @@ import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -29,20 +32,13 @@ public class SideBarSwitchElement extends GuiElement {
     int[] textureRows;
 
     public SideBarSwitchElement(MenuType<?> currentMenu, List<MenuType<?>> possibleMenus, int x, int y, int width, int height, int entityId) {
-        super(x, y, width, height);
-
-        for(int i = 0; i < POSSIBLE_TYPES.length; i++) {
-            if(currentMenu.equals(POSSIBLE_TYPES[i].get())) {
-                currentGuiIndex = i;
-            }
-        }
+        this(currentMenu, possibleMenus, x, y, width, height);
 
         for(int i = 0; i < possibleMenus.size(); i++) {
             if(possibleMenus.get(i).equals(currentMenu)) {
                 subsetGuiIndex = i;
                 continue; //Don't add a button for the currently active gui
             }
-
             ButtonElement button = new ButtonElement(x, y + i * height, width, height) {
                 @Override
                 public void onPress() {
@@ -51,6 +47,35 @@ public class SideBarSwitchElement extends GuiElement {
             };
 
             addElement(button);
+        }
+    }
+
+    public SideBarSwitchElement(MenuType<?> currentMenu, List<MenuType<?>> possibleMenus, int x, int y, int width, int height, BlockPos pos) {
+        this(currentMenu, possibleMenus, x, y, width, height);
+
+        for(int i = 0; i < possibleMenus.size(); i++) {
+            if(possibleMenus.get(i).equals(currentMenu)) {
+                subsetGuiIndex = i;
+                continue; //Don't add a button for the currently active gui
+            }
+            ButtonElement button = new ButtonElement(x, y + i * height, width, height) {
+                @Override
+                public void onPress() {
+                    NetworkHandler.sendToServer(new PacketOpenRobotMenu(possibleMenus.get(Math.floorDiv(getY() - y, height)), pos));
+                }
+            };
+
+            addElement(button);
+        }
+    }
+
+    private SideBarSwitchElement(MenuType<?> currentMenu, List<MenuType<?>> possibleMenus, int x, int y, int width, int height) {
+        super(x, y, width, height);
+
+        for(int i = 0; i < POSSIBLE_TYPES.length; i++) {
+            if(currentMenu.equals(POSSIBLE_TYPES[i].get())) {
+                currentGuiIndex = i;
+            }
         }
 
         //Find out on which row the texture is and save it in textureRows

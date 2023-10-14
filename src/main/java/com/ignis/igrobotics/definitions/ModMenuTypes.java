@@ -21,6 +21,7 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<AssemblerMenu>> ASSEMBLER = registerMenuType(AssemblerMenu::new, "assembler_menu");
     public static final RegistryObject<MenuType<WireCutterMenu>> WIRE_CUTTER = registerMenuType(WireCutterMenu::new, "wire_cutter_menu");
     public static final RegistryObject<MenuType<FactoryMenu>> FACTORY = registerMenuType(FactoryMenu::new, "factory_menu");
+    public static final RegistryObject<MenuType<FactoryModulesMenu>> FACTORY_MODULES = registerMenuType(FactoryModulesMenu::new, "factory_menu_modules");
     public static final RegistryObject<MenuType<StorageMenu>> STORAGE = registerMenuType(StorageMenu::new, "storage_menu");
     public static final RegistryObject<MenuType<RobotMenu>> ROBOT = registerMenuType(RobotMenu::new, "robot_menu");
     public static final RegistryObject<MenuType<RobotInfoMenu>> ROBOT_INFO = registerMenuType(RobotInfoMenu::new, "robot_info_menu");

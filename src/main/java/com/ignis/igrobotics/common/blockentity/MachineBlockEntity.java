@@ -508,4 +508,8 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     public void clearContent() {
         inventory.clear();
     }
+
+    public ContainerData getDataAccess() {
+        return dataAccess;
+    }
 }

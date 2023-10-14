@@ -62,7 +62,6 @@ public class FactoryInventory extends MachineInventory {
             living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setModules(stacks.subList(6, getSlots())));
         }
         if(factory.getLevel().isClientSide()) return;
-        setSize((int) (6 + living.getAttributeValue(ModAttributes.MODIFIER_SLOTS)));
     }
 
     public void deriveEntity() {

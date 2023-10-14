@@ -6,12 +6,14 @@ import com.ignis.igrobotics.client.menu.FactoryMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
+import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketConstructRobot;
@@ -26,6 +28,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.DyeColor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,6 +43,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     public ButtonElement startButton;
     public ButtonElement switchColorLeft, switchColorRight;
     public EditBox nameBar;
+    public SideBarSwitchElement sideBar;
     FactoryBlockEntity factory;
 
     public FactoryScreen(FactoryMenu menu, Inventory playerInv, Component title) {
@@ -54,6 +58,9 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         super.init();
         addRenderableWidget(new EnergyBarElement(leftPos + 8, topPos + 8, 203, () -> menu.data.get(3), () -> menu.data.get(4)));
 
+        List<MenuType<?>> possibleMenus = List.of(ModMenuTypes.FACTORY.get(), ModMenuTypes.FACTORY_MODULES.get());
+        sideBar = new SideBarSwitchElement(ModMenuTypes.FACTORY.get(), possibleMenus, leftPos + imageWidth - 1, topPos + 3, 18, 17, factory.getBlockPos());
+        sideBar.initTextureLocation(TEXTURE, 0, 219);
         startButton = new ButtonElement(leftPos + 89, topPos + 112, 54, 19, Lang.localise("start"), button -> {
             if(factory.hasCraftedRobotReady()) {
                 nameBar.setValue("");
@@ -83,6 +90,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
             nameBar.setValue(factory.getEntity().get().getCustomName().getString());
         }
 
+        addElement(sideBar);
         addElement(startButton);
         addElement(switchColorLeft);
         addElement(switchColorRight);
@@ -110,13 +118,6 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderUtil.drawEntityOnScreen(poseStack, leftPos + 116, topPos + 105, 30, 0, 0, living);
-
-        //Draw Module Slots
-        RenderSystem.setShaderTexture(0, Reference.MISC);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        for(int i = 6; i < menu.data.get(0); i++) {
-            blit(poseStack, leftPos + 206, topPos + 16 + 23 * (i - 6), 238, 0, 18, 18);
-        }
 
 		/* Draw Color Icon
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

@@ -19,6 +19,7 @@
   "container.wire_cutter": "Wire Cutter",
   "container.robot_factory": "Robot Factory",
   "container.robot_storage": "Robot Storage",
+  "container.robot_factory.modules": "Robot Factory",
 
   "igrobotics.assembler": "Assembling",
   "igrobotics.wire_cutter": "Wire Cutting",

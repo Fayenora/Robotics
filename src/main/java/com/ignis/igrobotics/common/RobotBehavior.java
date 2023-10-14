@@ -2,9 +2,6 @@ package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.RobotCommandMenu;
-import com.ignis.igrobotics.client.menu.RobotInfoMenu;
-import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.RetrieveGoal;
 import com.ignis.igrobotics.core.access.AccessConfig;
@@ -12,32 +9,23 @@ import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
-import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
-import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.cc.ComputerizedBehavior;
-import com.ignis.igrobotics.integration.cc.vanilla.ScreenInvokator;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
-import dan200.computercraft.shared.network.container.ComputerContainerData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -46,14 +34,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,8 +54,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
@@ -206,7 +189,7 @@ public class RobotBehavior {
                 return;
             }
         }
-        openRobotMenu(player, ModMenuTypes.ROBOT.get(), target);
+        RoboticsMenus.openRobotMenu(player, ModMenuTypes.ROBOT.get(), target);
     }
 
     private static boolean equipIfPossible(Mob mob, Player player, InteractionHand hand, EquipmentSlot slot, ItemStack stack) {
@@ -218,61 +201,6 @@ public class RobotBehavior {
             return true;
         }
         return false;
-    }
-
-    public static void openRobotMenu(Player player, MenuType<?> type, Entity target) {
-        if(!(player instanceof ServerPlayer serverPlayer)) return;
-        if(target == null || !target.getCapability(ModCapabilities.ROBOT).isPresent()) return;
-        if(!hasAccess(player, target, EnumPermission.VIEW)) return;
-        if(type == ModMenuTypes.ROBOT.get()) {
-            NetworkHooks.openScreen(serverPlayer,
-                    new SimpleMenuProvider((id, playerInv, f3) -> new RobotMenu(id, playerInv, target, constructContainerData(target)), Lang.localise("container.robot")),
-                    buf -> buf.writeInt(target.getId()));
-        }
-        if(type == ModMenuTypes.ROBOT_INFO.get()) {
-            if(!(target instanceof LivingEntity living)) return;
-            target.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                NetworkHooks.openScreen(serverPlayer,
-                    new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
-                    buf -> {
-                        buf.writeInt(target.getId());
-                        robot.getAccess().write(buf);
-                        for(Map.Entry<ResourceKey<Attribute>, Attribute> entry : ForgeRegistries.ATTRIBUTES.getEntries()) {
-                            if(living.getAttributes().hasAttribute(entry.getValue())) {
-                                buf.writeResourceKey(entry.getKey());
-                                buf.writeFloat((float) living.getAttributes().getValue(entry.getValue()));
-                            }
-                        }
-                    });
-            });
-        }
-        if(type == ModMenuTypes.ROBOT_COMMANDS.get()) {
-            if(!hasAccess(player, target, EnumPermission.COMMANDS)) return;
-            target.getCapability(ModCapabilities.COMMANDS).ifPresent(robot -> {
-                NetworkHooks.openScreen(serverPlayer,
-                        new SimpleMenuProvider((id, f2, f3) -> new RobotCommandMenu(id, target), Lang.localise("container.robot_commands")),
-                        buf -> {
-                            buf.writeInt(target.getId());
-                            CompoundTag tag = new CompoundTag();
-                            RobotCommand.writeToNBT(tag, robot.getCommands()); //TODO: Optimize
-                            buf.writeNbt(tag);
-                        });
-            });
-        }
-        if(type == ModMenuTypes.COMPUTER.get()) {
-            if(!hasAccess(player, target, EnumPermission.COMMANDS)) return;
-            if(!ModList.get().isLoaded(Reference.CC_MOD_ID)) return;
-            target.getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
-                NetworkHooks.openScreen(serverPlayer,
-                        new SimpleMenuProvider(
-                                ScreenInvokator.invokeProgrammingMenu(target, computer),
-                                Lang.localise("container.computer")),
-                        buf -> {
-                            new ComputerContainerData(computer.getComputer(), Items.APPLE.getDefaultInstance()).toBytes(buf);
-                            buf.writeInt(target.getId());
-                        });
-            });
-        }
     }
 
     public static void onRobotCreated(LivingEntity entity) {
@@ -388,34 +316,5 @@ public class RobotBehavior {
         } else {
             return entity.hasEffect(MobEffects.DIG_SLOWDOWN) ? 6 + (1 + entity.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) * 2 : 6;
         }
-    }
-
-    private static ContainerData constructContainerData(Entity entity) {
-        return new ContainerData() {
-            @Override
-            public int get(int key) {
-                return switch (key) {
-                    case 0 -> entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getEnergyStored();
-                    case 1 -> entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getMaxEnergyStored();
-                    default -> 0;
-                };
-            }
-
-            @Override
-            public void set(int key, int value) {
-                entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> {
-                    if(!(storage instanceof ModifiableEnergyStorage energy)) return;
-                    switch(key) {
-                        case 0 -> energy.setEnergy(value);
-                        case 1 -> energy.setMaxEnergyStored(value);
-                    }
-                });
-            }
-
-            @Override
-            public int getCount() {
-                return 2;
-            }
-        };
     }
 }

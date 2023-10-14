@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.capabilities.robot;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -32,7 +34,9 @@ public interface IRobot extends INBTSerializable<CompoundTag> {
 
     void setModules(List<ItemStack> items);
 
-    void setMaxModules(int amount);
+    void setMaxModules(EnumModuleSlot slotType, int amount);
+
+    Map<EnumModuleSlot, Integer> getModuleSlots();
 
     boolean hasRenderLayer(int id);
 

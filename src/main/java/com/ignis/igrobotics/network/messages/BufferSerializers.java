@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.network.messages;
 
 import com.ignis.igrobotics.core.access.AccessConfig;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -32,6 +33,8 @@ public class BufferSerializers {
         config.read(buf);
         return config;
     });
+    public static final BufferSerializer<BlockPos> BLOCKPOS = new BufferSerializer<>(4, BlockPos.class, (pos, buf) -> buf.writeBlockPos(pos), FriendlyByteBuf::readBlockPos);
+    public static final BufferSerializer<Integer> INTEGER = new BufferSerializer<>(5, Integer.class, (i, buf) -> buf.writeInt(i), FriendlyByteBuf::readInt);
 
     public static <T> void writeObject(FriendlyByteBuf buf, T data) {
         buf.writeInt(getType(data).id);

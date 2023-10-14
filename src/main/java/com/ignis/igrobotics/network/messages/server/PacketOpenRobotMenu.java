@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.RoboticsMenus;
+import com.ignis.igrobotics.network.messages.BufferSerializers;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.MenuType;
@@ -10,30 +11,30 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class PacketOpenRobotMenu implements IMessage {
 
     private MenuType<?> type;
-    private int entityId;
+    private Object extraData;
 
     public PacketOpenRobotMenu() {}
 
-    public PacketOpenRobotMenu(MenuType<?> type, int entityId) {
+    public PacketOpenRobotMenu(MenuType<?> type, Object extraData) {
         this.type = type;
-        this.entityId = entityId;
+        this.extraData = extraData;
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
         buf.writeRegistryId(ForgeRegistries.MENU_TYPES, type);
-        buf.writeInt(entityId);
+        BufferSerializers.writeObject(buf, extraData);
     }
 
     @Override
     public void decode(FriendlyByteBuf buf) {
         type = buf.readRegistryId();
-        entityId = buf.readInt();
+        extraData = BufferSerializers.readObject(buf);
     }
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        RobotBehavior.openRobotMenu(cxt.getSender(), type, cxt.getSender().level.getEntity(entityId));
+        RoboticsMenus.openMenu(cxt.getSender(), type, extraData);
     }
 
 }

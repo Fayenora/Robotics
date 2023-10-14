@@ -8,6 +8,7 @@ import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModAttributes;
@@ -56,7 +57,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     private boolean canStart = false;
 
     public FactoryBlockEntity(BlockPos pos, BlockState state) {
-        super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES, new int[] {}, new int[] {});
+        super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES * EnumModuleSlot.values().length, new int[] {}, new int[] {});
         storedRobot = new EntityLevelStorage(level, null, this::getBlockPos);
         inventory = new FactoryInventory(this, getContainerSize());
         inventory.setAllSlotsAccessibleByDefault();
@@ -132,19 +133,6 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
         storedRobot.setRobotPart(part, material);
-        if(level.isClientSide()) return;
-        storedRobot.getEntity().ifPresent(entity -> {
-            entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                if(!(entity instanceof LivingEntity living)) return;
-                int size = living.getAttributes().hasAttribute(ModAttributes.MODIFIER_SLOTS) ? (int) living.getAttributeValue(ModAttributes.MODIFIER_SLOTS) : 0;
-                /* TODO
-                if(!parts.hasAnyBodyPart()) {
-                    size = 0;
-                }
-                 */
-                inventory.setSize(6 + size);
-            });
-        });
     }
 
     public void setRobot(RobotEntity robot) {

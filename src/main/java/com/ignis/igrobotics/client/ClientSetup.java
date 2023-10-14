@@ -33,6 +33,7 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.WIRE_CUTTER.get(), WireCutterScreen::new);
             MenuScreens.register(ModMenuTypes.ASSEMBLER.get(), AssemblerScreen::new);
             MenuScreens.register(ModMenuTypes.FACTORY.get(), FactoryScreen::new);
+            MenuScreens.register(ModMenuTypes.FACTORY_MODULES.get(), FactoryModulesScreen::new);
             MenuScreens.register(ModMenuTypes.STORAGE.get(), StorageScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT.get(), RobotScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT_INFO.get(), RobotInfoScreen::new);

@@ -5,6 +5,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.ModifiableInventory;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -23,7 +24,7 @@ public class ModAttributes {
 
     public static final Attribute ENERGY_CAPACITY = register("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE, true);
     public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE, false);
-    public static final Attribute MODIFIER_SLOTS = register("robot.module_slots", 1, 0, Reference.MAX_MODULES, false);
+    public static final Attribute MODIFIER_SLOTS = register("robot.module_slots", 2, 0, Reference.MAX_MODULES, false);
     public static final Attribute INVENTORY_SLOTS = register("robot.inventory_slots", 12, 0, Reference.MAX_INVENTORY_SIZE, true);
 
     private static Attribute register(String name, double defaultValue, double min, double max, boolean syncable) {
@@ -87,7 +88,7 @@ public class ModAttributes {
 
 		if(instance.getAttribute().equals(MODIFIER_SLOTS)) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                    robot.setMaxModules((int) instance.getValue());
+                robot.setMaxModules(EnumModuleSlot.DEFAULT, (int) instance.getValue());
             });
 		}
     }
