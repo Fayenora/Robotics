@@ -32,8 +32,12 @@ public class CommandAPI implements ILuaAPI {
     }
 
     @LuaFunction
-    public final LuaRobotCommand remove(int index) {
-        RobotCommand command = commands.getCommands().toArray(new RobotCommand[0])[index + 1];
+    public final LuaRobotCommand remove(int index) throws LuaException {
+        RobotCommand[] commands1 = commands.getCommands().toArray(new RobotCommand[0]);
+        if(index <= 0 || index > commands1.length) {
+            throw new LuaException("Index " + index + " out of bounds for length " + commands1.length + ". ");
+        }
+        RobotCommand command = commands1[index - 1];
         commands.removeCommand(command);
         return new LuaRobotCommand(command);
     }

@@ -19,7 +19,7 @@ public class InventoryAPI implements ILuaAPI {
 
     @LuaFunction
     public final MethodResult getItem(ILuaContext context, Optional<Integer> slot, Optional<Boolean> detailed) throws LuaException {
-        int actualSlot = Math.min(inventory.getSlots(), Math.max(0, slot.orElse(0)));
+        int actualSlot = normalizeSlotIndex(slot);
         if (detailed.orElse(false)) {
             return context.executeMainThreadTask(() -> {
                 var stack = inventory.getStackInSlot(actualSlot);
@@ -37,8 +37,8 @@ public class InventoryAPI implements ILuaAPI {
 
     @LuaFunction
     public final void switchSlots(ILuaContext context, Optional<Integer> index1, Optional<Integer> index2) throws LuaException {
-        int ind1 = Math.min(inventory.getSlots(), Math.max(0, index1.orElse(0)));
-        int ind2 = Math.min(inventory.getSlots(), Math.max(0, index2.orElse(0)));
+        int ind1 = normalizeSlotIndex(index1);
+        int ind2 = normalizeSlotIndex(index2);
         context.executeMainThreadTask(() -> {
             var stack1 = inventory.getStackInSlot(ind1);
             var stack2 = inventory.getStackInSlot(ind2);
@@ -48,6 +48,10 @@ public class InventoryAPI implements ILuaAPI {
             inventory.setStackInSlot(ind1, stack2);
             return new Object[0];
         });
+    }
+
+    private int normalizeSlotIndex(Optional<Integer> index) {
+        return Math.min(inventory.getSlots(), Math.max(index.orElse(1), 1)) - 1;
     }
 
     @Override
