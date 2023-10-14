@@ -57,7 +57,7 @@ public class FactoryModulesMenu extends BaseMenu {
 
     private void addModuleSlots(IItemHandler handler, EnumModuleSlot slotType, int x, int y, boolean reverse) {
         for(int i = 0; i < moduleSlots.getOrDefault(slotType, 0); i++) {
-            int slotId = slotType.ordinal() * EnumModuleSlot.values().length + i;
+            int slotId = slotType.ordinal() * EnumModuleSlot.values().length + i + 6;
             addSlot(new SlotItemHandler(handler, slotId, x + (reverse ? -22 : 22) * (i % 4) + 1, y + (i > 3 ? 22 : 0) + 1));
         }
     }

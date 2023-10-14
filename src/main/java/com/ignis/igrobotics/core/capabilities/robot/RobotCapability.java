@@ -39,6 +39,7 @@ public class RobotCapability implements IRobot {
     private AccessConfig access = new AccessConfig();
 
     private NonNullList<ItemStack> modules;
+    /** Amount of slots for each module type. These are not enforced and just info for the module menu*/
     private final Map<EnumModuleSlot, Integer> slotSizes;
 
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
@@ -168,10 +169,6 @@ public class RobotCapability implements IRobot {
     }
 
     private void setModule(ItemStack item, int slot) {
-        EnumModuleSlot affectedSlotType = EnumModuleSlot.values()[Math.floorDiv(slot, EnumModuleSlot.values().length)];
-        if(slot % EnumModuleSlot.values().length > slotSizes.get(affectedSlotType)) {
-            return;
-        }
         //Remove the modifiers and texture of the old module
         if(!modules.get(slot).isEmpty()) {
             RobotModule oldModule = RoboticsConfig.current().modules.get(modules.get(slot));
