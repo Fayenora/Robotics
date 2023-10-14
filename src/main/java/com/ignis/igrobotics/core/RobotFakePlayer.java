@@ -14,12 +14,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -43,6 +45,11 @@ public class RobotFakePlayer extends FakePlayer {
     @Override
     public float getDigSpeed(BlockState state, @Nullable BlockPos pos) {
         return RobotBehavior.destroySpeed(mob, mob.getMainHandItem(), state);
+    }
+
+    @Override
+    public boolean hasCorrectToolForDrops(BlockState state) {
+        return ForgeEventFactory.doPlayerHarvestCheck(this, state, !state.requiresCorrectToolForDrops() || getMainHandItem().isCorrectToolForDrops(state));
     }
 
     @Override
