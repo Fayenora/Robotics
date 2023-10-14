@@ -47,10 +47,10 @@ public class EventHandler {
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if(event.getLevel().isClientSide()) return;
         BlockState state = event.getLevel().getBlockState(event.getPos());
-        if(state.getValue(StorageBlock.HALF).equals(DoubleBlockHalf.LOWER)) return;
-        if(state.getBlock().equals(ModBlocks.ROBOT_STORAGE.get())) return;
-        if(!(event.getLevel().getBlockEntity(event.getPos()) instanceof StorageBlockEntity storage)) return;
-        storage.exitStorage();
+        if(!state.getBlock().equals(ModBlocks.ROBOT_STORAGE.get())) return;
+        int offset = state.getValue(StorageBlock.HALF).equals(DoubleBlockHalf.LOWER) ? 0: 1;
+        if(!(event.getLevel().getBlockEntity(event.getPos().below(offset)) instanceof StorageBlockEntity storage)) return;
+        storage.exitStorage(null);
     }
 
     @SubscribeEvent
