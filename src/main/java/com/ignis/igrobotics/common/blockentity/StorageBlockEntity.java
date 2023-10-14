@@ -2,6 +2,7 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.menu.StorageMenu;
 import com.ignis.igrobotics.common.WorldData;
+import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
@@ -128,7 +129,11 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public Optional<Entity> exitStorage() {
-        Optional<Entity> exitedEntity = storedRobot.exitStorage();
+        return exitStorage(getBlockState().getValue(MachineBlock.FACING));
+    }
+
+    public Optional<Entity> exitStorage(@Nullable Direction direction) {
+        Optional<Entity> exitedEntity = storedRobot.exitStorage(direction);
         sync();
         return exitedEntity;
     }
@@ -140,7 +145,7 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     public void saveToItem(ItemStack p_187477_) {
         CompoundTag tag = saveWithoutMetadata();
-        tag.getCompound("entity").putUUID("UUID", UUID.randomUUID()); //Assign a new UUID to allow for the copied entity to also enter the world. Note: It will not be in the same command category
+        tag.getCompound("entity").remove("UUID");
         BlockItem.setBlockEntityData(p_187477_, this.getType(), tag);
     }
 

@@ -67,6 +67,9 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
         if(opt.isEmpty()) return Optional.empty();
         Entity entity = opt.get();
 
+        if(facing == null) {
+            facing = Direction.DOWN;
+        }
         //Determine spawn location
         switch (facing) {
             case NORTH -> {
