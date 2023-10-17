@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.util;
 
+import com.ignis.igrobotics.core.access.EnumPermission;
 import net.minecraft.client.gui.Font;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -32,6 +33,15 @@ public class StringUtil {
 		}
 		parts.add(remainder.trim());
 		return parts;
+	}
+
+	public static String enumToString(Enum<?>[] values) {
+		StringBuilder viablePermissions = new StringBuilder();
+		for(Enum<?> en : values) {
+			viablePermissions.append(", \"").append(en.name()).append("\"");
+		}
+		viablePermissions.delete(0, 2);
+		return viablePermissions.toString();
 	}
 
 	/**

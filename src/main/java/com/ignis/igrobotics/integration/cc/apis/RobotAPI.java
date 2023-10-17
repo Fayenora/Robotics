@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.SelectionType;
+import com.ignis.igrobotics.core.util.StringUtil;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -52,12 +53,7 @@ public class RobotAPI implements ILuaAPI {
         try {
             p = EnumPermission.valueOf(permission.trim().toUpperCase());
         } catch(IllegalArgumentException e) {
-            StringBuilder viablePermissions = new StringBuilder();
-            for(EnumPermission perm : EnumPermission.values()) {
-                viablePermissions.append(", \"").append(perm.name()).append("\"");
-            }
-            viablePermissions.delete(0, 2);
-            throw new LuaException("\"" + permission + "\" is not a valid permission type. Viable types are " + viablePermissions);
+            throw new LuaException("\"" + permission + "\" is not a valid permission type. Viable types are " + StringUtil.enumToString(EnumPermission.values()));
         }
         try {
             uuid = UUID.fromString(player);

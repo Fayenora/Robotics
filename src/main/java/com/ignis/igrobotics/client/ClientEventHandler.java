@@ -36,6 +36,7 @@ public class ClientEventHandler {
         Level level = Minecraft.getInstance().level;
         if(RoboticsConfig.current().modules.isModule(stack.getItem())) {
             RobotModule module = RoboticsConfig.current().modules.get(stack);
+            event.getToolTip().add(ComponentUtils.formatList(List.of(Lang.localise("module.slots"), Component.literal(": " + module.getViableSlots())), Component.empty()));
             event.getToolTip().addAll(module.getPerks().getDisplayString());
         }
         RobotPart part = RobotPart.getFromItem(stack.getItem());

@@ -6,11 +6,15 @@ import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
+import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RobotModule {
 
@@ -18,6 +22,7 @@ public class RobotModule {
 
     private final Ingredient item;
     private IPerkMap perks;
+    private final List<EnumModuleSlot> viableSlots = new ArrayList<>();
 
     /** A cooldown of 0 indicates a passive module */
     public int cooldown = 0;
@@ -66,6 +71,10 @@ public class RobotModule {
         return overlay != null;
     }
 
+    public List<EnumModuleSlot> getViableSlots() {
+        return viableSlots;
+    }
+
     public static RobotModule deserialize(JsonElement json) {
         JsonObject obj = json.getAsJsonObject();
 
@@ -73,6 +82,18 @@ public class RobotModule {
             Ingredient item = Ingredient.fromJson(obj.get("items"));
             RobotModule module = new RobotModule(item);
 
+            if(obj.has("slots")) {
+                for(JsonElement tag : obj.get("slots").getAsJsonArray()) {
+                    String s = tag.getAsString();
+                    try {
+                        module.viableSlots.add(EnumModuleSlot.valueOf(s));
+                    } catch(IllegalArgumentException ignored) {
+                        Robotics.LOGGER.warn("\"" + s + "\" is not a valid module slot. Viable values are: " + StringUtil.enumToString(EnumModuleSlot.values()));
+                    }
+                }
+            } else {
+                module.viableSlots.add(EnumModuleSlot.DEFAULT);
+            }
             if (obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
             if (obj.has("duration")) module.duration = obj.get("duration").getAsInt();
             if (obj.has("energyCost")) module.energyCost = obj.get("energyCost").getAsInt();

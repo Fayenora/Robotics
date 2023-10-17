@@ -77,6 +77,7 @@
   "igrobotics.robot_module": "Robot Module",
   "igrobotics.robot_part": "Robot Part",
   "igrobotics.max_energy": "Max Energy",
+  "igrobotics.module.slots": "Module Slots",
 
   "attribute.name.robot.energy_capacity": "Energy Capacity",
   "attribute.name.robot.energy_consumption": "Energy Consumption",
