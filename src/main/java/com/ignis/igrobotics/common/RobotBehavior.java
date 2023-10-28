@@ -181,7 +181,7 @@ public class RobotBehavior {
         if(event.getTarget().interact(player, hand).consumesAction()) return;
         if(target instanceof LivingEntity living && stack.getItem().interactLivingEntity(stack, player, living, hand).consumesAction()) return;
 
-        if(target instanceof Mob mob) {
+        if(target instanceof Mob mob && mob.getCapability(ModCapabilities.ROBOT).isPresent()) {
             if(equipIfPossible(mob, player, hand, EquipmentSlot.HEAD, stack) ||
                     equipIfPossible(mob, player, hand, EquipmentSlot.CHEST, stack) ||
                     equipIfPossible(mob, player, hand, EquipmentSlot.LEGS, stack) ||
@@ -197,7 +197,7 @@ public class RobotBehavior {
             if(!player.isCreative()) {
                 player.setItemInHand(hand, mob.getItemBySlot(slot));
             }
-            mob.setItemSlot(slot, stack);
+            mob.setItemSlot(slot, stack.copy());
             return true;
         }
         return false;

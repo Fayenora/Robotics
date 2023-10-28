@@ -151,6 +151,7 @@
   "item.igrobotics.commander": "Command Module",
   "item.igrobotics.cpu": "CPU",
   "item.igrobotics.battery": "Battery",
+  "item.igrobotics.solar_panel": "Solar Panel",
   "item.igrobotics.camera_unit": "Camera Unit",
   "item.igrobotics.neural_processing_unit": "Neural Processing Unit",
   "item.igrobotics.wiring": "Wiring",

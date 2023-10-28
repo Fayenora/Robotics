@@ -378,7 +378,7 @@ public class Perk implements PerkHooks {
 	}
 
 	public int getMaxLevel() {
-		return maxLevel;
+		return stackable ? maxLevel : UNSTACKABLE_MAX_LEVEL;
 	}
 
 	public Perk setDisplayColor(TextColor displayColor) {
