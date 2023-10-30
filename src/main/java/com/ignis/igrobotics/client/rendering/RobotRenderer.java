@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.client.rendering;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.rendering.layers.*;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
@@ -22,7 +23,7 @@ public class RobotRenderer extends GeoEntityRenderer<RobotEntity> {
             addRenderLayer(new LimbLayer(this, part));
             addRenderLayer(new ColorLayer(this, part)); //TODO: A color layer for every part might not be necessary as one should be able to hide the bones in the layer
         }
-        for(int i = 0; i < Integer.BYTES; i++) {
+        for(int i = 0; i < Reference.MAX_MODULES; i++) {
             addRenderLayer(new ModuleRenderLayer(this, i));
         }
         addRenderLayer(new ArmorRenderer<>(this));

@@ -274,20 +274,20 @@ public class RobotCapability implements IRobot {
     }
 
     public void addRenderLayer(int id) {
-        if(id >= Integer.BYTES || id < 0) return;
+        if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return;
         int currentOverlays = dataManager.get(RENDER_OVERLAYS);
         this.dataManager.set(RENDER_OVERLAYS, currentOverlays | (1 << id));
     }
 
     public void removeRenderLayer(int id) {
-        if(id >= Integer.BYTES || id < 0) return;
+        if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return;
         int currentOverlays = dataManager.get(RENDER_OVERLAYS);
         this.dataManager.set(RENDER_OVERLAYS, currentOverlays & ~(1 << id));
     }
 
     @Override
     public boolean hasRenderLayer(int id) {
-        if(id >= Integer.BYTES || id < 0) return false;
+        if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return false;
         return ((dataManager.get(RENDER_OVERLAYS) >> id) & 1) == 1;
     }
 

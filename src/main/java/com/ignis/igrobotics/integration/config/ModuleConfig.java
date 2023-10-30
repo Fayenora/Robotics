@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.robot.JsonSerializers;
 import com.ignis.igrobotics.core.robot.RobotModule;
@@ -46,7 +47,7 @@ public class ModuleConfig implements IJsonConfig {
 		}
 		Robotics.LOGGER.debug("Registered module " + module);
 		if(module.hasOverlay()) {
-			if(overlays.size() >= Integer.BYTES) {
+			if(overlays.size() >= Reference.MAX_RENDER_LAYERS) {
 				Robotics.LOGGER.error("Registered too many modules with textures! The texture " + module.getOverlay() + " will not show up in game! "
 						+ "If you need more module textures, contact the mod author!");
 				return;

@@ -26,6 +26,7 @@ public class Reference {
 	public static final ResourceLocation ENERGY_BAR = new ResourceLocation(Robotics.MODID, "textures/gui/energy_bar.png");
 	
 	public static final int MAX_ROBOT_NAME_LENGTH = 35;
+	public static final int MAX_RENDER_LAYERS = Integer.SIZE;
 	
 	/** Absolute maximum for module count per slot. Needs to be present at compile time */
 	public static final int MAX_MODULES = 8;
