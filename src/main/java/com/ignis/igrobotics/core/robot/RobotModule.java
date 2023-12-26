@@ -84,7 +84,7 @@ public class RobotModule {
 
             if(obj.has("slots")) {
                 for(JsonElement tag : obj.get("slots").getAsJsonArray()) {
-                    String s = tag.getAsString();
+                    String s = tag.getAsString().toUpperCase();
                     try {
                         module.viableSlots.add(EnumModuleSlot.valueOf(s));
                     } catch(IllegalArgumentException ignored) {
@@ -116,6 +116,7 @@ public class RobotModule {
         if(!(module.perks instanceof PerkMap perkMap)) return;
         module.item.toNetwork(buffer);
         PerkMap.write(buffer, perkMap);
+        //TODO Write viable slots
         buffer.writeBoolean(module.hasOverlay());
         if(module.hasOverlay()) {
             buffer.writeResourceLocation(module.overlay);
@@ -125,6 +126,7 @@ public class RobotModule {
     public static RobotModule read(FriendlyByteBuf buffer) {
         Ingredient ingredient = Ingredient.fromNetwork(buffer);
         RobotModule module = new RobotModule(ingredient);
+        //TODO Read Viable slots
         module.perks = PerkMap.read(buffer);
         if(buffer.readBoolean()) {
             module.overlay = buffer.readResourceLocation();

@@ -129,7 +129,7 @@ public class ItemStackUtils {
 			CompoundTag compound = nbtList.getCompound(i);
 			int j = compound.getByte("Slot") & 255;
 
-			if (j < nbtList.size()) {
+			if (j < list.size()) {
 				list.set(j, ItemStack.of(compound));
 			}
 		}
