@@ -6,8 +6,10 @@ import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -42,7 +44,7 @@ public class PerkBehavior {
     @SubscribeEvent
     public static void onDamage(LivingHurtEvent event) {
         Entity causingEntity = event.getSource().getEntity();
-        Entity targetEntity = event.getSource().getDirectEntity();
+        Entity targetEntity = event.getEntity();
         // First, apply the perks of the attacker
         if(causingEntity != null && targetEntity != null) {
             if(!(causingEntity instanceof Mob mob)) return;
@@ -55,8 +57,7 @@ public class PerkBehavior {
             });
         }
         // Secondly, apply the perks of the hurt entity
-        if(targetEntity != null) {
-            if(!(targetEntity instanceof Mob mob)) return;
+        if(targetEntity instanceof Mob mob) {
             targetEntity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
                 for(Tuple<Perk, Integer> tup : perks) {
                     event.setAmount(tup.getFirst().damageEntity(tup.getSecond(), mob, event.getSource(), event.getAmount(), perks.values()));
