@@ -48,6 +48,7 @@ public class Robotics {
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
+        ModMobEffects.EFFECTS.register(modEventBus);
 
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 

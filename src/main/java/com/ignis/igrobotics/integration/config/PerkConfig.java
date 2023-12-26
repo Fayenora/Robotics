@@ -2,8 +2,10 @@ package com.ignis.igrobotics.integration.config;
 
 import com.google.gson.Gson;
 import com.ignis.igrobotics.common.perks.*;
+import com.ignis.igrobotics.common.perks.modules.PerkFist;
 import com.ignis.igrobotics.common.perks.modules.PerkGenerator;
 import com.ignis.igrobotics.common.perks.modules.PerkSolarPanel;
+import com.ignis.igrobotics.common.perks.modules.PerkUnarmedAttack;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.robot.JsonSerializers;
 import com.ignis.igrobotics.core.util.FileUtils;
@@ -33,6 +35,8 @@ public class PerkConfig implements IJsonConfig {
 	public Perk PERK_SOLAR_PANEL;
 	public Perk PERK_COAL_GENERATOR;
 	public Perk PERK_BIO_GENERATOR;
+	public Perk PERK_UNARMED_ATTACK;
+	public Perk PERK_FIST;
 
 	public PerkConfig() {
 		PERK_UNRELIABLE = new PerkUnreliable("perk.unreliable").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
@@ -51,6 +55,8 @@ public class PerkConfig implements IJsonConfig {
 			if(stats == null) return 0;
 			return (int) (stats.getNutrition() * 200 + Math.pow(stats.getSaturationModifier(), 1.5) * 100);
 		});
+		PERK_UNARMED_ATTACK = new PerkUnarmedAttack("perk.unarmed_attack");
+		PERK_FIST = new PerkFist("perk.fist").setDisplayColor(ChatFormatting.BLUE);
 	}
 
 	public PerkConfig(File file) {
@@ -70,6 +76,8 @@ public class PerkConfig implements IJsonConfig {
 		register(PERK_SOLAR_PANEL);
 		register(PERK_COAL_GENERATOR);
 		register(PERK_BIO_GENERATOR);
+		register(PERK_UNARMED_ATTACK);
+		register(PERK_FIST);
 	}
 	
 	@Override

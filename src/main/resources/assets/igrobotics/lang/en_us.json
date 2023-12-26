@@ -108,6 +108,8 @@
   "igrobotics.perk.solar_panel": "Solar Panel",
   "igrobotics.perk.coal_generator": "Coal Generator",
   "igrobotics.perk.bio_generator": "Bio Generator",
+  "igrobotics.perk.fist": "Knock-up",
+  "igrobotics.perk.unarmed_attack": "Unarmed Attack Damage",
 
   "igrobotics.perk.desc": "Increases the stats of the robot: ",
   "igrobotics.perk.robust.desc": "Every damage the robot receives is reduced by %s * [Level]",
@@ -121,6 +123,7 @@
   "igrobotics.perk.charge.desc": "The robot charges up during movement & attacking. On reaching a certain charge, gain %s and %s",
   "igrobotics.perk.solar_panel.desc": "Generates a maximum of %s * [Level] RF/t in full daylight",
   "igrobotics.perk.generator.desc": "Generates energy by consuming items. Energy generated is fixed at %sRF/t. The time energy is generated depends on the item",
+  "igrobotics.perk.fist.desc": "Knock up and stun attacked entities, if wielding no weapon",
 
 
   "igrobotics.command.stay": "Stay at",
@@ -161,6 +164,7 @@
   "item.igrobotics.iron_rod": "Iron Rod",
   "item.igrobotics.electro_magnet": "Electro Magnet",
   "item.igrobotics.robot_spawn_egg": "Robot Spawn Egg",
+  "item.igrobotics.fist": "Robot Fist",
 
   "item.igrobotics.plate_manyullin": "Manyullin Plating",
   "item.igrobotics.plate_dark_steel": "Dark Steel Plating",
