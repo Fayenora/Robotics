@@ -8,8 +8,10 @@ import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import dan200.computercraft.api.lua.LuaFunction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -48,6 +50,21 @@ public class RobotModule {
             return item.equals(module.item);
         }
         return false;
+    }
+
+    @LuaFunction
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    @LuaFunction
+    public int getEnergyCost() {
+        return energyCost;
+    }
+
+    @LuaFunction
+    public int getDuration() {
+        return duration;
     }
 
     @Override
@@ -132,6 +149,14 @@ public class RobotModule {
             module.overlay = buffer.readResourceLocation();
         }
         return module;
+    }
+
+    public static RobotModule get(Item item) {
+        return RoboticsConfig.current().modules.get(item);
+    }
+
+    public static RobotModule get(ItemStack stack) {
+        return RoboticsConfig.current().modules.get(stack);
     }
 
     public static boolean isModule(ItemStack stack) {

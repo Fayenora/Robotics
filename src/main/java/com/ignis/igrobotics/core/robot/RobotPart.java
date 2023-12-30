@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Logic behind a robot part (not the item) as the combination of a {@link EnumRobotPart specific part of the robot} and a {@link EnumRobotMaterial material}. <br>
@@ -55,6 +56,7 @@ public class RobotPart {
 		return config.PARTS.get(key);
 	}
 
+	@Nullable
 	public static RobotPart getFromItem(Item item) {
 		for(int i = 0; i < EnumRobotMaterial.valuesWithoutEmpty().length; i++) {
 			for(int j = 0; j < EnumRobotPart.values().length; j++) {
@@ -63,7 +65,7 @@ public class RobotPart {
 				}
 			}
 		}
-		return RobotPart.get(EnumRobotPart.BODY, EnumRobotMaterial.NONE);
+		return null;
 	}
 
 	public ItemStack getItemStack(int count) {

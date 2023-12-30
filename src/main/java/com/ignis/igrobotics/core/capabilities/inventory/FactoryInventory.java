@@ -2,16 +2,15 @@ package com.ignis.igrobotics.core.capabilities.inventory;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.definitions.ModAttributes;
+import com.ignis.igrobotics.core.robot.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class FactoryInventory extends MachineInventory {
 
@@ -24,16 +23,34 @@ public class FactoryInventory extends MachineInventory {
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        EnumRobotPart part = RobotPart.getFromItem(stack.getItem()).getPart();
+        RobotPart part = RobotPart.getFromItem(stack.getItem());
+        if(part == null) {
+            if(slot >= 6 && RobotModule.isModule(stack)) {
+                List<EnumModuleSlot> allowedSlots = RobotModule.get(stack).getViableSlots();
+                EnumModuleSlot slotType = typeFromSlotId(slot);
+                return allowedSlots.contains(slotType);
+            }
+            return false;
+        }
         return switch(slot) {
-            case 0 -> part == EnumRobotPart.HEAD;
-            case 1 -> part == EnumRobotPart.BODY;
-            case 2 -> part == EnumRobotPart.LEFT_ARM;
-            case 3 -> part == EnumRobotPart.RIGHT_ARM;
-            case 4 -> part== EnumRobotPart.LEFT_LEG;
-            case 5 -> part == EnumRobotPart.RIGHT_LEG;
-            default -> RobotModule.isModule(stack);
+            case 0 -> part.getPart() == EnumRobotPart.HEAD;
+            case 1 -> part.getPart() == EnumRobotPart.BODY;
+            case 2 -> part.getPart() == EnumRobotPart.LEFT_ARM;
+            case 3 -> part.getPart() == EnumRobotPart.RIGHT_ARM;
+            case 4 -> part.getPart() == EnumRobotPart.LEFT_LEG;
+            case 5 -> part.getPart() == EnumRobotPart.RIGHT_LEG;
+            default -> false;
         };
+    }
+
+    /**
+     * The module slot type associated with this slot id
+     * @param slot the slot
+     * @see com.ignis.igrobotics.client.menu.FactoryModulesMenu#addModuleSlots(IItemHandler, EnumModuleSlot, int, int, boolean)
+     * @return the module type which can fit in the slot
+     */
+    public static EnumModuleSlot typeFromSlotId(int slot) {
+        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, EnumModuleSlot.values().length)];
     }
 
     @Override
@@ -53,8 +70,8 @@ public class FactoryInventory extends MachineInventory {
         if(slotIndex < 6) {
             EnumRobotPart part = EnumRobotPart.byId(slotIndex);
             if(!getStackInSlot(slotIndex).isEmpty()) {
-                EnumRobotMaterial material = RobotPart.getFromItem(getStackInSlot(slotIndex).getItem()).getMaterial();
-                factory.setRobotPart(part, material);
+                RobotPart robotPart = RobotPart.getFromItem(getStackInSlot(slotIndex).getItem());
+                factory.setRobotPart(part, robotPart == null ? EnumRobotMaterial.NONE : robotPart.getMaterial());
             } else {
                 factory.setRobotPart(part, EnumRobotMaterial.NONE);
             }
