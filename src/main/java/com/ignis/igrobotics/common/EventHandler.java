@@ -8,7 +8,6 @@ import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.client.PacketSyncConfigs;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobType;
@@ -56,7 +55,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if(!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
-        if(!Minecraft.getInstance().isLocalServer()) {
+        if(!Robotics.proxy.isLocalServer()) {
             NetworkHandler.sendToPlayer(new PacketSyncConfigs(RoboticsConfig.current()), serverPlayer);
         }
     }

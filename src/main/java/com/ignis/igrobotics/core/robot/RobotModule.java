@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.modules.ModuleActions;
+import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.core.util.StringUtil;
@@ -11,11 +13,14 @@ import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import dan200.computercraft.api.lua.LuaFunction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class RobotModule {
@@ -24,19 +29,30 @@ public class RobotModule {
 
     private final Ingredient item;
     private IPerkMap perks;
-    private final List<EnumModuleSlot> viableSlots = new ArrayList<>();
+    private EnumSet<EnumModuleSlot> viableSlots = EnumSet.noneOf(EnumModuleSlot.class);
 
+    private ModuleActions action = ModuleActions.NONE;
     /** A cooldown of 0 indicates a passive module */
-    public int cooldown = 0;
+    private int cooldown = 0;
     /** How long this module applies an effect, if it is active */
-    public int duration = 0;
+    private int duration = 0;
     /** The cost to activate the module. If the module is passive this is the energy cost per tick */
-    public int energyCost = 0;
+    private int energyCost = 0;
     /** Overlay to be applied to the robot */
     private ResourceLocation overlay;
 
-    private RobotModule(Ingredient item) {
+    protected RobotModule(Ingredient item) {
         this.item = item;
+    }
+
+    public void activate(LivingEntity caster) {
+        if(cooldown == 0) return;
+        caster.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
+            if (energyStorage instanceof ModifiableEnergyStorage mod) {
+                mod.setEnergy(mod.getEnergyStored() - energyCost);
+            }
+        });
+        action.execute(caster, energyCost, duration);
     }
 
     @Override
@@ -88,7 +104,7 @@ public class RobotModule {
         return overlay != null;
     }
 
-    public List<EnumModuleSlot> getViableSlots() {
+    public EnumSet<EnumModuleSlot> getViableSlots() {
         return viableSlots;
     }
 
@@ -114,6 +130,13 @@ public class RobotModule {
             if (obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
             if (obj.has("duration")) module.duration = obj.get("duration").getAsInt();
             if (obj.has("energyCost")) module.energyCost = obj.get("energyCost").getAsInt();
+            if (obj.has("action")) {
+                try {
+                    module.action = ModuleActions.valueOf(obj.get("action").getAsString().toUpperCase());
+                } catch(IllegalArgumentException e) {
+                    Robotics.LOGGER.warn("Did not find action \"" + obj.get("action").getAsString() + "\". Viable actions are: " + StringUtil.enumToString(ModuleActions.values()));
+                }
+            }
             if (obj.has("texture")) {
                 String path = obj.get("texture").getAsString();
                 if (!path.endsWith(".png")) path += ".png";
@@ -133,21 +156,23 @@ public class RobotModule {
         if(!(module.perks instanceof PerkMap perkMap)) return;
         module.item.toNetwork(buffer);
         PerkMap.write(buffer, perkMap);
-        //TODO Write viable slots
         buffer.writeBoolean(module.hasOverlay());
         if(module.hasOverlay()) {
             buffer.writeResourceLocation(module.overlay);
         }
+        buffer.writeEnumSet(module.viableSlots, EnumModuleSlot.class);
+        buffer.writeEnum(module.action);
     }
 
     public static RobotModule read(FriendlyByteBuf buffer) {
         Ingredient ingredient = Ingredient.fromNetwork(buffer);
         RobotModule module = new RobotModule(ingredient);
-        //TODO Read Viable slots
         module.perks = PerkMap.read(buffer);
         if(buffer.readBoolean()) {
             module.overlay = buffer.readResourceLocation();
         }
+        module.viableSlots = buffer.readEnumSet(EnumModuleSlot.class);
+        module.action = buffer.readEnum(ModuleActions.class);
         return module;
     }
 

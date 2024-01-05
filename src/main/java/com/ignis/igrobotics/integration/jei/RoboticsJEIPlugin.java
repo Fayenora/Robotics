@@ -24,7 +24,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -65,7 +64,7 @@ public class RoboticsJEIPlugin implements IModPlugin {
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
         ingredientRegistration = registration;
-        if(Minecraft.getInstance().isLocalServer()) {
+        if(Robotics.proxy.isLocalServer()) {
             registerPerkIngredientType(RoboticsConfig.current());
         }
     }
@@ -81,7 +80,7 @@ public class RoboticsJEIPlugin implements IModPlugin {
         registration.addRecipes(assemblerCategory.getRecipeType(), AssemblerRecipes.recipes);
         registration.addRecipes(wireCutterCategory.getRecipeType(), WireCutterRecipes.recipes);
         recipeRegistration = registration;
-        if(Minecraft.getInstance().isLocalServer()) {
+        if(Robotics.proxy.isLocalServer()) {
             registerPerkDescriptions(RoboticsConfig.current());
         }
     }

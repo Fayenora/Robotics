@@ -10,6 +10,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class FactoryInventory extends MachineInventory {
@@ -26,7 +27,7 @@ public class FactoryInventory extends MachineInventory {
         RobotPart part = RobotPart.getFromItem(stack.getItem());
         if(part == null) {
             if(slot >= 6 && RobotModule.isModule(stack)) {
-                List<EnumModuleSlot> allowedSlots = RobotModule.get(stack).getViableSlots();
+                EnumSet<EnumModuleSlot> allowedSlots = RobotModule.get(stack).getViableSlots();
                 EnumModuleSlot slotType = typeFromSlotId(slot);
                 return allowedSlots.contains(slotType);
             }
