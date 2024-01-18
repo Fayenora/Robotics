@@ -18,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.EnumSet;
 
@@ -43,14 +44,18 @@ public class RobotModule {
         this.item = item;
     }
 
-    public void activate(LivingEntity caster) {
-        if(cooldown == 0) return;
-        caster.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
+    public boolean activate(LivingEntity caster) {
+        if(cooldown == 0) return false;
+        if(!action.execute(caster, energyCost, duration)) return false;
+        if(energyCost > 0) {
+            if(!caster.getCapability(ForgeCapabilities.ENERGY).isPresent()) return false;
+            IEnergyStorage energyStorage = caster.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+            if(energyStorage.getEnergyStored() < energyCost) return false;
             if (energyStorage instanceof ModifiableEnergyStorage mod) {
                 mod.setEnergy(mod.getEnergyStored() - energyCost);
             }
-        });
-        action.execute(caster, energyCost, duration);
+        }
+        return true;
     }
 
     @Override

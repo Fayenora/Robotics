@@ -15,14 +15,14 @@ public enum ModuleActions {
         this.action = action;
     }
 
-    public void execute(LivingEntity caster, int energyCost, int duration) {
-        action.execute(caster, energyCost, duration);
+    public boolean execute(LivingEntity caster, int energyCost, int duration) {
+        return action.execute(caster, energyCost, duration);
     }
 
     static class NoAction implements IModuleAction {
         @Override
-        public void execute(LivingEntity caster, int energyCost, int duration) {
-            //NO-OP
+        public boolean execute(LivingEntity caster, int energyCost, int duration) {
+            return true;
         }
     }
 }

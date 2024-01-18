@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class EnderModule implements IModuleAction {
@@ -17,9 +16,9 @@ public class EnderModule implements IModuleAction {
     public static final int DISTANCE = 5;
 
     @Override
-    public void execute(LivingEntity caster, int energyCost, int duration) {
+    public boolean execute(LivingEntity caster, int energyCost, int duration) {
         if(caster.level.isClientSide || !caster.isAlive()) {
-            return;
+            return false;
         }
         if(caster instanceof Player) {
             Vec3 source = caster.getEyePosition();
@@ -30,13 +29,13 @@ public class EnderModule implements IModuleAction {
                 caster.level.playSound(null, caster.xo, caster.yo, caster.zo, SoundEvents.ENDERMAN_TELEPORT, caster.getSoundSource(), 1.0F, 1.0F);
                 caster.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
-            return;
         } else {
-            double d0 = caster.getX() + (caster.getRandom().nextDouble() - 0.5D) * 64.0D;
-            double d1 = caster.getY() + (double)(caster.getRandom().nextInt(64) - 32);
-            double d2 = caster.getZ() + (caster.getRandom().nextDouble() - 0.5D) * 64.0D;
+            double d0 = caster.getX() + (caster.getRandom().nextDouble() - 0.5D) * DISTANCE;
+            double d1 = caster.getY() + (double)(caster.getRandom().nextInt(DISTANCE) - DISTANCE / 2);
+            double d2 = caster.getZ() + (caster.getRandom().nextDouble() - 0.5D) * DISTANCE;
             teleport(caster, d0, d1, d2);
         }
+        return true;
     }
 
     public static boolean teleport(LivingEntity entity, double p_32544_, double p_32545_, double p_32546_) {

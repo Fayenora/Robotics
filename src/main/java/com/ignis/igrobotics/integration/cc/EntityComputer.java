@@ -37,7 +37,7 @@ public class EntityComputer extends ServerComputer {
         Optional<IEnergyStorage> energy = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
         Optional<ICommandable> commands = entity.getCapability(ModCapabilities.COMMANDS).resolve();
         if(robot.isPresent() && energy.isPresent()) {
-            addAPI(new RobotAPI(getAPIEnvironment(), robot.get(), energy.get()));
+            addAPI(new RobotAPI(getAPIEnvironment(), entity, robot.get(), energy.get()));
         }
         if(commands.isPresent()) {
             addAPI(new CommandAPI(getAPIEnvironment(), commands.get()));
