@@ -19,16 +19,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 public class RobotModule {
 
     public static final String TEXTURE_PATH = Robotics.MODID + ":textures/robot/modules/";
 
     private final Ingredient item;
-    private IPerkMap perks;
+    private IPerkMap perks = new PerkMap();
     private EnumSet<EnumModuleSlot> viableSlots = EnumSet.noneOf(EnumModuleSlot.class);
 
     private ModuleActions action = ModuleActions.NONE;
@@ -143,7 +141,9 @@ public class RobotModule {
                 module.overlay = new ResourceLocation(TEXTURE_PATH + path);
             }
 
-            module.perks = PerkMap.deserialize(obj.get("perks"));
+            if(obj.has("perks")) {
+                module.perks = PerkMap.deserialize(obj.get("perks"));
+            }
 
             return module;
         } catch(JsonSyntaxException e) {

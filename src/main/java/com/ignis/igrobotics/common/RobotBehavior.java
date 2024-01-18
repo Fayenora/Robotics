@@ -11,6 +11,7 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
@@ -154,8 +155,10 @@ public class RobotBehavior {
                         if(inventory instanceof RobotInventory robotInv) {
                             robotInv.dropItems();
                         }
-                        for(ItemStack stack : robot.getModules()) {
-                            ItemStackUtils.dropItem(entity, stack);
+                        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+                            for(ItemStack stack : robot.getModules(slot)) {
+                                ItemStackUtils.dropItem(entity, stack);
+                            }
                         }
                     })
             );

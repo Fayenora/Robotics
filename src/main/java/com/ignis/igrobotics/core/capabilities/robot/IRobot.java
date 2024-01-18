@@ -30,9 +30,9 @@ public interface IRobot extends INBTSerializable<CompoundTag> {
 
     boolean hasModule(RobotModule module);
 
-    NonNullList<ItemStack> getModules();
+    NonNullList<ItemStack> getModules(EnumModuleSlot slotType);
 
-    void setModules(List<ItemStack> items);
+    void setModules(EnumModuleSlot slotType, List<ItemStack> items);
 
     void setMaxModules(EnumModuleSlot slotType, int amount);
 

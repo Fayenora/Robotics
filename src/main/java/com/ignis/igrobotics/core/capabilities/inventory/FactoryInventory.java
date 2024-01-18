@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.*;
@@ -77,7 +78,13 @@ public class FactoryInventory extends MachineInventory {
                 factory.setRobotPart(part, EnumRobotMaterial.NONE);
             }
         } else if(!factory.getLevel().isClientSide()) {
-            living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setModules(stacks.subList(6, getSlots())));
+            living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+                for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+                    int startIndex = 6 + slot.ordinal() * Reference.MAX_MODULES;
+                    int endIndex = 6 + (slot.ordinal() + 1) * Reference.MAX_MODULES;
+                    robot.setModules(slot, stacks.subList(startIndex, endIndex));
+                }
+            });
         }
         if(factory.getLevel().isClientSide()) return;
     }

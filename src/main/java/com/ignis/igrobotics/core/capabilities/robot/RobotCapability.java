@@ -10,7 +10,6 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotModule;
@@ -38,9 +37,7 @@ public class RobotCapability implements IRobot {
     protected SynchedEntityData dataManager;
     private AccessConfig access = new AccessConfig();
 
-    private NonNullList<ItemStack> modules;
-    /** Amount of slots for each module type. These are not enforced and just info for the module menu*/
-    private final Map<EnumModuleSlot, Integer> slotSizes;
+    private Map<EnumModuleSlot, NonNullList<ItemStack>> modules = new HashMap<>();
 
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
@@ -54,10 +51,9 @@ public class RobotCapability implements IRobot {
     public RobotCapability(Mob entity) {
         this.entity = entity;
         this.dataManager = entity.getEntityData();
-        modules = NonNullList.withSize(EnumModuleSlot.values().length * Reference.MAX_MODULES, ItemStack.EMPTY);
-        slotSizes = new HashMap<>(6);
         for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
-            slotSizes.put(slotType, RoboticsConfig.general.moduleAmount[slotType.ordinal()].get());
+            int defaultSize = RoboticsConfig.general.moduleAmount[slotType.ordinal()].get();
+            modules.put(slotType, NonNullList.withSize(defaultSize, ItemStack.EMPTY));
         }
 
         dataManager.define(RENDER_OVERLAYS, 0);
@@ -71,7 +67,9 @@ public class RobotCapability implements IRobot {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        ItemStackUtils.saveAllItems(nbt, modules, "modules");
+        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+            ItemStackUtils.saveAllItems(nbt, modules.get(slot), slot.name());
+        }
         nbt.putBoolean("active", isActive());
         nbt.putInt("overlays", dataManager.get(RENDER_OVERLAYS));
         nbt.putBoolean("muted", isMuffled());
@@ -84,9 +82,9 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        modules = NonNullList.withSize(EnumModuleSlot.values().length * Reference.MAX_MODULES, ItemStack.EMPTY);
-        ItemStackUtils.loadAllItems(nbt, modules, "modules");
-        setModules(modules);
+        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+            setModules(slot, ItemStackUtils.loadAllItems(nbt, slot.name()));
+        }
         setActivation(nbt.getBoolean("active"));
         dataManager.set(RENDER_OVERLAYS, nbt.getInt("overlays"));
         setMuffled(nbt.getBoolean("muted"));
@@ -147,7 +145,16 @@ public class RobotCapability implements IRobot {
 
     @Override
     public boolean hasModule(RobotModule module) {
-        for(ItemStack stack : modules) {
+        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+            if(hasModule(slot, module)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasModule(EnumModuleSlot slot, RobotModule module) {
+        for(ItemStack stack : modules.get(slot)) {
             if(module.getItems().test(stack)) {
                 return true;
             }
@@ -156,34 +163,32 @@ public class RobotCapability implements IRobot {
     }
 
     @Override
-    public NonNullList<ItemStack> getModules() {
-        return modules;
+    public NonNullList<ItemStack> getModules(EnumModuleSlot slotType) {
+        return modules.get(slotType);
     }
 
     @Override
-    public void setModules(List<ItemStack> items) {
-        for(int i = 0; i < Math.min(items.size(), modules.size()); i++) {
-            setModule(items.get(i), i);
+    public void setModules(EnumModuleSlot slotType, List<ItemStack> items) {
+        for(int i = 0; i < Math.min(items.size(), modules.get(slotType).size()); i++) {
+            setModule(slotType, i, items.get(i));
         }
         entity.getCapability(ModCapabilities.PERKS).ifPresent(IPerkMapCap::updateAttributeModifiers);
     }
 
-    private void setModule(ItemStack item, int slot) {
-        //Remove the modifiers and texture of the old module
-        if(!modules.get(slot).isEmpty()) {
-            RobotModule oldModule = RoboticsConfig.current().modules.get(modules.get(slot));
+    private void setModule(EnumModuleSlot slotType, int slot, ItemStack item) {
+        if(!modules.get(slotType).get(slot).isEmpty()) {
+            RobotModule oldModule = RobotModule.get(modules.get(slotType).get(slot));
             entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldModule.getPerks()));
-            if(RoboticsConfig.current().modules.overlays.contains(oldModule)) {
+            if(oldModule.hasOverlay()) {
                 int overlayId = RoboticsConfig.current().modules.overlays.indexOf(oldModule);
                 removeRenderLayer(overlayId);
             }
         }
-        modules.set(slot, item);
-        //Add modifiers and texture of the new module
+        modules.get(slotType).set(slot, item);
         if(!item.isEmpty()) {
-            RobotModule module = RoboticsConfig.current().modules.get(item);
+            RobotModule module = RobotModule.get(item);
             entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.merge(module.getPerks()));
-            if(RoboticsConfig.current().modules.overlays.contains(module)) {
+            if(module.hasOverlay()) {
                 int overlayId = RoboticsConfig.current().modules.overlays.indexOf(module);
                 addRenderLayer(overlayId);
             }
@@ -192,24 +197,30 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void setMaxModules(EnumModuleSlot slotType, int amount) {
-        //TODO Rewrite
-        if(amount == slotSizes.get(slotType)) return;
-        //Remove any modules occupying these slots
-        int startIndex = slotType.ordinal() * EnumModuleSlot.values().length;
-        for(int i = startIndex + amount; i < startIndex + EnumModuleSlot.values().length; i++) {
-            if(modules.get(i).isEmpty()) continue;
-            IPerkMap oldPerks = RoboticsConfig.current().modules.get(modules.get(i)).getPerks();
-            entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldPerks));
-            ItemStackUtils.dropItem(entity.level, entity.xOld, entity.yOld, entity.zOld, modules.get(i));
+        if(amount == modules.get(slotType).size()) return;
+        //Remove and drop any modules occupying slots to be discarded
+        for(int i = amount; i < modules.get(slotType).size(); i++) {
+            ItemStack oldModule = modules.get(slotType).get(i);
+            if(oldModule.isEmpty()) continue;
+            setModule(slotType, i, ItemStack.EMPTY);
+            ItemStackUtils.dropItem(entity, oldModule);
         }
-        slotSizes.put(slotType, amount);
+        NonNullList<ItemStack> list = NonNullList.withSize(amount, ItemStack.EMPTY);
+        for(int i = 0; i < Math.min(amount, modules.get(slotType).size()); i++) {
+            list.set(i, modules.get(slotType).get(i));
+        }
+        modules.put(slotType, list);
 
         entity.getCapability(ModCapabilities.PERKS).ifPresent(IPerkMapCap::updateAttributeModifiers);
     }
 
     @Override
     public Map<EnumModuleSlot, Integer> getModuleSlots() {
-        return slotSizes;
+        HashMap<EnumModuleSlot, Integer> sizes = new HashMap<>();
+        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+            sizes.put(slot, modules.get(slot).size());
+        }
+        return sizes;
     }
 
     @Override

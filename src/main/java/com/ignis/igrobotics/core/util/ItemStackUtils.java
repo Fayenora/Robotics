@@ -122,17 +122,17 @@ public class ItemStackUtils {
 		tag.put(key, nbtList);
 	}
 
-	public static void loadAllItems(CompoundTag tag, NonNullList<ItemStack> list, String key) {
+	public static NonNullList<ItemStack> loadAllItems(CompoundTag tag, String key) {
 		ListTag nbtList = tag.getList(key, Tag.TAG_COMPOUND);
+		NonNullList<ItemStack> list = NonNullList.withSize(nbtList.size(), ItemStack.EMPTY);
 
 		for (int i = 0; i < nbtList.size(); ++i) {
 			CompoundTag compound = nbtList.getCompound(i);
 			int j = compound.getByte("Slot") & 255;
-
-			if (j < list.size()) {
-				list.set(j, ItemStack.of(compound));
-			}
+			list.set(j, ItemStack.of(compound));
 		}
+
+		return list;
 	}
 	
 	/**

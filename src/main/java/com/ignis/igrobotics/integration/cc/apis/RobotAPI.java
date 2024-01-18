@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.SelectionType;
 import com.ignis.igrobotics.core.util.StringUtil;
 import dan200.computercraft.api.lua.ILuaAPI;
@@ -15,7 +16,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class RobotAPI implements ILuaAPI {
@@ -77,8 +80,20 @@ public class RobotAPI implements ILuaAPI {
     }
 
     @LuaFunction
-    public final List<String> getModules() {
-        return robot.getModules().stream().map(SelectionType.ITEM.stringifier()).toList();
+    public final List<String> getModules(Optional<String> slotType) throws LuaException {
+        if(slotType.isPresent()) {
+            try {
+                EnumModuleSlot slot = EnumModuleSlot.valueOf(slotType.get().toUpperCase());
+                return robot.getModules(slot).stream().map(SelectionType.ITEM.stringifier()).toList();
+            } catch(IllegalArgumentException exc) {
+                throw new LuaException("\"" + slotType.get() + "\" is not a valid module slot type. Viable arguments are: " + StringUtil.enumToString(EnumModuleSlot.values()));
+            }
+        }
+        List<String> output = new ArrayList<>();
+        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+            output.addAll(robot.getModules(slot).stream().map(SelectionType.ITEM.stringifier()).toList());
+        }
+        return output;
     }
 
     @LuaFunction
