@@ -46,7 +46,7 @@ public class RobotModule {
 
     public boolean activate(LivingEntity caster) {
         if(cooldown == 0) return false;
-        if(!action.execute(caster, energyCost, duration)) return false;
+        if(!action.execute(caster, duration)) return false;
         if(energyCost > 0) {
             if(!caster.getCapability(ForgeCapabilities.ENERGY).isPresent()) return false;
             IEnergyStorage energyStorage = caster.getCapability(ForgeCapabilities.ENERGY).resolve().get();
@@ -109,6 +109,10 @@ public class RobotModule {
 
     public EnumSet<EnumModuleSlot> getViableSlots() {
         return viableSlots;
+    }
+
+    public ModuleActions getAction() {
+        return action;
     }
 
     public static RobotModule deserialize(JsonElement json) {

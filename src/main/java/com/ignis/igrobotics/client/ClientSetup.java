@@ -5,6 +5,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.rendering.RobotFactoryRenderer;
 import com.ignis.igrobotics.client.rendering.RobotRenderer;
 import com.ignis.igrobotics.client.rendering.RobotStorageRenderer;
+import com.ignis.igrobotics.client.rendering.StompedBlockRenderer;
 import com.ignis.igrobotics.client.screen.*;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModMachines;
@@ -56,6 +57,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         EntityRenderers.register(ModEntityTypes.ROBOT.get(), RobotRenderer::new);
+        EntityRenderers.register(ModEntityTypes.STOMPED_BLOCK.get(), StompedBlockRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_FACTORY.getBlockEntityType(), RobotFactoryRenderer::new);
     }

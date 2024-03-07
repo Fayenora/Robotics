@@ -16,7 +16,7 @@ public class EnderModule implements IModuleAction {
     public static final int DISTANCE = 5;
 
     @Override
-    public boolean execute(LivingEntity caster, int energyCost, int duration) {
+    public boolean execute(LivingEntity caster, int duration) {
         if(caster.level.isClientSide || !caster.isAlive()) {
             return false;
         }
