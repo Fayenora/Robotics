@@ -78,6 +78,13 @@
   "igrobotics.robot_part": "Robot Part",
   "igrobotics.max_energy": "Max Energy",
   "igrobotics.module.slots": "Module Slots",
+  "igrobotics.module.action": "Ability",
+
+  "igrobotics.action.teleport": "Teleportation",
+  "igrobotics.action.reinforce": "Reinforcement",
+  "igrobotics.action.stealth": "Invisibility",
+  "igrobotics.action.dash": "Dash",
+  "igrobotics.action.jump": "Jump",
 
   "attribute.name.robot.energy_capacity": "Energy Capacity",
   "attribute.name.robot.energy_consumption": "Energy Consumption",

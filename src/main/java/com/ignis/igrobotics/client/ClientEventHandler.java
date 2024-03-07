@@ -2,6 +2,7 @@ package com.ignis.igrobotics.client;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.items.CommanderItem;
+import com.ignis.igrobotics.common.modules.ModuleActions;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.robot.RobotPart;
@@ -9,6 +10,7 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
@@ -30,13 +32,22 @@ public class ClientEventHandler {
 
     public static int soundCooldown = 0;
 
+    private static final Component componentAction = ComponentUtils.formatList(List.of(Lang.localise("module.action").withStyle(Lang.AQUA),
+                                                                                        Component.literal(": ").withStyle(Lang.AQUA)), Component.empty());
+
     @SubscribeEvent
     public static void onToolTip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         Level level = Minecraft.getInstance().level;
         if(RoboticsConfig.current().modules.isModule(stack.getItem())) {
             RobotModule module = RoboticsConfig.current().modules.get(stack);
-            event.getToolTip().add(ComponentUtils.formatList(List.of(Lang.localise("module.slots"), Component.literal(": " + module.getViableSlots())), Component.empty()));
+            Component tooltipSlots = ComponentUtils.formatList(List.of(Lang.localise("module.slots"), Component.literal(": " + module.getViableSlots())), Component.empty());
+            Component tooltipAction = ComponentUtils.formatList(List.of(componentAction, Lang.localise("action." + module.getAction().toString().toLowerCase()).withStyle(Lang.color(module.getAction().color))), Component.empty());
+
+            event.getToolTip().add(tooltipSlots);
+            if(module.getAction() != ModuleActions.NONE) {
+                event.getToolTip().add(tooltipAction);
+            }
             event.getToolTip().addAll(module.getPerks().getDisplayString());
         }
         RobotPart part = RobotPart.getFromItem(stack.getItem());

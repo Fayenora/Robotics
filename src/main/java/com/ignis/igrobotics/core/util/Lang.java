@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.core.util;
 
 import com.ignis.igrobotics.Robotics;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -9,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 
 public class Lang {
+
+    public static final Style AQUA = color(TextColor.fromLegacyFormat(ChatFormatting.AQUA));
 
     public static MutableComponent localise(ResourceLocation loc) {
         return Component.translatable(loc.toString());
@@ -47,5 +50,9 @@ public class Lang {
 
     public static String describeDuration(MobEffectInstance effect) {
         return effect.isInfiniteDuration() ? "infinite" : Integer.toString(effect.getDuration());
+    }
+
+    public static Style color(TextColor color) {
+        return Component.empty().getStyle().withColor(color);
     }
 }
