@@ -26,13 +26,16 @@ public class RoboticsCreativeTab {
                     .icon(() -> new ItemStack(ModItems.CIRCUIT.get()))
                     .displayItems((params, output) -> {
                         Collection<RegistryObject<Item>> itemsWithoutMaterials = new ArrayList<>(ModItems.ITEMS.getEntries());
+                        Collection<RegistryObject<Block>> blocks = new ArrayList<>(ModBlocks.BLOCKS.getEntries());
+                        blocks.remove(ModBlocks.REDSTONE_INTEGRATOR);
+                        itemsWithoutMaterials.removeIf(entry -> entry.getId().equals(ModBlocks.REDSTONE_INTEGRATOR.getId()));
                         for(RegistryObject[] regs : ModItems.MATERIALS) {
                             itemsWithoutMaterials.removeAll(List.of(regs));
                         }
                         for(RegistryObject<Item> item : itemsWithoutMaterials) {
                             output.accept(item.get());
                         }
-                        for(RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {
+                        for(RegistryObject<Block> block : blocks) {
                             output.accept(block.get());
                         }
                     });
