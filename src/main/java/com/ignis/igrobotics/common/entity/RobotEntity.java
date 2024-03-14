@@ -63,6 +63,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<Integer> LOAD_CHUNK = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> PICKUP_STATE = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> COMMAND_GROUP = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> SWELLING = SynchedEntityData.defineId(RobotEntity.class, EntityDataSerializers.INT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 

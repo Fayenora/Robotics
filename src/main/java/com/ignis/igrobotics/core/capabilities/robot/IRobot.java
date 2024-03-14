@@ -61,6 +61,14 @@ public interface IRobot extends INBTSerializable<CompoundTag> {
         return getAccess().hasPermission(player, permission);
     }
 
+    default void igniteExplosion(float damage, float radius) {}
+
+    default int getSwell() { return 0; }
+
+    default boolean isSwelling() { return false; }
+
+    default void swell() {}
+
     //////////////////////
     // Configuration Data
     //////////////////////

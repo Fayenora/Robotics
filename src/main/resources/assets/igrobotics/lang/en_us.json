@@ -85,6 +85,7 @@
   "igrobotics.action.stealth": "Invisibility",
   "igrobotics.action.dash": "Dash",
   "igrobotics.action.jump": "Jump",
+  "igrobotics.action.selfdestruct": "Self-Destruct",
 
   "attribute.name.robot.energy_capacity": "Energy Capacity",
   "attribute.name.robot.energy_consumption": "Energy Consumption",

@@ -5,6 +5,7 @@ import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
 import com.ignis.igrobotics.common.entity.ai.PickupGoal;
+import com.ignis.igrobotics.common.modules.ModifiableExplosion;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
@@ -19,25 +20,31 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
 
 public class RobotCapability implements IRobot {
 
+    public static final int MAX_SWELL = 60;
+
     protected LivingEntity entity;
     protected SynchedEntityData dataManager;
     private AccessConfig access = new AccessConfig();
 
-    private Map<EnumModuleSlot, NonNullList<ItemStack>> modules = new HashMap<>();
+    private final Map<EnumModuleSlot, NonNullList<ItemStack>> modules = new HashMap<>();
 
     private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
@@ -45,8 +52,11 @@ public class RobotCapability implements IRobot {
     private static final EntityDataAccessor<Integer> LOAD_CHUNK = RobotEntity.LOAD_CHUNK;
     private static final EntityDataAccessor<Integer> PICKUP_STATE = RobotEntity.PICKUP_STATE;
     private static final EntityDataAccessor<Integer> COMMAND_GROUP = RobotEntity.COMMAND_GROUP;
+    private static final EntityDataAccessor<Integer> SWELLING = RobotEntity.SWELLING;
 
     public PickupGoal pickUpGoal;
+
+    private float explosionDamage, explosionRadius;
 
     public RobotCapability(Mob entity) {
         this.entity = entity;
@@ -62,6 +72,7 @@ public class RobotCapability implements IRobot {
         dataManager.define(LOAD_CHUNK, 0);
         dataManager.define(PICKUP_STATE, 0);
         dataManager.define(COMMAND_GROUP, 0);
+        dataManager.define(SWELLING, 0);
     }
 
     @Override
@@ -320,5 +331,42 @@ public class RobotCapability implements IRobot {
     @Override
     public AccessConfig getAccess() {
         return access; //TODO: Culminate across scopes
+    }
+
+    @Override
+    public boolean isSwelling() {
+        return dataManager.get(SWELLING) > 0;
+    }
+
+    @Override
+    public int getSwell() {
+        return dataManager.get(SWELLING);
+    }
+
+    @Override
+    public void swell() {
+        dataManager.set(SWELLING, (dataManager.get(SWELLING) + 1));
+        if(dataManager.get(SWELLING) > MAX_SWELL) {
+            explode();
+        }
+    }
+
+    @Override
+    public void igniteExplosion(float damage, float radius) {
+        entity.playSound(SoundEvents.CREEPER_PRIMED);
+        this.explosionDamage = damage;
+        this.explosionRadius = radius;
+        dataManager.set(SWELLING, 1);
+    }
+
+    protected void explode() {
+        entity.setInvulnerable(true);
+        Explosion.BlockInteraction interaction =  Explosion.BlockInteraction.DESTROY;
+        if(entity.level.getGameRules().getBoolean(GameRules.RULE_MOB_EXPLOSION_DROP_DECAY)) interaction = Explosion.BlockInteraction.DESTROY_WITH_DECAY;
+        if(!ForgeEventFactory.getMobGriefingEvent(entity.level, entity)) interaction = Explosion.BlockInteraction.KEEP;
+        Explosion explosion = new ModifiableExplosion(entity, explosionDamage, explosionRadius, true, interaction);
+        if(ForgeEventFactory.onExplosionStart(entity.level, explosion)) return;
+        explosion.explode();
+        explosion.finalizeExplosion(true);
     }
 }

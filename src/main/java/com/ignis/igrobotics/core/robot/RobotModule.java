@@ -45,7 +45,7 @@ public class RobotModule {
     }
 
     public boolean activate(LivingEntity caster) {
-        if(cooldown == 0) return false;
+        if(action == ModuleActions.NONE) return false;
         if(!action.execute(caster, duration)) return false;
         if(energyCost > 0) {
             if(!caster.getCapability(ForgeCapabilities.ENERGY).isPresent()) return false;

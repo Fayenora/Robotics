@@ -106,6 +106,10 @@ public class RobotBehavior {
                     } else {
                         energy.receiveEnergy((int) -consumption, false);
                     }
+
+                    if(robot.isSwelling()) {
+                        robot.swell();
+                    }
                 });
             });
     }
