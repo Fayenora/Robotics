@@ -112,6 +112,11 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
+    public int getAirSupply() {
+        return super.getMaxAirSupply();
+    }
+
+    @Override
     public ItemStack equipItemIfPossible(ItemStack stack) {
         //TODO Move this to a mixin/event
         ItemStack pickedUpStack = super.equipItemIfPossible(stack);
