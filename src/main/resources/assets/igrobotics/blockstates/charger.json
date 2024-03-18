@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"active=true": {
+            "model": "igrobotics:block/charger_active"
+        },
+        "active=false": {
+            "model": "igrobotics:block/charger",
+            "y": 180
+        }
+	}
+}

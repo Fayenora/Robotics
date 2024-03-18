@@ -2,10 +2,7 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
-import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.common.blockentity.WireCutterBlockEntity;
+import com.ignis.igrobotics.common.blockentity.*;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.IRecipeSerializer;
@@ -36,6 +33,7 @@ public class ModMachines {
     public static final Machine ROBOT_FACTORY = registerMachine("robot_factory", Reference.GUI_ROBOT_FACTORY_DIMENSIONS, FactoryBlockEntity::new, ModBlocks.ROBOT_FACTORY, null);
     public static final Machine ROBOT_STORAGE = registerMachine("robot_storage", Reference.GUI_DEFAULT_DIMENSIONS, StorageBlockEntity::new, ModBlocks.ROBOT_STORAGE, null);
 
+    public static final RegistryObject<BlockEntityType<ChargerBlockEntity>> CHARGER = registerBlockEntity("charger", ChargerBlockEntity::new, ModBlocks.CHARGER);
     public static final RegistryObject<BlockEntityType<RedstoneIntegrator>> REDSTONE_INTEGRATOR = registerBlockEntity("redstone_integrator", RedstoneIntegrator::new, ModBlocks.REDSTONE_INTEGRATOR);
 
     private static <R extends Recipe<?>> Machine<?> registerMachine(String name, Dimension guiDimension, BlockEntityType.BlockEntitySupplier<?> supplier, RegistryObject<Block> block, Supplier<? extends IRecipeSerializer<R>> recipeSerializer) {
