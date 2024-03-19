@@ -4,7 +4,6 @@ import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.common.entity.ai.*;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.robot.CommandType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +28,7 @@ public class ModCommands {
     public static final CommandType RETRIEVE = register("retrieve", ItemStack.class, GlobalPos.class);
     public static final CommandType STORE = register("store", ItemStack.class, GlobalPos.class);
     public static final CommandType BREAK = register("break", GlobalPos.class, GlobalPos.class);
+    public static final CommandType PLACE = register("place", GlobalPos.class, GlobalPos.class);
 
     static {
         STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (GlobalPos) selections[0].get()));
@@ -60,6 +60,7 @@ public class ModCommands {
         RETRIEVE.setAISupplier((robot, s) -> new RetrieveGoal(robot, (GlobalPos) s[1].get(), (ItemStack) s[0].get(), 20, 400, 200));
         STORE.setAISupplier((robot, s) -> new StoreGoal(robot, (GlobalPos) s[1].get(), (ItemStack) s[0].get(), 20, 400, 200));
         BREAK.setAISupplier((robot, s) -> new BreakBlocksGoal(robot, (GlobalPos) s[0].get(), (GlobalPos) s[1].get()));
+        PLACE.setAISupplier((robot, s) -> new PlaceBlocksGoal(robot, (GlobalPos) s[0].get(), (GlobalPos) s[1].get()));
     }
 
     public static CommandType register(String name, Class<?>... selectionClasses) {

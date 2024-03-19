@@ -149,6 +149,8 @@
   "igrobotics.command.break.1": "",
   "igrobotics.command.break.different_dimensions": "Dimension of first position does not match with dimension of second position",
   "igrobotics.command.break.too_many_blocks": "Selected area is too large! Maximum is %i",
+  "igrobotics.command.place.0": "Place",
+  "igrobotics.command.place.1": "",
   "igrobotics.selector.pos.useCommander": "Search your inventory for any Commanders that selected a position",
   "igrobotics.selector.pos.useSelf": "Your position",
   "igrobotics.selector.spEntity.useCommander": "Search your inventory for any Commanders that selected an entity",
