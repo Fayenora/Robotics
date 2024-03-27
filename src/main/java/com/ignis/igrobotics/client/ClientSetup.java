@@ -12,21 +12,38 @@ import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
 import com.ignis.igrobotics.integration.cc.vanilla.VProgrammingScreen;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.Util;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 @Mod.EventBusSubscriber(modid = Robotics.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
+
+    public static final ShaderTracker SHADER_SHIELD = new ShaderTracker();
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
@@ -60,5 +77,28 @@ public class ClientSetup {
         EntityRenderers.register(ModEntityTypes.STOMPED_BLOCK.get(), StompedBlockRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_FACTORY.getBlockEntityType(), RobotFactoryRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerShaders(RegisterShadersEvent event) throws IOException {
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(Robotics.MODID, "shield"), DefaultVertexFormat.POSITION_TEX_COLOR), SHADER_SHIELD::setInstance);
+    }
+
+    public static class ShaderTracker implements Supplier<ShaderInstance> {
+
+        private ShaderInstance instance;
+        final RenderStateShard.ShaderStateShard shard = new RenderStateShard.ShaderStateShard(this);
+
+        private ShaderTracker() {
+        }
+
+        private void setInstance(ShaderInstance instance) {
+            this.instance = instance;
+        }
+
+        @Override
+        public ShaderInstance get() {
+            return instance;
+        }
     }
 }
