@@ -5,7 +5,7 @@ import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
 import com.ignis.igrobotics.common.entity.ai.PickupGoal;
-import com.ignis.igrobotics.common.modules.ModifiableExplosion;
+import com.ignis.igrobotics.core.ModifiableExplosion;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;

@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common.modules;
+package com.ignis.igrobotics.core;
 
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;

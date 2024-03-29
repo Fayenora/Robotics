@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
  * This enum bundles all module actions and gives them an identifier
  */
 public enum ModuleActions {
-    NONE(new NoAction(), TextColor.fromRgb(0)),
+    NONE(IModuleAction.NO_ACTION, TextColor.fromRgb(0)),
     TELEPORT(new EnderModule(), TextColor.fromLegacyFormat(ChatFormatting.DARK_PURPLE)),
     REINFORCE(new MobEffectModule(  new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 0, 2),
                                     new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 0, 3)),
@@ -32,12 +32,5 @@ public enum ModuleActions {
 
     public boolean execute(LivingEntity caster, int duration) {
         return action.execute(caster, duration);
-    }
-
-    static class NoAction implements IModuleAction {
-        @Override
-        public boolean execute(LivingEntity caster, int duration) {
-            return true;
-        }
     }
 }
