@@ -9,6 +9,7 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,7 @@ import net.minecraftforge.client.model.obj.ObjLoader;
 import net.minecraftforge.client.model.obj.ObjModel;
 import net.minecraftforge.client.model.renderable.CompositeRenderable;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
@@ -47,13 +49,24 @@ public class ShieldLayer extends GeoRenderLayer<RobotEntity> {
         float widthZ = (float) (aabb.maxZ - aabb.minZ) * WIDTHMOD;
         Vec3 centerOffset = aabb.getCenter().subtract(animatable.position());
 
+        Matrix4f modelMat = translateAndScale(animatable.position(), 1, 1, 1);
+
+        Vector3f cameraPos = Minecraft.getInstance().player.getEyePosition().toVector3f();
+
+        poseStack.pushPose();
         renderable.render(poseStack, bufferSource, name -> {
             ClientSetup.SHADER_SHIELD.get().safeGetUniform("Color").set(color);
+            ClientSetup.SHADER_SHIELD.get().safeGetUniform("CameraPos").set(cameraPos);
             return RoboticsRenderTypes.RENDER_TYPE_SHIELD.apply(name);
-        }, packedLight, packedOverlay, partialTick, translateAndScale(centerOffset, widthX, height, widthZ));
+        }, packedLight, packedOverlay, partialTick, transformOf(translateAndScale(centerOffset, widthX, height, widthZ)));
+        poseStack.popPose();
     }
 
-    private CompositeRenderable.Transforms translateAndScale(Vec3 translation, float xScale, float yScale, float zScale) {
-        return CompositeRenderable.Transforms.of(ImmutableMap.<String, Matrix4f>builder().put("Sphere", new Matrix4f(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, zScale, 0, (float) translation.x, (float) translation.y, (float) translation.z, 1)).build());
+    private CompositeRenderable.Transforms transformOf(Matrix4f operation) {
+        return  CompositeRenderable.Transforms.of(ImmutableMap.<String, Matrix4f>builder().put("Sphere", operation).build());
+    }
+
+    private Matrix4f translateAndScale(Vec3 translation, float xScale, float yScale, float zScale) {
+        return new Matrix4f(xScale, 0, 0, 0, 0, yScale, 0, 0, 0, 0, zScale, 0, (float) translation.x, (float) translation.y, (float) translation.z, 1);
     }
 }
