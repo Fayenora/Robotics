@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.ignis.igrobotics.core.robot.CommandType;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -16,7 +15,6 @@ public class GeneralConfig extends BaseConfig {
     public Supplier<Double> limbDropChance;
     public Supplier<Boolean> poisonImmunity;
     public Supplier<DyeColor> startColor;
-    public Supplier<Integer>[] moduleAmount;
     public Supplier<Long> robotEnergyCapacity, robotBaseConsumption;
     public Supplier<Boolean> configShutdown, pickUpShutdown, chunkLoadShutdown;
 
@@ -67,17 +65,6 @@ public class GeneralConfig extends BaseConfig {
                     if(!(typeString instanceof String string)) return false;
                     return ModCommands.byName(string) != null;
         });
-
-        builder.pop();
-
-        builder.push("Module Slots");
-
-        moduleAmount = new Supplier[EnumModuleSlot.values().length];
-        int i = 0;
-        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            moduleAmount[i++] = builder.comment("Default " + slot.name() + " module slots").
-                    defineInRange("Max " + slot.name() + " Modules", (slot == EnumModuleSlot.DEFAULT ? 2 : 1), 0, 8);
-        }
 
         builder.pop();
 

@@ -18,13 +18,22 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
 
     public static final Attribute ENERGY_CAPACITY = register("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE, true);
     public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE, false);
-    public static final Attribute MODIFIER_SLOTS = register("robot.module_slots", 2, 0, Reference.MAX_MODULES, false);
+    public static final List<Attribute> MODIFIER_SLOTS = new ArrayList<>(EnumModuleSlot.values().length);
     public static final Attribute INVENTORY_SLOTS = register("robot.inventory_slots", 12, 0, Reference.MAX_INVENTORY_SIZE, true);
+
+    static {
+        for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
+            MODIFIER_SLOTS.add(register("robot.slots.modules." + slotType.name().toLowerCase(), 0, 0, Reference.MAX_MODULES, false));
+        }
+    }
 
     private static Attribute register(String name, double defaultValue, double min, double max, boolean syncable) {
         Attribute attr = new RangedAttribute("attribute.name." + name, defaultValue, min, max).setSyncable(syncable);
@@ -41,7 +50,9 @@ public class ModAttributes {
     public static void registerAttributes(EntityAttributeModificationEvent event) {
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CAPACITY);
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CONSUMPTION);
-        event.add(ModEntityTypes.ROBOT.get(), MODIFIER_SLOTS);
+        for(Attribute attribute : MODIFIER_SLOTS) {
+            event.add(ModEntityTypes.ROBOT.get(), attribute);
+        }
     }
 
     public static AttributeSupplier createRobotAttributes() {
@@ -76,9 +87,11 @@ public class ModAttributes {
 		//Server side attributes
 		if(entity.level.isClientSide()) return;
 
-		if(instance.getAttribute().equals(MODIFIER_SLOTS)) {
+		if(MODIFIER_SLOTS.contains(instance.getAttribute())) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                robot.setMaxModules(EnumModuleSlot.DEFAULT, (int) instance.getValue());
+                String[] nameComponents = instance.getAttribute().getDescriptionId().split("\\.");
+                EnumModuleSlot slotType = EnumModuleSlot.valueOf(nameComponents[nameComponents.length - 1].toUpperCase());
+                robot.setMaxModules(slotType, (int) instance.getValue());
             });
 		}
     }

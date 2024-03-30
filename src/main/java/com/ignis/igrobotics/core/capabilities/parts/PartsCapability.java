@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.capabilities.parts;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
@@ -13,6 +14,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -86,7 +88,6 @@ public class PartsCapability implements IPartBuilt {
 		RobotPart newPart = getBodyPart(part.getPart());
 		perkMap.merge(newPart.getPerks()); 
 		perkMap.updateAttributeModifiers();
-		
 	}
 
 	@Override
@@ -97,14 +98,16 @@ public class PartsCapability implements IPartBuilt {
 		entity.playSound(SoundEvents.ANVIL_FALL, 1, 1);
 		setBodyPart(part, EnumRobotMaterial.NONE);
 
-		//Drop any held items, if the arm got destroyed
+		//Drop any held items, if an arm got destroyed
 		if(part == EnumRobotPart.RIGHT_ARM || part == EnumRobotPart.LEFT_ARM) {
-			EquipmentSlot slot = (part == EnumRobotPart.RIGHT_ARM) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+			EquipmentSlot slot = Boolean.logicalXor(part == EnumRobotPart.RIGHT_ARM, entity.getMainArm() == HumanoidArm.RIGHT) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
 			ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
 			entity.setItemSlot(slot, ItemStack.EMPTY);
 		}
 
-		//TODO Kill the robot if integral parts were destroyed; Configurable?
+		if(part == EnumRobotPart.BODY || !(hasBodyPart(EnumRobotPart.LEFT_LEG) || hasBodyPart(EnumRobotPart.RIGHT_LEG))) {
+			entity.kill();
+		}
 	}
 	
 	private void setMaterials(int[] materials) {

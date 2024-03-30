@@ -47,7 +47,9 @@ public class Reference {
 		ATTRIBUTE_COLORS.put(Attributes.KNOCKBACK_RESISTANCE, TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA));
 		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CAPACITY, TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CONSUMPTION, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-		ATTRIBUTE_COLORS.put(ModAttributes.MODIFIER_SLOTS, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		for(Attribute attribute : ModAttributes.MODIFIER_SLOTS) {
+			ATTRIBUTE_COLORS.put(attribute, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		}
 		ATTRIBUTE_COLORS.put(ModAttributes.INVENTORY_SLOTS, TextColor.fromLegacyFormat(ChatFormatting.RED));
 	}
 	

@@ -62,8 +62,7 @@ public class RobotCapability implements IRobot {
         this.entity = entity;
         this.dataManager = entity.getEntityData();
         for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
-            int defaultSize = RoboticsConfig.general.moduleAmount[slotType.ordinal()].get();
-            modules.put(slotType, NonNullList.withSize(defaultSize, ItemStack.EMPTY));
+            modules.put(slotType, NonNullList.withSize(0, ItemStack.EMPTY));
         }
 
         dataManager.define(RENDER_OVERLAYS, 0);
@@ -187,6 +186,7 @@ public class RobotCapability implements IRobot {
     }
 
     private void setModule(EnumModuleSlot slotType, int slot, ItemStack item) {
+        if(modules.get(slotType).size() < slot) return;
         if(!modules.get(slotType).get(slot).isEmpty()) {
             RobotModule oldModule = RobotModule.get(modules.get(slotType).get(slot));
             entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldModule.getPerks()));
