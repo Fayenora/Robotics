@@ -4,7 +4,6 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
-import com.ignis.igrobotics.core.capabilities.inventory.ModifiableInventory;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,7 +42,6 @@ public class ModAttributes {
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CAPACITY);
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CONSUMPTION);
         event.add(ModEntityTypes.ROBOT.get(), MODIFIER_SLOTS);
-        event.add(ModEntityTypes.ROBOT.get(), INVENTORY_SLOTS);
     }
 
     public static AttributeSupplier createRobotAttributes() {
@@ -72,14 +70,6 @@ public class ModAttributes {
                 if(storage instanceof ModifiableEnergyStorage energy) {
                     energy.setMaxEnergyStored((int) instance.getValue());
                 }
-            });
-		}
-
-		if(instance.getAttribute().equals(INVENTORY_SLOTS)) {
-            entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
-                    if(inventory instanceof ModifiableInventory modifiable) {
-                        modifiable.setSize((int) instance.getValue());
-                    }
             });
 		}
 
