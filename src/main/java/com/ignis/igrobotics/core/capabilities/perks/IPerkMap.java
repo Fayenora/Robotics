@@ -40,6 +40,8 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 
 	boolean contains(Perk perk);
 
+	int getLevel(Perk perk);
+
 	default ArrayList<Component> getDisplayString() {
 		ArrayList<Component> tooltip = new ArrayList<>();
 		Multimap<Attribute, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();

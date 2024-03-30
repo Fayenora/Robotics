@@ -18,7 +18,23 @@
         "category": "entity",
         "subtitle": "entity.robot.kill_command",
         "sounds": [ "igrobotics:entity/robot/kill_command" ]
-    }, 
+    },
+
+    "shield.start": {
+          "category": "entity",
+          "subtitle": "shield.start",
+          "sounds": [ "igrobotics:shield/up" ]
+    },
+    "shield.impact": {
+      "category": "entity",
+      "subtitle": "shield.start",
+      "sounds": [ "igrobotics:shield/impact" ]
+    },
+    "shield.fatal_impact": {
+      "category": "entity",
+      "subtitle": "shield.start",
+      "sounds": [ "igrobotics:shield/impact_2" ]
+    },
     
     "machine.assembler":{
         "category": "block",

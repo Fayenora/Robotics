@@ -41,6 +41,7 @@ public class ModItems {
     public static final RegistryObject<Item> MODULE_REINFORCE = registerBasicItem("reinforce_module");
     public static final RegistryObject<Item> MODULE_STEALTH = registerBasicItem("stealth_module");
     public static final RegistryObject<Item> MODULE_TNT = registerBasicItem("tnt_module");
+    public static final RegistryObject<Item> MODULE_SHIELD = registerBasicItem("shield_module");
 
     public static final RegistryObject<Item> ROBOT_SPAWN_EGG = ITEMS.register("robot_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.ROBOT, 0x000000, 0xffa500, new Item.Properties()));
 

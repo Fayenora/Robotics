@@ -70,6 +70,11 @@ public class PerkMapCapability implements IPerkMapCap {
     }
 
     @Override
+    public int getLevel(Perk perk) {
+        return perkMap.getLevel(perk);
+    }
+
+    @Override
     public SimpleDataManager values() {
         return values;
     }

@@ -7,6 +7,7 @@ import com.ignis.igrobotics.client.RoboticsRenderTypes;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
+import com.ignis.igrobotics.core.capabilities.shield.IShielded;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -41,7 +42,9 @@ public class ShieldLayer extends GeoRenderLayer<RobotEntity> {
 
     @Override
     public void render(PoseStack poseStack, RobotEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        float[] color = animatable.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS).getColor().getTextureDiffuseColors();
+        if(!animatable.getCapability(ModCapabilities.SHIELDED).isPresent()) return;
+        IShielded shield = animatable.getCapability(ModCapabilities.SHIELDED).resolve().get();
+        if(!shield.isShielded()) return;
 
         AABB aabb = animatable.getBoundingBox();
         float widthX = (float) (aabb.maxX - aabb.minX) * WIDTHMOD;
@@ -49,14 +52,16 @@ public class ShieldLayer extends GeoRenderLayer<RobotEntity> {
         float widthZ = (float) (aabb.maxZ - aabb.minZ) * WIDTHMOD;
         Vec3 centerOffset = aabb.getCenter().subtract(animatable.position());
 
-        Matrix4f modelMat = translateAndScale(animatable.position(), 1, 1, 1);
-
+        float[] color = animatable.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS).getColor().getTextureDiffuseColors();
         Vector3f cameraPos = Minecraft.getInstance().player.getEyePosition().toVector3f();
+        float strength = shield.getHealth() / shield.getMaxHealth();
 
         poseStack.pushPose();
         renderable.render(poseStack, bufferSource, name -> {
             ClientSetup.SHADER_SHIELD.get().safeGetUniform("Color").set(color);
             ClientSetup.SHADER_SHIELD.get().safeGetUniform("CameraPos").set(cameraPos);
+            ClientSetup.SHADER_SHIELD.get().safeGetUniform("Hit").set(animatable.invulnerableTime);
+            ClientSetup.SHADER_SHIELD.get().safeGetUniform("Strength").set(strength);
             return RoboticsRenderTypes.RENDER_TYPE_SHIELD.apply(name);
         }, packedLight, packedOverlay, partialTick, transformOf(translateAndScale(centerOffset, widthX, height, widthZ)));
         poseStack.popPose();

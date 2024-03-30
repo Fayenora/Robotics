@@ -47,4 +47,8 @@ public class MathUtil {
 		return Math.max(min, Math.min((int) value, max));
 	}
 
+	public static float asymptote(int x, float min, float max) {
+		return (float) ((-((max - min) * Math.exp(-x) - (max - min)/2)) + (max - min)/2);
+	}
+
 }

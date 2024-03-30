@@ -11,8 +11,10 @@ uniform vec3 CameraPos;
 uniform mat3 IViewRotMat;
 uniform int FogShape;
 uniform vec3 Color;
+uniform int Hit;
+uniform float Strength;
 
-out vec3 color;
+out vec4 color;
 out float fresnel;
 out float vertexDistance;
 
@@ -26,5 +28,5 @@ void main() {
     fresnel = 0.7 * pow(1.0 + dot(vertexCameraDir, worldNormal), 4);
 
     vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, FogShape);
-    color = Color;
+    color = vec4(mix(Color, vec3(1, 1, 1), 0.2 * float(Hit > 0)), 0.1 + 0.3 * Strength);
 }

@@ -17,6 +17,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> ROBOT_KILL_COMMAND = register("entity.robot.kill_command");
     public static final RegistryObject<SoundEvent> ASSEMBLER = register("machine.assembler");
     public static final RegistryObject<SoundEvent> WIRE_CUTTER = register("machine.wire_cutter");
+    public static final RegistryObject<SoundEvent> SHIELD_UP = register("shield.start");
+    public static final RegistryObject<SoundEvent> SHIELD_IMPACT = register("shield.impact");
+    public static final RegistryObject<SoundEvent> SHIELD_IMPACT_FATAL = register("shield.fatal_impact");
 
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Robotics.MODID, name)));

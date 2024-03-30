@@ -116,7 +116,12 @@ public class AdvancedPerkMap implements IPerkMap {
 	public boolean contains(Perk perk) {
 		return perks.containsValue(perk);
 	}
-	
+
+	@Override
+	public int getLevel(Perk perk) {
+		return levels.getOrDefault(perk.getUnlocalizedName(), 0);
+	}
+
 	@Override
 	public Iterator<Tuple<Perk, Integer>> iterator() {
 		return new Iterator<>() {

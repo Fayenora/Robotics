@@ -8,6 +8,7 @@ import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
@@ -53,16 +54,11 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         if(entity == null) return;
 
-        RenderSystem.setShaderTexture(0, Reference.MISC);
-        entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
-                    blit(poseStack, leftPos + 76, topPos + 43, 238, 0, 18, 18);
-                }
-                if(parts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
-                    blit(poseStack, leftPos + 76, topPos + 61, 238, 0, 18, 18);
-                }
-            });
+        this.drawHealthBar(poseStack, 7, 81, Math.round(entity.getHealth()), Math.round(entity.getMaxHealth()));
+        this.drawArmor(poseStack, 89, 81, entity.getArmorValue());
 
+        RenderSystem.setShaderTexture(0, Reference.MISC);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             if(robot.isActive()) {
                 RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
@@ -71,8 +67,18 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
             }
         });
 
-        this.drawHealthBar(poseStack, 7, 81, Math.round(entity.getHealth()), Math.round(entity.getMaxHealth()));
-        this.drawArmor(poseStack, 89, 81, entity.getArmorValue());
+        entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
+                    blit(poseStack, leftPos + 76, topPos + 43, 238, 0, 18, 18);
+                }
+                if(parts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
+                    blit(poseStack, leftPos + 76, topPos + 61, 238, 0, 18, 18);
+                }
+
+                entity.getCapability(ModCapabilities.SHIELDED).ifPresent(shield -> {
+                    this.drawShieldBar(poseStack, 7, 81, Math.round(shield.getHealth()), parts.getColor().getTextColor());
+                });
+            });
     }
 
     @Override
@@ -152,9 +158,31 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         }
     }
 
+    public void drawShieldBar(PoseStack poseStack, int x, int y, int shieldHealth, int energyColor) {
+        RenderSystem.setShaderTexture(0, Reference.MISC);
+        RenderSystem.enableBlend();
+
+        for(int i = 0; i < 10; i++) {
+            int timesHeartOccupied = Math.floorDiv(shieldHealth, 20) + (shieldHealth % 20 >= (i + 1) * 2 ? 1 : 0);
+            if(timesHeartOccupied <= 0) break;
+            setColor(energyColor, MathUtil.asymptote(timesHeartOccupied, 0.3f, 0.8f));
+            blit(poseStack, this.leftPos + x + i * 8, this.topPos + y, 232, 18, 9, 9);
+        }
+        if(shieldHealth % 2 == 1) {
+            float alphaLeft = MathUtil.asymptote(Math.floorDiv(shieldHealth, 20) + 1, 0.3f, 0.8f);
+            setColor(energyColor, alphaLeft);
+            blit(poseStack, this.leftPos + x + (shieldHealth % 20 - 1)/2 * 8, this.topPos + y, 232, 18, 5, 9);
+        }
+        RenderSystem.disableBlend();
+    }
+
     private void setColor(int color) {
+        setColor(color, 1);
+    }
+
+    private void setColor(int color, float alpha) {
         Color c = new Color(color);
-        RenderSystem.setShaderColor(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, 1);
+        RenderSystem.setShaderColor(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, alpha);
     }
 
 }

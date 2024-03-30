@@ -58,6 +58,11 @@ public class PerkMap implements IPerkMap {
 	}
 
 	@Override
+	public int getLevel(Perk perk) {
+		return levels.getOrDefault(perk.getUnlocalizedName(), 0);
+	}
+
+	@Override
 	public Iterator<Tuple<Perk, Integer>> iterator() {
 		return new Iterator<>() {
 			final Iterator<Perk> perkIt = perks.values().iterator();

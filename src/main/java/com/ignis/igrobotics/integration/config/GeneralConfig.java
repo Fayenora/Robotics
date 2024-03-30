@@ -20,6 +20,9 @@ public class GeneralConfig extends BaseConfig {
     public Supplier<Long> robotEnergyCapacity, robotBaseConsumption;
     public Supplier<Boolean> configShutdown, pickUpShutdown, chunkLoadShutdown;
 
+    public Supplier<Integer> shieldBaseHealth, shieldActivationCost, shieldPerHealthCost, shieldUpkeep;
+    public Supplier<Double> shieldRechargeRate;
+
     public Supplier<Integer> robotAmountPerPlayerOnServer;
 
     public Supplier<List<? extends String>> availableCommands;
@@ -48,6 +51,16 @@ public class GeneralConfig extends BaseConfig {
         chunkLoadShutdown = builder.comment("Whether deactivated robots cease chunk loading capabilities").define("Chunk Loading Shutdown", true);
         builder.pop();
 
+        builder.push("Modules");
+
+        shieldBaseHealth = builder.comment("Base health when a shield is activated").defineInRange("Shield Base Health", 4, 1, 1000);
+        shieldActivationCost = builder.comment("Energy activation cost of shields").defineInRange("Shield Activation Cost", 500000, 0, Integer.MAX_VALUE);
+        shieldPerHealthCost = builder.comment("Energy cost of regenerating a half a heart of shield health").defineInRange("Shield Health Cost", 10000, 0, Integer.MAX_VALUE);
+        shieldUpkeep = builder.comment("Passive energy cost of maintaining a shield").defineInRange("Shield Upkeep", 10, 0, Integer.MAX_VALUE);
+        shieldRechargeRate = builder.comment("How much shield health is recharged every 4 in-game ticks (~200ms)").defineInRange("Shield Recharge", 0.1, 0, 1);
+
+        builder.pop();
+
         builder.push("Commands");
         availableCommands = builder.comment("Available commands. Note that limiting these does not remove already applied commands!")
                 .defineList("Available Commands", ModCommands.COMMAND_TYPES.stream().map(CommandType::toString).toList(), typeString -> {
@@ -62,7 +75,7 @@ public class GeneralConfig extends BaseConfig {
         moduleAmount = new Supplier[EnumModuleSlot.values().length];
         int i = 0;
         for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            moduleAmount[i++] = builder.comment("Default " + slot.name() + " robot. Note that module slots cannot exceed the maximum of 8, even with other modifiers. This will be extended in the future").
+            moduleAmount[i++] = builder.comment("Default " + slot.name() + " module slots").
                     defineInRange("Max " + slot.name() + " Modules", (slot == EnumModuleSlot.DEFAULT ? 2 : 1), 0, 8);
         }
 

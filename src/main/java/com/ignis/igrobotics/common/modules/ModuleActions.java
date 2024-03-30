@@ -20,7 +20,8 @@ public enum ModuleActions {
     STEALTH(new MobEffectModule(new MobEffectInstance(MobEffects.INVISIBILITY)), TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY)),
     DASH(new DashModule(0, 0.5f, Entity::getLookAngle), TextColor.fromLegacyFormat(ChatFormatting.GREEN)),
     JUMP(new DashModule(1, 1, living -> new Vec3(0, 1, 0)), TextColor.fromLegacyFormat(ChatFormatting.GREEN)),
-    SELFDESTRUCT(new DestructModule(10, 10), TextColor.fromLegacyFormat(ChatFormatting.RED));
+    SELFDESTRUCT(new DestructModule(10, 10), TextColor.fromLegacyFormat(ChatFormatting.RED)),
+    SHIELD(new ShieldModule(), TextColor.fromLegacyFormat(ChatFormatting.AQUA));
 
     private final IModuleAction action;
     public final TextColor color;

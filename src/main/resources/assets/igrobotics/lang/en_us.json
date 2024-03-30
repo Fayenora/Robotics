@@ -86,6 +86,7 @@
   "igrobotics.action.dash": "Dash",
   "igrobotics.action.jump": "Jump",
   "igrobotics.action.selfdestruct": "Self-Destruct",
+  "igrobotics.action.shield": "Shield",
 
   "attribute.name.robot.energy_capacity": "Energy Capacity",
   "attribute.name.robot.energy_consumption": "Energy Consumption",
@@ -118,6 +119,7 @@
   "igrobotics.perk.bio_generator": "Bio Generator",
   "igrobotics.perk.fist": "Knock-up",
   "igrobotics.perk.unarmed_attack": "Unarmed Attack Damage",
+  "igrobotics.perk.shield": "Shield Strength",
 
   "igrobotics.perk.desc": "Increases the stats of the robot: ",
   "igrobotics.perk.robust.desc": "Every damage the robot receives is reduced by %s * [Level]",

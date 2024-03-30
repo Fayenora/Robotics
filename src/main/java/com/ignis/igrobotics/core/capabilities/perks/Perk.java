@@ -360,9 +360,10 @@ public class Perk implements PerkHooks {
 		return stackable;
 	}
 
-	protected void setStackable(boolean stackable) {
+	public Perk setStackable(boolean stackable) {
 		this.stackable = stackable;
 		if(!stackable) maxLevel = Math.min(UNSTACKABLE_MAX_LEVEL, maxLevel);
+		return this;
 	}
 
 	public boolean isVisible() {

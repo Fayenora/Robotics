@@ -37,6 +37,7 @@ public class PerkConfig implements IJsonConfig {
 	public Perk PERK_BIO_GENERATOR;
 	public Perk PERK_UNARMED_ATTACK;
 	public Perk PERK_FIST;
+	public Perk PERK_SHIELD;
 
 	public PerkConfig() {
 		PERK_UNRELIABLE = new PerkUnreliable("perk.unreliable").setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
@@ -57,6 +58,7 @@ public class PerkConfig implements IJsonConfig {
 		});
 		PERK_UNARMED_ATTACK = new PerkUnarmedAttack("perk.unarmed_attack");
 		PERK_FIST = new PerkFist("perk.fist").setDisplayColor(ChatFormatting.BLUE);
+		PERK_SHIELD = new Perk("perk.shield", 10).setStackable(true).setDisplayColor(ChatFormatting.AQUA);
 	}
 
 	public PerkConfig(File file) {
@@ -78,6 +80,7 @@ public class PerkConfig implements IJsonConfig {
 		register(PERK_BIO_GENERATOR);
 		register(PERK_UNARMED_ATTACK);
 		register(PERK_FIST);
+		register(PERK_SHIELD);
 	}
 	
 	@Override
