@@ -26,7 +26,7 @@ public class WorldData extends SavedData {
     public static final String KEY_ACCESS_CONFIG = "access_config";
     public static final String KEY_GROUPS = "views";
 
-    private int numberOfCommandGroups = 0;
+    private int numberOfCommandGroups = 1; //commandGroup = 0 means no command group
     private final WorldAccessData accessData = new WorldAccessData();
     private final HashMap<Integer, HashMap<UUID, RobotView>> commandGroups = new HashMap<>();
 
