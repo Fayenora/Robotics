@@ -153,6 +153,7 @@ public class RobotBehavior {
     public static void onRobotDeath(LivingDeathEvent event) {
         if(event.getEntity().level.isClientSide()) return;
         Entity entity = event.getEntity();
+        // Drop Inventory
         if(event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
                     entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
@@ -167,6 +168,7 @@ public class RobotBehavior {
                     })
             );
         }
+        // Close any open containers
         if(entity instanceof Mob mob && mob.getCapability(ModCapabilities.COMMANDS).isPresent()) {
             for(WrappedGoal goal : mob.goalSelector.getAvailableGoals()) {
                 if(goal.getGoal() instanceof RetrieveGoal retrieveGoal) {
@@ -174,6 +176,12 @@ public class RobotBehavior {
                 }
             }
         }
+        // Close the computer
+        event.getEntity().getCapability(ModCapabilities.COMPUTERIZED).ifPresent(computer -> {
+            if(computer.hasComputer()) {
+                computer.getComputer().close();
+            }
+        });
     }
 
     @SubscribeEvent

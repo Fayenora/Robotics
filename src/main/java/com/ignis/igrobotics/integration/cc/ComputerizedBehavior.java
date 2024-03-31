@@ -18,17 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ComputerizedBehavior {
 
-    private static final ComponentAccess<IPeripheral> peripherals = PlatformHelper.get().createPeripheralAccess(d -> {});
-
     public static void onComputerTick(LivingEntity entity, IRobot robot, ServerComputer computer) {
-        if(robot.isActive() && !computer.isOn()) {
-            computer.turnOn();
-        }
-        if(!robot.isActive()) {
-            computer.shutdown();
-        } else {
-            computer.keepAlive();
-        }
+        if(robot.isActive()) {
+            if(!computer.isOn()) {
+                computer.turnOn();
+            }
+        } else computer.shutdown();
+
+        computer.keepAlive();
 
         //Update peripherals & redstone. Only do this when standing still
         if(entity.getDeltaMovement().length() > 0.1) return;

@@ -48,8 +48,6 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
         var server = entity.getLevel().getServer();
         if (server == null) throw new IllegalStateException("Cannot access server computer on the client.");
 
-        var changed = false;
-
         var computer = ServerContext.get(server).registry().get(instanceID);
         if(computer == null) {
             if(computerID < 0) {
@@ -58,12 +56,9 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
 
             computer = createComputer(computerID);
             instanceID = computer.register();
-            changed = true;
         }
         if(!(computer instanceof EntityComputer)) throw new IllegalStateException(".");
 
-        computer.turnOn();
-        // TODO if (changed) update peripherals
         return (EntityComputer) computer;
     }
 
