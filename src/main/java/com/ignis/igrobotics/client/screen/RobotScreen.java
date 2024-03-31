@@ -59,14 +59,6 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
         RenderSystem.setShaderTexture(0, Reference.MISC);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-            if(robot.isActive()) {
-                RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
-            } else {
-                RenderUtil.drawInactiveRobot(poseStack, leftPos + 25, topPos + 7, 30, entity);
-            }
-        });
-
         entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                 if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
                     blit(poseStack, leftPos + 76, topPos + 43, 238, 0, 18, 18);
@@ -79,6 +71,14 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
                     this.drawShieldBar(poseStack, 7, 81, Math.round(shield.getHealth()), parts.getColor().getTextColor());
                 });
             });
+
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+            if(robot.isActive()) {
+                RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
+            } else {
+                RenderUtil.drawInactiveRobot(poseStack, leftPos + 25, topPos + 7, 30, entity);
+            }
+        });
     }
 
     @Override
@@ -173,7 +173,6 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
             setColor(energyColor, alphaLeft);
             blit(poseStack, this.leftPos + x + (shieldHealth % 20 - 1)/2 * 8, this.topPos + y, 232, 18, 5, 9);
         }
-        RenderSystem.disableBlend();
     }
 
     private void setColor(int color) {
