@@ -12,8 +12,6 @@ import net.minecraft.world.entity.ai.control.BodyRotationControl;
 public class RobotBodyControl extends BodyRotationControl {
 
     private final Mob mob;
-    private int headStableTime;
-    private float lastStableYHeadRot;
 
     public RobotBodyControl(Mob p_24879_) {
         super(p_24879_);
@@ -22,35 +20,14 @@ public class RobotBodyControl extends BodyRotationControl {
 
     @Override
     public void clientTick() {
-        if (this.isMoving()) {
+        if (isMoving()) {
             this.mob.yBodyRot = this.mob.getYRot();
-            this.lastStableYHeadRot = this.mob.yHeadRot;
-            this.headStableTime = 0;
-        } else {
-            if (this.notCarryingMobPassengers()) {
-                if (Math.abs(this.mob.yHeadRot - this.lastStableYHeadRot) > 15.0F) {
-                    this.headStableTime = 0;
-                    this.lastStableYHeadRot = this.mob.yHeadRot;
-                } else {
-                    ++this.headStableTime;
-                    if (this.headStableTime > 10) {
-                        this.rotateHeadTowardsFront();
-                    }
-                }
-            }
-
+            this.rotateHeadIfNecessary();
         }
     }
 
-    private void rotateHeadTowardsFront() {
-        int i = this.headStableTime - 10;
-        float f = Mth.clamp((float)i / 10.0F, 0.0F, 1.0F);
-        float f1 = (float)this.mob.getMaxHeadYRot() * (1.0F - f);
-        this.mob.yBodyRot = Mth.rotateIfNecessary(this.mob.yBodyRot, this.mob.yHeadRot, f1);
-    }
-
-    private boolean notCarryingMobPassengers() {
-        return !(this.mob.getFirstPassenger() instanceof Mob);
+    private void rotateHeadIfNecessary() {
+        this.mob.yHeadRot = Mth.rotateIfNecessary(this.mob.yHeadRot, this.mob.yBodyRot, (float)this.mob.getMaxHeadYRot());
     }
 
     private boolean isMoving() {
