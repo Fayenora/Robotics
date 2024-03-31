@@ -6,7 +6,10 @@ import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.blockentity.EntityLevelStorage;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
@@ -19,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
@@ -29,11 +33,21 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot.png");
 
-    private final LivingEntity entity;
+    private final LivingEntity entity, entityToRender;
+
+    private IPartBuilt entityParts;
+    private IRobot robot, robotToRender;
 
     public RobotScreen(RobotMenu menu, Inventory inv, Component comp) {
         super(menu, inv, menu.robot, comp);
         this.entity = menu.robot;
+        if(EntityLevelStorage.copyEntity(entity).get() instanceof LivingEntity living) {
+            entityToRender = living;
+            entityToRender.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> storage.receiveEnergy(storage.getMaxEnergyStored(), false));
+        } else entityToRender = entity;
+        entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> this.entityParts = parts);
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robot = robot);
+        entityToRender.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robotToRender = robot);
         imageHeight = Reference.GUI_ROBOT_DIMENSIONS.height;
     }
 
@@ -57,28 +71,26 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         this.drawHealthBar(poseStack, 7, 81, Math.round(entity.getHealth()), Math.round(entity.getMaxHealth()));
         this.drawArmor(poseStack, 89, 81, entity.getArmorValue());
 
+        if(entityParts == null || robot == null || robotToRender == null) return;
+
         RenderSystem.setShaderTexture(0, Reference.MISC);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
-                    blit(poseStack, leftPos + 76, topPos + 43, 238, 0, 18, 18);
-                }
-                if(parts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
-                    blit(poseStack, leftPos + 76, topPos + 61, 238, 0, 18, 18);
-                }
-
-                entity.getCapability(ModCapabilities.SHIELDED).ifPresent(shield -> {
-                    this.drawShieldBar(poseStack, 7, 81, Math.round(shield.getHealth()), parts.getColor().getTextColor());
-                });
-            });
-
-        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-            if(robot.isActive()) {
-                RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
-            } else {
-                RenderUtil.drawInactiveRobot(poseStack, leftPos + 25, topPos + 7, 30, entity);
-            }
+        if(entityParts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
+            blit(poseStack, leftPos + 76, topPos + 43, 238, 0, 18, 18);
+        }
+        if(entityParts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
+            blit(poseStack, leftPos + 76, topPos + 61, 238, 0, 18, 18);
+        }
+        entity.getCapability(ModCapabilities.SHIELDED).ifPresent(shield -> {
+            this.drawShieldBar(poseStack, 7, 81, Math.round(shield.getHealth()), entityParts.getColor().getTextColor());
         });
+
+        robotToRender.setActivation(robot.isActive());
+        if(robotToRender.isActive()) {
+            RenderUtil.drawEntityOnScreen(poseStack, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entityToRender);
+        } else {
+            RenderUtil.drawInactiveRobot(poseStack, leftPos + 25, topPos + 7, 30, entityToRender, false);
+        }
     }
 
     @Override

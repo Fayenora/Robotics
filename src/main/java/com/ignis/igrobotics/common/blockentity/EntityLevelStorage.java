@@ -174,8 +174,8 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
         return stored != null ? Optional.of(stored) : Optional.empty();
     }
 
-    private Optional<Entity> copyEntity(Entity toCopy) {
+    public static Optional<Entity> copyEntity(Entity toCopy) {
         CompoundTag tag = toCopy.serializeNBT();
-        return EntityType.create(tag, level);
+        return EntityType.create(tag, toCopy.level);
     }
 }

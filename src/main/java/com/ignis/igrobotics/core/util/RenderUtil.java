@@ -155,7 +155,7 @@ public class RenderUtil {
         Lighting.setupFor3DItems();
     }
 
-    public static void drawInactiveRobot(PoseStack poseStack, int posX, int posY, int scale, LivingEntity entity) {
+    public static void drawInactiveRobot(PoseStack poseStack, int posX, int posY, int scale, LivingEntity entity, boolean renderNameTag) {
         float f = 0;
         float f1 = 0;
         posX += (int)(13/15F * scale);
@@ -168,6 +168,8 @@ public class RenderUtil {
         float f4 = entity.getXRot();
         float f5 = entity.yHeadRotO;
         float f6 = entity.yHeadRot;
+        Component f7 = entity.getCustomName();
+        if(!renderNameTag) entity.setCustomName(null);
         entity.yBodyRot = 180.0F + f * 20.0F;
         entity.setYRot(180.0F + f * 40.0F);
         entity.setXRot(-f1 * 20.0F + 45);
@@ -179,6 +181,7 @@ public class RenderUtil {
         entity.setXRot(f4);
         entity.yHeadRotO = f5;
         entity.yHeadRot = f6;
+        if(!renderNameTag) entity.setCustomName(f7);
     }
 
     public static void drawItemStack(PoseStack poseStack, ItemStack stack, int x, int y) {

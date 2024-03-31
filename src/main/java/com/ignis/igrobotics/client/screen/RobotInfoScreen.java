@@ -8,10 +8,12 @@ import com.ignis.igrobotics.client.screen.elements.*;
 import com.ignis.igrobotics.client.screen.selectors.EntitySelector;
 import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.blockentity.EntityLevelStorage;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
@@ -39,6 +41,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -52,8 +55,9 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_info.png");
     private static final Component OWNER_CAPTION = ComponentUtils.formatList(List.of(Component.translatable("owner"), Component.literal(":")), CommonComponents.EMPTY);
 
-    private final LivingEntity entity;
+    private final LivingEntity entity, entityToRender;
     private final AccessConfig access;
+    private IRobot robot, robotToRender;
 
     public ButtonElement pickUpButton;
     public ButtonElement chunkLoadingToggle;
@@ -67,6 +71,12 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public RobotInfoScreen(RobotInfoMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, menu.robot, title);
         this.entity = menu.robot;
+        if(EntityLevelStorage.copyEntity(entity).get() instanceof LivingEntity living) {
+            entityToRender = living;
+            entityToRender.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> storage.receiveEnergy(storage.getMaxEnergyStored(), false));
+        } else entityToRender = entity;
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robot = robot);
+        entityToRender.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robotToRender = robot);
         this.access = menu.access;
         imageWidth = Reference.GUI_COMMANDER_DIMENSIONS.width;
         imageHeight = Reference.GUI_COMMANDER_DIMENSIONS.height;
@@ -153,29 +163,28 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         RenderSystem.setShaderTexture(0, TEXTURE);
         blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-            if(menu.data.get(0) <= 0) {
-                robot.setActivation(false);
-            }
+        if(access.hasOwner()) {
+            //Draw a String declaring the owner
+            drawString(poseStack, Minecraft.getInstance().font, OWNER_CAPTION, leftPos + 78, topPos + 154, Reference.FONT_COLOR);
 
-            if(access.hasOwner()) {
-                //Draw a String declaring the owner
-                drawString(poseStack, Minecraft.getInstance().font, OWNER_CAPTION, leftPos + 78, topPos + 154, Reference.FONT_COLOR);
-
-                //If the owner changed, ask for confirmation
-                if(ownerSelector != null && ownerSelector.getOwner() != null && !hasSubGui()) {
-                    LivingEntity currentSelection = ownerSelector.getOwner();
-                    if(!access.getOwner().equals(currentSelection.getUUID())) {
-                        createConfirmationDialog(currentSelection);
-                    }
+            //If the owner changed, ask for confirmation
+            if(ownerSelector != null && ownerSelector.getOwner() != null && !hasSubGui()) {
+                LivingEntity currentSelection = ownerSelector.getOwner();
+                if(!access.getOwner().equals(currentSelection.getUUID())) {
+                    createConfirmationDialog(currentSelection);
                 }
             }
-        });
+        }
 
         int entity_size = 55;
         if(!hasSubGui()) {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            RenderUtil.drawEntityOnScreen(poseStack, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entity, false);
+            robotToRender.setActivation(robot.isActive());
+            if(robotToRender.isActive()) {
+                RenderUtil.drawEntityOnScreen(poseStack, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entityToRender, false);
+            } else {
+                RenderUtil.drawInactiveRobot(poseStack, leftPos + (imageWidth / 2) - 32, topPos + 22, entity_size, entityToRender, false);
+            }
         }
     }
 
