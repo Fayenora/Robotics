@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.common.entity.ai.AbstractRangedAttackGoal;
 import com.ignis.igrobotics.common.entity.ai.RetrieveGoal;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,18 +49,20 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RobotBehavior {
@@ -205,6 +209,17 @@ public class RobotBehavior {
             }
         }
         RoboticsMenus.openRobotMenu(player, ModMenuTypes.ROBOT.get(), target);
+    }
+
+    @SubscribeEvent
+    public static void determineProjectile(LivingGetProjectileEvent event) {
+        LivingEntity living = event.getEntity();
+        if(!living.getCapability(ModCapabilities.ROBOT).isPresent()) return;
+        ItemStack weapon = event.getProjectileWeaponItemStack();
+        ItemStack ammunition = AbstractRangedAttackGoal.retrieveAmmunitionFromInventory(living, weapon);
+        if(!ammunition.isEmpty() && !event.getProjectileWeaponItemStack().isEmpty()) {
+            event.setProjectileItemStack(ammunition);
+        }
     }
 
     private static boolean equipIfPossible(Mob mob, Player player, InteractionHand hand, EquipmentSlot slot, ItemStack stack) {

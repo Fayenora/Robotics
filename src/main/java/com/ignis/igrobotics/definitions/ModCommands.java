@@ -39,7 +39,7 @@ public class ModCommands {
             EntitySearch search = (EntitySearch) selections[0].get();
             Entity entity = search.commence(server, robot.blockPosition());
             if(!(entity instanceof LivingEntity)) return null;
-            return new HuntGoal(robot, (LivingEntity) entity);
+            return new SpecificTargetGoal(robot, (LivingEntity) entity);
         });
         DEFEND.setAISupplier((robot, selections) -> {
             if(!(robot.level instanceof ServerLevel server)) return null;

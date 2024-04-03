@@ -1,6 +1,10 @@
 package com.ignis.igrobotics.common.entity;
 
 import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.entity.ai.RangedBowAttack;
+import com.ignis.igrobotics.common.entity.ai.RangedCrossbowAttack;
+import com.ignis.igrobotics.common.entity.ai.RangedGenericAttack;
+import com.ignis.igrobotics.common.entity.ai.ReachAcrossDimensionGoal;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.util.ItemStackUtils;
@@ -24,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -81,7 +86,11 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(4, new RangedGenericAttack(this, 2, 8, 2));
+        this.goalSelector.addGoal(4, new RangedBowAttack(this, 2, 8, 4));
+        this.goalSelector.addGoal(4, new RangedCrossbowAttack(this, 2, 8, 1));
         this.goalSelector.addGoal(5, new MeleeAttackGoal(this, getAttributeValue(Attributes.MOVEMENT_SPEED), true));
+        this.goalSelector.addGoal(8, new ReachAcrossDimensionGoal(this, 64));
         this.goalSelector.addGoal(CommandCapability.MAX_COMMANDS + CommandCapability.MAX_NON_COMMAND_GOALS + 2, new LookAtPlayerGoal(this, Player.class, 6));
     }
 
