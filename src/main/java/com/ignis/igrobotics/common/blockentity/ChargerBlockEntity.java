@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
+import com.ignis.igrobotics.common.blocks.ChargerBlock;
 import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.definitions.ModMachines;
@@ -18,7 +19,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.ignis.igrobotics.common.blocks.ChargerBlock;
 
 import java.util.List;
 

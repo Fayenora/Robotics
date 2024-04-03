@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.util;
 
-import com.ignis.igrobotics.core.access.EnumPermission;
 import net.minecraft.client.gui.Font;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

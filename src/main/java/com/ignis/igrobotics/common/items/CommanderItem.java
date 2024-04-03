@@ -13,7 +13,6 @@ import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotView;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModBlocks;
-import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;

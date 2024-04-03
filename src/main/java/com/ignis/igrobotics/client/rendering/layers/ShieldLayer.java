@@ -6,7 +6,6 @@ import com.ignis.igrobotics.client.ClientSetup;
 import com.ignis.igrobotics.client.RoboticsRenderTypes;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.shield.IShielded;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

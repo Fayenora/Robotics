@@ -1,7 +1,5 @@
 package com.ignis.igrobotics.integration.cc.apis;
 
-import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
@@ -14,7 +12,6 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.apis.IAPIEnvironment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.server.ServerLifecycleHooks;

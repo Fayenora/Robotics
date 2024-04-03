@@ -14,11 +14,9 @@ import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
 import com.ignis.igrobotics.integration.cc.vanilla.VProgrammingScreen;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.Util;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.Component;
@@ -35,7 +33,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault

@@ -10,7 +10,6 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;

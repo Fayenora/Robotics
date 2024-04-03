@@ -1,7 +1,5 @@
 package com.ignis.igrobotics.common.entity.ai;
 
-import com.ignis.igrobotics.core.util.ItemStackUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
