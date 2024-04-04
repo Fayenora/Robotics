@@ -10,16 +10,21 @@ import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.apis.IAPIEnvironment;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class RobotAPI implements ILuaAPI {
 
@@ -82,6 +87,40 @@ public class RobotAPI implements ILuaAPI {
     }
 
     @LuaFunction
+    public final float getHealth() {
+        return entity.getHealth();
+    }
+
+    /**
+     * A list of objects representing the MobEffects the entity is currently affected by
+     * @return the list
+     */
+    @LuaFunction
+    public final List<LuaMobEffect> getEffects() {
+        return entity.getActiveEffects().stream().map(LuaMobEffect::new).toList();
+    }
+
+    @LuaFunction
+    public final double getAttribute(String attributeName) throws LuaException {
+        try {
+            ResourceLocation loc = ResourceLocation.tryParse(attributeName);
+            Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(loc);
+            if(attribute == null) {
+                throw new LuaException(attributeName + " is not a valid attribute. Call " + getNames()[0] + ".getValidAttributes() for a list of valid attributes");
+            }
+            return entity.getAttributeValue(attribute);
+        } catch(ResourceLocationException e) {
+            throw new LuaException(e.getMessage());
+        }
+    }
+
+    @LuaFunction
+    public final List<String> getValidAttributes() {
+        Stream<Attribute> attributes = ForgeRegistries.ATTRIBUTES.getValues().stream();
+        return attributes.map(Attribute::getDescriptionId).toList();
+    }
+
+    @LuaFunction
     public final List<String> getModules(Optional<String> slotType) throws LuaException {
         if(slotType.isPresent()) {
             try {
@@ -100,12 +139,12 @@ public class RobotAPI implements ILuaAPI {
         if(slotType.isPresent()) {
             try {
                 EnumModuleSlot moduleSlot = EnumModuleSlot.valueOf(slotType.get().toUpperCase());
-                moduleItem = robot.getModules(moduleSlot).get(slot);
+                moduleItem = robot.getModules(moduleSlot).get(slot - 1);
             } catch(IllegalArgumentException exc) {
                 throw new LuaException("\"" + slotType.get() + "\" is not a valid module slot type. Viable arguments are: " + StringUtil.enumToString(EnumModuleSlot.values()));
             }
         } else {
-            moduleItem = getModules().get(slot);
+            moduleItem = getModules().get(slot - 1);
         }
         RobotModule module = RobotModule.get(moduleItem);
         if(module == null) return false;
@@ -174,4 +213,18 @@ public class RobotAPI implements ILuaAPI {
     public String[] getNames() {
         return new String[] {"robot"};
     }
+
+    /*
+        A list of potential methods to expose for the future
+        getRobotsOfSameCommandGroup()
+            Respect access rights!
+        entity.getLastAttacker();
+        entity.getLastHurtByMob();
+        entity.getLastDamageSource();
+        entity.getLastHurtMob();
+        entity.getBoundingBox();
+        entity.getMobType();
+        entity.getAirSupply();
+        entity.getMaxAirSupply();
+     */
 }
