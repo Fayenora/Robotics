@@ -28,10 +28,6 @@ public class ShieldBehavior {
     public static void shieldedEntityHit(LivingAttackEvent event) {
         LivingEntity entity = event.getEntity();
         if(!entity.getCapability(ModCapabilities.SHIELDED).isPresent()) return;
-        if(entity.invulnerableTime > 0) {
-            event.setCanceled(true);
-            return;
-        }
         IShielded shield = entity.getCapability(ModCapabilities.SHIELDED).resolve().get();
         if(!shield.isShielded()) return;
         DamageSource source = event.getSource();
@@ -39,7 +35,7 @@ public class ShieldBehavior {
                 source.is(DamageTypeTags.BYPASSES_EFFECTS) ||
                 source.is(DamageTypeTags.NO_IMPACT)) return;
 
-        shield.damage(event.getAmount());
+        if(entity.invulnerableTime <= 0) shield.damage(event.getAmount());
         event.setCanceled(true);
     }
 
