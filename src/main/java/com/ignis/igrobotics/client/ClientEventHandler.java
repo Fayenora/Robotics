@@ -50,8 +50,7 @@ public class ClientEventHandler {
             event.getToolTip().addAll(module.getPerks().getDisplayString());
         }
         RobotPart part = RobotPart.getFromItem(stack.getItem());
-        if(part == null) return;
-        if(part.getMaterial() != EnumRobotMaterial.NONE) {
+        if(part != null && part.getMaterial() != EnumRobotMaterial.NONE) {
             event.getToolTip().addAll(part.getPerks().getDisplayString());
         }
         if(stack.getItem() instanceof CommanderItem) {
