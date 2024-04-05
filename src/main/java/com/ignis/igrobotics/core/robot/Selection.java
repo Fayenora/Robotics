@@ -7,7 +7,8 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	
 	private SelectionType<A> type;
 	private A target;
-	
+
+	// TODO Make private, move to method
 	public Selection(A value) {
 		set(value);
 	}

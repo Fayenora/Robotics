@@ -21,7 +21,7 @@ public class ModEntityTypes {
 
 
     public static final RegistryObject<EntityType<StompedUpBlockEntity>> STOMPED_BLOCK = ENTITY_TYPES.register("stomped_block",
-            () -> EntityType.Builder.of((EntityType.EntityFactory<StompedUpBlockEntity>) (type, level) -> new StompedUpBlockEntity(level), MobCategory.AMBIENT)
+            () -> EntityType.Builder.of((EntityType.EntityFactory<StompedUpBlockEntity>) (type, level) -> new StompedUpBlockEntity(level), MobCategory.MISC)
                     .sized(1, 1).build(new ResourceLocation(Robotics.MODID, "stomped_block").toString()));
 
 }
