@@ -5,7 +5,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.blockentity.*;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
-import com.ignis.igrobotics.core.IRecipeSerializer;
+import com.ignis.igrobotics.common.recipes.IRecipeSerializer;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.integration.cc.RedstoneIntegrator;
 import net.minecraft.resources.ResourceLocation;

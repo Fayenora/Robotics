@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.network.messages.IMessage;

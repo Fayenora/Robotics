@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common.entity.ai;
+package com.ignis.igrobotics.common;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;

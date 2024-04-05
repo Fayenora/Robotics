@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.util.Optional;
 
-public class FileUtils {
+public class FileUtil {
 
     public static void copyFromDefault(String defaultConfigFile, File to) {
         try {

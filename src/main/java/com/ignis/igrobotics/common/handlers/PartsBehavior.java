@@ -1,9 +1,9 @@
-package com.ignis.igrobotics.common;
+package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
@@ -24,7 +24,7 @@ public class PartsBehavior {
             Random r = new Random();
             for(RobotPart part : parts.getBodyParts()) {
                 if (parts.hasBodyPart(part.getPart()) && r.nextDouble() < RoboticsConfig.general.limbDropChance.get()) {
-                    ItemStackUtils.dropItem(entity, part.getItemStack(1));
+                    InventoryUtil.dropItem(entity, part.getItemStack(1));
                 }
             }
         });

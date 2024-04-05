@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
-public class ItemStackUtils {
+public class InventoryUtil {
 
 	public static void dropItem(Entity entity, ItemStack stack) {
 		dropItem(entity.level, entity.xOld, entity.yOld, entity.zOld, stack);

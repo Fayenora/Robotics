@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.entity.ai;
 
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.DimensionNavigator;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;

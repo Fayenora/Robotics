@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.core;
 
+import com.ignis.igrobotics.common.recipes.IRecipeSerializer;
 import com.ignis.igrobotics.core.util.Lang;
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.network.chat.Component;

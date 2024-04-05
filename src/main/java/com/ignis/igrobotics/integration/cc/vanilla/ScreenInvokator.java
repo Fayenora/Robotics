@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraftforge.fml.ModList;
 
-import static com.ignis.igrobotics.common.RobotBehavior.hasAccess;
+import static com.ignis.igrobotics.common.handlers.RobotBehavior.hasAccess;
 
 public class ScreenInvokator {
 

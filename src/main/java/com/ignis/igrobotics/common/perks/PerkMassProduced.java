@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.perks;
 
-import com.ignis.igrobotics.common.PerkBehavior;
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.PerkBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;

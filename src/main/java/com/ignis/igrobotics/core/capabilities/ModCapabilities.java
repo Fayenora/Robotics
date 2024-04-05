@@ -2,7 +2,7 @@ package com.ignis.igrobotics.core.capabilities;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.ChunkLoadingHandler;
+import com.ignis.igrobotics.common.handlers.ChunkLoadingHandler;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.chunkloading.ChunkLoadingCapability;

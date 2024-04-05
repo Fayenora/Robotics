@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.entity.ai;
 
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +40,7 @@ public class PickupGoal extends FollowGoal {
         if(!mob.wantsToPickUp(stack)) return false;
         AtomicBoolean hasSpace = new AtomicBoolean(false);
         entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
-            hasSpace.set(ItemStackUtils.insert(inventory, stack, true).isEmpty());
+            hasSpace.set(InventoryUtil.insert(inventory, stack, true).isEmpty());
         });
         return hasSpace.get();
     }

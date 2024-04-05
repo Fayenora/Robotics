@@ -6,7 +6,7 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.core.robot.Selection;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModItems;
@@ -67,7 +67,7 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 			Player player = Minecraft.getInstance().player;
 			if(player == null) return;
 			buttonSelectPos = new ButtonElement(getX() + 8, getY() + height - 8 - 17, 17, 17, button -> {
-				ItemStack stack = ItemStackUtils.searchPlayerForItem(player, ModItems.COMMANDER.get(), itemStack -> CommanderItem.getRememberedPos(itemStack) != null);
+				ItemStack stack = InventoryUtil.searchPlayerForItem(player, ModItems.COMMANDER.get(), itemStack -> CommanderItem.getRememberedPos(itemStack) != null);
 				if(stack == null) return;
 				selection.set(CommanderItem.getRememberedPos(stack));
 				//TODO Using an entity to set the position would require contacting the server

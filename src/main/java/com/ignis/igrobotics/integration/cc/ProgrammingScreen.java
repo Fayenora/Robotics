@@ -3,7 +3,7 @@ package com.ignis.igrobotics.integration.cc;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

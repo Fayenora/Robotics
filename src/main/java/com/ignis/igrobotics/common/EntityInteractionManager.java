@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.RobotFakePlayerFactory;
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;

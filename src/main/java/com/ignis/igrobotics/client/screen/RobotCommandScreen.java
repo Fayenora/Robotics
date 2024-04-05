@@ -8,7 +8,7 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.CommandElement;
 import com.ignis.igrobotics.client.screen.elements.ScrollableElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.CommandType;
 import com.ignis.igrobotics.core.robot.RobotCommand;

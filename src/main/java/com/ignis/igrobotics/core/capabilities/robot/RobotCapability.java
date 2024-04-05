@@ -14,7 +14,7 @@ import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -78,7 +78,7 @@ public class RobotCapability implements IRobot {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            ItemStackUtils.saveAllItems(nbt, modules.get(slot), slot.name());
+            InventoryUtil.saveAllItems(nbt, modules.get(slot), slot.name());
         }
         nbt.putBoolean("active", isActive());
         nbt.putInt("overlays", dataManager.get(RENDER_OVERLAYS));
@@ -93,7 +93,7 @@ public class RobotCapability implements IRobot {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            setModules(slot, ItemStackUtils.loadAllItems(nbt, slot.name()));
+            setModules(slot, InventoryUtil.loadAllItems(nbt, slot.name()));
         }
         setActivation(nbt.getBoolean("active"));
         dataManager.set(RENDER_OVERLAYS, nbt.getInt("overlays"));
@@ -214,7 +214,7 @@ public class RobotCapability implements IRobot {
             ItemStack oldModule = modules.get(slotType).get(i);
             if(oldModule.isEmpty()) continue;
             setModule(slotType, i, ItemStack.EMPTY);
-            ItemStackUtils.dropItem(entity, oldModule);
+            InventoryUtil.dropItem(entity, oldModule);
         }
         NonNullList<ItemStack> list = NonNullList.withSize(amount, ItemStack.EMPTY);
         for(int i = 0; i < Math.min(amount, modules.get(slotType).size()); i++) {

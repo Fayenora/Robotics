@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.chunkloading;
 
-import com.ignis.igrobotics.common.ChunkLoadingHandler;
+import com.ignis.igrobotics.common.handlers.ChunkLoadingHandler;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;

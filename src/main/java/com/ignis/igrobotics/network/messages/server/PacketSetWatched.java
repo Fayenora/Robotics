@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.common.EffectSynchronizer;
+import com.ignis.igrobotics.common.handlers.EffectSynchronizer;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.client.PacketSetEntityEffects;

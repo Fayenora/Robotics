@@ -38,7 +38,7 @@ public class PosUtil {
     }
 
     public static GlobalPos readPos(CompoundTag tag) {
-        ResourceKey<Level> dim = NBTUtils.deserializeKey(Registries.DIMENSION, tag.get("dim"));
+        ResourceKey<Level> dim = NBTUtil.deserializeKey(Registries.DIMENSION, tag.get("dim"));
         if(dim == null) {
             dim = ServerLifecycleHooks.getCurrentServer().overworld().dimension();
         }
@@ -47,7 +47,7 @@ public class PosUtil {
 
     public static CompoundTag writePos(GlobalPos pos) {
         CompoundTag tag = NbtUtils.writeBlockPos(pos.pos());
-        tag.put("dim", NBTUtils.serializeKey(pos.dimension()));
+        tag.put("dim", NBTUtil.serializeKey(pos.dimension()));
         return tag;
     }
 

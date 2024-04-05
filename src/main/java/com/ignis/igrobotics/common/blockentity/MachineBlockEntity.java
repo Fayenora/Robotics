@@ -6,7 +6,7 @@ import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.MachineInventory;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -105,7 +105,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         inventory = new MachineInventory(this, inventorySize);
 
         RECIPES = machine.getRecipes();
-        currentlyProcessedItems = ItemStackUtils.full(inputs.length, ItemStack.EMPTY);
+        currentlyProcessedItems = InventoryUtil.full(inputs.length, ItemStack.EMPTY);
         this.inputs = inputs;
         this.outputs = outputs;
     }
@@ -146,7 +146,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
 
                     //Evaluate the next recipe
                     machine.currentRecipe = machine.getRecipe();
-                    machine.currentlyProcessedItems = ItemStackUtils.full(machine.inputs.length, ItemStack.EMPTY);
+                    machine.currentlyProcessedItems = InventoryUtil.full(machine.inputs.length, ItemStack.EMPTY);
                     if(machine.hasRecipe()) { //Directly head to the next recipe, if present
                         machine.onMachineStart();
                         machine.consumeEnergy(machine.currentRecipe);
@@ -198,12 +198,12 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     protected MachineRecipe<?> getRecipe(ItemStack[] inputStacks) {
         ItemStack[] outputStacks = getStacks(outputs);
 
-        if(!ItemStackUtils.areBeneathMaxStackSize(outputStacks) || inputStacks.length == 0) {
+        if(!InventoryUtil.areBeneathMaxStackSize(outputStacks) || inputStacks.length == 0) {
             return null;
         }
 
         for(MachineRecipe<?> recipe : RECIPES) {
-            if(recipe.matches(this, level) && (ItemStackUtils.areEmpty(outputStacks) || ItemStackUtils.areItemsEqual(outputStacks, recipe.getOutputs()))) {
+            if(recipe.matches(this, level) && (InventoryUtil.areEmpty(outputStacks) || InventoryUtil.areItemsEqual(outputStacks, recipe.getOutputs()))) {
                 return recipe;
             }
         }
@@ -233,7 +233,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
             currentlyProcessedItems[i] = getStacks(inputs)[i].copy();
 
             if(recipe.getInputs()[i] != null && !(recipe.getInputs()[i].isEmpty())) {
-                amount = (ItemStackUtils.getCount(recipe.getInputs()[i]));
+                amount = (InventoryUtil.getCount(recipe.getInputs()[i]));
                 inventory.extractItem(inputs[i], amount, false);
             }
 
@@ -338,7 +338,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         compound.putInt("runTime", this.runTime);
         compound.putInt("currentRunTime", this.currentRunTime);
 
-        if(!ItemStackUtils.areEmpty(currentlyProcessedItems)) {
+        if(!InventoryUtil.areEmpty(currentlyProcessedItems)) {
             ListTag processedItems = new ListTag();
             for(ItemStack stack : currentlyProcessedItems) {
                 processedItems.add(stack.serializeNBT());
@@ -355,7 +355,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
 
         ListTag tagList = compound.getList("ProcessedItems", new CompoundTag().getId());
         if(tagList.size() == 0) {
-            currentlyProcessedItems = ItemStackUtils.full(inputs.length, ItemStack.EMPTY);
+            currentlyProcessedItems = InventoryUtil.full(inputs.length, ItemStack.EMPTY);
         } else {
             for(int i = 0; i < Math.min(tagList.size(), currentlyProcessedItems.length); i++) {
                 currentlyProcessedItems[i] = ItemStack.of(tagList.getCompound(i));

@@ -1,13 +1,13 @@
 package com.ignis.igrobotics.common.entity;
 
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.common.entity.ai.RangedBowAttack;
 import com.ignis.igrobotics.common.entity.ai.RangedCrossbowAttack;
 import com.ignis.igrobotics.common.entity.ai.RangedGenericAttack;
 import com.ignis.igrobotics.common.entity.ai.ReachAcrossDimensionGoal;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModSounds;
@@ -133,7 +133,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         if(getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
             Optional<IItemHandler> inventory = getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
             if(inventory.isPresent()) {
-                stack.setCount(stack.getCount() - ItemStackUtils.insert(inventory.get(), stack, false).getCount());
+                stack.setCount(stack.getCount() - InventoryUtil.insert(inventory.get(), stack, false).getCount());
                 return stack;
             }
         }

@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.items;
 
 import com.ignis.igrobotics.client.menu.CommanderMenu;
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;
@@ -15,7 +15,7 @@ import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.robot.RobotView;
 import com.ignis.igrobotics.core.robot.Selection;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModCommands;
@@ -207,13 +207,13 @@ public class CommanderItem extends Item {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if(blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
             if(state.getAnalogOutputSignal(level, pos) > 10) {
-                ItemStack dominantItem = ItemStackUtils.dominantItem(blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
+                ItemStack dominantItem = InventoryUtil.dominantItem(blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
                 RobotCommand retrieve = new RobotCommand(ModCommands.RETRIEVE, List.of(new Selection<>(dominantItem), new Selection<>(pos)));
                 if(addNewCommand(player, mob, retrieve, true, "commandGroup.command.retrieve", dominantItem.getItem())) {
                     return;
                 }
             } else if(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
-                ItemStack dominantItem = ItemStackUtils.dominantItem(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
+                ItemStack dominantItem = InventoryUtil.dominantItem(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
                 RobotCommand store = new RobotCommand(ModCommands.STORE, List.of(new Selection<>(dominantItem), new Selection<>(pos)));
                 if(addNewCommand(player, mob, store, true, "commandGroup.command.store", dominantItem.getItem())) {
                     return;

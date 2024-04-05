@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.commands;
 
-import com.ignis.igrobotics.common.CommandBehavior;
+import com.ignis.igrobotics.common.handlers.CommandBehavior;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;

@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.core;
 
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

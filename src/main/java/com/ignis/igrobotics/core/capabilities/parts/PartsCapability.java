@@ -6,7 +6,7 @@ import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -93,14 +93,14 @@ public class PartsCapability implements IPartBuilt {
 	public void destroyBodyPart(EnumRobotPart part) {
 		if(!RoboticsConfig.general.limbDestruction.get()) return;
 		RobotPart robotPart = getBodyPart(part);
-		ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
+		InventoryUtil.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
 		entity.playSound(SoundEvents.ANVIL_FALL, 1, 1);
 		setBodyPart(part, EnumRobotMaterial.NONE);
 
 		//Drop any held items, if an arm got destroyed
 		if(part == EnumRobotPart.RIGHT_ARM || part == EnumRobotPart.LEFT_ARM) {
 			EquipmentSlot slot = Boolean.logicalXor(part == EnumRobotPart.RIGHT_ARM, entity.getMainArm() == HumanoidArm.RIGHT) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-			ItemStackUtils.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
+			InventoryUtil.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
 			entity.setItemSlot(slot, ItemStack.EMPTY);
 		}
 

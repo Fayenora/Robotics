@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common;
+package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;

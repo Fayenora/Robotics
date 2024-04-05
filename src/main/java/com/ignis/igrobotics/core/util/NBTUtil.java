@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class NBTUtils {
+public class NBTUtil {
 
     public static Tag serializeParts(RobotPart[] parts) {
         if(parts.length != 6) throw new IllegalArgumentException();

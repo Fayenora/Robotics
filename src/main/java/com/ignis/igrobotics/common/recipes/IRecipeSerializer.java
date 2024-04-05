@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.common.recipes;
 
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

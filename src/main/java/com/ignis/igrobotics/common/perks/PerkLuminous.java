@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.perks;
 
 
-import com.ignis.igrobotics.common.PerkBehavior;
+import com.ignis.igrobotics.common.handlers.PerkBehavior;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.util.Lang;

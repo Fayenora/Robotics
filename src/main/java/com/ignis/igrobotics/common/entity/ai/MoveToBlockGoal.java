@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.common.DimensionNavigator;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.common.blocks.StorageBlock;

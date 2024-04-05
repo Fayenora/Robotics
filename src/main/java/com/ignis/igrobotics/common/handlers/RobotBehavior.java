@@ -1,7 +1,8 @@
-package com.ignis.igrobotics.common;
+package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.RoboticsMenus;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.AbstractRangedAttackGoal;
 import com.ignis.igrobotics.common.entity.ai.RetrieveGoal;
@@ -15,7 +16,7 @@ import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.definitions.ModSounds;
@@ -163,7 +164,7 @@ public class RobotBehavior {
                         }
                         for(EnumModuleSlot slot : EnumModuleSlot.values()) {
                             for(ItemStack stack : robot.getModules(slot)) {
-                                ItemStackUtils.dropItem(entity, stack);
+                                InventoryUtil.dropItem(entity, stack);
                             }
                         }
                     })

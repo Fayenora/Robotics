@@ -5,7 +5,7 @@ import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.util.NBTUtils;
+import com.ignis.igrobotics.core.util.NBTUtil;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
 import net.minecraft.core.BlockPos;
@@ -103,7 +103,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         tag.putUUID("uuid", uuid);
         tag.putString("name", name);
         tag.putInt("color", color.getId());
-        tag.put("parts", NBTUtils.serializeParts(parts));
+        tag.put("parts", NBTUtil.serializeParts(parts));
         tag.putByte("state", (byte) state.ordinal());
         tag.put("pos", PosUtil.writePos(lastKnownPosition));
         return tag;
@@ -114,7 +114,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         uuid = nbt.getUUID("uuid");
         name = nbt.getString("name");
         color = DyeColor.byId(nbt.getInt("color"));
-        parts = NBTUtils.deserializeParts(nbt.get("parts"));
+        parts = NBTUtil.deserializeParts(nbt.get("parts"));
         state = RobotState.values()[nbt.getByte("state")];
         lastKnownPosition = PosUtil.readPos(nbt.getCompound("pos"));
     }

@@ -7,7 +7,7 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.*;
 import com.ignis.igrobotics.client.screen.selectors.EntitySelector;
 import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.common.blockentity.EntityLevelStorage;
 import com.ignis.igrobotics.core.access.AccessConfig;
 import com.ignis.igrobotics.core.access.EnumPermission;

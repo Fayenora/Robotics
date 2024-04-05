@@ -6,7 +6,7 @@ import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import net.minecraft.network.FriendlyByteBuf;
@@ -83,7 +83,7 @@ public class PacketComponentAction implements IMessage {
                     Vec3 pos = Vec3.atCenterOf(data.getAsPos()).relative(blockEntity.getBlockState().getValue(MachineBlock.FACING), 0.6);
                     storage.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                         for(RobotPart part : parts.getBodyParts()) {
-                            ItemStackUtils.dropItem(level, pos.x, pos.y, pos.z, part.getItemStack(1));
+                            InventoryUtil.dropItem(level, pos.x, pos.y, pos.z, part.getItemStack(1));
                         }
                     }));
                     storage.clearEntity();

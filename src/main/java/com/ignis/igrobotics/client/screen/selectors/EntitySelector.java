@@ -7,7 +7,7 @@ import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.robot.Selection;
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
@@ -92,7 +92,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			if(player == null) return;
 			textField = new EditBox(Minecraft.getInstance().font, getX() + 8, getY() + 8, 80, 15, Component.empty());
 			buttonSelect = new ButtonElement(getX() + 8, getY() + 16 + 15, 17, 17, button -> {
-				ItemStack stack = ItemStackUtils.searchPlayerForItem(player, ModItems.COMMANDER.get(), stack1 -> CommanderItem.getRememberedEntity(stack1) != null);
+				ItemStack stack = InventoryUtil.searchPlayerForItem(player, ModItems.COMMANDER.get(), stack1 -> CommanderItem.getRememberedEntity(stack1) != null);
 
 				if(stack != null) {
 					setSelection(CommanderItem.getRememberedEntity(stack));

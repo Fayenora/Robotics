@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.shield;
 
 import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.common.handlers.ShieldBehavior;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
@@ -19,7 +20,7 @@ import java.util.UUID;
 /**
  * A shield around an entity. Requires energy to activate only if the entity has the capability to provide it.
  * Requires energy per tick only if the entity has {@link com.ignis.igrobotics.definitions.ModAttributes#ENERGY_CONSUMPTION} as attribute.
- * Behavior is defined in {@link com.ignis.igrobotics.common.ShieldBehavior}
+ * Behavior is defined in {@link ShieldBehavior}
  */
 public class ShieldCapability implements IShielded {
 
@@ -132,7 +133,7 @@ public class ShieldCapability implements IShielded {
     }
 
     private ModifiableEnergyStorage energy() {
-        if(entity.getCapability(ForgeCapabilities.ENERGY).isPresent() &&  entity.getCapability(ForgeCapabilities.ENERGY).resolve().get() instanceof ModifiableEnergyStorage modifiableEnergyStorage) {
+        if(entity.getCapability(ForgeCapabilities.ENERGY).isPresent() && entity.getCapability(ForgeCapabilities.ENERGY).resolve().get() instanceof ModifiableEnergyStorage modifiableEnergyStorage) {
             energy = modifiableEnergyStorage;
         }
         return energy;

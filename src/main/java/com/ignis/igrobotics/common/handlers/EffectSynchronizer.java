@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common;
+package com.ignis.igrobotics.common.handlers;
 
 import com.google.common.collect.HashMultimap;
 import com.ignis.igrobotics.Robotics;

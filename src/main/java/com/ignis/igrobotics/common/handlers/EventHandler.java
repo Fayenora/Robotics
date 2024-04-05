@@ -1,6 +1,7 @@
-package com.ignis.igrobotics.common;
+package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.blocks.StorageBlock;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;

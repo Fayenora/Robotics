@@ -5,7 +5,7 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.menu.RobotMenu;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.common.blockentity.EntityLevelStorage;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;

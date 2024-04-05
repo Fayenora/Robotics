@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.entity.ai;
 
-import com.ignis.igrobotics.common.RobotBehavior;
+import com.ignis.igrobotics.common.DimensionNavigator;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
 import com.ignis.igrobotics.core.util.MathUtil;
 import net.minecraft.core.BlockPos;

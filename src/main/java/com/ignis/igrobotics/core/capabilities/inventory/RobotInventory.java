@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.core.capabilities.inventory;
 
-import com.ignis.igrobotics.core.util.ItemStackUtils;
+import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +30,7 @@ public class RobotInventory extends CombinedInvWrapper implements INBTSerializab
             }
         }
         for(int i = 0; i < getSlots(); i++) {
-            ItemStackUtils.dropItem(entity, getStackInSlot(i));
+            InventoryUtil.dropItem(entity, getStackInSlot(i));
         }
     }
 
