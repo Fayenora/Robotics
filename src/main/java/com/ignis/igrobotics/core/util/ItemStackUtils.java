@@ -17,6 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class ItemStackUtils {
@@ -133,6 +134,24 @@ public class ItemStackUtils {
 		}
 
 		return list;
+	}
+
+	public static ItemStack dominantItem(IItemHandler inventory) {
+		HashMap<Item, Integer> counts = new HashMap<>(inventory.getSlots());
+		for(int i = 0; i < inventory.getSlots(); i++) {
+			ItemStack stack = inventory.getStackInSlot(i);
+			counts.putIfAbsent(stack.getItem(), 0);
+			counts.put(stack.getItem(), counts.get(stack.getItem()) + stack.getCount());
+		}
+		Item dominant = null;
+		int count = 0;
+		for(Item item : counts.keySet()) {
+			if(counts.get(item) > count) {
+				dominant = item;
+				count = counts.get(item);
+			}
+		}
+		return dominant != null ? new ItemStack(dominant) : ItemStack.EMPTY;
 	}
 	
 	/**

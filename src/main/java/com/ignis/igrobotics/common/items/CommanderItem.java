@@ -6,14 +6,21 @@ import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
+import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.robot.RobotView;
+import com.ignis.igrobotics.core.robot.Selection;
+import com.ignis.igrobotics.core.util.ItemStackUtils;
 import com.ignis.igrobotics.core.util.PosUtil;
 import com.ignis.igrobotics.definitions.ModBlocks;
+import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,7 +33,10 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -35,14 +45,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -76,6 +85,7 @@ public class CommanderItem extends Item {
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if(player.level.isClientSide()) return InteractionResult.SUCCESS;
         Optional<IRobot> optRobot = target.getCapability(ModCapabilities.ROBOT).resolve();
+        LivingEntity currentEntity = getRememberedEntity(player.level, stack);
 
         if(player.isShiftKeyDown() && optRobot.isPresent()) {
             IRobot robot = optRobot.get();
@@ -93,6 +103,21 @@ public class CommanderItem extends Item {
             return InteractionResult.CONSUME;
         }
 
+        if(currentEntity instanceof Mob mob && currentEntity.getCapability(ModCapabilities.COMMANDS).isPresent()) {
+            Selection<EntitySearch> targetSelection = new Selection<>(new EntitySearch(target.getUUID()));
+            if(!target.getType().getCategory().isFriendly()) {
+                RobotCommand attack = new RobotCommand(ModCommands.ATTACK_SPECIFIC, List.of(targetSelection));
+                if(addNewCommand(player, mob, attack, true, "commandGroup.command.attack", target.getDisplayName())) {
+                    return InteractionResult.CONSUME;
+                }
+            } else if(target.getType().getCategory() == MobCategory.CREATURE) {
+                RobotCommand defend = new RobotCommand(ModCommands.DEFEND, List.of(targetSelection));
+                if(addNewCommand(player, mob, defend, false, "commandGroup.command.defend", target.getDisplayName())) {
+                    return InteractionResult.CONSUME;
+                }
+            }
+        }
+
         rememberEntity(stack, target);
         player.sendSystemMessage(Component.translatable("commandGroup.selected.robot", target.getDisplayName()));
         return InteractionResult.CONSUME;
@@ -103,23 +128,23 @@ public class CommanderItem extends Item {
     public InteractionResult useOn(UseOnContext cxt) {
         ItemStack stack = cxt.getItemInHand();
         Level level = cxt.getLevel();
-        GlobalPos pos = GlobalPos.of(level.dimension(), cxt.getClickedPos());
+        Player player = cxt.getPlayer();
+        BlockPos pos = cxt.getClickedPos();
+        GlobalPos globalPos = GlobalPos.of(level.dimension(), pos);
         
         if(level.isClientSide()) return InteractionResult.SUCCESS;
 
         GlobalPos savedPos = getRememberedPos(stack);
         LivingEntity living = getRememberedEntity(level, stack);
 
-        //If the commander remembers a robot, make it move here
+        //If the commander remembers a robot, either add a fitting command based on circumstances, or simply make it move there
 
         if(living instanceof Mob mob && living.getCapability(ModCapabilities.ROBOT).isPresent()) {
-            living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                if(robot.isActive()) {
-                    mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, pos));
-                    RobotBehavior.playAggressionSound(living);
-                }
-            });
-            return InteractionResult.CONSUME;
+            IRobot robot = living.getCapability(ModCapabilities.ROBOT).resolve().get();
+            if(robot.isActive()) {
+                addContextDependentCommand(mob, cxt);
+                return InteractionResult.CONSUME;
+            }
         }
 
         //If the commander is pointing towards a robot in storage, make it exit and move here
@@ -130,30 +155,17 @@ public class CommanderItem extends Item {
                 BlockState state = savedLevel.getBlockState(savedPos.pos());
                 if(state.getBlock() == ModBlocks.ROBOT_STORAGE.get()) {
                     BlockEntity storage = savedLevel.getBlockEntity(state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER ? savedPos.pos().below() : savedPos.pos());
-                    if(orderEntityOutOfStorage(storage, pos)) {
+                    if(orderEntityOutOfStorage(storage, globalPos)) {
                         return InteractionResult.CONSUME;
                     }
                 }
             }
         }
         //Otherwise just remember this position (for f.e. commands)
-        CommanderItem.rememberPos(stack, pos);
+        CommanderItem.rememberPos(stack, globalPos);
         cxt.getPlayer().sendSystemMessage(Component.translatable("commandGroup.selected.pos"));
 
         return InteractionResult.CONSUME;
-    }
-
-    private boolean orderEntityOutOfStorage(@Nullable BlockEntity blockEntity, GlobalPos to) {
-        if(!(blockEntity instanceof StorageBlockEntity storage)) return false;
-        Optional<Entity> spawnedEntity = storage.exitStorage();
-        if(spawnedEntity.isEmpty()) return false;
-        if(spawnedEntity.get() instanceof Mob mob) {
-            mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, to));
-        }
-        if(spawnedEntity.get() instanceof RobotEntity robot) {
-            RobotBehavior.playAggressionSound(robot);
-        }
-        return true;
     }
 
     //Called on empty right click
@@ -184,6 +196,75 @@ public class CommanderItem extends Item {
                 buf -> RobotView.writeViews(buf, robotsOfCommandGroupView));
 
         return InteractionResultHolder.consume(stack);
+    }
+
+    private void addContextDependentCommand(Mob mob, UseOnContext cxt) {
+        Player player = cxt.getPlayer();
+        Level level = cxt.getLevel();
+        BlockPos pos = cxt.getClickedPos();
+        GlobalPos globalPos = GlobalPos.of(level.dimension(), pos);
+        BlockState state = level.getBlockState(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if(blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
+            if(state.getAnalogOutputSignal(level, pos) > 10) {
+                ItemStack dominantItem = ItemStackUtils.dominantItem(blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
+                RobotCommand retrieve = new RobotCommand(ModCommands.RETRIEVE, List.of(new Selection<>(dominantItem), new Selection<>(pos)));
+                if(addNewCommand(player, mob, retrieve, true, "commandGroup.command.retrieve", dominantItem.getItem())) {
+                    return;
+                }
+            } else if(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
+                ItemStack dominantItem = ItemStackUtils.dominantItem(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
+                RobotCommand store = new RobotCommand(ModCommands.STORE, List.of(new Selection<>(dominantItem), new Selection<>(pos)));
+                if(addNewCommand(player, mob, store, true, "commandGroup.command.store", dominantItem.getItem())) {
+                    return;
+                }
+            }
+        }
+        if(mob.getMainHandItem().getItem() instanceof BlockItem) {
+            GlobalPos sidePos = GlobalPos.of(globalPos.dimension(), pos.relative(cxt.getClickedFace()));
+            RobotCommand place = new RobotCommand(ModCommands.PLACE, List.of(new Selection<>(sidePos), new Selection<>(sidePos)));
+            if(addNewCommand(player, mob, place, true, "commandGroup.command.place")) {
+                return;
+            }
+        }
+        if(mob.getMainHandItem().isCorrectToolForDrops(level.getBlockState(pos))) {
+            RobotCommand break_command = new RobotCommand(ModCommands.BREAK, List.of(new Selection<>(globalPos), new Selection<>(globalPos)));
+            if(addNewCommand(player, mob, break_command, true, "commandGroup.command.break")) {
+                return;
+            }
+        }
+        mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, globalPos));
+        RobotBehavior.playAggressionSound(mob);
+    }
+
+    private boolean addNewCommand(Player player, Mob mob, RobotCommand command, boolean strict, String message, Object... additionalInfo) {
+        if(!mob.getCapability(ModCapabilities.COMMANDS).isPresent()) return false;
+        ICommandable commands = mob.getCapability(ModCapabilities.COMMANDS).resolve().get();
+        if(strict) {
+            Goal goal = command.getGoal(mob);
+            if(goal == null || !goal.canUse()) return false;
+        }
+        Collection<RobotCommand> currentCommands = new HashSet<>(commands.getCommands());
+        currentCommands.add(command);
+        commands.setCommands(currentCommands);
+        List<Object> messageObjects = new ArrayList<>(Arrays.stream(additionalInfo).toList());
+        messageObjects.add(0, mob.getDisplayName());
+        player.sendSystemMessage(Component.translatable(message, messageObjects.toArray()));
+        RobotBehavior.playAggressionSound(mob);
+        return true;
+    }
+
+    private boolean orderEntityOutOfStorage(@Nullable BlockEntity blockEntity, GlobalPos to) {
+        if(!(blockEntity instanceof StorageBlockEntity storage)) return false;
+        Optional<Entity> spawnedEntity = storage.exitStorage();
+        if(spawnedEntity.isEmpty()) return false;
+        if(spawnedEntity.get() instanceof Mob mob) {
+            mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, to));
+        }
+        if(spawnedEntity.get() instanceof RobotEntity robot) {
+            RobotBehavior.playAggressionSound(robot);
+        }
+        return true;
     }
 
     public static int getID(ItemStack stack) {

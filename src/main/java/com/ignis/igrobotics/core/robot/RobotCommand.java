@@ -24,9 +24,12 @@ public class RobotCommand {
         }
     }
 
-    private RobotCommand(CommandType command_type, List<Selection<?>> selections) {
+    public RobotCommand(CommandType command_type, List<Selection<?>> selections) {
         this(command_type);
         for(int i = 0; i < selections.size(); i++) {
+            if(i <= command_type.getSelectionTypes().size() && !command_type.getSelectionTypes().get(i).equals(selections.get(i).getType())) {
+                throw new IllegalArgumentException("This command type does not support supplied selections");
+            }
             selectors.set(i, selections.get(i).clone());
         }
     }
