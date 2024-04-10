@@ -30,13 +30,13 @@ public class AssemblerMenu extends BaseMenu {
     public static final Point slot_out = new Point(80, 59);
 
     public AssemblerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public AssemblerMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.ASSEMBLER.get(), id);
         this.blockEntity = (AssemblerBlockEntity) blockEntity;
-        this.level = playerInv.player.level;
+        this.level = playerInv.player.level();
         this.data = data;
 
         addPlayerInv(playerInv, Reference.GUI_ASSEMBLER_DIMENSIONS);

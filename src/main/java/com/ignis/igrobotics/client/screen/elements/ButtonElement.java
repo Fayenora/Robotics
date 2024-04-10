@@ -5,9 +5,9 @@ import com.ignis.igrobotics.client.screen.base.IGuiTexturable;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -100,16 +100,16 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
         for(var comp : children()) {
             if(!(comp instanceof Renderable renderable)) continue;
-            renderable.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+            renderable.render(graphics, pMouseX, pMouseY, pPartialTick);
         }
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if(icons == null) return;
         Point[] currentIcons = icons[state];
 
@@ -126,16 +126,15 @@ public class ButtonElement extends Button implements IElement, IGuiTexturable {
             }
         }
 
-        poseStack.translate(0, 0, 1);
+        graphics.pose().translate(0, 0, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, resource);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(poseStack, getX(), getY(), i, j, width, height);
+        graphics.blit(resource, getX(), getY(), i, j, width, height);
 
-        drawCenteredString(poseStack, Minecraft.getInstance().font, getMessage(), getX() + this.width / 2, getY() + (height - 8) / 2, color | Mth.ceil(this.alpha * 255.0F) << 24);
+        graphics.drawCenteredString(Minecraft.getInstance().font, getMessage(), getX() + this.width / 2, getY() + (height - 8) / 2, color | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     public int getState() {

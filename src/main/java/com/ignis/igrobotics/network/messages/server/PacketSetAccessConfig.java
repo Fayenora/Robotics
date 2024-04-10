@@ -39,7 +39,7 @@ public class PacketSetAccessConfig implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        Entity entity = cxt.getSender().level.getEntity(entityId);
+        Entity entity = cxt.getSender().level().getEntity(entityId);
         if(entity == null) return;
         RobotBehavior.setAccess(scope, entity, config);
     }

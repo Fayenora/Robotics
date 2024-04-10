@@ -11,6 +11,7 @@ import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -48,37 +49,37 @@ public class FactoryModulesScreen extends BaseContainerScreen<FactoryModulesMenu
         addElement(sideBar);
     }
 
-    private void renderModuleSlots(PoseStack poseStack, EnumModuleSlot slotType, int x, int y, boolean reverse) {
+    private void renderModuleSlots(GuiGraphics graphics, EnumModuleSlot slotType, int x, int y, boolean reverse) {
         for(int i = 0; i < moduleSlots.getOrDefault(slotType, 0); i++) {
-            blit(poseStack, leftPos + x + (reverse ? -22 : 22) * (i % 4), topPos + y + (i > 3 ? 22 : 0), 229, 0, 18, 18);
+            graphics.blit(TEXTURE, leftPos + x + (reverse ? -22 : 22) * (i % 4), topPos + y + (i > 3 ? 22 : 0), 229, 0, 18, 18);
         }
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float p_97788_, int p_97789_, int p_97790_) {
+    protected void renderBg(GuiGraphics graphics, float p_97788_, int p_97789_, int p_97790_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-        renderModuleSlots(poseStack, EnumModuleSlot.SENSOR, 26, 16, false);
-        renderModuleSlots(poseStack, EnumModuleSlot.REACTOR, 26, 62, false);
-        renderModuleSlots(poseStack, EnumModuleSlot.FEET, 26, 108, false);
+        renderModuleSlots(graphics, EnumModuleSlot.SENSOR, 26, 16, false);
+        renderModuleSlots(graphics, EnumModuleSlot.REACTOR, 26, 62, false);
+        renderModuleSlots(graphics, EnumModuleSlot.FEET, 26, 108, false);
 
-        renderModuleSlots(poseStack, EnumModuleSlot.SKIN, 185, 16, true);
-        renderModuleSlots(poseStack, EnumModuleSlot.FIST, 185, 62, true);
-        renderModuleSlots(poseStack, EnumModuleSlot.DEFAULT, 185, 108, true);
+        renderModuleSlots(graphics, EnumModuleSlot.SKIN, 185, 16, true);
+        renderModuleSlots(graphics, EnumModuleSlot.FIST, 185, 62, true);
+        renderModuleSlots(graphics, EnumModuleSlot.DEFAULT, 185, 108, true);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, delta);
-        renderTooltip(poseStack, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, delta);
+        renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    protected void renderLabels(GuiGraphics graphics, int p_97809_, int p_97810_) {
         //Don't
     }
 }

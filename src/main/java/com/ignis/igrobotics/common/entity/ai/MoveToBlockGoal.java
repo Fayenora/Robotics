@@ -43,7 +43,7 @@ public class MoveToBlockGoal extends Goal {
 
     public MoveToBlockGoal(Mob mob, BlockPos target) {
         this(mob);
-        this.blockPos = determineEnterPosition(mob.level.getBlockState(target), GlobalPos.of(mob.level.dimension(), target));
+        this.blockPos = determineEnterPosition(mob.level().getBlockState(target), GlobalPos.of(mob.level().dimension(), target));
     }
 
     public MoveToBlockGoal(Mob mob, GlobalPos target) {
@@ -99,8 +99,8 @@ public class MoveToBlockGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        if(storagePos != null && mob.level.dimension().equals(storagePos.dimension()) && mob.distanceToSqr(storagePos.pos().getCenter()) < 12) {
-            BlockEntity tile = mob.level.getBlockEntity(storagePos.pos());
+        if(storagePos != null && mob.level().dimension().equals(storagePos.dimension()) && mob.distanceToSqr(storagePos.pos().getCenter()) < 12) {
+            BlockEntity tile = mob.level().getBlockEntity(storagePos.pos());
             if(tile instanceof StorageBlockEntity storage) {
                 storage.enterStorage(mob);
             }
@@ -121,7 +121,7 @@ public class MoveToBlockGoal extends Goal {
     }
 
     public boolean hasReachedTarget() {
-        return mob.level.dimension().equals(blockPos.dimension()) && blockPos.pos().closerToCenterThan(this.mob.position(), this.acceptedDistance());
+        return mob.level().dimension().equals(blockPos.dimension()) && blockPos.pos().closerToCenterThan(this.mob.position(), this.acceptedDistance());
     }
 
     @Override

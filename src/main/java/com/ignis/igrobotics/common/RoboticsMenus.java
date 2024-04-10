@@ -38,10 +38,10 @@ public class RoboticsMenus {
     public static void openMenu(Player player, MenuType<?> type, Object extraData) {
         if(!(player instanceof ServerPlayer serverPlayer)) return;
         if(extraData instanceof Integer entityId) {
-            openRobotMenu(player, type, player.level.getEntity(entityId));
+            openRobotMenu(player, type, player.level().getEntity(entityId));
         }
         if(extraData instanceof BlockPos pos) {
-            BlockEntity be = player.level.getBlockEntity(pos);
+            BlockEntity be = player.level().getBlockEntity(pos);
             if(!(be instanceof FactoryBlockEntity factory)) return;
             if(type == ModMenuTypes.FACTORY.get()) {
                 NetworkHooks.openScreen(serverPlayer,

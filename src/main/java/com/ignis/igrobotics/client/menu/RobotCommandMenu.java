@@ -17,7 +17,7 @@ public class RobotCommandMenu extends AbstractContainerMenu {
     public final LivingEntity robot;
 
     public RobotCommandMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv.player.level.getEntity(extraData.readInt()));
+        this(id, inv.player.level().getEntity(extraData.readInt()));
         robot.getCapability(ModCapabilities.COMMANDS).ifPresent(commands -> {
             commands.setCommands(RobotCommand.readFromNBT(extraData.readNbt()));
         });

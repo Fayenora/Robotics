@@ -93,14 +93,14 @@ public class PartsCapability implements IPartBuilt {
 	public void destroyBodyPart(EnumRobotPart part) {
 		if(!RoboticsConfig.general.limbDestruction.get()) return;
 		RobotPart robotPart = getBodyPart(part);
-		InventoryUtil.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
+		InventoryUtil.dropItem(entity.level(), entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
 		entity.playSound(SoundEvents.ANVIL_FALL, 1, 1);
 		setBodyPart(part, EnumRobotMaterial.NONE);
 
 		//Drop any held items, if an arm got destroyed
 		if(part == EnumRobotPart.RIGHT_ARM || part == EnumRobotPart.LEFT_ARM) {
 			EquipmentSlot slot = Boolean.logicalXor(part == EnumRobotPart.RIGHT_ARM, entity.getMainArm() == HumanoidArm.RIGHT) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-			InventoryUtil.dropItem(entity.level, entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
+			InventoryUtil.dropItem(entity.level(), entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
 			entity.setItemSlot(slot, ItemStack.EMPTY);
 		}
 

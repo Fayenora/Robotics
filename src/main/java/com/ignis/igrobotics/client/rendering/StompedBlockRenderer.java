@@ -38,7 +38,7 @@ public class StompedBlockRenderer extends EntityRenderer<StompedUpBlockEntity> {
             p_114637_.translate(-0.5D, 0.0D, -0.5D);
             var model = this.dispatcher.getBlockModel(blockstate);
             for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(stompedBlock.getStartPos())), net.minecraftforge.client.model.data.ModelData.EMPTY))
-                this.dispatcher.getModelRenderer().tesselateBlock(stompedBlock.level, model, blockstate, blockpos, p_114637_, p_114638_.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(stompedBlock.getStartPos()), OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.ModelData.EMPTY, renderType);
+                this.dispatcher.getModelRenderer().tesselateBlock(stompedBlock.level(), model, blockstate, blockpos, p_114637_, p_114638_.getBuffer(renderType), false, RandomSource.create(), blockstate.getSeed(stompedBlock.getStartPos()), OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.ModelData.EMPTY, renderType);
             p_114637_.popPose();
             super.render(stompedBlock, p_114635_, p_114636_, p_114637_, p_114638_, p_114639_);
         }

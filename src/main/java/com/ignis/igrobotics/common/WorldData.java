@@ -68,7 +68,7 @@ public class WorldData extends SavedData {
     }
 
     public void cacheRobotForCommandGroup(int commandGroup, Entity robot) {
-        if(robot.level.isClientSide) return;
+        if(robot.level().isClientSide) return;
         cacheRobotForCommandGroup(commandGroup, new RobotView(robot));
     }
 
@@ -94,7 +94,7 @@ public class WorldData extends SavedData {
         ent.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             if(robot.getCommandGroup() == 0) return;
             RobotView view = commandGroups.get(robot.getCommandGroup()).get(ent.getUUID());
-            view.updatePosition(RobotView.RobotState.IN_STORAGE, ent.level, pos);
+            view.updatePosition(RobotView.RobotState.IN_STORAGE, ent.level(), pos);
         });
     }
 
@@ -102,7 +102,7 @@ public class WorldData extends SavedData {
         ent.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             if(robot.getCommandGroup() == 0) return;
             RobotView view = commandGroups.get(robot.getCommandGroup()).get(ent.getUUID());
-            view.updatePosition(RobotView.RobotState.IN_WORLD, ent.level, ent.blockPosition());
+            view.updatePosition(RobotView.RobotState.IN_WORLD, ent.level(), ent.blockPosition());
         });
     }
 

@@ -37,7 +37,7 @@ public class PacketConstructRobot implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        BlockEntity tile = cxt.getSender().level.getBlockEntity(pos);
+        BlockEntity tile = cxt.getSender().level().getBlockEntity(pos);
         if(!(tile instanceof FactoryBlockEntity factory)) return;
 
         if(factory.hasCraftedRobotReady()) {

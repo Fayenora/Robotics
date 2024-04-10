@@ -16,6 +16,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -49,12 +50,12 @@ public class AssemblerRecipeCategory extends MachineRecipeCategory {
 	}
 
 	@Override
-	public void draw(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-		energy_bar.draw(stack, AssemblerScreen.energy_bar.x - 7, AssemblerScreen.energy_bar.y - 4);
-		arrow_down.draw(stack, AssemblerScreen.arr_down.x - 7, AssemblerScreen.arr_down.y - 4);
-		arrow_up.draw(stack, AssemblerScreen.arr_up.x - 7, AssemblerScreen.arr_up.y - 4);
-		arrow_right.draw(stack, AssemblerScreen.arr_right.x - 7, AssemblerScreen.arr_right.y - 4);
-		arrow_left.draw(stack, AssemblerScreen.arr_left.x - 7, AssemblerScreen.arr_left.y - 4);
+	public void draw(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		energy_bar.draw(graphics, AssemblerScreen.energy_bar.x - 7, AssemblerScreen.energy_bar.y - 4);
+		arrow_down.draw(graphics, AssemblerScreen.arr_down.x - 7, AssemblerScreen.arr_down.y - 4);
+		arrow_up.draw(graphics, AssemblerScreen.arr_up.x - 7, AssemblerScreen.arr_up.y - 4);
+		arrow_right.draw(graphics, AssemblerScreen.arr_right.x - 7, AssemblerScreen.arr_right.y - 4);
+		arrow_left.draw(graphics, AssemblerScreen.arr_left.x - 7, AssemblerScreen.arr_left.y - 4);
 	}
 
 	@Override

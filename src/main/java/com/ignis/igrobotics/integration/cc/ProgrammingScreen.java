@@ -6,13 +6,16 @@ import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import dan200.computercraft.client.ForgeClientHooks;
 import dan200.computercraft.client.gui.AbstractComputerScreen;
-import dan200.computercraft.client.gui.widgets.ComputerSidebar;
 import dan200.computercraft.client.gui.widgets.TerminalWidget;
+import dan200.computercraft.client.render.RenderTypes;
+import dan200.computercraft.client.render.SpriteRenderer;
 import dan200.computercraft.shared.computer.inventory.AbstractComputerMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +29,7 @@ import java.util.List;
 public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/computer.png");
+    private static final ResourceLocation sidebar = new ResourceLocation(Robotics.MODID, "gui/computer_sidebar.png");
 
     private final LivingEntity entity;
 
@@ -45,12 +49,13 @@ public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack poseStack, float p_97788_, int p_97789_, int p_97790_) {
+    protected void renderBg(@NotNull GuiGraphics graphics, float p_97788_, int p_97789_, int p_97790_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, leftPos + AbstractComputerMenu.SIDEBAR_WIDTH, topPos, 0, 117, imageWidth - AbstractComputerMenu.SIDEBAR_WIDTH, imageHeight);
-        ComputerSidebar.renderBackground(poseStack, leftPos, topPos + sidebarYOffset);
+        SpriteRenderer spriteRenderer = SpriteRenderer.createForGui(graphics, RenderTypes.GUI_SPRITES);
+
+        graphics.setColor(1, 1, 1, 1);
+        graphics.blit(TEXTURE, leftPos, topPos + sidebarYOffset, 48, 0, 17, 40);
+        graphics.blit(TEXTURE, leftPos + AbstractComputerMenu.SIDEBAR_WIDTH, topPos, 0, 117, imageWidth - AbstractComputerMenu.SIDEBAR_WIDTH, imageHeight);
     }
 
     @Override

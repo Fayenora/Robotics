@@ -10,6 +10,7 @@ import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,11 +36,11 @@ public class RobotElement extends ButtonElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(poseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        InventoryScreen.renderEntityInInventoryFollowsAngle(poseStack, getX() + 10, getY() + 23, 10, 0, 0, robot);
-        RenderUtil.drawString(poseStack, Lang.localise(view.getState().toString()), getX() + 100, getY() + 3, Reference.FONT_COLOR, 0.6f);
-        RenderUtil.drawString(poseStack, PosUtil.prettyPrint(view.getLastKnownPosition()), getX() + 100, getY() + 9, Reference.FONT_COLOR, 0.6f);
+        InventoryScreen.renderEntityInInventoryFollowsAngle(graphics, getX() + 10, getY() + 23, 10, 0, 0, robot);
+        RenderUtil.drawString(graphics, Lang.localise(view.getState().toString()), getX() + 100, getY() + 3, Reference.FONT_COLOR, 0.6f);
+        RenderUtil.drawString(graphics, PosUtil.prettyPrint(view.getLastKnownPosition()), getX() + 100, getY() + 9, Reference.FONT_COLOR, 0.6f);
     }
 }

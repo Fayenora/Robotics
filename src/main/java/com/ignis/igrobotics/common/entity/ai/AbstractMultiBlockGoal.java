@@ -71,7 +71,7 @@ public abstract class AbstractMultiBlockGoal extends Goal {
 
     @Override
     public void tick() {
-        if(!entity.level.dimension().equals(dim)) {
+        if(!entity.level().dimension().equals(dim)) {
             navigator.navigateTo(GlobalPos.of(dim, new BlockPos(minX, minY, minZ)));
         }
         Level level = entity.getServer().getLevel(dim);

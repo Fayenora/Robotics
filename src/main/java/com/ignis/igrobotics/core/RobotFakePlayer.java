@@ -37,7 +37,7 @@ public class RobotFakePlayer extends FakePlayer {
     protected final Mob mob;
 
     public RobotFakePlayer(Mob mob, GameProfile name) {
-        super((ServerLevel) mob.level, name);
+        super((ServerLevel) mob.level(), name);
         this.mob = mob;
     }
 

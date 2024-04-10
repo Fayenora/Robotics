@@ -11,6 +11,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,8 +31,8 @@ public class ItemSelector extends SelectorElement<ItemStack> {
 	}
 
 	@Override
-	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		RenderUtil.drawItemStack(poseStack, selection.get(), getX() + 1, getY() + 1);
+	public void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		RenderUtil.drawItemStack(graphics, selection.get(), getX() + 1, getY() + 1);
 	}
 
 	class GuiSelectItem extends GuiElement {
@@ -56,9 +57,9 @@ public class ItemSelector extends SelectorElement<ItemStack> {
 		}
 
 		@Override
-		public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-			super.render(poseStack, mouseX, mouseY, delta);
-			RenderUtil.drawString(poseStack, Lang.localise("pick_with_jei"), getX() + 5, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.55f);
+		public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+			super.render(graphics, mouseX, mouseY, delta);
+			RenderUtil.drawString(graphics, Lang.localise("pick_with_jei"), getX() + 5, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.55f);
 		}
 	}
 

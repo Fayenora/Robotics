@@ -22,13 +22,13 @@ public class FactoryMenu extends BaseMenu {
     public final ContainerData data;
 
     public FactoryMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public FactoryMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.FACTORY.get(), id);
         this.blockEntity = (FactoryBlockEntity) blockEntity;
-        this.level = playerInv.player.level;
+        this.level = playerInv.player.level();
         this.data = data;
 
         addDataSlots(data);

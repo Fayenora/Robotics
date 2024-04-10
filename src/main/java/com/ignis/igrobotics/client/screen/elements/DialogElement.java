@@ -8,6 +8,7 @@ import com.ignis.igrobotics.core.util.StringUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
@@ -71,8 +72,8 @@ public class DialogElement extends GuiElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        super.render(poseStack, mouseX, mouseY, delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
         Font font = Minecraft.getInstance().font;
         if(texts == null) {
             texts = StringUtil.calculateStringSplit(font, text, (int) (width * (1 / TEXT_SIZE)));
@@ -88,7 +89,7 @@ public class DialogElement extends GuiElement {
         int offset = (thisShape.height / texts.size() - Minecraft.getInstance().font.lineHeight) / 2 + 5;
         for(int i = 0; i < texts.size(); i++) {
             int y_offset = i * (thisShape.height / texts.size());
-            RenderUtil.drawCenteredString(poseStack, texts.get(i), getX() + (width / 2), getY() + y_offset + offset, Reference.FONT_COLOR, TEXT_SIZE, width - 10);
+            RenderUtil.drawCenteredString(graphics, texts.get(i), getX() + (width / 2), getY() + y_offset + offset, Reference.FONT_COLOR, TEXT_SIZE, width - 10);
         }
     }
 }

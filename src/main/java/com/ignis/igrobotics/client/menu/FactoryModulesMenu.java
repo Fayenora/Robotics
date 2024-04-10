@@ -29,13 +29,13 @@ public class FactoryModulesMenu extends BaseMenu {
     private final Map<EnumModuleSlot, Integer> moduleSlots;
 
     public FactoryModulesMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, extraData.readMap(buf -> buf.readEnum(EnumModuleSlot.class), FriendlyByteBuf::readInt), inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
+        this(id, inv, extraData.readMap(buf -> buf.readEnum(EnumModuleSlot.class), FriendlyByteBuf::readInt), inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public FactoryModulesMenu(int id, Inventory playerInv, Map<EnumModuleSlot, Integer> moduleSlots, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.FACTORY_MODULES.get(), id);
         this.blockEntity = (FactoryBlockEntity) blockEntity;
-        this.level = playerInv.player.level;
+        this.level = playerInv.player.level();
         this.data = data;
         this.moduleSlots = moduleSlots;
 

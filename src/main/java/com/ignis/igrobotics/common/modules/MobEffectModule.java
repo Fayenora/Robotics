@@ -13,7 +13,7 @@ public class MobEffectModule implements IModuleAction {
 
     @Override
     public boolean execute(LivingEntity caster, int duration) {
-        if(caster.level.isClientSide || !caster.isAlive()) {
+        if(caster.level().isClientSide || !caster.isAlive()) {
             return false;
         }
         for(MobEffectInstance effect : effects) {

@@ -24,7 +24,7 @@ public class RobotMenu extends BaseMenu {
     public final ContainerData data;
 
     public RobotMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getEntity(extraData.readInt()), new SimpleContainerData(2));
+        this(id, inv, inv.player.level().getEntity(extraData.readInt()), new SimpleContainerData(2));
     }
 
     public RobotMenu(int id, Inventory playerInv, Entity entity, ContainerData data) {

@@ -35,21 +35,21 @@ public class ModCommands {
         GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (GlobalPos) selections[0].get()));
         ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal<>(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
-            if(!(robot.level instanceof ServerLevel server)) return null;
+            if(!(robot.level() instanceof ServerLevel server)) return null;
             EntitySearch search = (EntitySearch) selections[0].get();
             Entity entity = search.commence(server, robot.blockPosition());
             if(!(entity instanceof LivingEntity)) return null;
             return new SpecificTargetGoal(robot, (LivingEntity) entity);
         });
         DEFEND.setAISupplier((robot, selections) -> {
-            if(!(robot.level instanceof ServerLevel server)) return null;
+            if(!(robot.level() instanceof ServerLevel server)) return null;
             EntitySearch search = (EntitySearch) selections[0].get();
             Entity entity = search.commence(server, robot.blockPosition());
             if(!(entity instanceof LivingEntity)) return null;
             return new DefendGoal(robot, (LivingEntity) entity, false);
         });
         FOLLOW.setAISupplier((robot, selections) -> {
-            if(!(robot.level instanceof ServerLevel server)) return null;
+            if(!(robot.level() instanceof ServerLevel server)) return null;
             EntitySearch search = (EntitySearch) selections[0].get();
             int range = (int) selections[1].get();
             Entity entity = search.commence(server, robot.blockPosition());

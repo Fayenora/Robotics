@@ -57,7 +57,7 @@ public class PacketRequestEntitySearch implements IMessage {
 	public void handle(NetworkEvent.Context cxt) {
 		ServerPlayer player = cxt.getSender();
 		if(player == null) return;
-		if(!(player.level instanceof ServerLevel server)) return;
+		if(!(player.level() instanceof ServerLevel server)) return;
 		Entity result = search.commence(server, player.blockPosition());
 		//Let the client know, even if the search did not find anything
 		NetworkHandler.sendToPlayer(new PacketGuiData(parentGuiPath, result), player);

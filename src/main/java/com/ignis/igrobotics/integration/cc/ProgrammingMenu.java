@@ -21,7 +21,7 @@ public class ProgrammingMenu extends ComputerMenuWithoutInventory implements IPr
 
     public ProgrammingMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         super((MenuType<ProgrammingMenu>) ModMenuTypes.COMPUTER.get(), id, inv, new ComputerContainerData(extraData));
-        this.robot = (LivingEntity) inv.player.level.getEntity(extraData.readInt());
+        this.robot = (LivingEntity) inv.player.level().getEntity(extraData.readInt());
     }
 
     public ProgrammingMenu(int id, Inventory player, Entity robot, Predicate<Player> canUse, ServerComputer computer) {

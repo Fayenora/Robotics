@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 public class InventoryUtil {
 
 	public static void dropItem(Entity entity, ItemStack stack) {
-		dropItem(entity.level, entity.xOld, entity.yOld, entity.zOld, stack);
+		dropItem(entity.level(), entity.xOld, entity.yOld, entity.zOld, stack);
 	}
 
 	public static void dropItem(Level level, double x, double y, double z, ItemStack stack) {

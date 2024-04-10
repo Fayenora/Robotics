@@ -21,7 +21,7 @@ public class DashModule implements IModuleAction {
 
     @Override
     public boolean execute(LivingEntity caster, int duration) {
-        if(caster.level.isClientSide || !caster.isAlive()) {
+        if(caster.level().isClientSide || !caster.isAlive()) {
             return false;
         }
         caster.addDeltaMovement(direction.apply(caster).scale(force));

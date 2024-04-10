@@ -35,7 +35,7 @@ public class PacketSetWatched implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        Entity ent = cxt.getSender().level.getEntity(entityId);
+        Entity ent = cxt.getSender().level().getEntity(entityId);
         if(!(ent instanceof LivingEntity)) return;
 
         if(watch) {

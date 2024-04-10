@@ -6,6 +6,7 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -33,12 +34,11 @@ public class EnergyBarElement extends GuiElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Reference.ENERGY_BAR);
         int k = scaleEnergy(height);
-        blit(poseStack, getX(), getY() + height - k, 0, height - k, width, k);
+        graphics.blit(Reference.ENERGY_BAR, getX(), getY() + height - k, 0, height - k, width, k);
     }
 
     @Override

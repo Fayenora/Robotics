@@ -64,7 +64,7 @@ public abstract class AbstractRangedAttackGoal extends Goal {
         Vec3 attackVec = attackVector(projectile, target);
         projectile.shoot(attackVec.x, attackVec.y, attackVec.z, projectile instanceof ThrownPotion ? 0.75f : 1.6f, inaccuracy);
         attacker.playSound(getSound(weapon), 1, 1 / (attacker.getRandom().nextFloat() * 0.4f + 0.8f));
-        attacker.level.addFreshEntity(projectile);
+        attacker.level().addFreshEntity(projectile);
         weapon.hurtAndBreak(1, attacker, living -> living.broadcastBreakEvent(getWeaponHand()));
         consumeAmmunition(attacker, weapon, ammunition);
     }

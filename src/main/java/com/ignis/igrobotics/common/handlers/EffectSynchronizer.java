@@ -22,7 +22,7 @@ public class EffectSynchronizer {
     private static final HashMultimap<Integer, UUID> entitiesToSynchronize = HashMultimap.create();
 
     public static void onEffectChanged(LivingEntity entity, MobEffectInstance instance, boolean toAdd) {
-        if(entity.level.isClientSide()) return;
+        if(entity.level().isClientSide()) return;
         if(!entitiesToSynchronize.containsKey(entity.getId())) return;
         Collection<MobEffectInstance> effectInstances = new ArrayList<>(entity.getActiveEffects());
         if(toAdd) {
@@ -30,7 +30,7 @@ public class EffectSynchronizer {
         } else effectInstances.remove(instance);
 
         for(UUID uuid : entitiesToSynchronize.get(entity.getId())) {
-            ServerPlayer player = (ServerPlayer) entity.level.getPlayerByUUID(uuid);
+            ServerPlayer player = (ServerPlayer) entity.level().getPlayerByUUID(uuid);
             NetworkHandler.sendToPlayer(new PacketSetEntityEffects(entity.getId(), effectInstances), player);
         }
     }

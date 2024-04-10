@@ -5,6 +5,9 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetWatched;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.network.chat.Component;
@@ -39,15 +42,15 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        renderEffects(pPoseStack, entity.getActiveEffects(), pMouseX, pMouseY);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        renderEffects(graphics, entity.getActiveEffects(), pMouseX, pMouseY);
     }
 
     private static final int WIDTH_SMALL = 32;
     private static final int WIDTH_LARGE = 120;
 
-    private void renderEffects(PoseStack pPoseStack, Collection<MobEffectInstance> effects, int pMouseX, int pMouseY) {
+    private void renderEffects(GuiGraphics graphics, Collection<MobEffectInstance> effects, int pMouseX, int pMouseY) {
         int i = this.leftPos - WIDTH_LARGE - 2;
         boolean compact = i >= 0;
         if(!compact) i = this.leftPos - WIDTH_SMALL - 2;
@@ -60,10 +63,10 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
 
 
             Iterable<MobEffectInstance> iterable = effects.stream().filter(this::shouldRenderEffect).sorted().collect(Collectors.toList());
-            this.renderBackgrounds(pPoseStack, i, k, iterable, compact);
-            this.renderIcons(pPoseStack, i, k, iterable, compact);
+            this.renderBackgrounds(graphics, i, k, iterable, compact);
+            this.renderIcons(graphics, i, k, iterable, compact);
             if (compact) {
-                this.renderLabels(pPoseStack, i, k, iterable);
+                this.renderLabels(graphics, i, k, iterable);
             } else if (pMouseX >= i && pMouseX <= i + 33) {
                 int l = this.topPos;
                 MobEffectInstance mobeffectinstance = null;
@@ -78,7 +81,7 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
 
                 if (mobeffectinstance != null) {
                     List<Component> list = List.of(this.getEffectName(mobeffectinstance), MobEffectUtil.formatDuration(mobeffectinstance, 1.0F));
-                    this.renderTooltip(pPoseStack, list, Optional.empty(), pMouseX, pMouseY);
+                    graphics.renderTooltip(Minecraft.getInstance().font, list, Optional.empty(), pMouseX, pMouseY);
                 }
             }
 
@@ -89,16 +92,15 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
         return IClientMobEffectExtensions.of(effectInstance).isVisibleInInventory(effectInstance);
     }
 
-    private void renderBackgrounds(PoseStack pPoseStack, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean compact) {
-        RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
+    private void renderBackgrounds(GuiGraphics graphics, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean compact) {
         int i = this.topPos;
 
         for(MobEffectInstance ignored : pEffects) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             if (compact) {
-                blit(pPoseStack, pRenderX, i, 0, 166, 120, 32);
+                graphics.blit(INVENTORY_LOCATION, pRenderX, i, 0, 166, 120, 32);
             } else {
-                blit(pPoseStack, pRenderX, i, 0, 198, 32, 32);
+                graphics.blit(INVENTORY_LOCATION, pRenderX, i, 0, 198, 32, 32);
             }
 
             i += pYOffset;
@@ -106,28 +108,27 @@ public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu
 
     }
 
-    private void renderIcons(PoseStack pPoseStack, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean p_194013_) {
+    private void renderIcons(GuiGraphics graphics, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects, boolean p_194013_) {
         MobEffectTextureManager mobeffecttexturemanager = this.minecraft.getMobEffectTextures();
         int i = this.topPos;
 
         for(MobEffectInstance mobeffectinstance : pEffects) {
             MobEffect mobeffect = mobeffectinstance.getEffect();
             TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(mobeffect);
-            RenderSystem.setShaderTexture(0, textureatlassprite.atlasLocation());
-            blit(pPoseStack, pRenderX + (p_194013_ ? 6 : 7), i + 7, this.getGuiLeft(), 18, 18, textureatlassprite);
+            graphics.blit(pRenderX + (p_194013_ ? 6 : 7), i + 7, this.getGuiLeft(), 18, 18, textureatlassprite);
             i += pYOffset;
         }
 
     }
 
-    private void renderLabels(PoseStack pPoseStack, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects) {
+    private void renderLabels(GuiGraphics graphics, int pRenderX, int pYOffset, Iterable<MobEffectInstance> pEffects) {
         int i = this.topPos;
 
         for(MobEffectInstance mobeffectinstance : pEffects) {
             Component component = this.getEffectName(mobeffectinstance);
-            this.font.drawShadow(pPoseStack, component, (float)(pRenderX + 10 + 18), (float)(i + 6), 16777215);
+            graphics.drawString(this.font, component, pRenderX + 10 + 18, i + 6, 16777215);
             Component s = MobEffectUtil.formatDuration(mobeffectinstance, 1.0F);
-            this.font.drawShadow(pPoseStack, s, (float)(pRenderX + 10 + 18), (float)(i + 6 + 10), 8355711);
+            graphics.drawString(this.font, s, pRenderX + 10 + 18, i + 6 + 10, 8355711);
             i += pYOffset;
         }
 

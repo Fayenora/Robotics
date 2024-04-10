@@ -29,13 +29,13 @@ public class WireCutterMenu extends BaseMenu {
     public final ContainerData data;
 
     public WireCutterMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
     }
 
     public WireCutterMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.WIRE_CUTTER.get(), id);
         this.blockEntity = (WireCutterBlockEntity) blockEntity;
-        this.level = playerInv.player.level;
+        this.level = playerInv.player.level();
         this.data = data;
 
         addPlayerInv(playerInv, Reference.GUI_DEFAULT_DIMENSIONS);

@@ -43,7 +43,7 @@ public class DimensionNavigator {
     }
 
     public boolean navigateTo(Level level, BlockPos pos) {
-        if(mob.getLevel().equals(level)) {
+        if(mob.level().equals(level)) {
             return mob.getNavigation().moveTo(pos.getX(), pos.getY(), pos.getZ(), speedMod);
         }
         Block portal = getPortalBlock(level.dimensionTypeId());
@@ -53,8 +53,9 @@ public class DimensionNavigator {
     }
 
     private Block getPortalBlock(ResourceKey<DimensionType> targetDimension) {
-        if(!mob.level.dimensionTypeId().equals(BuiltinDimensionTypes.OVERWORLD)) {
-            return PORTAL_BLOCKS.get(mob.level.dimensionTypeId());
+        ResourceKey<DimensionType> dimension = mob.level().dimensionTypeId();
+        if(!dimension.equals(BuiltinDimensionTypes.OVERWORLD)) {
+            return PORTAL_BLOCKS.get(dimension);
         } else {
             return PORTAL_BLOCKS.get(targetDimension);
         }
@@ -69,7 +70,7 @@ public class DimensionNavigator {
                 for(int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                     for(int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                         pos.setWithOffset(mobPos, i1, k - 1, j1);
-                        if (this.mob.isWithinRestriction(pos) && mob.level.getBlockState(pos).getBlock().equals(block)) {
+                        if (this.mob.isWithinRestriction(pos) && mob.level().getBlockState(pos).getBlock().equals(block)) {
                             return pos;
                         }
                     }

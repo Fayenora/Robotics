@@ -40,7 +40,7 @@ public class PacketSetCommands implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        Entity entity = cxt.getSender().level.getEntity(entityId);
+        Entity entity = cxt.getSender().level().getEntity(entityId);
         if(entity == null) return;
         entity.getCapability(ModCapabilities.COMMANDS).ifPresent(robot -> {
             robot.setCommands(commands);

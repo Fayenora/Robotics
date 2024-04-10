@@ -45,7 +45,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
             this.color = partCap.getColor();
             this.parts = partCap.getBodyParts();
         });
-        this.lastKnownPosition = GlobalPos.of(entity.getLevel().dimension(), entity.blockPosition());
+        this.lastKnownPosition = GlobalPos.of(entity.level().dimension(), entity.blockPosition());
     }
 
     public Entity getEntity() {
@@ -63,7 +63,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
             if(level != null) {
                 Entity ent = level.getEntity(uuid);
                 if(ent != null) {
-                    updatePosition(RobotState.IN_WORLD, ent.level, ent.blockPosition());
+                    updatePosition(RobotState.IN_WORLD, ent.level(), ent.blockPosition());
                     return ent;
                 }
             }
@@ -71,7 +71,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
             for(ServerLevel dimension : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
                 Entity ent = dimension.getEntity(uuid);
                 if(ent != null) {
-                    updatePosition(RobotState.IN_WORLD, ent.level, ent.blockPosition());
+                    updatePosition(RobotState.IN_WORLD, ent.level(), ent.blockPosition());
                     return ent;
                 }
             }

@@ -14,6 +14,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -42,11 +43,11 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 	}
 
 	@Override
-	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		float fontSize = 0.5f;
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().pos().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR, fontSize, 16);
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().pos().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR, fontSize, 16);
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get().pos().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get().pos().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get().pos().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR, fontSize, 16);
+		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get().pos().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR, fontSize, 16);
 	}
 
 	class GuiSelectPos extends GuiElement {
@@ -76,7 +77,7 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 			});
 			buttonSelectPos.setTooltip(Lang.localise("selector.pos.useCommander"));
 			buttonSelfPos = new ButtonElement(getX() + 12 + 17, getY() + height - 8 - 17, 17, 17, button -> {
-				selection.set(GlobalPos.of(player.level.dimension(), player.getOnPos()));
+				selection.set(GlobalPos.of(player.level().dimension(), player.getOnPos()));
 				updateTextFields();
 			});
 			buttonSelfPos.setTooltip(Lang.localise("selector.pos.useSelf"));
@@ -128,12 +129,12 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 		}
 
 		@Override
-		public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-			super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+		public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+			super.render(graphics, pMouseX, pMouseY, pPartialTick);
 			Font font = Minecraft.getInstance().font;
-			drawString(pPoseStack, font, "X:", getX() + 11, getY() + 28, Reference.FONT_COLOR);
-			drawString(pPoseStack, font, "Y:", getX() + 11, getY() + 50, Reference.FONT_COLOR);
-			drawString(pPoseStack, font, "Z:", getX() + 11, getY() + 72, Reference.FONT_COLOR);
+			graphics.drawString(font, "X:", getX() + 11, getY() + 28, Reference.FONT_COLOR);
+			graphics.drawString(font, "Y:", getX() + 11, getY() + 50, Reference.FONT_COLOR);
+			graphics.drawString(font, "Z:", getX() + 11, getY() + 72, Reference.FONT_COLOR);
 		}
 
 	}
@@ -164,9 +165,9 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 		}
 
 		@Override
-		public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-			super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
-			RenderUtil.drawString(poseStack, Lang.localiseExisting(currentDim().location().toString()), getX() + 6, getY() + 4, Reference.FONT_COLOR, 0.8f);
+		public void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+			super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+			RenderUtil.drawString(graphics, Lang.localiseExisting(currentDim().location().toString()), getX() + 6, getY() + 4, Reference.FONT_COLOR, 0.8f);
 		}
 	}
 

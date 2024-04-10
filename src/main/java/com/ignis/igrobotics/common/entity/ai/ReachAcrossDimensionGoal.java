@@ -25,7 +25,7 @@ public class ReachAcrossDimensionGoal extends Goal {
 
     @Override
     public void start() {
-        navigator.navigateTo(target.level, target.blockPosition());
+        navigator.navigateTo(target.level(), target.blockPosition());
         tryTicks = 0;
     }
 
@@ -33,7 +33,7 @@ public class ReachAcrossDimensionGoal extends Goal {
     public void tick() {
         ++this.tryTicks;
         if (this.shouldRecalculatePath()) {
-            navigator.navigateTo(target.level, target.blockPosition());
+            navigator.navigateTo(target.level(), target.blockPosition());
         }
     }
 
@@ -48,7 +48,7 @@ public class ReachAcrossDimensionGoal extends Goal {
     }
 
     public boolean hasReachedTarget() {
-        return mob.level.dimension().equals(target.level.dimension()) && mob.distanceTo(target) < distance;
+        return mob.level().dimension().equals(target.level().dimension()) && mob.distanceTo(target) < distance;
     }
 
     @Override

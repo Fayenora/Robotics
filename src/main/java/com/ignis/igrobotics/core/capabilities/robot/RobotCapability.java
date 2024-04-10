@@ -362,10 +362,10 @@ public class RobotCapability implements IRobot {
     protected void explode() {
         entity.setInvulnerable(true);
         Explosion.BlockInteraction interaction =  Explosion.BlockInteraction.DESTROY;
-        if(entity.level.getGameRules().getBoolean(GameRules.RULE_MOB_EXPLOSION_DROP_DECAY)) interaction = Explosion.BlockInteraction.DESTROY_WITH_DECAY;
-        if(!ForgeEventFactory.getMobGriefingEvent(entity.level, entity)) interaction = Explosion.BlockInteraction.KEEP;
+        if(entity.level().getGameRules().getBoolean(GameRules.RULE_MOB_EXPLOSION_DROP_DECAY)) interaction = Explosion.BlockInteraction.DESTROY_WITH_DECAY;
+        if(!ForgeEventFactory.getMobGriefingEvent(entity.level(), entity)) interaction = Explosion.BlockInteraction.KEEP;
         Explosion explosion = new ModifiableExplosion(entity, explosionDamage, explosionRadius, true, interaction);
-        if(ForgeEventFactory.onExplosionStart(entity.level, explosion)) return;
+        if(ForgeEventFactory.onExplosionStart(entity.level(), explosion)) return;
         explosion.explode();
         explosion.finalizeExplosion(true);
     }

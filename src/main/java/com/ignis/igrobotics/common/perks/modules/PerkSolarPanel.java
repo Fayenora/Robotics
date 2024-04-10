@@ -22,7 +22,7 @@ public class PerkSolarPanel extends Perk {
 	
 	@Override
 	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
-		int skylight = entity.level.getBrightness(LightLayer.SKY, entity.blockPosition().above()) - entity.level.getSkyDarken();
+		int skylight = entity.level().getBrightness(LightLayer.SKY, entity.blockPosition().above()) - entity.level().getSkyDarken();
 		int energy_gain = skylight * GENERATION_MULT * level;
 		entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
 			energy.receiveEnergy(energy_gain, false);

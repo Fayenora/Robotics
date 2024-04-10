@@ -8,7 +8,7 @@ public class ShieldModule implements IModuleAction {
 
     @Override
     public boolean execute(LivingEntity caster, int duration) {
-        if(caster.level.isClientSide || !caster.isAlive()) return false;
+        if(caster.level().isClientSide || !caster.isAlive()) return false;
         if(!caster.getCapability(ModCapabilities.SHIELDED).isPresent()) return false;
         IShielded shield = caster.getCapability(ModCapabilities.SHIELDED).resolve().get();
         return shield.setActive(!shield.isShielded());

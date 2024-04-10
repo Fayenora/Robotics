@@ -3,6 +3,7 @@ package com.ignis.igrobotics.client.screen.elements;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,10 +29,10 @@ public class EntityElement extends ButtonElement {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
-        RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
-        RenderUtil.drawRotatingEntity(poseStack, getX() + BOUNDS.width / 2, getY() + 6 + BOUNDS.height / 2, (int) (8 / living.getBoundingBox().getSize()), living, angle.get());
-        RenderUtil.disableScissor();
+    public void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+        RenderUtil.enableScissor(graphics, MathUtil.downsizeRect(getShape(), 1));
+        RenderUtil.drawRotatingEntity(graphics.pose(), getX() + BOUNDS.width / 2, getY() + 6 + BOUNDS.height / 2, (int) (8 / living.getBoundingBox().getSize()), living, angle.get());
+        RenderUtil.disableScissor(graphics);
     }
 }

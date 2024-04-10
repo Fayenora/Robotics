@@ -20,14 +20,14 @@ public class RangedGenericAttack extends AbstractRangedAttackGoal {
 
     @Override
     public Projectile getProjectile(ItemStack ammunition, float force) {
-        if(ammunition.getItem() instanceof SnowballItem) return new Snowball(attacker.level, attacker);
+        if(ammunition.getItem() instanceof SnowballItem) return new Snowball(attacker.level(), attacker);
         if(ammunition.getItem() instanceof TridentItem) {
-            ThrownTrident trident = new ThrownTrident(attacker.level, attacker, ammunition);
+            ThrownTrident trident = new ThrownTrident(attacker.level(), attacker, ammunition);
             trident.pickup = AbstractArrow.Pickup.ALLOWED;
             return trident;
         }
         if(ammunition.getItem() instanceof ThrowablePotionItem) {
-            ThrownPotion thrownpotion = new ThrownPotion(attacker.level, attacker);
+            ThrownPotion thrownpotion = new ThrownPotion(attacker.level(), attacker);
             thrownpotion.setItem(ammunition);
             thrownpotion.setXRot(thrownpotion.getXRot() - -20.0F);
             return thrownpotion;

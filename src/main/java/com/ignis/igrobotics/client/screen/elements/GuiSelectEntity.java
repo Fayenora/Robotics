@@ -5,6 +5,7 @@ import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,10 +45,10 @@ public class GuiSelectEntity extends GuiElement {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         angle += pPartialTick * 3;
         angle %= 360;
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
         //Update the search
         String searchTerm = searchBar.getValue().toLowerCase();
         if(searchTerm.equals(currentSearch)) return;

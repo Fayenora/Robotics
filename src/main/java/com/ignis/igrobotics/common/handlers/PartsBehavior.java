@@ -19,7 +19,7 @@ public class PartsBehavior {
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        if(entity.level.isClientSide() || !entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) return;
+        if(entity.level().isClientSide() || !entity.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) return;
         entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
             Random r = new Random();
             for(RobotPart part : parts.getBodyParts()) {

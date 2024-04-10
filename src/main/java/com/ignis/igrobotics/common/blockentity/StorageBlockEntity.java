@@ -128,7 +128,9 @@ public class StorageBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public Optional<Entity> exitStorage() {
-        return exitStorage(getBlockState().getValue(MachineBlock.FACING));
+        Optional<Entity> robot = exitStorage(getBlockState().getValue(MachineBlock.FACING));
+        //TODO robot.ifPresent(entity -> WorldData.get().forgetRobotStorage(entity));
+        return robot;
     }
 
     public Optional<Entity> exitStorage(@Nullable Direction direction) {

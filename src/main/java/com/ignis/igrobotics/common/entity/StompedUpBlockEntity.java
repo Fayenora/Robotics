@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
@@ -58,7 +59,7 @@ public class StompedUpBlockEntity extends ThrowableProjectile {
             discard();
         }
         //Collision
-        HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if((hitresult.getType() == HitResult.Type.ENTITY || (hitresult.getType() == HitResult.Type.BLOCK && tickCount > 5))
                 && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
             this.onHit(hitresult);
@@ -73,7 +74,7 @@ public class StompedUpBlockEntity extends ThrowableProjectile {
         if (this.isInWater()) {
             for (int i = 0; i < 4; ++i) {
                 float f1 = 0.25F;
-                this.level.addParticle(ParticleTypes.BUBBLE, d2 - vec3.x * 0.25D, d0 - vec3.y * 0.25D, d1 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
+                this.level().addParticle(ParticleTypes.BUBBLE, d2 - vec3.x * 0.25D, d0 - vec3.y * 0.25D, d1 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
             }
 
             f = 0.8F;
@@ -107,7 +108,7 @@ public class StompedUpBlockEntity extends ThrowableProjectile {
     public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
         super.onSyncedDataUpdated(data);
         if(data.equals(DATA_START_POS)) {
-            this.blockState = level.getBlockState(getStartPos());
+            this.blockState = level().getBlockState(getStartPos());
         }
     }
 
@@ -121,7 +122,7 @@ public class StompedUpBlockEntity extends ThrowableProjectile {
 
     protected void setStartPos(BlockPos pos) {
         entityData.set(DATA_START_POS, pos);
-        this.blockState = level.getBlockState(pos);
+        this.blockState = level().getBlockState(pos);
     }
 
     @Override

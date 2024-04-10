@@ -7,6 +7,7 @@ import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -50,7 +51,7 @@ public class EntityInteractionManager {
 
     public EntityInteractionManager(Mob mob) {
         this.mob = mob;
-        this.level = (ServerLevel) mob.level;
+        this.level = (ServerLevel) mob.level();
         fakePlayer = new WeakReference<>(RobotFakePlayerFactory.get(mob, Reference.PROFILE));
     }
 
@@ -93,7 +94,7 @@ public class EntityInteractionManager {
     }
 
     public void startDestroyingBlock(BlockPos pos, Direction side, int p_215124_) {
-        PlayerInteractEvent.LeftClickBlock event = ForgeHooks.onLeftClickBlock(fakePlayer.get(), pos, side);
+        PlayerInteractEvent.LeftClickBlock event = ForgeHooks.onLeftClickBlock(fakePlayer.get(), pos, side, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK);
         if (event.isCanceled() || event.getResult() == net.minecraftforge.eventbus.api.Event.Result.DENY) {
             return;
         }

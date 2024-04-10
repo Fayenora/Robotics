@@ -9,13 +9,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import java.util.UUID;
+
 public class ComputerCapability implements IComputerized, INBTSerializable<CompoundTag> {
+
+    private static final UUID NO_COMPUTER = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     private final LivingEntity entity;
     private EntityComputer computer;
 
     int computerID = -1;
-    int instanceID = -1;
+    UUID instanceID = NO_COMPUTER;
 
     public ComputerCapability(LivingEntity entity) {
         this.entity = entity;
@@ -23,7 +27,7 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
 
     @Override
     public boolean hasComputer() {
-        return instanceID >= 0;
+        return !instanceID.equals(NO_COMPUTER);
     }
 
     @Override
@@ -36,7 +40,7 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
 
     private EntityComputer createComputer(int computerId) {
         return new EntityComputer(
-                (ServerLevel) entity.level,
+                (ServerLevel) entity.level(),
                 entity, computerId,
                 entity.getName().getString(),
                 ComputerFamily.ADVANCED,
@@ -45,7 +49,7 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
     }
 
     private EntityComputer createEntityComputer() {
-        var server = entity.getLevel().getServer();
+        var server = entity.level().getServer();
         if (server == null) throw new IllegalStateException("Cannot access server computer on the client.");
 
         var computer = ServerContext.get(server).registry().get(instanceID);
@@ -65,14 +69,14 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag compound = new CompoundTag();
-        compound.putInt("instanceID", instanceID);
+        compound.putUUID("instanceID", instanceID);
         compound.putInt("computerID", computerID);
         return compound;
     }
 
     @Override
     public void deserializeNBT(CompoundTag compound) {
-        instanceID = compound.getInt("instanceID");
+        instanceID = compound.getUUID("instanceID");
         computerID = compound.getInt("computerID");
     }
 }

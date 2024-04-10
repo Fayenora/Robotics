@@ -7,6 +7,7 @@ import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,14 +46,14 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 	}
 
 	@Override
-	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if(selection == null || selection.get() == null) return;
 		Entity entity = CommonSetup.allLivingEntities.get(selection.get());
 		if(!(entity instanceof LivingEntity living)) return;
 		if(getBaseGui().hasSubGui()) return;
-		RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
-		RenderUtil.drawRotatingEntity(poseStack, getX() + width / 2, getY() + height / 2 + 6, (int) (8 / living.getBoundingBox().getSize()), living, angle);
-		RenderUtil.disableScissor();
+		RenderUtil.enableScissor(graphics, MathUtil.downsizeRect(getShape(), 1));
+		RenderUtil.drawRotatingEntity(graphics.pose(), getX() + width / 2, getY() + height / 2 + 6, (int) (8 / living.getBoundingBox().getSize()), living, angle);
+		RenderUtil.disableScissor(graphics);
 	}
 
 }

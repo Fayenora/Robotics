@@ -82,7 +82,7 @@ public class RobotBehavior {
     @SubscribeEvent
     public static void onRobotTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        if(entity.level.isClientSide()) return;
+        if(entity.level().isClientSide()) return;
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
                     if(energy.getEnergyStored() <= 0) {
@@ -153,10 +153,10 @@ public class RobotBehavior {
 
     @SubscribeEvent
     public static void onRobotDeath(LivingDeathEvent event) {
-        if(event.getEntity().level.isClientSide()) return;
+        if(event.getEntity().level().isClientSide()) return;
         Entity entity = event.getEntity();
         // Drop Inventory
-        if(event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+        if(event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
                     entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
                         if(inventory instanceof RobotInventory robotInv) {
@@ -277,7 +277,7 @@ public class RobotBehavior {
     }
 
     public static void setAccess(WorldAccessData.EnumAccessScope scope, Entity entity, AccessConfig access) {
-        if(entity.level.isClientSide()) {
+        if(entity.level().isClientSide()) {
             NetworkHandler.sendToServer(new PacketSetAccessConfig(scope, entity, access));
         } else entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setAccess(access));
     }
@@ -288,7 +288,7 @@ public class RobotBehavior {
     }
 
     public static boolean canReach(LivingEntity entity, GlobalPos pos) {
-        if(!entity.level.dimension().equals(pos.dimension())) return false;
+        if(!entity.level().dimension().equals(pos.dimension())) return false;
         return canReach(entity, pos.pos());
     }
 

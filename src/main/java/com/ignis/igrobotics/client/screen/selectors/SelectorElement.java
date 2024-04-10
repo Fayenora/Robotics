@@ -7,6 +7,7 @@ import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,7 +34,7 @@ public abstract class SelectorElement<A> extends ButtonElement {
 
     protected abstract IElement getMaximizedVersion();
 
-    public abstract void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks);
+    public abstract void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 
     @Override
     public void onPress() {
@@ -42,12 +43,12 @@ public abstract class SelectorElement<A> extends ButtonElement {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
+    public void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
         angle += pPartialTick * 5;
         angle %= 360;
         if(currentGuiActive()) {
-            renderSelection(poseStack, pMouseX, pMouseY, pPartialTick);
+            renderSelection(graphics, pMouseX, pMouseY, pPartialTick);
         }
     }
 

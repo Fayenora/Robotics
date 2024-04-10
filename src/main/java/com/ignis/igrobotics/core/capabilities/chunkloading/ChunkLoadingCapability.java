@@ -27,8 +27,8 @@ public class ChunkLoadingCapability implements IChunkLoader {
 
     @Override
     public void loadChunks(ChunkPos chunk) {
-        if(entity.level.isClientSide()) return;
-        Optional<ChunkLoadingHandler.ChunkTracker> opt = entity.level.getCapability(ModCapabilities.CHUNK_TRACKER).resolve();
+        if(entity.level().isClientSide()) return;
+        Optional<ChunkLoadingHandler.ChunkTracker> opt = entity.level().getCapability(ModCapabilities.CHUNK_TRACKER).resolve();
         if(opt.isEmpty()) return;
         Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
         if(robot.isEmpty()) return;
@@ -50,8 +50,8 @@ public class ChunkLoadingCapability implements IChunkLoader {
 
     @Override
     public void unloadChunks(ChunkPos chunk) {
-        if(entity.level.isClientSide()) return;
-        entity.level.getCapability(ModCapabilities.CHUNK_TRACKER).ifPresent(tracker -> {
+        if(entity.level().isClientSide()) return;
+        entity.level().getCapability(ModCapabilities.CHUNK_TRACKER).ifPresent(tracker -> {
             for(int i = -1; i <= 1; i++) {
                 for(int j = -1; j <= 1; j++) {
                     tracker.remove(new ChunkPos(chunk.x + i, chunk.z + j), this);

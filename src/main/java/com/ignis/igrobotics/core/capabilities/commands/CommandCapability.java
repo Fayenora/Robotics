@@ -46,7 +46,7 @@ public class CommandCapability implements ICommandable {
      * Clear all commands and goals provided by them
      */
     protected void clearCommands() {
-        if(!entity.level.isClientSide()) {
+        if(!entity.level().isClientSide()) {
             //If commands are changed in any way, the entity should always reconsider what to do next
             entity.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
             for(Map.Entry<RobotCommand, Goal> entry : commands.entrySet()) {
@@ -63,7 +63,7 @@ public class CommandCapability implements ICommandable {
      * Does not re-evaluate the commands.
      */
     protected void applyCommands() {
-        if(entity.level.isClientSide()) return;
+        if(entity.level().isClientSide()) return;
         Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
         if(robot.isPresent() && !robot.get().isActive()) return;
         int i = 0;
@@ -80,7 +80,7 @@ public class CommandCapability implements ICommandable {
      */
     @Override
     public void reapplyCommand(RobotCommand command) {
-        if(entity.level.isClientSide()) return;
+        if(entity.level().isClientSide()) return;
         if(!commands.containsKey(command)) return;
         //Stop
         Goal goal = commands.get(command);
@@ -145,7 +145,7 @@ public class CommandCapability implements ICommandable {
     }
 
     private void onApplied(RobotCommand command) {
-        if(entity.level.isClientSide) return;
+        if(entity.level().isClientSide) return;
         // Register the Entity Predicates of this command to the CommandBehavior
         for(Selection<?> selector : command.getSelectors()) {
             if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
@@ -154,17 +154,17 @@ public class CommandCapability implements ICommandable {
                     search.setCache(newResult);
                     reapplyCommand(command);
                 });
-                CommandBehavior.SEARCHES.put(entity.getLevel(), search);
+                CommandBehavior.SEARCHES.put(entity.level(), search);
             }
         }
     }
 
     private void onRemoved(RobotCommand command) {
-        if(entity.level.isClientSide) return;
+        if(entity.level().isClientSide) return;
         for(Selection<?> selector : command.getSelectors()) {
             if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
                 EntitySearch search = (EntitySearch) selector.get();
-                CommandBehavior.SEARCHES.remove(entity.getLevel(), search);
+                CommandBehavior.SEARCHES.remove(entity.level(), search);
             }
         }
     }

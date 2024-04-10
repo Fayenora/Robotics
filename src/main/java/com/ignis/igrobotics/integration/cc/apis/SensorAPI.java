@@ -30,7 +30,7 @@ public class SensorAPI implements ILuaAPI {
      */
     @LuaFunction
     public final int getBrightness() {
-        return mob.getLevel().getBrightness(LightLayer.BLOCK, mob.getOnPos());
+        return mob.level().getBrightness(LightLayer.BLOCK, mob.getOnPos());
     }
 
     /**
@@ -41,7 +41,7 @@ public class SensorAPI implements ILuaAPI {
     public final List<LuaEntity> getSeenEntities() {
         TargetingConditions target = TargetingConditions.forNonCombat();
         List<LuaEntity> entities = Lists.newArrayList();
-        for(Entity ent : mob.getLevel().getEntities(mob, mob.getBoundingBox().inflate(VISUAL_RANGE))) {
+        for(Entity ent : mob.level().getEntities(mob, mob.getBoundingBox().inflate(VISUAL_RANGE))) {
             if(ent instanceof LivingEntity living && target.test(mob, living)) {
                 entities.add(new LuaEntity(ent));
             }

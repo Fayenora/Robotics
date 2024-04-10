@@ -7,7 +7,9 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 
@@ -17,16 +19,17 @@ public class EnderModule implements IModuleAction {
 
     @Override
     public boolean execute(LivingEntity caster, int duration) {
-        if(caster.level.isClientSide || !caster.isAlive()) {
+        Level level = caster.level();
+        if(level.isClientSide || !caster.isAlive()) {
             return false;
         }
         if(caster instanceof Player) {
             Vec3 source = caster.getEyePosition();
             Vec3 target = caster.getEyePosition().add(caster.getLookAngle().normalize().scale(DISTANCE));
-            Vec3 blockHit = caster.level.clip(new ClipContext(source, target, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, caster)).getLocation();
+            Vec3 blockHit = level.clip(new ClipContext(source, target, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, caster)).getLocation();
             caster.teleportTo(blockHit.x, blockHit.y - caster.getEyeHeight(), blockHit.z);
             if (!caster.isSilent()) {
-                caster.level.playSound(null, caster.xo, caster.yo, caster.zo, SoundEvents.ENDERMAN_TELEPORT, caster.getSoundSource(), 1.0F, 1.0F);
+                level.playSound(null, caster.xo, caster.yo, caster.zo, SoundEvents.ENDERMAN_TELEPORT, caster.getSoundSource(), 1.0F, 1.0F);
                 caster.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
         } else {
@@ -39,14 +42,15 @@ public class EnderModule implements IModuleAction {
     }
 
     public static boolean teleport(LivingEntity entity, double p_32544_, double p_32545_, double p_32546_) {
+        Level level = entity.level();
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(p_32544_, p_32545_, p_32546_);
 
-        while(blockpos$mutableblockpos.getY() > entity.level.getMinBuildHeight() && !entity.level.getBlockState(blockpos$mutableblockpos).getMaterial().blocksMotion()) {
+        while(blockpos$mutableblockpos.getY() > level.getMinBuildHeight() && !level.getBlockState(blockpos$mutableblockpos).blocksMotion()) {
             blockpos$mutableblockpos.move(Direction.DOWN);
         }
 
-        BlockState blockstate = entity.level.getBlockState(blockpos$mutableblockpos);
-        boolean flag = blockstate.getMaterial().blocksMotion();
+        BlockState blockstate = level.getBlockState(blockpos$mutableblockpos);
+        boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
         if (flag && !flag1) {
             net.minecraftforge.event.entity.EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(entity, p_32544_, p_32545_, p_32546_);
@@ -54,9 +58,9 @@ public class EnderModule implements IModuleAction {
             Vec3 vec3 = entity.position();
             boolean flag2 = entity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
             if (flag2) {
-                entity.level.gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
+                level.gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
                 if (!entity.isSilent()) {
-                    entity.level.playSound(null, entity.xo, entity.yo, entity.zo, SoundEvents.ENDERMAN_TELEPORT, entity.getSoundSource(), 1.0F, 1.0F);
+                    level.playSound(null, entity.xo, entity.yo, entity.zo, SoundEvents.ENDERMAN_TELEPORT, entity.getSoundSource(), 1.0F, 1.0F);
                     entity.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
                 }
             }

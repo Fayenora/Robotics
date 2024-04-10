@@ -26,8 +26,8 @@ public class ModifiableExplosion extends Explosion {
     protected final float radius, damage;
 
     public ModifiableExplosion(Entity entity, float damage, float radius, boolean fire, BlockInteraction blockInteraction) {
-        super(entity.level, entity, entity.getX(), entity.getY(), entity.getZ(), radius, fire, blockInteraction);
-        this.level = entity.level;
+        super(entity.level(), entity, entity.getX(), entity.getY(), entity.getZ(), radius, fire, blockInteraction);
+        this.level = entity.level();
         this.source = entity;
         this.x = entity.getX();
         this.y = entity.getY();

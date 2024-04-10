@@ -85,7 +85,7 @@ public class ModAttributes {
 		}
 
 		//Server side attributes
-		if(entity.level.isClientSide()) return;
+		if(entity.level().isClientSide()) return;
 
 		if(MODIFIER_SLOTS.contains(instance.getAttribute())) {
             entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {

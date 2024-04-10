@@ -32,7 +32,7 @@ public class PacketComponentAction implements IMessage {
     @Override
     public void handle(NetworkEvent.Context cxt) {
         Player player = cxt.getSender();
-        Level level = player.level;
+        Level level = player.level();
         Entity entity = data.getAsEntity(level);
         BlockEntity blockEntity = data.getAsBlockEntity(level);
         switch (action) {

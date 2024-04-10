@@ -5,12 +5,14 @@ import com.ignis.igrobotics.definitions.ModBlocks;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.impl.BundledRedstone;
+import dan200.computercraft.impl.Peripherals;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.platform.ComponentAccess;
 import dan200.computercraft.shared.platform.PlatformHelper;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,19 +31,18 @@ public class ComputerizedBehavior {
 
         //Update peripherals & redstone. Only do this when standing still
         if(entity.getDeltaMovement().length() > 0.1) return;
-        Level level = computer.getLevel();
+        ServerLevel level = computer.getLevel();
         BlockPos pos = computer.getPosition();
 
-        ComponentAccess<IPeripheral> peripherals = PlatformHelper.get().createPeripheralAccess(d -> {});
         for(Direction direction : Direction.values()) {
             ComputerSide side = toSide(direction);
             computer.setRedstoneInput(side, RedstoneUtil.getRedstoneInput(level, pos.relative(direction), direction));
             computer.setBundledRedstoneInput(side, BundledRedstone.getOutput(level, pos.relative(direction), direction));
-            computer.setPeripheral(side, peripherals.get(computer.getLevel(), computer.getPosition(), direction));
+            computer.setPeripheral(side, Peripherals.getPeripheral(level, pos, direction, () -> {}));
         }
         placeRedstoneIntegrator(level, pos, computer);
         placeRedstoneIntegrator(level, pos.above(), computer);
-        if(computer.hasOutputChanged()) {
+        if(computer.pollAndResetChanges() > 0) {
             level.updateNeighborsAt(pos, ModBlocks.REDSTONE_INTEGRATOR.get());
             level.updateNeighborsAt(pos.above(), ModBlocks.REDSTONE_INTEGRATOR.get());
         }

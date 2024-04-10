@@ -83,9 +83,9 @@ public class CommanderItem extends Item {
     //Called on entity right click
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if(player.level.isClientSide()) return InteractionResult.SUCCESS;
+        if(player.level().isClientSide()) return InteractionResult.SUCCESS;
         Optional<IRobot> optRobot = target.getCapability(ModCapabilities.ROBOT).resolve();
-        LivingEntity currentEntity = getRememberedEntity(player.level, stack);
+        LivingEntity currentEntity = getRememberedEntity(player.level(), stack);
 
         if(player.isShiftKeyDown() && optRobot.isPresent()) {
             IRobot robot = optRobot.get();

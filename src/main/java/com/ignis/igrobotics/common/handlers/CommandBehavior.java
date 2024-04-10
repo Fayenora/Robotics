@@ -84,9 +84,9 @@ public class CommandBehavior {
     @SubscribeEvent
     public static void onEntitySwitchedDimension(EntityTravelToDimensionEvent event) {
         Entity entity = event.getEntity();
-        if(entity.getLevel().isClientSide) return;
+        if(entity.level().isClientSide) return;
         if(entity instanceof ItemEntity) return; // Save some runtime here by ignoring items
-        ServerLevel level = (ServerLevel) entity.getLevel();
+        ServerLevel level = (ServerLevel) entity.level();
         ServerLevel otherDimension = level.getServer().getLevel(event.getDimension());
         if(otherDimension == null) return;
         AABB area = AABB.ofSize(entity.position(), 16, 16, 16);
@@ -102,12 +102,12 @@ public class CommandBehavior {
     }
 
     private static void followThroughDimension(Entity toTransport, Entity leader, ServerLevel dimension) {
-        Vec3 newPosOfLeader = findDimensionEntryPoint(leader, leader.level, dimension);
+        Vec3 newPosOfLeader = findDimensionEntryPoint(leader, leader.level(), dimension);
         if(newPosOfLeader == null) return;
         toTransport.changeDimension(dimension, new ITeleporter() {
             @Override
             public Entity placeEntity(Entity transportedEntity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
-                transportedEntity.getLevel().getProfiler().popPush("reloading");
+                transportedEntity.level().getProfiler().popPush("reloading");
                 Entity clone = transportedEntity.getType().create(dimension);
                 if (clone == null) return null;
                 clone.restoreFrom(transportedEntity);

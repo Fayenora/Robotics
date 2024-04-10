@@ -16,6 +16,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,9 +41,9 @@ public class WireCutterRecipeCategory extends MachineRecipeCategory {
 	}
 
 	@Override
-	public void draw(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-		energy_bar.draw(stack, WireCutterScreen.energy_bar.x - 7, WireCutterScreen.energy_bar.y - 4);
-		arrow.draw(stack, WireCutterScreen.arrow.x - 7, WireCutterScreen.arrow.y - 4);
+	public void draw(MachineRecipe<?> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		energy_bar.draw(graphics, WireCutterScreen.energy_bar.x - 7, WireCutterScreen.energy_bar.y - 4);
+		arrow.draw(graphics, WireCutterScreen.arrow.x - 7, WireCutterScreen.arrow.y - 4);
 	}
 
 	@Override

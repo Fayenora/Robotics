@@ -48,7 +48,7 @@ public class RetrieveGoal extends Goal {
 	public RetrieveGoal(Mob mob, GlobalPos from, ItemStack toTake, int time, int maxStay, int minAway) {
 		this.entity = mob;
 		navigator = new DimensionNavigator(mob, 16, 16, 1);
-		fakePlayer = new WeakReference<>(FakePlayerFactory.getMinecraft((ServerLevel) entity.level));
+		fakePlayer = new WeakReference<>(FakePlayerFactory.getMinecraft((ServerLevel) entity.level()));
 		this.target = from;
 		this.toTake = toTake;
 		this.maxStay = maxStay;

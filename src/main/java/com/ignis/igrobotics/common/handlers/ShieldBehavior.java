@@ -41,7 +41,7 @@ public class ShieldBehavior {
 
     @SubscribeEvent
     public static void projectileHit(ProjectileImpactEvent event) {
-        Level level = event.getProjectile().level;
+        Level level = event.getProjectile().level();
         if(event.getRayTraceResult().getType() != HitResult.Type.ENTITY) return;
         Projectile projectile = event.getProjectile();
         Predicate<Entity> predicate = EntitySelector.NO_SPECTATORS.and(Entity::canBeHitByProjectile);
@@ -62,13 +62,13 @@ public class ShieldBehavior {
         if(!level.isClientSide) {
             shield.damage(1);
         }
-        event.setCanceled(true);
+        event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
     }
 
     @SubscribeEvent
     public static void shieldRecharge(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        if(entity.level.isClientSide()) return;
+        if(entity.level().isClientSide()) return;
         if(entity.tickCount % 4 != 0) return;
         entity.getCapability(ModCapabilities.SHIELDED).ifPresent(IShielded::recharge);
     }

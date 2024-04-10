@@ -1,7 +1,8 @@
 package com.ignis.igrobotics.client.screen.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -41,26 +42,26 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     /////////////////
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        super.render(poseStack, mouseX, mouseY, delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
 
         if(hasSubGui()) {
             for(IElement comp : subGuis) {
-                renderBackground(poseStack);
-                poseStack.translate(0, 0, 100);
-                comp.render(poseStack, mouseX, mouseY, delta);
+                renderBackground(graphics);
+                graphics.pose().translate(0, 0, 100);
+                comp.render(graphics, mouseX, mouseY, delta);
             }
         }
     }
 
     @Override
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        super.renderTooltip(poseStack, mouseX, mouseY);
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderTooltip(graphics, mouseX, mouseY);
         //Only show hovered tooltips of the current subGui (may be this gui itself)
         Optional<GuiEventListener> child = getSubGui().getChildAt(mouseX, mouseY);
         if(child.isPresent() && child.get() instanceof IElement element) {
             if(element.isEnabled()) {
-                renderTooltip(poseStack, element.getTooltip(mouseX, mouseY), Optional.empty(), mouseX, mouseY);
+                graphics.renderTooltip(Minecraft.getInstance().font, element.getTooltip(mouseX, mouseY), Optional.empty(), mouseX, mouseY);
             }
         }
     }

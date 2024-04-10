@@ -5,11 +5,11 @@ import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,7 +17,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class AssemblerBlock extends MachineBlock {
     public AssemblerBlock() {
-        super(Properties.of(Material.HEAVY_METAL).strength(5f));
+        super(Properties.copy(Blocks.IRON_BLOCK));
     }
 
     @Nullable

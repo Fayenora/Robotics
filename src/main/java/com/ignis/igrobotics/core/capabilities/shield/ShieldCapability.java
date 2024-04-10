@@ -63,7 +63,7 @@ public class ShieldCapability implements IShielded {
     @Override
     public void damage(float damage) {
         entity.invulnerableTime = 10;
-        if(entity.level.isClientSide) return;
+        if(entity.level().isClientSide) return;
         setHealth(Math.max(getHealth() - damage, 0));
         if(getHealth() <= 0) {
             setActive(false);

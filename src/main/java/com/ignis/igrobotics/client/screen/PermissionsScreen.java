@@ -14,6 +14,7 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetAccessConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -78,15 +79,14 @@ public class PermissionsScreen extends GuiElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        super.render(poseStack, mouseX, mouseY, delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
 
         //Draw Permission Icons
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
         for(int i = 0; i < EnumPermission.values().length; i++) {
-            blit(poseStack, getX() + 49 + 22 * i, getY() + 7, 238, 18 * i, 18, 18);
+            graphics.blit(TEXTURE, getX() + 49 + 22 * i, getY() + 7, 238, 18 * i, 18, 18);
         }
     }
 
@@ -157,7 +157,7 @@ public class PermissionsScreen extends GuiElement {
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        public void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
             int offsetX = (width - 18) / 2;
             int offsetY = (height - 18) / 2;
             int originalWidth = width;
@@ -166,7 +166,7 @@ public class PermissionsScreen extends GuiElement {
             setY(getY() + offsetY);
             width = 18;
             height = 18;
-            super.renderWidget(poseStack, pMouseX, pMouseY, pPartialTick);
+            super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
             this.width = originalWidth;
             this.height = originalHeight;
             setX(getX() - offsetX);

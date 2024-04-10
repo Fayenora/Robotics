@@ -27,6 +27,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -154,18 +155,17 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
         if(entity == null) return;
         updateButtonsEnabled();
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.setColor(1, 1, 1, 1);
+        graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         if(access.hasOwner()) {
             //Draw a String declaring the owner
-            drawString(poseStack, Minecraft.getInstance().font, OWNER_CAPTION, leftPos + 78, topPos + 154, Reference.FONT_COLOR);
+            graphics.drawString(Minecraft.getInstance().font, OWNER_CAPTION, leftPos + 78, topPos + 154, Reference.FONT_COLOR);
 
             //If the owner changed, ask for confirmation
             if(ownerSelector != null && ownerSelector.getOwner() != null && !hasSubGui()) {
@@ -181,9 +181,9 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             robotToRender.setActivation(robot.isActive());
             if(robotToRender.isActive()) {
-                RenderUtil.drawEntityOnScreen(poseStack, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entityToRender, false);
+                RenderUtil.drawEntityOnScreen(graphics, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entityToRender, false);
             } else {
-                RenderUtil.drawInactiveRobot(poseStack, leftPos + (imageWidth / 2) - 32, topPos + 22, entity_size, entityToRender, false);
+                RenderUtil.drawInactiveRobot(graphics, leftPos + (imageWidth / 2) - 32, topPos + 22, entity_size, entityToRender, false);
             }
         }
     }
@@ -248,14 +248,14 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, delta);
-        renderTooltip(poseStack, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, delta);
+        renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
+    protected void renderLabels(GuiGraphics graphics, int p_97809_, int p_97810_) {
         //Don't
     }
 

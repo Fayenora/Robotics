@@ -33,7 +33,7 @@ public class PacketSetEntityName implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        Entity entity = cxt.getSender().level.getEntity(entityId);
+        Entity entity = cxt.getSender().level().getEntity(entityId);
         if(entity == null) return;
         entity.setCustomName(Component.literal(name));
     }

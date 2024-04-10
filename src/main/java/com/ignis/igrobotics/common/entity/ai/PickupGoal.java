@@ -18,7 +18,7 @@ public class PickupGoal extends FollowGoal {
     @Override
     public boolean canUse() {
         if(followingEntityCache == null) {
-            Collection<ItemEntity> itemsInArea = entity.level.getEntitiesOfClass(ItemEntity.class, entity.getBoundingBox().inflate(areaSize));
+            Collection<ItemEntity> itemsInArea = entity.level().getEntitiesOfClass(ItemEntity.class, entity.getBoundingBox().inflate(areaSize));
             double closest = Double.MAX_VALUE;
 
             for(ItemEntity item : itemsInArea) {

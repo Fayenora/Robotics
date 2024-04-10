@@ -18,7 +18,7 @@ public class RobotFakePlayerFactory {
     private static final Map<GameProfile, FakePlayer> fakePlayers = Maps.newHashMap();
 
     public static FakePlayer get(Mob mob, GameProfile username) {
-        if(!(mob.level instanceof ServerLevel)) return null;
+        if(!(mob.level() instanceof ServerLevel)) return null;
         if (!fakePlayers.containsKey(username)) {
             FakePlayer fakePlayer = new RobotFakePlayer(mob, username);
             fakePlayers.put(username, fakePlayer);
@@ -29,6 +29,6 @@ public class RobotFakePlayerFactory {
 
     @SubscribeEvent
     public static void unloadLevel(LevelEvent.Unload event) {
-        fakePlayers.entrySet().removeIf(entry -> entry.getValue().level == event.getLevel());
+        fakePlayers.entrySet().removeIf(entry -> entry.getValue().level() == event.getLevel());
     }
 }

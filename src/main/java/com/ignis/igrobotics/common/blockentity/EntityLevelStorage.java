@@ -23,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
-import software.bernie.shadowed.eliotlash.mclib.utils.MathHelper;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -74,15 +73,15 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
         switch (facing) {
             case NORTH -> {
                 entity.setPos(Vec3.atBottomCenterOf(pos.get().north()));
-                entity.lerpHeadTo(MathHelper.wrapDegrees(180.0F), 0);
+                entity.lerpHeadTo((float) Math.toRadians(180), 0);
             }
             case WEST -> {
                 entity.setPos(Vec3.atBottomCenterOf(pos.get().west()));
-                entity.lerpHeadTo(MathHelper.wrapDegrees(90.0F), 0);
+                entity.lerpHeadTo((float) Math.toRadians(90), 0);
             }
             case EAST -> {
                 entity.setPos(Vec3.atBottomCenterOf(pos.get().east()));
-                entity.lerpHeadTo(MathHelper.wrapDegrees(-90.0F), 0);
+                entity.lerpHeadTo((float) Math.toRadians(-90), 0);
             }
             case SOUTH -> {
                 entity.setPos(Vec3.atBottomCenterOf(pos.get().south()));
@@ -176,6 +175,6 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
 
     public static Optional<Entity> copyEntity(Entity toCopy) {
         CompoundTag tag = toCopy.serializeNBT();
-        return EntityType.create(tag, toCopy.level);
+        return EntityType.create(tag, toCopy.level());
     }
 }

@@ -3,7 +3,7 @@ package com.ignis.igrobotics.client.screen.elements;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,24 +34,23 @@ public class ArrowElement extends GuiElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int p_94670_, int p_94671_, float p_94672_) {
+    public void render(GuiGraphics graphics, int p_94670_, int p_94671_, float p_94672_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Reference.MISC);
 
         int k = (int) (progress.get() * Math.max(width, height));
         int l = (k != 0) ? 1 : 0;
 
         switch (pointTo) {
-            case DOWN, SOUTH -> blit(poseStack, getX(), getY(), 233, 211, width, k);
-            case EAST -> blit(poseStack, getX(), getY(), 233, 196, k, height);
+            case DOWN, SOUTH -> graphics.blit(Reference.MISC, getX(), getY(), 233, 211, width, k);
+            case EAST -> graphics.blit(Reference.MISC, getX(), getY(), 233, 196, k, height);
             case WEST -> {
                 k += l;
-                blit(poseStack, getX() + width - k, getY(), 233 + width - k, 180, k, height);
+                graphics.blit(Reference.MISC, getX() + width - k, getY(), 233 + width - k, 180, k, height);
             }
             case UP, NORTH -> {
                 k += l;
-                blit(poseStack, getX(), getY() + height - k, 233, 233 + height - k, width, k);
+                graphics.blit(Reference.MISC, getX(), getY() + height - k, 233, 233 + height - k, width, k);
             }
         }
     }

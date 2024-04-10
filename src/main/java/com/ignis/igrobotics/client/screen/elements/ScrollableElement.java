@@ -4,6 +4,7 @@ import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
@@ -67,14 +68,14 @@ public class ScrollableElement extends GuiElement {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         for(int index : toRemove) {
             internalRemove(index);
         }
         toRemove.clear();
-        RenderUtil.enableScissor(getShape());
-        super.render(poseStack, mouseX, mouseY, delta);
-        RenderUtil.disableScissor();
+        RenderUtil.enableScissor(graphics, getShape());
+        super.render(graphics, mouseX, mouseY, delta);
+        RenderUtil.disableScissor(graphics);
     }
 
     @Override

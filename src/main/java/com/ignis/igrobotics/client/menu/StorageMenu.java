@@ -22,13 +22,13 @@ public class StorageMenu extends AbstractContainerMenu {
     public final ContainerData data;
 
     public StorageMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
     public StorageMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.STORAGE.get(), id);
         this.blockEntity = (StorageBlockEntity) blockEntity;
-        this.level = playerInv.player.level;
+        this.level = playerInv.player.level();
         this.data = data;
         addDataSlots(data);
     }

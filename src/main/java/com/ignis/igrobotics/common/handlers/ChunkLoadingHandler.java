@@ -28,7 +28,7 @@ public class ChunkLoadingHandler {
     @SubscribeEvent
     public static void onEntityEntersChunk(EntityEvent.EnteringSection event) {
         if(!event.didChunkChange()) return;
-        if(event.getEntity().level.isClientSide()) return;
+        if(event.getEntity().level().isClientSide()) return;
         event.getEntity().getCapability(ModCapabilities.CHUNK_LOADER).ifPresent(loader -> {
             loader.unloadChunks(event.getOldPos().chunk());
             loader.loadChunks(event.getNewPos().chunk());
@@ -37,7 +37,7 @@ public class ChunkLoadingHandler {
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
-        if(event.getEntity().level.isClientSide()) return;
+        if(event.getEntity().level().isClientSide()) return;
         event.getEntity().getCapability(ModCapabilities.CHUNK_LOADER).ifPresent(loader -> {
             loader.unloadChunks(event.getEntity().chunkPosition());
         });

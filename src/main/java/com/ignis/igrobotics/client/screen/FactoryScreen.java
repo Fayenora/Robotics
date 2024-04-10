@@ -19,8 +19,8 @@ import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketConstructRobot;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -98,11 +98,10 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float p_97788_, int p_97789_, int p_97790_) {
+    protected void renderBg(GuiGraphics graphics, float p_97788_, int p_97789_, int p_97790_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(poseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
         startButton.setEnabled(!MachineBlockEntity.isRunning(menu.data) && (factory.canStart() || (factory.hasCraftedRobotReady() && !nameBar.getValue().isEmpty())));
         switchColorLeft.setVisible(factory.getEntity().isPresent());
@@ -117,7 +116,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         if(factory.getEntity().isEmpty() || !(factory.getEntity().get() instanceof LivingEntity living)) return;
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderUtil.drawEntityOnScreen(poseStack, leftPos + 116, topPos + 105, 30, 0, 0, living);
+        RenderUtil.drawEntityOnScreen(graphics, leftPos + 116, topPos + 105, 30, 0, 0, living);
 
 		/* Draw Color Icon
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -135,15 +134,15 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, delta);
-        renderTooltip(poseStack, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, delta);
+        renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        super.renderTooltip(poseStack, mouseX, mouseY);
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderTooltip(graphics, mouseX, mouseY);
         if(startButton.isHovered()) {
             List<Component> tooltip = new ArrayList<>();
             if(MachineBlockEntity.isRunning(menu.data)) {
@@ -158,7 +157,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
                 tooltip.add(requirement("body"));
                 tooltip.add(requirement("head"));
             }
-            renderComponentTooltip(poseStack, tooltip, mouseX, mouseY);
+            graphics.renderComponentTooltip(Minecraft.getInstance().font, tooltip, mouseX, mouseY);
         }
     }
 
@@ -178,7 +177,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int p_97809_, int p_97810_) {
+    protected void renderLabels(GuiGraphics poseStack, int p_97809_, int p_97810_) {
         //Don't
     }
 }

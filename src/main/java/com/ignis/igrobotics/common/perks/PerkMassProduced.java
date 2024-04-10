@@ -56,7 +56,7 @@ public class PerkMassProduced extends Perk {
 			BlockPos lower = entity.blockPosition().relative(Direction.DOWN, AREA_SIZE).relative(Direction.SOUTH, AREA_SIZE).relative(Direction.EAST, AREA_SIZE);
 			BlockPos upper = entity.blockPosition().relative(Direction.UP, AREA_SIZE).relative(Direction.NORTH, AREA_SIZE).relative(Direction.WEST, AREA_SIZE);
 			AABB area = new AABB(lower, upper);
-			int allies = entity.level.getEntities(entity, area, ent -> {
+			int allies = entity.level().getEntities(entity, area, ent -> {
 				Optional<IRobot> otherRobot = entity.getCapability(ModCapabilities.ROBOT).resolve();
 				Optional<IPerkMapCap> perkMap = entity.getCapability(ModCapabilities.PERKS).resolve();
 				if(otherRobot.isEmpty() || !otherRobot.get().isActive()) return false;

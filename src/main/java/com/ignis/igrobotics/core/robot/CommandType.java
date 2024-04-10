@@ -39,12 +39,12 @@ public class CommandType {
 
     @Nullable
     public Goal getGoal(List<Selection<?>> selectors, Mob robot) {
-        if(robot.level.isClientSide()) return null;
+        if(robot.level().isClientSide()) return null;
         try {
             return applyToEntity.apply(robot, selectors.toArray(new Selection[0]));
         } catch(CommandApplyException e) {
             robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
-                Player player = robot.level.getPlayerByUUID(r.getOwner());
+                Player player = robot.level().getPlayerByUUID(r.getOwner());
                 if(player == null) return;
                 MutableComponent msg = Component.literal(e.getMessage());
                 msg.setStyle(msg.getStyle().withColor(TextColor.fromLegacyFormat(ChatFormatting.RED)));

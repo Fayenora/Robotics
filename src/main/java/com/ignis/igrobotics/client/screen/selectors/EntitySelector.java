@@ -18,6 +18,7 @@ import com.ignis.igrobotics.network.messages.server.PacketRequestEntitySearch;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -46,10 +47,10 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 	}
 
 	@Override
-	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if(selection.get() == null) return;
 		if(selection.get().equals(Reference.DEFAULT_UUID)) {
-			RenderUtil.drawCenteredString(poseStack, Component.translatable("none"), getX() + width / 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.5f, getWidth() - 2);
+			RenderUtil.drawCenteredString(graphics, Component.translatable("none"), getX() + width / 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.5f, getWidth() - 2);
 			return;
 		}
 		if(!cached) {
@@ -58,9 +59,9 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 			return;
 		}
 		if(cachedEntity != null && currentGuiActive()) {
-			RenderUtil.enableScissor(MathUtil.downsizeRect(getShape(), 1));
-			RenderUtil.drawRotatingEntity(poseStack, getX() + width / 2, getY() + height / 2 + 6, (int) (8 / cachedEntity.getBoundingBox().getSize()), cachedEntity, angle);
-			RenderUtil.disableScissor();
+			RenderUtil.enableScissor(graphics, MathUtil.downsizeRect(getShape(), 1));
+			RenderUtil.drawRotatingEntity(graphics.pose(), getX() + width / 2, getY() + height / 2 + 6, (int) (8 / cachedEntity.getBoundingBox().getSize()), cachedEntity, angle);
+			RenderUtil.disableScissor(graphics);
 		}
 	}
 

@@ -39,6 +39,6 @@ public class PlaceBlocksGoal extends AbstractMultiBlockGoal {
 
     protected BlockPlaceContext getDefaultPlaceContext(BlockPos pos) {
         BlockHitResult blockHit = new BlockHitResult(Vec3.ZERO, Direction.UP, pos, true);
-        return new BlockPlaceContext(entity.level, null, InteractionHand.MAIN_HAND, entity.getMainHandItem(), blockHit);
+        return new BlockPlaceContext(entity.level(), null, InteractionHand.MAIN_HAND, entity.getMainHandItem(), blockHit);
     }
 }

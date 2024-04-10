@@ -27,7 +27,7 @@ public class RangedCrossbowAttack extends AbstractRangedAttackGoal {
 
     @Override
     public void performAttack(Mob attacker, LivingEntity target, InteractionHand hand, float force, float inaccuracy) {
-        CrossbowItem.performShooting(attacker.level, attacker, hand, attacker.getItemInHand(hand), force, inaccuracy);
+        CrossbowItem.performShooting(attacker.level(), attacker, hand, attacker.getItemInHand(hand), force, inaccuracy);
         attacker.getItemInHand(hand).hurtAndBreak(1, attacker, living -> living.broadcastBreakEvent(getWeaponHand()));
     }
 

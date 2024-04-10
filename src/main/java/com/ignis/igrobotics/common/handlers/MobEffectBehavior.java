@@ -34,7 +34,7 @@ public class MobEffectBehavior {
 
     private static int impactEffect(LivingEntity entity, float fallingDistance) {
         if(fallingDistance < 4) return 0;
-        if(entity.level.isClientSide) return 0;
+        if(entity.level().isClientSide) return 0;
         if(!entity.hasEffect(ModMobEffects.IMPACTFUL.get())) return 0;
         int effectLevel = entity.getEffect(ModMobEffects.IMPACTFUL.get()).getAmplifier();
 
@@ -46,7 +46,7 @@ public class MobEffectBehavior {
     }
 
     public static void createShockWave(Entity owner, Vec3 location, float damage, float radius, float depth, float intensity) {
-        Level level = owner.level;
+        Level level = owner.level();
         List<StompedUpBlockEntity> stompedUpBlocks = new ArrayList<>();
         // Consider all blocks with manhattan distance r to the center.
         // Only looking from the top, consider how much of the block area is covered by the impact circle.
@@ -70,7 +70,7 @@ public class MobEffectBehavior {
             }
         }
 
-        for(Entity ent : owner.level.getEntities(owner, owner.getBoundingBox().inflate(radius), e -> e.distanceTo(owner) < radius)) {
+        for(Entity ent : owner.level().getEntities(owner, owner.getBoundingBox().inflate(radius), e -> e.distanceTo(owner) < radius)) {
             ent.hurt(ent.damageSources().explosion(owner, ent), damage);
         }
         for(StompedUpBlockEntity stompedBlock : stompedUpBlocks) {

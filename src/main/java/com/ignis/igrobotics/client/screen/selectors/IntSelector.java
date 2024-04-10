@@ -6,8 +6,8 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,8 +34,8 @@ public class IntSelector extends SelectorElement<Integer> {
 	}
 
 	@Override
-	public void renderSelection(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		RenderUtil.drawCenteredString(poseStack, Integer.toString(selection.get()), getX() + width / 2, getY() + 5, Reference.FONT_COLOR, 1, 16);
+	public void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get()), getX() + width / 2, getY() + 5, Reference.FONT_COLOR, 1, 16);
 	}
 	
 	class GuiSelectInt extends GuiElement {

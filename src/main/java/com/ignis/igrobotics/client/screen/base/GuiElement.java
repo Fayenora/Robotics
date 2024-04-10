@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.client.screen.base;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -123,19 +123,19 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         tickCounter += delta;
         RenderSystem.enableDepthTest();
-        poseStack.translate(0, 0, 1);
+        graphics.pose().translate(0, 0, 1);
         if(resource != null) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, resource);
-            blit(poseStack, getX(), getY(), textureLoc.x, textureLoc.y, getShape().width, getShape().height);
+            graphics.blit(resource, getX(), getY(), textureLoc.x, textureLoc.y, getShape().width, getShape().height);
         }
         for(var child : children()) {
             if(child instanceof Renderable renderable) {
-                renderable.render(poseStack, mouseX, mouseY, delta);
+                renderable.render(graphics, mouseX, mouseY, delta);
             }
         }
         RenderSystem.disableDepthTest();
@@ -168,7 +168,7 @@ public class GuiElement extends AbstractContainerEventHandler implements IElemen
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrOutput) {
-        narrOutput.add(NarratedElementType.TITLE, Component.translatable("gui.narrate.button", name));
+    public void updateNarration(NarrationElementOutput narrationOutput) {
+        narrationOutput.add(NarratedElementType.TITLE, Component.translatable("gui.narrate.button", name));
     }
 }
