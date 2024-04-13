@@ -70,6 +70,10 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     // Adding & Removing Components
     //////////////////////////////
 
+    public <T extends GuiEventListener & Renderable & NarratableEntry> void addElement(T element) {
+        addRenderableWidget(element);
+    }
+
     @Override
     public void addElement(IElement element) {
         addRenderableWidget(element);

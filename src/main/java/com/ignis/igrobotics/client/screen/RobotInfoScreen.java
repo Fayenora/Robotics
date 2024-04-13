@@ -88,8 +88,8 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         super.init();
         SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.ROBOT_INFO.get(), RobotBehavior.possibleMenus(entity), leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
         sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
-        addRenderableWidget(sidebar);
-        addRenderableWidget(new EnergyBarElement(leftPos + 155, topPos + 8, 165, () -> menu.data.get(0), () -> menu.data.get(1)));
+        addElement(sidebar);
+        addElement(new EnergyBarElement(leftPos + 155, topPos + 8, 165, () -> menu.data.get(0), () -> menu.data.get(1)));
 
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             this.pickUpButton = new ButtonElement(leftPos + 135, topPos + 7, 17, 17, robot.getPickUpState(), 3);
@@ -123,7 +123,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
             if(access.hasOwner()) {
                 this.ownerSelector = new GuiSelectorOwner(access.getOwner(), leftPos + 113, topPos + 150);
-                addRenderableWidget(ownerSelector);
+                addElement(ownerSelector);
             } else {
                 claimButton = new ButtonElement(leftPos + 76, topPos + 150, 54, 19, Lang.localise("button.claim"), button -> {
                     access.setOwner(Minecraft.getInstance().player.getUUID());
@@ -133,15 +133,15 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
                     init();
                 });
                 claimButton.initTextureLocation(Reference.MISC, 94, 34);
-                addRenderableWidget(claimButton);
+                addElement(claimButton);
             }
 
-            addRenderableWidget(pickUpButton);
-            addRenderableWidget(chunkLoadingToggle);
-            addRenderableWidget(soundToggle);
-            addRenderableWidget(powerButton);
-            addRenderableWidget(permissionConfig);
-            addRenderableWidget(nameBar);
+            addElement(pickUpButton);
+            addElement(chunkLoadingToggle);
+            addElement(soundToggle);
+            addElement(powerButton);
+            addElement(permissionConfig);
+            addElement(nameBar);
         });
 
         ScrollableElement attributeBar = new ScrollableElement(leftPos + 4, topPos + 5, 67, 170);
@@ -291,7 +291,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public static class GuiSelectorOwner extends EntitySelector {
 
         public GuiSelectorOwner(UUID owner, int x, int y) {
-            super(new Selection<>(owner), x, y);
+            super(Selection.of(owner), x, y);
         }
 
         protected void setOwner(LivingEntity entity) {

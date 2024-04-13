@@ -94,7 +94,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         addElement(startButton);
         addElement(switchColorLeft);
         addElement(switchColorRight);
-        addRenderableWidget(nameBar);
+        addElement(nameBar);
     }
 
     @Override

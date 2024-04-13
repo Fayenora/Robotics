@@ -8,17 +8,16 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	private SelectionType<A> type;
 	private A target;
 
-	// TODO Make private, move to method
-	public Selection(A value) {
+	private Selection(A value) {
 		set(value);
 	}
 	
-	public Selection(SelectionType<A> type) {
+	private Selection(SelectionType<A> type) {
 		this.type = type;
 		this.target = type.defaultsTo().get();
 	}
 	
-	public Selection(CompoundTag tag) {
+	private Selection(CompoundTag tag) {
 		deserializeNBT(tag);
 	}
 	
@@ -66,5 +65,13 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	@Override
 	public String toString() {
 		return type.toString(target);
+	}
+
+	public static <F> Selection<F> of(F value) {
+		return new Selection<>(value);
+	}
+
+	public static <F> Selection<F> ofType(SelectionType<F> type) {
+		return new Selection<>(type);
 	}
 }

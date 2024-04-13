@@ -36,7 +36,7 @@ public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
+        addElement(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
         addRenderableOnly(new ArrowElement(leftPos + arr_down.x, topPos + arr_down.y, Direction.DOWN, () -> getMachineProgress(menu.data, Direction.DOWN)));
         addRenderableOnly(new ArrowElement(leftPos + arr_up.x, topPos + arr_up.y, Direction.UP, () -> getMachineProgress(menu.data, Direction.UP)));
         addRenderableOnly(new ArrowElement(leftPos + arr_right.x, topPos + arr_right.y, Direction.WEST, () -> getMachineProgress(menu.data, Direction.WEST)));

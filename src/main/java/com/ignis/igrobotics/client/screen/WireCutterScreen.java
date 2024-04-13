@@ -30,7 +30,7 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
+        addElement(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
         addRenderableOnly(new ArrowElement(leftPos + arrow.x, topPos + arrow.y, Direction.EAST, () -> (float) menu.data.get(2) / menu.data.get(1)));
     }
 

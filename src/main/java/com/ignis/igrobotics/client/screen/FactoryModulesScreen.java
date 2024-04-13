@@ -41,7 +41,7 @@ public class FactoryModulesScreen extends BaseContainerScreen<FactoryModulesMenu
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnergyBarElement(leftPos + 8, topPos + 8, 203, () -> menu.data.get(3), () -> menu.data.get(4)));
+        addElement(new EnergyBarElement(leftPos + 8, topPos + 8, 203, () -> menu.data.get(3), () -> menu.data.get(4)));
 
         List<MenuType<?>> possibleMenus = List.of(ModMenuTypes.FACTORY.get(), ModMenuTypes.FACTORY_MODULES.get());
         sideBar = new SideBarSwitchElement(ModMenuTypes.FACTORY_MODULES.get(), possibleMenus, leftPos + imageWidth - 1, topPos + 3, 18, 17, factory.getBlockPos());

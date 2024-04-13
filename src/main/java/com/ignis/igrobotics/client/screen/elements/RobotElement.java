@@ -85,8 +85,8 @@ public class RobotElement extends ButtonElement {
             moveHere.initTextureLocation(Reference.MISC, 0, 102);
             moveHere.setTooltip(Lang.localise("button.move.here"));
             UUID playerUUID = Minecraft.getInstance().player.getUUID();
-            var selectionPlayer = new Selection<>(new EntitySearch(playerUUID));
-            var selectionFollowRange = new Selection<>(DEFAULT_FOLLOW_RANGE);
+            var selectionPlayer = Selection.of(new EntitySearch(playerUUID));
+            var selectionFollowRange = Selection.of(DEFAULT_FOLLOW_RANGE);
             moveHere.setNetworkAction(() -> new PacketAddCommand(robot.getId(), new RobotCommand(ModCommands.FOLLOW, List.of(selectionPlayer, selectionFollowRange))));
             addElement(moveHere);
         }

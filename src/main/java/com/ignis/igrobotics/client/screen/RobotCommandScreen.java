@@ -53,7 +53,7 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
         if(entity == null) return;
         SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.ROBOT_COMMANDS.get(), RobotBehavior.possibleMenus(entity), leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
         sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
-        addRenderableWidget(sidebar);
+        addElement(sidebar);
         selectedCommands = new ScrollableElement(leftPos + 9, topPos + 9, 116, 165);
         availableCommands = new ScrollableElement(leftPos + 132, topPos + 9, 116, 165);
 

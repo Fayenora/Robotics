@@ -57,13 +57,13 @@ public class CommandAPI implements ILuaAPI {
         RobotCommand command = new RobotCommand(commandType);
         List<SelectionType<?>> selectionTypes = commandType.getSelectionTypes();
         for(int i = 0; i < selectionTypes.size(); i++) {
-            Selection<?> selection = new Selection<>(selectionTypes.get(i));
+            Selection<?> selection = Selection.ofType(selectionTypes.get(i));
             if(i < selections.size()) {
                 Object obj = selectionTypes.get(i).parse(selections.get(i));
                 if(obj == null) {
                     throw new LuaException("Could not parse " + selections.get(i) + " as " + selectionTypes.get(i).toString());
                 }
-                selection = new Selection<>(obj);
+                selection = Selection.of(obj);
             }
             command.getSelectors().set(i, selection);
         }
