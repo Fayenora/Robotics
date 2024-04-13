@@ -4,7 +4,6 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.core.util.Lang;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;

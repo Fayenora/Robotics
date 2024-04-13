@@ -6,7 +6,6 @@ import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

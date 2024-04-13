@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.definitions.ModBlocks;
-import com.ignis.igrobotics.definitions.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;

@@ -6,7 +6,6 @@ import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.robot.SelectionType;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
