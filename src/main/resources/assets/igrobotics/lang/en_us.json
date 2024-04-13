@@ -4,6 +4,7 @@
   "none": "None",
   "create": "Create",
   "start": "Start",
+  "igrobotics.unknown": "Unknown",
   "igrobotics.level": "[Level]",
 
   "minecraft:overworld": "Overworld",
@@ -40,6 +41,8 @@
   "igrobotics.button.config": "Manage access from other players",
   "igrobotics.button.power.up": "Power up",
   "igrobotics.button.power.down": "Power down",
+  "igrobotics.button.move.here": "Move here",
+  "igrobotics.button.exit.storage": "Exit storage",
   "igrobotics.button.claim": "Claim",
   "igrobotics.button.ownership.confirm": "You will only retain the default rights to this robot",
   "igrobotics.button.ownership.decline": "Keep Ownership",

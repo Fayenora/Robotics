@@ -47,6 +47,8 @@ public class NetworkHandler {
         registerMessageHandledOnMessageThread(PacketRequestEntitySearch.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketSetCommands.class, NetworkDirection.PLAY_TO_SERVER);
         registerMessage(PacketSetAccessConfig.class, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(PacketReleaseFromCommandGroup.class, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(PacketAddCommand.class, NetworkDirection.PLAY_TO_SERVER);
     }
 
     private static <MSG extends IMessage> void registerMessage(Class<MSG> clazz, NetworkDirection direction) {

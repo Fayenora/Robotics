@@ -31,12 +31,13 @@ public class RobotView implements INBTSerializable<CompoundTag> {
     private String name;
     private DyeColor color;
     private RobotPart[] parts;
+    private boolean active;
     private GlobalPos lastKnownPosition;
     private RobotState state = RobotState.IN_WORLD;
 
     private Entity cache;
 
-    public RobotView() {}
+    private RobotView() {}
 
     public RobotView(Entity entity) {
         this.uuid = entity.getUUID();
@@ -45,6 +46,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
             this.color = partCap.getColor();
             this.parts = partCap.getBodyParts();
         });
+        entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> active = robot.isActive());
         this.lastKnownPosition = GlobalPos.of(entity.level().dimension(), entity.blockPosition());
     }
 
@@ -81,6 +83,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         }
         //Case 3: Nowhere to be found
         RobotEntity robot = new RobotEntity(Robotics.proxy.getLevel());
+        robot.setUUID(uuid);
         robot.setCustomName(Component.literal(name));
         robot.getCapability(ModCapabilities.PARTS).ifPresent(partCaps -> {
             partCaps.setColor(color);
@@ -88,6 +91,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
                 partCaps.setBodyPart(part);
             }
         });
+        robot.getCapability(ModCapabilities.ROBOT).ifPresent(robotics -> robotics.setActivation(active));
         return robot;
     }
 
@@ -104,6 +108,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         tag.putString("name", name);
         tag.putInt("color", color.getId());
         tag.put("parts", NBTUtil.serializeParts(parts));
+        tag.putBoolean("active", active);
         tag.putByte("state", (byte) state.ordinal());
         tag.put("pos", PosUtil.writePos(lastKnownPosition));
         return tag;
@@ -115,6 +120,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         name = nbt.getString("name");
         color = DyeColor.byId(nbt.getInt("color"));
         parts = NBTUtil.deserializeParts(nbt.get("parts"));
+        active = nbt.getBoolean("active");
         state = RobotState.values()[nbt.getByte("state")];
         lastKnownPosition = PosUtil.readPos(nbt.getCompound("pos"));
     }
@@ -123,12 +129,14 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         Entity ent = getEntity();
         buf.writeEnum(state);
         buf.writeGlobalPos(lastKnownPosition);
+        buf.writeBoolean(active);
         EntityByteBufUtil.writeEntity(ent, buf);
     }
 
     public void read(FriendlyByteBuf buf) {
         state = buf.readEnum(RobotState.class);
         lastKnownPosition = buf.readGlobalPos();
+        active = buf.readBoolean();
         cache = EntityByteBufUtil.readEntity(buf);
     }
 
@@ -168,7 +176,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
     }
 
     public UUID getUUID() {
-        return uuid;
+        return uuid != null ? uuid : cache.getUUID();
     }
 
     public GlobalPos getLastKnownPosition() {
@@ -177,6 +185,18 @@ public class RobotView implements INBTSerializable<CompoundTag> {
 
     public RobotState getState() {
         return state;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean activation) {
+        this.active = activation;
+    }
+
+    public void setState(RobotState state) {
+        this.state = state;
     }
 
     public enum RobotState {

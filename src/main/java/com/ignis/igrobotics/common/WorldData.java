@@ -82,12 +82,16 @@ public class WorldData extends SavedData {
     }
 
     public void releaseRobotFromCommandGroup(Entity robot) {
-        robot.getCapability(ModCapabilities.ROBOT).ifPresent(robotCap -> {
-            if(commandGroups.containsKey(robotCap.getCommandGroup())) {
-                commandGroups.get(robotCap.getCommandGroup()).remove(robot.getUUID());
-            }
+        robot.getCapability(ModCapabilities.ROBOT).ifPresent(robotics -> {
+            releaseRobotFromCommandGroup(robotics.getCommandGroup(), robot.getUUID());
         });
-        setDirty();
+    }
+
+    public void releaseRobotFromCommandGroup(int group, UUID entity) {
+        if(commandGroups.containsKey(group)) {
+            commandGroups.get(group).remove(entity);
+            setDirty();
+        }
     }
 
     public void rememberRobotStorage(BlockPos pos, Entity ent) {
@@ -110,6 +114,7 @@ public class WorldData extends SavedData {
         if(!commandGroups.containsKey(commandGroup)) {
             return List.of();
         }
+        // TODO Update any information on the robots
         return commandGroups.get(commandGroup).values();
     }
 

@@ -65,21 +65,23 @@ public class RobotCommand {
 
         for(RobotCommand command : commands) {
             CompoundTag commandTag = new CompoundTag();
-
-            //Type of command
-            commandTag.putInt("id", command.type.getId());
-
-            //Individual selections of the command
-            ListTag selectorList = new ListTag();
-            for(Selection<?> sel : command.getSelectors()) {
-                selectorList.add(sel.serializeNBT());
-            }
-            commandTag.put("selectors", selectorList);
-
+            writeToNBT(commandTag, command);
             list.add(commandTag);
         }
 
         comp.put("commands", list);
+    }
+
+    public static void writeToNBT(CompoundTag comp, RobotCommand command) {
+        //Type of command
+        comp.putInt("id", command.type.getId());
+
+        //Individual selections of the command
+        ListTag selectorList = new ListTag();
+        for(Selection<?> sel : command.getSelectors()) {
+            selectorList.add(sel.serializeNBT());
+        }
+        comp.put("selectors", selectorList);
     }
 
     public static List<RobotCommand> readFromNBT(CompoundTag comp) {
@@ -88,22 +90,23 @@ public class RobotCommand {
         List<RobotCommand> commands = new ArrayList<>();
 
         for (Tag tag : list) {
-            CompoundTag com = (CompoundTag) tag;
-
-            //Type of command
-            int id = com.getInt("id");
-
-            //Individual selections of the command
-            ListTag selectorList = com.getList("selectors", Tag.TAG_COMPOUND);
-            ArrayList<Selection<?>> selections = new ArrayList<>();
-            for(Tag value : selectorList) {
-                selections.add(new Selection<>((CompoundTag) value));
-            }
-
-            //Instantiate command
-            commands.add(new RobotCommand(CommandType.byId(id), selections));
+            commands.add(readSingleCommandFromNBT((CompoundTag) tag));
         }
 
         return commands;
+    }
+
+    public static RobotCommand readSingleCommandFromNBT(CompoundTag comp) {
+        //Type of command
+        int id = comp.getInt("id");
+
+        //Individual selections of the command
+        ListTag selectorList = comp.getList("selectors", Tag.TAG_COMPOUND);
+        ArrayList<Selection<?>> selections = new ArrayList<>();
+        for(Tag value : selectorList) {
+            selections.add(new Selection<>((CompoundTag) value));
+        }
+
+        return new RobotCommand(CommandType.byId(id), selections);
     }
 }

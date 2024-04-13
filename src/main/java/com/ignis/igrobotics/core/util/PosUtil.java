@@ -52,9 +52,15 @@ public class PosUtil {
     }
 
     public static Component prettyPrint(GlobalPos pos) {
-        List<Component> components = List.of(
-                Lang.localiseExisting(pos.dimension().location().toString()),
-                Component.literal(pos.pos().getX() + " " + pos.pos().getY() + " " + pos.pos().getZ()));
+        List<Component> components = List.of(prettyPrint(pos.dimension()), prettyPrint(pos.pos()));
         return ComponentUtils.formatList(components, Component.literal(" "));
+    }
+
+    public static Component prettyPrint(BlockPos pos) {
+        return Component.literal(pos.getX() + " " + pos.getY() + " " + pos.getZ());
+    }
+
+    public static Component prettyPrint(ResourceKey<Level> dimension) {
+        return Lang.localiseExisting(dimension.location().toString());
     }
 }
