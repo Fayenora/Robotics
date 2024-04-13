@@ -5,7 +5,6 @@ import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.core.util.StringUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

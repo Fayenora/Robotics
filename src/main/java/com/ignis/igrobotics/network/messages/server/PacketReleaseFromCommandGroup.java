@@ -1,7 +1,6 @@
 package com.ignis.igrobotics.network.messages.server;
 
 import com.ignis.igrobotics.common.WorldData;
-import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.network.messages.IMessage;

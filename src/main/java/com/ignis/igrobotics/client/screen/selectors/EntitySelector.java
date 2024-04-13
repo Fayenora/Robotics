@@ -15,7 +15,6 @@ import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.IPacketDataReceiver;
 import com.ignis.igrobotics.network.messages.server.PacketRequestEntitySearch;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

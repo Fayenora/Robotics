@@ -2,13 +2,10 @@ package com.ignis.igrobotics.integration.cc;
 
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.definitions.ModBlocks;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.impl.BundledRedstone;
 import dan200.computercraft.impl.Peripherals;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import dan200.computercraft.shared.platform.ComponentAccess;
-import dan200.computercraft.shared.platform.PlatformHelper;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

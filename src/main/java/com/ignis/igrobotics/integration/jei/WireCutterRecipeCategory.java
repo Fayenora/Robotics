@@ -5,7 +5,6 @@ import com.ignis.igrobotics.client.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.definitions.ModMachines;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

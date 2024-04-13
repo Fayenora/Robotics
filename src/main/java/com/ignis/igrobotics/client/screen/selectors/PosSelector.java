@@ -11,7 +11,6 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

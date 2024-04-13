@@ -1,10 +1,10 @@
 package com.ignis.igrobotics.common.entity;
 
-import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.common.entity.ai.RangedBowAttack;
 import com.ignis.igrobotics.common.entity.ai.RangedCrossbowAttack;
 import com.ignis.igrobotics.common.entity.ai.RangedGenericAttack;
 import com.ignis.igrobotics.common.entity.ai.ReachAcrossDimensionGoal;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.util.InventoryUtil;

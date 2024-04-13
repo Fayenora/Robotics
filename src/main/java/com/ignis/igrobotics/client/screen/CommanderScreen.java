@@ -9,7 +9,6 @@ import com.ignis.igrobotics.client.screen.elements.RobotElement;
 import com.ignis.igrobotics.client.screen.elements.ScrollableElement;
 import com.ignis.igrobotics.core.robot.RobotView;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;

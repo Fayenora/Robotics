@@ -1,16 +1,15 @@
 package com.ignis.igrobotics.common.items;
 
 import com.ignis.igrobotics.client.menu.CommanderMenu;
-import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.RoboticsFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.robot.RobotView;

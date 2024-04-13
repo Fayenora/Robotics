@@ -6,7 +6,6 @@ import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ArrowElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;

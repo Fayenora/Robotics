@@ -8,7 +8,6 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.integration.jei.RoboticsJEIPlugin;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.gui.GuiGraphics;

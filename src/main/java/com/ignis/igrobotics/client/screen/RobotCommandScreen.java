@@ -18,7 +18,6 @@ import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetCommands;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
