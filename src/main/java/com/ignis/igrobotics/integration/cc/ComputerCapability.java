@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.integration.cc;
 
+import com.ignis.igrobotics.Reference;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerContext;
@@ -13,13 +14,11 @@ import java.util.UUID;
 
 public class ComputerCapability implements IComputerized, INBTSerializable<CompoundTag> {
 
-    private static final UUID NO_COMPUTER = UUID.fromString("00000000-0000-0000-0000-000000000000");
-
     private final LivingEntity entity;
     private EntityComputer computer;
 
     int computerID = -1;
-    UUID instanceID = NO_COMPUTER;
+    UUID instanceID = Reference.DEFAULT_UUID;
 
     public ComputerCapability(LivingEntity entity) {
         this.entity = entity;
@@ -27,7 +26,7 @@ public class ComputerCapability implements IComputerized, INBTSerializable<Compo
 
     @Override
     public boolean hasComputer() {
-        return !instanceID.equals(NO_COMPUTER);
+        return !instanceID.equals(Reference.DEFAULT_UUID);
     }
 
     @Override

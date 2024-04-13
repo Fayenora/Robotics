@@ -239,14 +239,12 @@ public class CommanderItem extends Item {
 
     private boolean addNewCommand(Player player, Mob mob, RobotCommand command, boolean strict, String message, Object... additionalInfo) {
         if(!mob.getCapability(ModCapabilities.COMMANDS).isPresent()) return false;
-        ICommandable commands = mob.getCapability(ModCapabilities.COMMANDS).resolve().get();
+        if(player.level().isClientSide) return false;
         if(strict) {
             Goal goal = command.getGoal(mob);
             if(goal == null || !goal.canUse()) return false;
         }
-        Collection<RobotCommand> currentCommands = new HashSet<>(commands.getCommands());
-        currentCommands.add(command);
-        commands.setCommands(currentCommands);
+        mob.getCapability(ModCapabilities.COMMANDS).ifPresent(commands -> commands.addCommand(command));
         List<Object> messageObjects = new ArrayList<>(Arrays.stream(additionalInfo).toList());
         messageObjects.add(0, mob.getDisplayName());
         player.sendSystemMessage(Component.translatable(message, messageObjects.toArray()));
@@ -323,7 +321,10 @@ public class CommanderItem extends Item {
     @Nullable
     public static LivingEntity getRememberedEntity(Level level, ItemStack stack) {
         if(!getTagCompound(stack).contains(NBT_ENTITY)) return null;
-        if(getTagCompound(stack).contains(NBT_ENTITY_CACHE)) return (LivingEntity) level.getEntity(getTagCompound(stack).getInt(NBT_ENTITY_CACHE));
+        if(getTagCompound(stack).contains(NBT_ENTITY_CACHE)) {
+            Entity entity = level.getEntity(getTagCompound(stack).getInt(NBT_ENTITY_CACHE));
+            if(entity instanceof LivingEntity living) return living;
+        }
         UUID uuid = getTagCompound(stack).getUUID(NBT_ENTITY);
 
         //FIXME Clients may not know of the entity

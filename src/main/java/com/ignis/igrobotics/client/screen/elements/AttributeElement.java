@@ -6,6 +6,7 @@ import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -38,21 +39,21 @@ public class AttributeElement extends GuiElement {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
         RenderSystem.enableColorLogicOp();
-        RenderSystem.setShaderColor(color.getRed() / 256f, color.getGreen() / 256f, color.getBlue() / 256f, 1);
+        graphics.setColor(color.getRed() / 256f, color.getGreen() / 256f, color.getBlue() / 256f, 1);
         graphics.blit(TEXTURE, getX(), getY() + 2, 0, 182, 67, 11);
         RenderUtil.drawString(graphics, attribute, getX() + 3, getY() + 5, Reference.FONT_COLOR, 0.6f, 43);
         RenderUtil.drawString(graphics, value, getX() + 47, getY() + 5, Reference.FONT_COLOR, 0.6f, 15);
         if(shimmer > 0) {
-            RenderSystem.setShaderColor(1, 1, 1, 0.5f);
+            graphics.setColor(1, 1, 1, 0.5f);
             graphics.blit(TEXTURE, getX() + shimmer, getY() + 3, 0, 193, 5, 9);
             shimmer++;
             shimmer %= width - 5;
         } else if(r.nextDouble() > 0.999) {
             shimmer++;
         }
-        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.disableBlend();
         RenderSystem.disableColorLogicOp();
     }

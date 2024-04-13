@@ -252,13 +252,13 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void setCommandGroup(int group) {
-        dataManager.set(COMMAND_GROUP, group);
         WorldData data = WorldData.get();
         if(group == 0) {
             data.releaseRobotFromCommandGroup(entity);
         } else {
             data.cacheRobotForCommandGroup(group, entity);
         }
+        dataManager.set(COMMAND_GROUP, group);
     }
 
     @Override
