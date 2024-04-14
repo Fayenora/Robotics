@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.core;
+package com.ignis.igrobotics.core.util;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,13 +19,44 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * A set of common functions for finding entities
+ * A set of common functions for finding entities, usually across all levels.
+ * For a serializable entity search see {@link com.ignis.igrobotics.core.EntitySearch}
  */
 @MethodsReturnNonnullByDefault
-public class RoboticsFinder {
+public class EntityFinder {
 
     /** Search radius to use on client side */
     public static final int SEARCH_RADIUS = 100;
+
+    /**
+     * Search for the closest entity in a specified level
+     * @param level the level to search
+     * @param origin which point the entity should be closest to
+     * @return the entity fulfilling the condition which is closest to origin, if it exists
+     */
+    @Nullable
+    public static Entity getClosestTo(Level level, Vec3 origin, Predicate<Entity> condition) {
+        Iterable<Entity> toSearch;
+        if(level instanceof ServerLevel serverLevel) {
+            toSearch = serverLevel.getAllEntities();
+        } else {
+            Player player = Robotics.proxy.getPlayer();
+            if(player == null) return null;
+            toSearch = level.getEntities(player, player.getBoundingBox().deflate(SEARCH_RADIUS));
+        }
+        double min_distance = Double.MAX_VALUE;
+        Entity result = null;
+        for(Entity ent : toSearch) {
+            if(condition.test(ent)) {
+                double distance = ent.distanceToSqr(origin);
+                if(distance < min_distance) {
+                    result = ent;
+                    min_distance = distance;
+                }
+            }
+        }
+        return result;
+    }
 
     /**
      * Find an entity with specified UUID across all dimensions on server-side. On client-side only search entities in the vicinity

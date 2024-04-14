@@ -42,7 +42,7 @@ public class EntitySearchSelector extends SelectorElement<EntitySearch> implemen
     @Override
     public void renderSelection(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if(selection.get() == null) return;
-        if(selection.get().equals(new EntitySearch())) {
+        if(selection.get().equals(EntitySearch.SEARCH_FOR_NONE)) {
             RenderUtil.drawCenteredString(graphics, Component.translatable("none"), getX() + width / 2, getY() + height / 2 - 2, Reference.FONT_COLOR, 0.5f, getWidth() - 2);
             return;
         }
@@ -106,7 +106,9 @@ public class EntitySearchSelector extends SelectorElement<EntitySearch> implemen
                     getBaseGui().removeSubGui();
                     return;
                 }
-                NetworkHandler.sendToServer(new PacketRequestEntitySearch(EntitySearchSelector.this.getParentGuiPath(), new EntitySearch(textField.getValue())));
+                EntitySearch search = new EntitySearch(textField.getValue());
+                setSelection(search);
+                NetworkHandler.sendToServer(new PacketRequestEntitySearch(EntitySearchSelector.this.getParentGuiPath(), search));
                 getBaseGui().removeSubGui();
             });
             buttonSelect.initTextureLocation(Reference.MISC, 0, 187);

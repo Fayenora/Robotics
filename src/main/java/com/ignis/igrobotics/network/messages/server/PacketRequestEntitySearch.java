@@ -15,22 +15,17 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class PacketRequestEntitySearch implements IMessage {
 
-	EntitySearch search = new EntitySearch();
+	EntitySearch search;
 	int[] parentGuiPath;
 	
 	public PacketRequestEntitySearch() {}
 
 	@OnlyIn(Dist.CLIENT)
-	private PacketRequestEntitySearch(IElement[] parentGuiPath) {
+	public PacketRequestEntitySearch(IElement[] parentGuiPath, EntitySearch search) {
 		this.parentGuiPath = new int[parentGuiPath.length];
 		for(int i = 0; i < parentGuiPath.length; i++) {
 			this.parentGuiPath[i] = parentGuiPath[i].hashCode();
 		}
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public PacketRequestEntitySearch(IElement[] parentGuiPath, EntitySearch search) {
-		this(parentGuiPath);
 		this.search = search;
 	}
 
@@ -50,7 +45,7 @@ public class PacketRequestEntitySearch implements IMessage {
 		for(int i = 0; i < size; i++) {
 			parentGuiPath[i] = buf.readInt();
 		}
-		search.read(buf);
+		search = EntitySearch.from(buf);
 	}
 
 	@Override
@@ -58,8 +53,8 @@ public class PacketRequestEntitySearch implements IMessage {
 		ServerPlayer player = cxt.getSender();
 		if(player == null) return;
 		if(!(player.level() instanceof ServerLevel server)) return;
-		Entity result = search.commence(server, player.blockPosition());
-		//Let the client know, even if the search did not find anything
+		Entity result = search.commence(server, player.position());
+		// Let the client know, even if the search did not find anything
 		NetworkHandler.sendToPlayer(new PacketGuiData(parentGuiPath, result), player);
 	}
 }

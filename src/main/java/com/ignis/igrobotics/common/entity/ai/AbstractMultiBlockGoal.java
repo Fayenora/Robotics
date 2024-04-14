@@ -29,7 +29,7 @@ public abstract class AbstractMultiBlockGoal extends Goal {
     private BlockPos nextPos;
 
     public AbstractMultiBlockGoal(Mob entity, GlobalPos pos1, GlobalPos pos2) {
-        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.TARGET));
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         this.entity = entity;
         navigator = new DimensionNavigator(entity, 16, 16, 1);
         dim = pos1.dimension();

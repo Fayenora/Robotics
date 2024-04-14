@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.common.blocks.MachineBlock;
-import com.ignis.igrobotics.core.RoboticsFinder;
+import com.ignis.igrobotics.core.util.EntityFinder;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
@@ -107,7 +107,7 @@ public class EntityLevelStorage implements INBTSerializable<CompoundTag> {
 
         //Limit amount of robots
 
-        int ownedRobots = RoboticsFinder.getRobotics(level, robot -> owner.equals(robot.getOwner())).size();
+        int ownedRobots = EntityFinder.getRobotics(level, robot -> owner.equals(robot.getOwner())).size();
         if(ownedRobots >= RoboticsConfig.general.robotAmountPerPlayerOnServer.get()) {
             Component warnMessage = Component.translatable("igrobotics.too_many_robots").setStyle(Style.EMPTY.withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW)));
             Player player = level.getPlayerByUUID(owner);

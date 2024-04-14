@@ -74,4 +74,8 @@ public class Selection<A> implements INBTSerializable<CompoundTag> {
 	public static <F> Selection<F> ofType(SelectionType<F> type) {
 		return new Selection<>(type);
 	}
+
+	public static <F> Selection<F> read(CompoundTag tag) {
+		return new Selection<>(tag);
+	}
 }

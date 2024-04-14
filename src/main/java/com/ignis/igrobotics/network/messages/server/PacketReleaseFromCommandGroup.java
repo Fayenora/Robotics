@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.network.messages.server;
 
 import com.ignis.igrobotics.common.WorldData;
-import com.ignis.igrobotics.core.RoboticsFinder;
+import com.ignis.igrobotics.core.util.EntityFinder;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
@@ -39,7 +39,7 @@ public class PacketReleaseFromCommandGroup implements IMessage {
     @Override
     public void handle(NetworkEvent.Context cxt) {
         WorldData.get().releaseRobotFromCommandGroup(commandGroup, entity);
-        Entity ent = RoboticsFinder.getEntity(cxt.getSender().level(), entity);
+        Entity ent = EntityFinder.getEntity(cxt.getSender().level(), entity);
         if(ent != null) {
             ent.getCapability(ModCapabilities.ROBOT).ifPresent(robotics -> robotics.setCommandGroup(0));
         }

@@ -48,7 +48,7 @@ public class SelectionType<T> {
         tag.putInt("value", number);
         return tag;
     }, tag -> tag.getInt("value"), string -> Integer.valueOf(Arrays.stream(string.split("\\D")).filter(s -> s.length() > 0).findFirst().get()), Object::toString);
-    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::new, EntitySearch::serializeNBT, EntitySearch::of, EntitySearch::new, EntitySearch::toString);
+    public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, () -> EntitySearch.SEARCH_FOR_NONE, EntitySearch::serializeNBT, EntitySearch::of, EntitySearch::new, EntitySearch::toString);
 
     private final String identifier;
     private final Class<T> type;

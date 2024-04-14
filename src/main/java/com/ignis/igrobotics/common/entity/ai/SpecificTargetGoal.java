@@ -9,6 +9,8 @@ import java.util.EnumSet;
 
 public class SpecificTargetGoal extends TargetGoal {
 
+	private final TargetingConditions targetingConditions = TargetingConditions.forCombat().ignoreLineOfSight();
+
 	public SpecificTargetGoal(Mob creature, LivingEntity target) {
 		super(creature, false, false);
 		setFlags(EnumSet.of(Flag.TARGET));
@@ -23,7 +25,18 @@ public class SpecificTargetGoal extends TargetGoal {
 
 	@Override
 	public boolean canUse() {
-		return canAttack(targetMob, TargetingConditions.forCombat());
+		return canAttack(targetMob, targetingConditions);
+	}
+
+	@Override
+	public boolean canContinueToUse() {
+		mob.setTarget(targetMob);
+		return canUse();
+	}
+
+	@Override
+	public void stop() {
+		mob.setTarget(null);
 	}
 
 	@Override

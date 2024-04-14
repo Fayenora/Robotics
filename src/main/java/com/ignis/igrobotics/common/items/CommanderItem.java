@@ -7,7 +7,7 @@ import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.QuickMoveToBlock;
 import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.EntitySearch;
-import com.ignis.igrobotics.core.RoboticsFinder;
+import com.ignis.igrobotics.core.util.EntityFinder;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
@@ -327,7 +327,7 @@ public class CommanderItem extends Item {
         UUID uuid = getTagCompound(stack).getUUID(NBT_ENTITY);
 
         //FIXME Clients may not know of the entity
-        Entity entity = RoboticsFinder.getEntity(level, uuid);
+        Entity entity = EntityFinder.getEntity(level, uuid);
         if(!(entity instanceof LivingEntity living)) return null;
         cacheEntity(stack, living.getId());
         return living;

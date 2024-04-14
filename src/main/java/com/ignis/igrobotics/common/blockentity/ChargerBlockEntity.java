@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.common.blocks.ChargerBlock;
-import com.ignis.igrobotics.core.RoboticsFinder;
+import com.ignis.igrobotics.core.util.EntityFinder;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ public class ChargerBlockEntity extends BlockEntity {
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, ChargerBlockEntity charger) {
         charger.getCapability(ForgeCapabilities.ENERGY).ifPresent(chargerEnergy -> {
-            List<LivingEntity> entitiesToCharge = level.getEntities(RoboticsFinder.LIVING, new AABB(pos), ent -> ent.getCapability(ForgeCapabilities.ENERGY).isPresent());
+            List<LivingEntity> entitiesToCharge = level.getEntities(EntityFinder.LIVING, new AABB(pos), ent -> ent.getCapability(ForgeCapabilities.ENERGY).isPresent());
             if(state.getValue(ChargerBlock.ACTIVE) != entitiesToCharge.size() > 0) {
                 BlockState newState = state.setValue(ChargerBlock.ACTIVE, entitiesToCharge.size() > 0);
                 level.setBlock(pos, newState, 3);

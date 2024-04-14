@@ -88,7 +88,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         this.goalSelector.addGoal(4, new RangedGenericAttack(this, 2, 8, 2));
         this.goalSelector.addGoal(4, new RangedBowAttack(this, 2, 8, 4));
         this.goalSelector.addGoal(4, new RangedCrossbowAttack(this, 2, 8, 1));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, getAttributeValue(Attributes.MOVEMENT_SPEED), true));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1, true));
         this.goalSelector.addGoal(8, new ReachAcrossDimensionGoal(this, 64));
         this.goalSelector.addGoal(CommandCapability.MAX_COMMANDS + CommandCapability.MAX_NON_COMMAND_GOALS + 2, new LookAtPlayerGoal(this, Player.class, 6));
     }

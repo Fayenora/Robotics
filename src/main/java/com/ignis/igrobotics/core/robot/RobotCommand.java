@@ -20,7 +20,7 @@ public class RobotCommand {
     public RobotCommand(CommandType commandType) {
         this.type = commandType;
         for(SelectionType<?> type : commandType.getSelectionTypes()) {
-            selectors.add(Selection.of(type));
+            selectors.add(Selection.ofType(type));
         }
     }
 
@@ -104,7 +104,7 @@ public class RobotCommand {
         ListTag selectorList = comp.getList("selectors", Tag.TAG_COMPOUND);
         ArrayList<Selection<?>> selections = new ArrayList<>();
         for(Tag value : selectorList) {
-            selections.add(Selection.of((CompoundTag) value));
+            selections.add(Selection.read((CompoundTag) value));
         }
 
         return new RobotCommand(CommandType.byId(id), selections);
