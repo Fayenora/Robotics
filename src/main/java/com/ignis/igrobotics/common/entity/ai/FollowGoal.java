@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -34,7 +35,10 @@ public class FollowGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 
         if (!(follower.getNavigation() instanceof GroundPathNavigation) && !(follower.getNavigation() instanceof FlyingPathNavigation)) {
-            throw new IllegalArgumentException("Unsupported mob type for FollowMobGoal");
+            throw new CommandApplyException("command.follow.unsupported");
+        }
+        if(follower == toFollow) {
+            throw new CommandApplyException("command.follow.selfReference");
         }
     }
 

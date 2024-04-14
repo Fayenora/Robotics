@@ -46,9 +46,7 @@ public class CommandType {
             robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
                 Player player = robot.level().getPlayerByUUID(r.getOwner());
                 if(player == null) return;
-                MutableComponent msg = Component.literal(e.getMessage());
-                msg.setStyle(msg.getStyle().withColor(TextColor.fromLegacyFormat(ChatFormatting.RED)));
-                player.sendSystemMessage(msg);
+                player.sendSystemMessage(e.getErrorMessage());
             });
             return null;
         }
