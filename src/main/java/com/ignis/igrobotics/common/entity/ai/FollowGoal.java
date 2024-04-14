@@ -25,6 +25,7 @@ public class FollowGoal extends Goal {
     private float oldWaterCost;
     protected final float areaSize;
 
+    //TODO Should take an EntitySearch directly and re-commence every time a target was killed / vanished
     public FollowGoal(Mob follower, Entity toFollow, float distance, float area) {
         this.entity = follower;
         this.navigation = follower.getNavigation();

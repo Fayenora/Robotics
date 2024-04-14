@@ -14,6 +14,7 @@ public class DefendGoal extends TargetGoal {
     LivingEntity toDefend;
     private int timestamp;
 
+    //TODO Should take an EntitySearch directly and re-commence every time a target was killed / vanished
     public DefendGoal(Mob defender, LivingEntity toDefend, boolean checkSight) {
         super(defender, checkSight);
         this.toDefend = toDefend;

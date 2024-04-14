@@ -43,6 +43,18 @@ public class StringUtil {
 		return viablePermissions.toString();
 	}
 
+	public static String titleCase(String s) {
+		s = s.replaceAll("_", " ");
+		StringBuilder builder = new StringBuilder();
+		char prevCharacter = ' ';
+		for(int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			builder.append(prevCharacter == ' ' ? Character.toUpperCase(c) : c);
+			prevCharacter = c;
+		}
+		return builder.toString();
+	}
+
 	/**
 	 * Generate a string indicating a time <1 hour
 	 * @param time in milliseconds

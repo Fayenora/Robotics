@@ -13,6 +13,8 @@ public class SpecificTargetGoal extends TargetGoal {
 
 	private final TargetingConditions targetingConditions = TargetingConditions.forCombat().ignoreLineOfSight();
 
+
+	//TODO Should take an EntitySearch directly and re-commence every time a target was killed / vanished
 	public SpecificTargetGoal(Mob creature, LivingEntity target) {
 		super(creature, false, false);
 		setFlags(EnumSet.of(Flag.TARGET));

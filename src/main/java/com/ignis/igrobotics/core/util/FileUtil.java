@@ -3,7 +3,10 @@ package com.ignis.igrobotics.core.util;
 import com.google.gson.Gson;
 import com.ignis.igrobotics.Robotics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -12,10 +15,9 @@ import java.util.Optional;
 public class FileUtil {
 
     public static void copyFromDefault(String defaultConfigFile, File to) {
-        try {
+        try(CloseableResourceManager datapack = ServerLifecycleHooks.getCurrentServer().getServerResources().resourceManager()) {
             ResourceLocation path = new ResourceLocation(Robotics.MODID, "configs/" + defaultConfigFile);
-            //FIXME: Servers need to read the file from a data pack!
-            Optional<Resource> resource = Robotics.proxy.getResourceManager().getResource(path);
+            Optional<Resource> resource = datapack.getResource(path);
             if(resource.isEmpty()) {
                 throw new RuntimeException("Unable to copy file! No file found at " + path);
             }
@@ -26,6 +28,8 @@ public class FileUtil {
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

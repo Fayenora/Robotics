@@ -13,14 +13,39 @@
 			{
 				"name": "perk.health", 
 				"level": 2
+			},
+			{
+				"name": "perk.module_slot",
+				"level": 2
+			},
+			{
+				"name": "perk.skin_slot",
+				"level": 1
+			},
+			{
+				"name": "perk.reactor_slot",
+				"level": 1
 			}
 		]
-	}, 
+	},
+	{
+		"part": "head",
+		"perks": [
+			{
+				"name": "perk.sensor_slot",
+				"level": 1
+			}
+		]
+	},
 	{
 		"part": "arm", 
 		"perks": [
 		{
 			"name": "perk.destructive", 
+			"level": 1
+		},
+		{
+			"name": "perk.fist_slot",
 			"level": 1
 		}
 		]
@@ -29,7 +54,11 @@
 		"part": "leg", 
 		"perks": [
 		{
-			"name": "perk.movementSpeed", 
+			"name": "perk.swift",
+			"level": 1
+		},
+		{
+			"name": "perk.feet_slot",
 			"level": 1
 		}
 		]

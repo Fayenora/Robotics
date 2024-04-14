@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core;
 
 import com.ignis.igrobotics.common.recipes.IRecipeSerializer;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -33,17 +34,17 @@ public class Machine<R extends Recipe<?>> {
     }
 
     public int getEnergyCapacity() {
-        return 1000000; //TODO Load from config
+        return RoboticsConfig.general.energyCapacities.getOrDefault(name, () -> 1000000).get();
     }
 
     public int getEnergyTransfer() { return 100000; }
 
-    public float getEnergyConsumption() {
-        return 1; //TODO Load from config
+    public double getEnergyConsumption() {
+        return RoboticsConfig.general.energyConsumption.getOrDefault(name, () -> 1d).get();
     }
 
-    public float getProcessingSpeed() {
-        return 1; //TODO Load from config
+    public double getProcessingSpeed() {
+        return RoboticsConfig.general.processingSpeed.getOrDefault(name, () -> 1d).get();
     }
 
     public RecipeType<R> getRecipeType() {

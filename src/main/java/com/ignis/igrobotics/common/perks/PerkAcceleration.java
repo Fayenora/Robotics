@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.util.Lang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
@@ -34,9 +35,12 @@ public class PerkAcceleration extends Perk {
 		float acceleration = values.get(ACCELERATION);
 		if(acceleration == currentAcc) return;
 		float scalar = (MAX_ACCELERATION + SPEED_SLOWDOWN) * (acceleration / MAX_ACC_TICKS) - SPEED_SLOWDOWN;
-		//TODO: This rapid changing of attribute modifiers might cause efficiency or instability issues
-		entity.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).removeModifier(MODIFIER_UUID);
-		entity.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).addTransientModifier(new AttributeModifier(MODIFIER_UUID, ACCELERATION, scalar, AttributeModifier.Operation.MULTIPLY_BASE));
+		AttributeInstance attributeInstance = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+		if(attributeInstance == null) return;
+		if(attributeInstance.getModifier(MODIFIER_UUID) == null || attributeInstance.getModifier(MODIFIER_UUID).getAmount() != scalar) {
+			attributeInstance.removeModifier(MODIFIER_UUID);
+			attributeInstance.addTransientModifier(new AttributeModifier(MODIFIER_UUID, ACCELERATION, scalar, AttributeModifier.Operation.MULTIPLY_BASE));
+		}
 	}
 
 	@Override

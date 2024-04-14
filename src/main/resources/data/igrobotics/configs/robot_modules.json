@@ -1,6 +1,80 @@
 [
 {
 	"items": {
+		"item": "igrobotics:shield_module"
+	},
+	"perks": [
+		{
+			"name": "perk.shield",
+			"level": 2
+		}
+	],
+	"action": "shield",
+	"cooldown": 2
+},
+{
+	"items": {
+		"item": "igrobotics:tnt_module"
+	},
+	"action": "selfdestruct",
+	"energyCost": 250000
+},
+{
+	"items": {
+		"item": "igrobotics:stealth_module"
+	},
+	"slots": [
+		"skin"
+	],
+	"action": "stealth",
+	"cooldown": 30,
+	"duration": 10,
+	"energyCost": 100000
+},
+{
+	"items": {
+		"item": "igrobotics:reinforce_module"
+	},
+	"slots": [
+		"skin"
+	],
+	"action": "reinforce",
+	"cooldown": 40,
+	"duration": 15,
+	"energyCost": 100000
+},
+{
+	"items": {
+		"item": "igrobotics:charge_legs"
+	},
+	"slots" : [
+		"feet"
+	],
+	"action": "jump",
+	"cooldown": 5,
+	"energyCost": 5000
+},
+{
+	"items": {
+		"item": "igrobotics:dash_module"
+	},
+	"slots": [
+		"feet"
+	],
+	"action": "dash",
+	"cooldown": 3,
+	"energyCost": 5000
+},
+{
+	"items": {
+		"item": "igrobotics:ender_module"
+	},
+	"action": "teleport",
+	"cooldown": 10,
+	"energyCost": 10000
+},
+{
+	"items": {
 		"item": "igrobotics:battery"
 	},
 	"perks": [
@@ -9,18 +83,25 @@
 		"name": "perk.battery"
 	}
 	]
-}, 
+},
 {
 	"items": {
-		"item": "igrobotics:inventory_module"
+		"item": "igrobotics:fist"
 	},
+	"slots": [
+		"fist"
+	],
 	"perks": [
-	{
-		"level": 1, 
-		"name": "perk.inventory"
-	}
+		{
+			"level": 1,
+			"name": "perk.fist"
+		},
+		{
+			"level": 3,
+			"name": "perk.unarmed_attack"
+		}
 	]
-}, 
+},
 {
 	"items": {
 		"item": "igrobotics:solar_panel"

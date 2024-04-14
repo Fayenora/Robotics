@@ -205,15 +205,16 @@ public class CommanderItem extends Item {
         BlockState state = level.getBlockState(pos);
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if(blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
+            if(blockEntity instanceof StorageBlockEntity) return;
             if(state.getAnalogOutputSignal(level, pos) > 10) {
                 ItemStack dominantItem = InventoryUtil.dominantItem(blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
-                RobotCommand retrieve = new RobotCommand(ModCommands.RETRIEVE, List.of(Selection.of(dominantItem), Selection.of(pos)));
+                RobotCommand retrieve = new RobotCommand(ModCommands.RETRIEVE, List.of(Selection.of(dominantItem), Selection.of(globalPos)));
                 if(addNewCommand(player, mob, retrieve, true, "commandGroup.command.retrieve", dominantItem.getItem())) {
                     return;
                 }
             } else if(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
                 ItemStack dominantItem = InventoryUtil.dominantItem(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
-                RobotCommand store = new RobotCommand(ModCommands.STORE, List.of(Selection.of(dominantItem), Selection.of(pos)));
+                RobotCommand store = new RobotCommand(ModCommands.STORE, List.of(Selection.of(dominantItem), Selection.of(globalPos)));
                 if(addNewCommand(player, mob, store, true, "commandGroup.command.store", dominantItem.getItem())) {
                     return;
                 }

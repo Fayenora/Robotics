@@ -16,22 +16,6 @@
 		]
 	},
 	{
-		"name": "perk.movementSpeed",
-		"stackable": true,
-		"attributes": [
-		{
-			"name": "generic.movement_speed",
-			"modifiers": [
-			{
-				"value": 0, 
-				"operation": 0, 
-				"scalar": 0.15
-			}
-			]
-		}
-		]
-	}, 
-	{
 		"name": "perk.destructive", 
 		"stackable": true,
 		"maxLevel": 5, 
@@ -101,7 +85,7 @@
 		]
 	},
 	{
-		"name": "perk.speedy", 
+		"name": "perk.swift",
 		"maxLevel": 3, 
 		"attributes": [
 		{
@@ -138,16 +122,119 @@
 		"maxLevel": 1, 
 		"attributes": [
 		{
-			"name": "igrobotics:robot.module_slots",
+			"name": "igrobotics:robot.slots.modules.default",
 			"modifiers": [
 			{
-				"value": 1, 
-				"operation": 0
+				"value": 0,
+				"operation": 0,
+				"scalar": 1
 			}
 			]
 		}
 		]
-	}, 
+	},
+	{
+		"name": "perk.module_slot",
+		"displayColor": "white",
+		"stackable": true,
+		"attributes": [
+			{
+				"name": "igrobotics:robot.slots.modules.default",
+				"modifiers": [
+					{
+						"value": 0,
+						"operation": 0,
+						"scalar": 1
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "perk.feet_slot",
+		"displayColor": "white",
+		"stackable": true,
+		"attributes": [
+			{
+				"name": "igrobotics:robot.slots.modules.feet",
+				"modifiers": [
+					{
+						"value": 0,
+						"operation": 0,
+						"scalar": 1
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "perk.fist_slot",
+		"displayColor": "white",
+		"stackable": true,
+		"attributes": [
+			{
+				"name": "igrobotics:robot.slots.modules.fist",
+				"modifiers": [
+					{
+						"value": 0,
+						"operation": 0,
+						"scalar": 1
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "perk.reactor_slot",
+		"displayColor": "white",
+		"stackable": true,
+		"attributes": [
+			{
+				"name": "igrobotics:robot.slots.modules.reactor",
+				"modifiers": [
+					{
+						"value": 0,
+						"operation": 0,
+						"scalar": 1
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "perk.sensor_slot",
+		"displayColor": "white",
+		"stackable": true,
+		"attributes": [
+			{
+				"name": "igrobotics:robot.slots.modules.sensor",
+				"modifiers": [
+					{
+						"value": 0,
+						"operation": 0,
+						"scalar": 1
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "perk.skin_slot",
+		"displayColor": "white",
+		"stackable": true,
+		"attributes": [
+			{
+				"name": "igrobotics:robot.slots.modules.skin",
+				"modifiers": [
+					{
+						"value": 0,
+						"operation": 0,
+						"scalar": 1
+					}
+				]
+			}
+		]
+	},
 	{
 		"name": "perk.battery", 
 		"stackable": true,
@@ -156,29 +243,14 @@
 			"name": "igrobotics:robot.energy_capacity",
 			"modifiers": [
 			{
-				"value": 200000, 
-				"operation": 0
+				"value": 0,
+				"operation": 0,
+				"scalar": 500000
 			}
 			]
 		}
 		]
-	}, 
-	{
-		"name": "perk.inventory", 
-		"stackable": true, 
-		"attributes": [
-		{
-			"name": "igrobotics:robot.inventory_slots",
-			"modifiers": [
-			{
-				"value": 0, 
-				"operation": 0, 
-				"scalar": 8
-			}
-			]
-		}
-		]
-	}, 
+	},
 	{
 		"name": "perk.energy_generation", 
 		"stackable": true, 

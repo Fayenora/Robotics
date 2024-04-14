@@ -1,11 +1,16 @@
 package com.ignis.igrobotics.integration.config;
 
 import com.ignis.igrobotics.core.robot.CommandType;
+import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModCommands;
+import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -24,6 +29,10 @@ public class GeneralConfig extends BaseConfig {
     public Supplier<Integer> robotAmountPerPlayerOnServer;
 
     public Supplier<List<? extends String>> availableCommands;
+
+    public HashMap<String, Supplier<Integer>> energyCapacities;
+    public HashMap<String, Supplier<Double>> energyConsumption;
+    public HashMap<String, Supplier<Double>> processingSpeed;
 
     @Override
     public ForgeConfigSpec define(ForgeConfigSpec.Builder builder) {
@@ -65,6 +74,21 @@ public class GeneralConfig extends BaseConfig {
                     if(!(typeString instanceof String string)) return false;
                     return ModCommands.byName(string) != null;
         });
+
+        builder.pop();
+
+        builder.push("Machines");
+
+        energyCapacities = new HashMap<>();
+        energyConsumption = new HashMap<>();
+        processingSpeed = new HashMap<>();
+
+        for(RegistryObject<RecipeSerializer<?>> recipe : ModMachines.RECIPE_SERIALIZERS.getEntries()) {
+            String name = recipe.getId().getPath();
+            energyCapacities.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Energy Capacity", 1000000, 0, Integer.MAX_VALUE));
+            energyConsumption.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Energy Consumption", 1d, 0, 1000));
+            processingSpeed.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Processing Speed", 1d, 0, 1000));
+        }
 
         builder.pop();
 

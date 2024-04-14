@@ -15,13 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 public class PerkBehavior {
 
     public static final int PERK_TICK_RATE = 10;
-    private static int ticks;
 
     @SubscribeEvent
     public static void onEntityUpdate(LivingEvent.LivingTickEvent event) {
-        if(ticks++ > PERK_TICK_RATE) { //FIXME: CHANGES DEPENDING ON HOW MANY ENTITIES THERE ARE
-            if(!(event.getEntity() instanceof Mob mob)) return;
-            event.getEntity().getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
+        if(!(event.getEntity() instanceof Mob mob)) return;
+        if(mob.tickCount % PERK_TICK_RATE == 0) {
+            mob.getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
                 for(Tuple<Perk, Integer> tup : perks) {
                     tup.getFirst().onEntityUpdate(tup.getSecond(), mob, perks.values());
                 }
