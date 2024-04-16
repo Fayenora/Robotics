@@ -200,7 +200,13 @@
   "item.igrobotics.electro_magnet": "Electro Magnet",
   "item.igrobotics.robot_spawn_egg": "Robot Spawn Egg",
   "item.igrobotics.fist": "Robot Fist",
-  "item.igrobotics.ender_module": "Ender Module",
+  "item.igrobotics.ender_module": "End Connector",
+  "item.igrobotics.dash_module": "Horizontal Thrusters",
+  "item.igrobotics.charge_legs": "Charge Legs",
+  "item.igrobotics.reinforce_module": "Shiftable Platings",
+  "item.igrobotics.stealth_module": "Chameleon Skin",
+  "item.igrobotics.tnt_module": "Integrated Explosives",
+  "item.igrobotics.shield_module": "Shield Module",
 
   "item.igrobotics.plate_manyullin": "Manyullin Plating",
   "item.igrobotics.plate_dark_steel": "Dark Steel Plating",
@@ -232,6 +238,7 @@
   "block.igrobotics.compressor": "Compressor",
   "block.igrobotics.robot_factory": "Robot Factory",
   "block.igrobotics.robot_storage": "Robot Storage",
+  "block.igrobotics.charger": "Charger",
 
   "item.igrobotics.iron_plate": "Iron Plate",
   "item.igrobotics.gold_plate": "Gold Plate",
