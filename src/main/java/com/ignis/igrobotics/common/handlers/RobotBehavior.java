@@ -253,6 +253,7 @@ public class RobotBehavior {
                 storage.setEnergy(Integer.MAX_VALUE);
             });
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setActivation(true));
+        entity.setHealth(entity.getMaxHealth());
     }
 
     public static List<MenuType<?>> possibleMenus(Entity entity) {

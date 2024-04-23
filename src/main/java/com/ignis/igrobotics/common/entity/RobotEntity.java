@@ -7,6 +7,9 @@ import com.ignis.igrobotics.common.entity.ai.ReachAcrossDimensionGoal;
 import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
+import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModItems;
@@ -24,7 +27,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -35,7 +37,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -95,14 +96,12 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if(!getCapability(ModCapabilities.PARTS).isPresent()) return InteractionResult.PASS;
+        IPartBuilt parts = getCapability(ModCapabilities.PARTS).resolve().get();
+        EnumRobotMaterial repairMaterial = parts.getBodyPart(EnumRobotPart.BODY).getMaterial();
+        Item requiredItem = ModItems.PLATES[repairMaterial.getID()].get();
         ItemStack stack = player.getItemInHand(hand);
-        boolean isPlate = false;
-        for(RegistryObject<Item> plate : ModItems.PLATES) {
-            if(plate.get().equals(stack.getItem())) {
-                isPlate = true;
-            }
-        }
-        if(!isPlate) return InteractionResult.PASS;
+        if(!stack.getItem().equals(requiredItem)) return InteractionResult.PASS;
         if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
         setHealth(getHealth() + 5);
         playSound(SoundEvents.ANVIL_USE);

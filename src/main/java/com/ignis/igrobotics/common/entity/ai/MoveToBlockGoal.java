@@ -19,8 +19,6 @@ import java.util.EnumSet;
 
 /**
  * Adaptation of {@link net.minecraft.world.entity.ai.goal.MoveToBlockGoal}
- * @author Nathan
- *
  */
 public class MoveToBlockGoal extends Goal {
 

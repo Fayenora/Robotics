@@ -29,7 +29,7 @@ public class RetrieveGoal extends Goal {
 	private final WeakReference<Player> fakePlayer;
 	GlobalPos target, adjacent;
 	ItemStack toTake;
-	boolean taskFinished;
+	boolean taskFinished, invalid;
 	private int tickCounter, takeItemsCounter, awayCounter;
 	protected int takeItemTime;
 	private final int maxStay, minAway;
@@ -61,7 +61,7 @@ public class RetrieveGoal extends Goal {
 	@Override
 	public boolean canUse() {
 		taskFinished = false;
-		return awayCounter++ > minAway;
+		return awayCounter++ > minAway && !invalid;
 	}
 
 	@Override
@@ -90,6 +90,7 @@ public class RetrieveGoal extends Goal {
 		openedInventory = openContainer(target);
 		if(openedInventory == null) { //The target either is not a valid container (anymore or never was)
 			taskFinished = true;
+			invalid = true;
 			return;
 		}
 

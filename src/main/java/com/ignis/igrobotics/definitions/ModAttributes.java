@@ -57,10 +57,10 @@ public class ModAttributes {
 
     public static AttributeSupplier createRobotAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 1.0f)
+                .add(Attributes.MAX_HEALTH, 12.0D)
+                .add(Attributes.ATTACK_DAMAGE, 0.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.35f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
     }
 
     @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)

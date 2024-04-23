@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+//TODO Place blocks regardless in which hand
 public class PlaceBlocksGoal extends AbstractMultiBlockGoal {
 
     public PlaceBlocksGoal(Mob entity, GlobalPos pos1, GlobalPos pos2) {

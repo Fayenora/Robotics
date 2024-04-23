@@ -101,7 +101,7 @@ public class NetworkHandler {
                 }
             };
         } catch (NoSuchMethodException e) {
-            Robotics.LOGGER.warn("Registered Message " + clazz + " does not have empty constructor. This shouldn't happen, report it the mod author!");
+            Robotics.LOGGER.error("Registered Message " + clazz + " does not have empty constructor. This shouldn't happen, report it the mod author!");
             return (buf) -> null;
         }
     }

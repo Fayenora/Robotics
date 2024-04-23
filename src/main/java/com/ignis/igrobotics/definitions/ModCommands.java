@@ -20,7 +20,6 @@ public class ModCommands {
     public static final List<CommandType> COMMAND_TYPES = new ArrayList<>();
 
     public static final CommandType STAY = register("stay", GlobalPos.class);
-    public static final CommandType GO = register("go", GlobalPos.class);
     public static final CommandType ATTACK = register("attack", EntityType.class);
     public static final CommandType ATTACK_SPECIFIC = register("attack_specific", EntitySearch.class);
     public static final CommandType DEFEND = register("defend", EntitySearch.class);
@@ -32,7 +31,6 @@ public class ModCommands {
 
     static {
         STAY.setAISupplier((robot, selections) -> new MoveToBlockGoal(robot, (GlobalPos) selections[0].get()));
-        GO.setAISupplier((robot, selections) -> new QuickMoveToBlock(robot, (GlobalPos) selections[0].get()));
         ATTACK.setAISupplier((robot, selections) -> new NearestAttackableTargetGoal<>(robot, CommonSetup.allLivingEntities.get(selections[0].get()).getClass()));
         ATTACK_SPECIFIC.setAISupplier((robot, selections) -> {
             if(!(robot.level() instanceof ServerLevel server)) return null;

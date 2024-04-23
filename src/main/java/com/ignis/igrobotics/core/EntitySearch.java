@@ -43,8 +43,9 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
     private Entity cache;
     private final Collection<SearchListener> listeners = new HashSet<>();
 
-    // For future use?
+    // For future use
     private EntityTypeTest<?, ?> typeTest;
+    private int range;
 
     private EntitySearch() {}
 
