@@ -22,6 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -33,7 +36,8 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot.png");
 
-    private final LivingEntity entity, entityToRender;
+    private final LivingEntity entity;
+    public final LivingEntity entityToRender;
 
     private IPartBuilt entityParts;
     private IRobot robot, robotToRender;
@@ -154,16 +158,16 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
             int backgroundArmorColor = armorColors.get((Math.floorDiv(armor, 20) - 1) % armorColors.size());
             setColor(backgroundArmorColor);
             for(int i = 0; i < 10; i++) {
-                graphics.blit(Reference.ICONS, this.leftPos + x + i * 8, this.topPos + y, 223, 18, 9, 9);
+                graphics.blit(Reference.MISC, this.leftPos + x + i * 8, this.topPos + y, 223, 18, 9, 9);
             }
         }
         //Then, fill in the rest of the armor value
         setColor(armorColor);
         for(int i = 0; i < armorToDraw / 2; i++) {
-            graphics.blit(Reference.ICONS, this.leftPos + x + i * 8, this.topPos + y, 223, 18, 9, 9);
+            graphics.blit(Reference.MISC, this.leftPos + x + i * 8, this.topPos + y, 223, 18, 9, 9);
         }
         if(armorToDraw % 2 == 1) {
-            graphics.blit(Reference.ICONS, this.leftPos + x + ((armorToDraw - 1)/ 2) * 8, this.topPos + y, 214, 18, 9, 9);
+            graphics.blit(Reference.MISC, this.leftPos + x + ((armorToDraw - 1)/ 2) * 8, this.topPos + y, 214, 18, 9, 9);
         }
     }
 

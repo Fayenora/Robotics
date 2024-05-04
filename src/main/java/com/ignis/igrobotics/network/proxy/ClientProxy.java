@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -72,6 +73,11 @@ public class ClientProxy extends ServerProxy {
     @Override
     public ResourceManager getResourceManager() {
         return Minecraft.getInstance().getResourceManager();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public Optional<Screen> getScreen() {
+        return Optional.ofNullable(Minecraft.getInstance().screen);
     }
 
     @OnlyIn(Dist.CLIENT)

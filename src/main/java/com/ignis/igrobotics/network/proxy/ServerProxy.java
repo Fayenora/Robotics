@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.network.proxy;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -10,6 +11,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.lang.ref.WeakReference;
+import java.util.Optional;
 
 public class ServerProxy implements IProxy {
 
@@ -45,5 +47,10 @@ public class ServerProxy implements IProxy {
     @Override
     public boolean isLocalServer() {
         return false;
+    }
+
+    @Override
+    public Optional<Screen> getScreen() {
+        return Optional.empty();
     }
 }

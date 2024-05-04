@@ -1,12 +1,14 @@
 package com.ignis.igrobotics.network.proxy;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.lang.ref.WeakReference;
+import java.util.Optional;
 
 public interface IProxy {
 
@@ -19,6 +21,8 @@ public interface IProxy {
     ResourceManager getResourceManager();
 
     boolean isLocalServer();
+
+    Optional<Screen> getScreen();
 
     boolean isTexturePresent(ResourceLocation resourceLocation);
 
