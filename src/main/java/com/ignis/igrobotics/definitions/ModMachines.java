@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.blockentity.*;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
+import com.ignis.igrobotics.common.recipes.CommanderCopyRecipe;
 import com.ignis.igrobotics.common.recipes.IRecipeSerializer;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.Machine;
@@ -12,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -35,6 +37,8 @@ public class ModMachines {
 
     public static final RegistryObject<BlockEntityType<ChargerBlockEntity>> CHARGER = registerBlockEntity("charger", ChargerBlockEntity::new, ModBlocks.CHARGER);
     public static final RegistryObject<BlockEntityType<RedstoneIntegrator>> REDSTONE_INTEGRATOR = registerBlockEntity("redstone_integrator", RedstoneIntegrator::new, ModBlocks.REDSTONE_INTEGRATOR);
+
+    public static final RegistryObject<RecipeSerializer> COMMANDERCOPY_RECIPE = RECIPE_SERIALIZERS.register("crafting_special_commandercloning", () -> new SimpleCraftingRecipeSerializer<>(CommanderCopyRecipe::new));
 
     private static <R extends Recipe<?>> Machine<?> registerMachine(String name, Dimension guiDimension, BlockEntityType.BlockEntitySupplier<?> supplier, RegistryObject<Block> block, Supplier<? extends IRecipeSerializer<R>> recipeSerializer) {
         RegistryObject<BlockEntityType<?>> blockEntityType = BLOCK_ENTITIES.register(name, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));
