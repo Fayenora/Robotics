@@ -6,13 +6,13 @@ import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.robot.SelectionType;
 import com.ignis.igrobotics.definitions.ModCommands;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.apis.IAPIEnvironment;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +24,11 @@ public class CommandAPI implements ILuaAPI {
     public CommandAPI(IAPIEnvironment environment, ICommandable commands) {
         this.environment = environment;
         this.commands = commands;
+    }
+
+    @LuaFunction
+    public final int amount() {
+        return commands.getCommands().size();
     }
 
     @LuaFunction
@@ -56,21 +61,32 @@ public class CommandAPI implements ILuaAPI {
 
         RobotCommand command = new RobotCommand(commandType);
         List<SelectionType<?>> selectionTypes = commandType.getSelectionTypes();
-        for(int i = 0; i < selectionTypes.size(); i++) {
-            Selection<?> selection = Selection.ofType(selectionTypes.get(i));
-            if(i < selections.size()) {
-                Object obj = selectionTypes.get(i).parse(selections.get(i));
-                if(obj == null) {
-                    throw new LuaException("Could not parse " + selections.get(i) + " as " + selectionTypes.get(i).toString());
-                }
-                selection = Selection.of(obj);
+        for(int i = 0; i < Math.min(selectionTypes.size(), selections.size()); i++) {
+            String argument = selections.get(i);
+            SelectionType<?> reqType = selectionTypes.get(i);
+            if(reqType == SelectionType.POS) {
+                if(argument.matches("\\[[A-z:]*/[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
+                    // Everything is fine
+                } else if(argument.matches("\\[[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
+                    argument = "[minecraft:dimension/" + argument.split("\\[")[1].trim();
+                } else if(argument.matches("\\s*-?+\\d*\\s-?+\\d*\\s-?+\\d*\\s*")) {
+                    argument = "[minecraft:dimension/minecraft:overworld] " + argument.trim();
+                } else throw new LuaException("Position argument does not match required format 'x y z' or '[dimension-id] x y z'");
             }
+            Object obj = reqType.parse(argument);
+            if(obj == null) {
+                throw new LuaException("Could not parse " + selections.get(i) + " as " + selectionTypes.get(i).toString());
+            }
+            Selection<?> selection = Selection.of(obj);
             command.getSelectors().set(i, selection);
         }
 
-        Collection<RobotCommand> currentCommands = new ArrayList<>(commands.getCommands());
-        currentCommands.add(command);
-        commands.setCommands(currentCommands);
+        commands.addCommand(command);
+    }
+
+    @LuaFunction
+    public final List<? extends String> getAvailableCommands() {
+        return RoboticsConfig.general.availableCommands.get();
     }
 
     @Override
