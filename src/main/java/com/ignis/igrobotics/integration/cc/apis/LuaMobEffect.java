@@ -24,6 +24,7 @@ public class LuaMobEffect {
         return amplifier;
     }
 
+    //FIXME: Seems to return client values? Values are in ranges 250-150 and get updated periodically
     @LuaFunction
     public final int getDuration() {
         return duration;

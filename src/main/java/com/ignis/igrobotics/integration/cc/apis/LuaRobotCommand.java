@@ -40,6 +40,7 @@ public class LuaRobotCommand {
             throw new LuaException("Unable to set value \"" + selection + "\" for type " + s.getType().identifier() + ". ");
         }
         //Don't reapply the command. We don't necessarily know whether it is still part of the active list
+        //TODO We definitely DO want to reapply here, figure something out
     }
 
     private <A> void setSelection(Selection<A> sel, String newValue) {

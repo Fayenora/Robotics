@@ -41,8 +41,8 @@ public class RobotAPI implements ILuaAPI {
     }
 
     @LuaFunction
-    public final boolean isActive() {
-        return robot.isActive();
+    public final void deactivate() {
+        robot.setActivation(false);
     }
 
     /**
