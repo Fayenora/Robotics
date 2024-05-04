@@ -7,7 +7,6 @@ import com.ignis.igrobotics.common.blocks.StorageBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,7 +26,6 @@ public class MoveToBlockGoal extends Goal {
     /** Controls task execution delay */
     protected int nextStartTick;
     protected int tryTicks;
-    protected int maxStayTicks;
     /** Block to move to */
     protected GlobalPos blockPos;
     @Nullable
@@ -72,21 +70,19 @@ public class MoveToBlockGoal extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean canContinueToUse() {
-        return this.tryTicks >= -this.maxStayTicks && this.tryTicks <= 1200;
+        return this.tryTicks <= 1200;
     }
 
     /**
      * Execute a one shot task or start executing a continuous task
      */
     public void start() {
-        double speed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
         navigator.navigateTo(blockPos);
         this.tryTicks = 0;
-        this.maxStayTicks = this.mob.getRandom().nextInt(this.mob.getRandom().nextInt(1200) + 1200) + 1200;
     }
 
     public double acceptedDistance() {
-        return 1.0D;
+        return 0.3D;
     }
 
     public boolean requiresUpdateEveryTick() {
@@ -106,7 +102,6 @@ public class MoveToBlockGoal extends Goal {
         if (!hasReachedTarget()) {
             ++this.tryTicks;
             if (this.shouldRecalculatePath()) {
-                double speed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
                 navigator.navigateTo(blockPos);
             }
         } else {
