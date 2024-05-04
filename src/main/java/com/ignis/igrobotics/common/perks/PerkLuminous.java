@@ -21,9 +21,4 @@ public class PerkLuminous extends Perk {
 		entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, PerkBehavior.PERK_TICK_RATE * 2, 0, true, false));
 	}
 
-	@Override
-	public Component getDescriptionText() {
-		return Lang.localise("perk.glowing.desc");
-	}
-
 }

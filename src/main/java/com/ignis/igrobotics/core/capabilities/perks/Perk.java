@@ -111,6 +111,9 @@ public class Perk implements PerkHooks {
 	}
 
 	public Component getDescriptionText() {
+		if(scalars.size() == 0) {
+			return Lang.localise(getUnlocalizedName() + ".desc");
+		}
 		ArrayList<Component> tooltip = new ArrayList<>();
 		tooltip.add(Lang.localise("perk.desc"));
 		for(Tuple<Attribute, Integer> attrOperation : scalars.keySet()) {

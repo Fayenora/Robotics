@@ -23,9 +23,4 @@ public class PerkGlowing extends Perk {
 		entity.world.checkLightFor(EnumSkyBlock.BLOCK, entity.getPosition().add(0, 0, -1));
 	}
 	*/
-
-	@Override
-	public Component getDescriptionText() {
-		return Lang.localise("perk.glowing.desc");
-	}
 }
