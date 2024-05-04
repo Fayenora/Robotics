@@ -1,0 +1,11 @@
+{
+  "name": "igrobotics.command.break.0",
+  "icon": "minecraft:diamond_pickaxe",
+  "category": "igrobotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Break blocks in the box spanned by the two coordinates using the mainhand item. This task is $(bold)always$() valid."
+    }
+  ]
+}

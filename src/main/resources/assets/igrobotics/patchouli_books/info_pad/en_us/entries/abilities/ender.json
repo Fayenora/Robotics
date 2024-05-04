@@ -1,0 +1,11 @@
+{
+  "name": "Teleport",
+  "icon": "igrobotics:ender_module",
+  "category": "igrobotics:abilities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Teleports the robot to a random location within 5 blocks. "
+    }
+  ]
+}

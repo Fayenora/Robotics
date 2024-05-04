@@ -1,0 +1,21 @@
+{
+  "name": "Robot API",
+  "icon": "igrobotics:iron_head",
+  "category": "igrobotics:programming",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "An API giving access to the various capabilities of a robot.$(br)$(bold)deactivate()$() -> deactivates the robot$(br)$(bold)getEnergy()$() -> current energy$(br)$(bold)getMaxEnergy()$() -> max energy$(br)$(bold)getHealth()$() -> current health$(br)$(bold)getAttribute(attribute)$() -> value of an attribute. See $(l:https://minecraft.fandom.com/wiki/Attribute#Attributes)here$() or call $(n)getValidAttributes()$() for a list of valid attributes$(br)$(bold)getValidAttributes()$() -> valid attributes for $(n)getAttribute(attribute)$()$(br)$(bold)getEffects()$() -> $(l:igrobotics:programming/robot_api#effect_object)effects$() currently affecting the robot$(br)$(bold)hasAccess(player, permission)$() -> whether the player has the permission. Call for a list of valid permissions"
+    },
+    {
+      "type": "patchouli:text", 
+      "text": "$(br)$(bold)getModules(slotType)$() -> the robot's modules of the supplied slot type. Call for a list of viable slot types$(br)$(bold)activate(i, slotType)$() -> whether it was possible to activate the module at slot i of the supplied slot type$(br)$(bold)getPickupState()$() -> robot pickup state$(br)$(bold)setPickupState(state)$() - set the robot's pickup state$(br)$(bold)isChunkLoadingActive()$() -> robot chunkloading state$(br)$(bold)setChunkLoadingState(state)$() -> set the robot's chunkloading state$(br)$(bold)isMuffled()$() -> whether robot is muffled$(br)$(bold)setMuffled(muffle)$() -> muffle/unmuffle the robot$(br)$(bold)getCommandGroup()$() -> robot's command group$(br)$(bold)getOwner()$() -> the robot's owner"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect Object",
+      "anchor": "effect_object",
+      "text": "$(bold)getType()$() -> effect type$(br)$(bold)getAmplifier()$() -> effect amplifier. Note that amplifiers start at 0$(br)$(bold)getDuration()$() -> effect duration in ms"
+    }
+  ]
+}

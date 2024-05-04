@@ -1,0 +1,11 @@
+{
+  "name": "igrobotics.command.retrieve.0",
+  "icon": "minecraft:chest",
+  "category": "igrobotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Retrieve the specified item from a container located at the provided coordinates. If the coordinates do not point to a container (anymore), the task becomes invalid. If the container is emptied of the item, the task becomes invalid $(bold)for a time$(), after which the robot will return to the container and check it for the item. You can use this in conjunction with $(italic)store$() to transport items between containers. "
+    }
+  ]
+}

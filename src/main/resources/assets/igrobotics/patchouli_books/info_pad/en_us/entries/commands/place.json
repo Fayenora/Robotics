@@ -1,0 +1,11 @@
+{
+  "name": "igrobotics.command.place.0",
+  "icon": "minecraft:cobblestone",
+  "category": "igrobotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Place blocks in the main hand, filling the box spanned by the two coordinates. This task is valid if the robot is holding a block in the main hand. "
+    }
+  ]
+}

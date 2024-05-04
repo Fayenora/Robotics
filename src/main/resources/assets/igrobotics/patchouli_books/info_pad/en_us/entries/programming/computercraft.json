@@ -1,0 +1,36 @@
+{
+  "name": "Computercraft",
+  "icon": "computercraft:computer_normal",
+  "category": "igrobotics:programming",
+  "priority": true,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "While assigning a robot a task is nice and all, it will only continue to execute this command at nauseam. It is time to fully utilize the capabilities of the T-800. "
+    },
+    {
+      "type": "patchouli:text",
+      "text": "When switching to the programming tab, the user will be greeted by a $(italic)console$(). This is an interface to a file system just as the user might know it from their operating system, however text based instead of visual. To navigate it, the user may utilize some common programs: $(li)$(italic)ls$() to list the contents of the current directory$(li)$(italic)cd directory-name$() to move to the specified directory$(li)$(italic)mkdir directory-name$() to create a directory$(li)$(italic)rmdir directory-name$() to remove an empty directory"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "While directories are useful for organizing, the actual logic happens in files: $(li)$(italic)edit file-name$() to edit an existing or new file and $(li)$(italic)rm file-name$() to remove a file$(br)To create a basic program, start editing any file and write $(italic)print(\"Hello World\")$() like in the image. To check that everything works, either run the program directly through the menu or return to the console and simply type the file name if present in its directory. Name the program $(italic)startup.lua$() to let it run automatically when the computer restarts. "
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "igrobotics:textures/book/basic_program.png"
+      ]
+    },
+    {
+      "type": "patchouli:text",
+      "text": "More interesting than writing simple text messages in a console only the user can see anyways, might be the $(l:igrobotics:programming/command_api)command API$(). The example shows a simple program that moves a robot to another position (where the use could place f.e. a charger) for 20 seconds every 2 minutes.$(br)$(br)For more information, the user is referred to the $(l:https://www.lua.org/manual/5.4/manual.html)Lua reference manual$() and the $(l:https://computercraft.cc/)Computercraft wiki$()."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "igrobotics:textures/book/recharge_program.png"
+      ]
+    }
+  ]
+}

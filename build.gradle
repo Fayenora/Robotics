@@ -145,7 +145,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
-        // location of the maven that hosts JEI files since January 2023
+        // JEI & Patchouli
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
@@ -191,6 +191,9 @@ dependencies {
     implementation fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge:${cct_version}")
     // Geckolib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${mc_version}:${geckolib_version}")
+    // Patchouli
+    //compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}-FORGE:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}-FORGE")
 
     // Mekanism at runtime
     runtimeOnly(fg.deobf("curse.maven:mekanism-268560:5125665"))

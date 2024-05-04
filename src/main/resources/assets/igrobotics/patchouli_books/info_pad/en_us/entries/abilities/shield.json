@@ -1,0 +1,11 @@
+{
+  "name": "Shield",
+  "icon": "igrobotics:shield_module",
+  "category": "igrobotics:abilities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Activates a shield, consuming a lot of energy. The shield functions similar to absorption hearts but also deflects any projectiles. The shield health is determined by the $(bold)$(b)Shield Strength$() perk: 1 level equals 1 heart. If the shield is broken by damage, it must be activated again. Activating this ability while the shield is active will deactivate it. "
+    }
+  ]
+}

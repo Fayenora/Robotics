@@ -1,0 +1,11 @@
+{
+  "name": "igrobotics.command.follow.0",
+  "icon": "minecraft:diamond_boots",
+  "category": "igrobotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Follow the specified entity at the given distance. This task is valid if the specified entity is alive. "
+    }
+  ]
+}
