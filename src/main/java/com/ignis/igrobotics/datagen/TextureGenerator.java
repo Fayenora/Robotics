@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common.generators;
+package com.ignis.igrobotics.datagen;
 
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
@@ -34,7 +34,7 @@ public class TextureGenerator implements DataProvider {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        event.getGenerator().addProvider(event.includeClient(), (Factory<TextureGenerator>) TextureGenerator::new);
+        //event.getGenerator().addProvider(event.includeClient(), (Factory<TextureGenerator>) TextureGenerator::new);
     }
 
     private final PackOutput.PathProvider pathProvider;

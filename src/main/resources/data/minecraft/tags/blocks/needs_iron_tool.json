@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "igrobotics:assembler",
+    "igrobotics:wire_cutter",
+    "igrobotics:robot_factory",
+    "igrobotics:robot_storage",
+    "igrobotics:charger"
+  ]
+}

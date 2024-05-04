@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common.generators;
+package com.ignis.igrobotics.datagen;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
@@ -23,14 +23,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class RecipeDataGenerator extends RecipeProvider {
+public class RecipeGenerator extends RecipeProvider {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        event.getGenerator().addProvider(event.includeServer(), (DataProvider.Factory<RecipeDataGenerator>) RecipeDataGenerator::new);
+        event.getGenerator().addProvider(event.includeServer(), (DataProvider.Factory<RecipeGenerator>) RecipeGenerator::new);
     }
 
-    public RecipeDataGenerator(PackOutput pOutput) {
+    public RecipeGenerator(PackOutput pOutput) {
         super(pOutput);
     }
 
