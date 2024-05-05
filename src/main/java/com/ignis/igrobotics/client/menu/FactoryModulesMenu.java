@@ -50,7 +50,7 @@ public class FactoryModulesMenu extends BaseMenu {
 
                 addModuleSlots(handler, EnumModuleSlot.SKIN, 185, 16, true);
                 addModuleSlots(handler, EnumModuleSlot.FIST, 185, 62, true);
-                addModuleSlots(handler, EnumModuleSlot.DEFAULT, 185, 108, true);
+                addModuleSlots(handler, EnumModuleSlot.CORE, 185, 108, true);
             });
         });
     }

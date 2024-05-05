@@ -132,7 +132,7 @@ public class RobotModule {
                     }
                 }
             } else {
-                module.viableSlots.add(EnumModuleSlot.DEFAULT);
+                module.viableSlots.add(EnumModuleSlot.CORE);
             }
             if (obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
             if (obj.has("duration")) module.duration = obj.get("duration").getAsInt();

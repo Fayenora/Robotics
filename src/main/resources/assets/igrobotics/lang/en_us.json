@@ -100,7 +100,7 @@
   "attribute.name.robot.energy_capacity": "Energy Capacity",
   "attribute.name.robot.energy_consumption": "Energy Consumption",
   "attribute.name.robot.inventory_slots": "Inventory Slots",
-  "attribute.name.robot.slots.modules.default": "Core Module Slots",
+  "attribute.name.robot.slots.modules.core": "Core Module Slots",
   "attribute.name.robot.slots.modules.skin": "Skin Slots",
   "attribute.name.robot.slots.modules.feet": "Feet Slots",
   "attribute.name.robot.slots.modules.fist": "Fist Slots",

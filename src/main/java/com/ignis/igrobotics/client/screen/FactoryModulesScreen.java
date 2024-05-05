@@ -67,7 +67,7 @@ public class FactoryModulesScreen extends BaseContainerScreen<FactoryModulesMenu
 
         renderModuleSlots(graphics, EnumModuleSlot.SKIN, 185, 16, true);
         renderModuleSlots(graphics, EnumModuleSlot.FIST, 185, 62, true);
-        renderModuleSlots(graphics, EnumModuleSlot.DEFAULT, 185, 108, true);
+        renderModuleSlots(graphics, EnumModuleSlot.CORE, 185, 108, true);
     }
 
     @Override

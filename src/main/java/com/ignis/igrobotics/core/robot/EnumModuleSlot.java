@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.core.robot;
 
 public enum EnumModuleSlot {
-    DEFAULT,
+    CORE,
     FIST,
     FEET,
     SENSOR,
