@@ -10,7 +10,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "igrobotics:commander",
-      "text": "On right clicking any block or entity, the object is selected and can be used to easily supply information to $(l:commands)commands$(). "
+      "text": "Right clicking any block or entity selects the object to be used to supply information to $(l:commands)commands$() easily. "
     },
     {
       "type": "patchouli:text",
