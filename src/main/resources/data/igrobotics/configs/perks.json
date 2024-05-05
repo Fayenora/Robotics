@@ -122,7 +122,7 @@
 		"maxLevel": 1, 
 		"attributes": [
 		{
-			"name": "igrobotics:robot.slots.modules.default",
+			"name": "igrobotics:robot.slots.modules.core",
 			"modifiers": [
 			{
 				"value": 0,
@@ -139,7 +139,7 @@
 		"stackable": true,
 		"attributes": [
 			{
-				"name": "igrobotics:robot.slots.modules.default",
+				"name": "igrobotics:robot.slots.modules.core",
 				"modifiers": [
 					{
 						"value": 0,

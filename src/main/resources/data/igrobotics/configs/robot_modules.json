@@ -14,7 +14,7 @@
 },
 {
 	"items": {
-		"item": "igrobotics:tnt_module"
+		"item": "minecraft:tnt"
 	},
 	"action": "selfdestruct",
 	"energyCost": 250000
@@ -106,7 +106,10 @@
 	"items": {
 		"item": "igrobotics:solar_panel"
 	},
-	"texture": "solar_panel.png", 
+	"texture": "solar_panel.png",
+	"slots": [
+		"skin"
+	],
 	"perks": [
 	{
 		"level": 1, 
