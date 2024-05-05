@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i  ",
+    "iip",
+    " p "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "p": {
+      "item": "igrobotics:plate_iron"
+    }
+  },
+  "result": {
+    "item": "igrobotics:fist"
+  }
+}

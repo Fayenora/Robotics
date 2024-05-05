@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " is",
+    "isp",
+    "sp "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:glass_pane"
+    },
+    "s": {
+      "item": "igrobotics:plate_silver"
+    },
+    "p": {
+      "item": "igrobotics:plate_steel"
+    }
+  },
+  "result": {
+    "item": "igrobotics:stealth_module"
+  }
+}

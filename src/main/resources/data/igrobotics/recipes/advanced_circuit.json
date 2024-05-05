@@ -3,7 +3,7 @@
 	"pattern": "rwiv",
     "key": {
         "r": {
-            "tag": "forge:dusts/redstone",
+            "item": "minecraft:redstone",
 			"amount": 3
         }, 
 		"w": {

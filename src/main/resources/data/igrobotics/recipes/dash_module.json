@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " pg",
+    "prp",
+    " p "
+  ],
+  "key": {
+    "p": {
+      "item": "igrobotics:plate_iron"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "g": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "result": {
+    "item": "igrobotics:dash_module"
+  }
+}

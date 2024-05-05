@@ -3,8 +3,8 @@
 	"pattern": "rwiv",
     "key": {
         "r": {
-            "tag": "forge:dusts/redstone",
-			"amount": 3
+          "item": "minecraft:redstone",
+          "amount": 3
         }, 
 		"w": {
             "item": "igrobotics:complex_wiring"

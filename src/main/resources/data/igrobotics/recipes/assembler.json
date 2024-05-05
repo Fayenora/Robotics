@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iwi",
+    "w w",
+    "iwi"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_block"
+    },
+    "w": {
+      "item": "igrobotics:copper_wire"
+    }
+  },
+  "result": {
+    "item": "igrobotics:assembler"
+  }
+}

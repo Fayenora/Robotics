@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " gs",
+    "gsp",
+    "sp "
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "s": {
+      "item": "igrobotics:silicone"
+    },
+    "p": {
+      "item": "igrobotics:plate_steel"
+    }
+  },
+  "result": {
+    "item": "igrobotics:solar_panel"
+  }
+}

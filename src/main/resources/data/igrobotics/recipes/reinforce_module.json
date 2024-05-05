@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " is",
+    "isp",
+    "sp "
+  ],
+  "key": {
+    "s": {
+      "item": "igrobotics:servo_motor"
+    },
+    "i": {
+      "item": "igrobotics:plate_iron"
+    },
+    "p": {
+      "item": "igrobotics:plate_steel"
+    }
+  },
+  "result": {
+    "item": "igrobotics:reinforce_module"
+  }
+}

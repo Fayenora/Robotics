@@ -32,6 +32,8 @@ public class ModItems {
     public static final RegistryObject<Item> PERCEPTRON_LAYER = registerBasicItem("perceptron_layer");
     public static final RegistryObject<Item> NEURAL_PROCESSING_UNIT = registerBasicItem("neural_processing_unit");
 
+    public static final RegistryObject<Item> SILICONE = registerBasicItem("silicone");
+
     public static final RegistryObject<Item> MODULE_BATTERY = registerBasicItem("battery");
     public static final RegistryObject<Item> MODULE_SOLAR_PANEL = registerBasicItem("solar_panel");
     public static final RegistryObject<Item> MODULE_FIST = registerBasicItem("fist");
