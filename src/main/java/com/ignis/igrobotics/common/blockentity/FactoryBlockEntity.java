@@ -12,6 +12,7 @@ import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModMachines;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -39,12 +40,9 @@ import java.util.UUID;
 @MethodsReturnNonnullByDefault
 public class FactoryBlockEntity extends MachineBlockEntity {
 
-    public static final int ENERGY_COST = 50000;
-    public static final int WORK_TIME = 60;
-
     public static final MachineRecipe<?> DEFAULT_RECIPE = new MachineRecipe.Builder(ModMachines.ROBOT_FACTORY, new ResourceLocation(Robotics.MODID, "robot_construction"))
-            .setEnergyRequirement(ENERGY_COST)
-            .setProcessingTime(WORK_TIME)
+            .setEnergyRequirement(RoboticsConfig.general.constructionEnergyCost.get())
+            .setProcessingTime(RoboticsConfig.general.constructionTime.get())
             .build();
 
     private final EntityLevelStorage storedRobot;
@@ -119,7 +117,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
                 storedRobot != null &&
                         !hasCraftedRobotReady() &&
                         !isRunning() &&
-                        this.storage.getEnergyStored() >= ENERGY_COST &&
+                        this.storage.getEnergyStored() >= DEFAULT_RECIPE.getEnergy() &&
                         !inventory.getStackInSlot(0).isEmpty() &&
                         !inventory.getStackInSlot(1).isEmpty() &&
                         !(inventory.getStackInSlot(4).isEmpty() && inventory.getStackInSlot(5).isEmpty());

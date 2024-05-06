@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common.perks.modules;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -13,7 +14,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class PerkSolarPanel extends Perk {
 
-	public static final int GENERATION_MULT = 10;
+	public static final int GENERATION_MULT = RoboticsConfig.general.solarGeneratorMult.get();
 
 	public PerkSolarPanel(String name) {
 		super(name, Integer.MAX_VALUE);

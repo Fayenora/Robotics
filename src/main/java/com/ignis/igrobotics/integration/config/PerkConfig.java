@@ -50,8 +50,8 @@ public class PerkConfig implements IJsonConfig {
 		PERK_ACCELERATION = new PerkAcceleration("perk.acceleration");
 		PERK_CHARGE = new PerkCharge("perk.charge");
 		PERK_SOLAR_PANEL = new PerkSolarPanel("perk.solar_panel");
-		PERK_COAL_GENERATOR = new PerkGenerator("perk.coal_generator", 2000, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
-		PERK_BIO_GENERATOR = new PerkGenerator("perk.bio_generator", 1500, (stack, entity) -> {
+		PERK_COAL_GENERATOR = new PerkGenerator("perk.coal_generator", RoboticsConfig.general.coalGeneratorRate.get(), (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
+		PERK_BIO_GENERATOR = new PerkGenerator("perk.bio_generator", RoboticsConfig.general.bioGeneratorRate.get(), (stack, entity) -> {
 			FoodProperties stats = stack.getItem().getFoodProperties(stack, entity);
 			if(stats == null) return 0;
 			return (int) (stats.getNutrition() * 200 + Math.pow(stats.getSaturationModifier(), 1.5) * 100);

@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class PerkUnreliable extends Perk {
 
-	public static final float CHANCE = 0.02f;
+	public static final float CHANCE = RoboticsConfig.general.unreliableChance.get().floatValue();
 	private final Random r = new Random();
 
 	public PerkUnreliable(String name) {
