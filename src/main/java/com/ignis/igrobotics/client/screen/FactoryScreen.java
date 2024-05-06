@@ -14,6 +14,7 @@ import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketConstructRobot;
@@ -150,9 +151,10 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
                 Component timeDisplay = Component.literal(": " + StringUtil.getTimeDisplay(remainingTime));
                 tooltip.add(ComponentUtils.formatList(List.of(Lang.localise("remaining_time"), timeDisplay), Component.empty()));
             } else if(!startButton.isEnabled()) {
+                String energyCostDisplay = StringUtil.getEnergyDisplay(RoboticsConfig.general.constructionEnergyCost.get());
                 tooltip.add(Lang.localise("requires"));
                 tooltip.add(requirement("name"));
-                tooltip.add(requirement("energy", StringUtil.getEnergyDisplay(FactoryBlockEntity.ENERGY_COST)));
+                tooltip.add(requirement("energy", energyCostDisplay));
                 tooltip.add(requirement("leg"));
                 tooltip.add(requirement("body"));
                 tooltip.add(requirement("head"));
