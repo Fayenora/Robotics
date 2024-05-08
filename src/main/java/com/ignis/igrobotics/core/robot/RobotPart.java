@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * Each part has associated perks loaded in with the config during pre-server startup. <br>
  * There should only exist a single instance for each unique combination, saved in the current {@link com.ignis.igrobotics.integration.config.PartConfig}.<br>
  * To retrieve an instance, use {@link #get(EnumRobotPart, EnumRobotMaterial)}
- * @author Ignis
+ * @author Roe
  */
 public class RobotPart {
 	
