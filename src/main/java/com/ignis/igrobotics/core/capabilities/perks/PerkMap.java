@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.HashMap;
@@ -102,7 +104,7 @@ public class PerkMap implements IPerkMap {
 		JsonArray arr = json.getAsJsonArray();
 		
 		for(JsonElement el : arr) {
-			Perk perk = Perk.deserialize(el);
+			Perk perk = Perk.deserialize(el.getAsJsonObject().get("name"));
 			int level = el.getAsJsonObject().get("level").getAsInt();
 			this.add(perk, level);
 		}

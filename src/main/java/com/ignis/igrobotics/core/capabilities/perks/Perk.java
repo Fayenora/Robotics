@@ -2,26 +2,28 @@ package com.ignis.igrobotics.core.capabilities.perks;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.*;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class Perk implements PerkHooks {
@@ -29,27 +31,62 @@ public class Perk implements PerkHooks {
 	/** Perks that do not stack should have a lower max level for efficiency reasons.
 	 * Since these obviously cannot stack, it just limits components to have a maximum level of this value */
 	public static final int UNSTACKABLE_MAX_LEVEL = 20;
+	public static final TextColor DEFAULT_COLOR = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
+	private static int modifierId = 0;
+
+	private record AttributeScalar(int id, int operation, Either<Double, List<Double>> value, Optional<Double> scalar) {
+		AttributeScalar(Either<Double, List<Double>> value, int operation, Optional<Double> scalar) {
+			this(modifierId++, operation, value, scalar);
+		}
+		AttributeModifier getModifier(int level) {
+			double attributeValue = value.map(Function.identity(), l -> l.get(MathUtil.restrict(0, level, l.size())));
+			if (scalar.isPresent()) {
+				attributeValue += level * scalar.get();
+			}
+			return new AttributeModifier("modifier_" + id, attributeValue, AttributeModifier.Operation.fromValue(operation));
+		}
+	}
+
+	private record AttributeEntry(Attribute attribute, List<AttributeScalar> modifiers) {}
+
+	public static final Codec<AttributeScalar> CODEC_SCALAR = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.either(Codec.DOUBLE, Codec.list(Codec.DOUBLE)).optionalFieldOf("value", Either.left(0d)).forGetter(c -> c.value),
+			Codec.intRange(0, 2).fieldOf("operation").forGetter(c -> c.operation),
+			Codec.DOUBLE.optionalFieldOf("scalar").forGetter(c -> c.scalar)
+	).apply(instance, AttributeScalar::new));
+
+	public static final Codec<AttributeEntry> CODEC_ATTRIBUTE = RecordCodecBuilder.create(instance -> instance.group(
+			ForgeRegistries.ATTRIBUTES.getCodec().fieldOf("name").forGetter(c -> c.attribute),
+			Codec.list(CODEC_SCALAR).fieldOf("modifiers").forGetter(c -> c.modifiers)
+	).apply(instance, AttributeEntry::new));
+
+	private static final Codec<Perk> DEFINITION_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.STRING.fieldOf("name").forGetter(Perk::getUnlocalizedName),
+			Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("maxLevel", Integer.MAX_VALUE).forGetter(Perk::getMaxLevel),
+			Codec.BOOL.optionalFieldOf("visible", true).forGetter(Perk::isVisible),
+			Codec.BOOL.optionalFieldOf("stackable", false).forGetter(Perk::isStackable),
+			TextColor.CODEC.optionalFieldOf("displayColor", DEFAULT_COLOR).forGetter(Perk::getDisplayColor),
+			Codec.list(CODEC_ATTRIBUTE).optionalFieldOf("attributes", List.of()).forGetter(Perk::getModifiers)
+	).apply(instance, Perk::initialize));
+
+	public static final Codec<Perk> CODEC = Codec.either(ResourceLocation.CODEC, DEFINITION_CODEC).comapFlatMap(
+			e -> e.map(key ->
+				Optional.ofNullable(RoboticsConfig.current().perks.PERKS.get(key.getPath()))
+						.map(DataResult::success)
+						.orElseGet(() -> DataResult.error(() -> "No perk named '" + key + "'")),
+					DataResult::success
+			),
+			Either::right
+	);
 
 	private final String unlocalizedName;
 	private int maxLevel;
-	protected TextColor displayColor = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
+	protected TextColor displayColor = DEFAULT_COLOR;
 	private boolean visible = true;
 	private boolean stackable = false;
 	private final ResourceLocation iconTexture;
 
-	/**
-	 * AttributeModifiers to be later applied f.e. to a robot. Maps {@link Attribute#getDescriptionId()}  Attribute Names} to modifiers affecting this attribute
-	 */
-	private final Multimap<Attribute, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
-
-	/**
-	 * Maps attribute+operation to an array of scalars. There are the following possibilities: <p>
-	 * <i> 1. The array contains 1 element: </i> The element is understood as a multiplier to the level of the perk <br>
-	 * <i> 2. The array contains less than {@link #maxLevel} elements: </i><b> Invalid state </b><br>
-	 * <i> 3. The array contains equal or more than {@link #maxLevel} elements: </i> The elements are understood as absolute values
-	 *    replacing the values in {@link #modifiers} with the according level
-	 **/
-	private final Map<Tuple<Attribute, Integer>, double[]> scalars = new HashMap<>();
+	private final List<AttributeEntry> modifiers = new ArrayList<>();
 
 	public Perk(String name, int maxLevel) {
 		this.unlocalizedName = name;
@@ -63,26 +100,12 @@ public class Perk implements PerkHooks {
 
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(int level) {
 		Multimap<Attribute, AttributeModifier> scaledModifiers = MultimapBuilder.hashKeys().arrayListValues().build();
-		modifiers.forEach((attribute, u) -> {
-			double[] sc = getScalars(attribute, u.getOperation().toValue());
-			double attributeValue = u.getAmount();
-
-			if (sc != null && sc.length > 0) {
-				if (sc.length == 1) {
-					attributeValue = u.getAmount() + level * sc[0];
-				} else {
-					//Use scalars directly. Do not extend over the length of the provided array
-					attributeValue = sc[Math.min(level, sc.length) - 1];
-				}
+		for(AttributeEntry entry : modifiers) {
+			for(AttributeScalar scalar : entry.modifiers) {
+				scaledModifiers.put(entry.attribute, scalar.getModifier(level));
 			}
-
-			scaledModifiers.put(attribute, new AttributeModifier(u.getId(), u.getName(), attributeValue, u.getOperation()));
-		});
+		}
 		return scaledModifiers;
-	}
-
-	public double[] getScalars(Attribute attribute, int operation) {
-		return scalars.get(new Tuple<>(attribute, operation));
 	}
 
 	/**
@@ -95,7 +118,7 @@ public class Perk implements PerkHooks {
 
 	/**
 	 * Only has an effect if the perk is actually {@link #showPerk() shown}.
-	 * Otherwise it's attributes are simply displayed
+	 * Otherwise, it's attributes are simply displayed
 	 * @return the text to be displayed for this perk
 	 */
 	public Component getDisplayText(int level) {
@@ -111,40 +134,41 @@ public class Perk implements PerkHooks {
 	}
 
 	public Component getDescriptionText() {
-		if(scalars.size() == 0) {
+		if(modifiers.size() == 0) {
 			return Lang.localise(getUnlocalizedName() + ".desc");
 		}
 		ArrayList<Component> tooltip = new ArrayList<>();
 		tooltip.add(Lang.localise("perk.desc"));
-		for(Tuple<Attribute, Integer> attrOperation : scalars.keySet()) {
-			TextColor color = Reference.ATTRIBUTE_COLORS.getOrDefault(attrOperation.first, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
-			Component attr_name = Component.translatable(attrOperation.first.getDescriptionId()).withStyle(Style.EMPTY.withColor(color));
-
+		for(AttributeEntry entry : modifiers) {
+			TextColor color = Reference.ATTRIBUTE_COLORS.getOrDefault(entry.attribute, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
+			Component attr_name = Component.translatable(entry.attribute.getDescriptionId()).withStyle(Style.EMPTY.withColor(color));
 			StringBuilder literal = new StringBuilder();
-			if(scalars.get(attrOperation).length == 1) {
-				double value = scalars.get(attrOperation)[0];
-				literal.append(switch (attrOperation.second) {
-					case 0 -> Reference.FORMAT.format(value);
-					case 1 -> Reference.FORMAT.format(value) + "%";
-					case 2 -> "x" + String.format("%.2f", value);
-					default -> throw new IllegalStateException("Unexpected value: " + attrOperation.second);
-				});
-				literal.append("x").append(Lang.localise("level").getString()).append(" ");
-			} else {
-				literal.append(attrOperation.second == 2 ? "x" : "");
-				for(int i = 0; i < scalars.get(attrOperation).length; i++) {
-					double scalar = scalars.get(attrOperation)[i];
-					if(i != 0) {
-						literal.append("/");
-					}
-					literal.append(switch (attrOperation.second) {
-						case 0 -> Reference.FORMAT.format(scalar);
-						case 1 -> Reference.FORMAT.format(scalar * 100);
-						case 2 -> String.format("%.2f", scalar);
-						default -> throw new IllegalStateException("Unexpected value: " + attrOperation.second);
+			for(AttributeScalar scalar : entry.modifiers) {
+				if(scalar.value.left().isPresent()) {
+					double value = scalar.value.left().get();
+					literal.append(switch (scalar.operation) {
+						case 0 -> Reference.FORMAT.format(value);
+						case 1 -> Reference.FORMAT.format(value) + "%";
+						case 2 -> "x" + String.format("%.2f", value);
+						default -> throw new IllegalStateException("Unexpected value: " + scalar.operation);
 					});
+					literal.append("x").append(Lang.localise("level").getString()).append(" ");
+				} else if(scalar.value.right().isPresent()) {
+					literal.append(scalar.operation == 2 ? "x" : "");
+					for(int i = 0; i < scalar.value.right().get().size(); i++) {
+						double s = scalar.value.right().get().get(i);
+						if(i != 0) {
+							literal.append("/");
+						}
+						literal.append(switch (scalar.operation) {
+							case 0 -> Reference.FORMAT.format(s);
+							case 1 -> Reference.FORMAT.format(s * 100);
+							case 2 -> String.format("%.2f", s);
+							default -> throw new IllegalStateException("Unexpected value: " + scalar.operation);
+						});
+					}
+					literal.append(scalar.operation == 1 ? "% " : " ");
 				}
-				literal.append(attrOperation.second == 1 ? "% " : " ");
 			}
 			tooltip.add(combine(Component.literal(literal.toString()), attr_name));
 		}
@@ -166,8 +190,7 @@ public class Perk implements PerkHooks {
 		otherPerk.displayColor = displayColor;
 		otherPerk.visible = visible;
 		otherPerk.stackable = stackable;
-		otherPerk.scalars.putAll(scalars);
-		otherPerk.modifiers.putAll(modifiers);
+		otherPerk.modifiers.addAll(modifiers);
 		return otherPerk;
 	}
 
@@ -175,111 +198,29 @@ public class Perk implements PerkHooks {
 	// Serialization
 	//////////////////////////////////
 
+	private static Perk initialize(String name, int maxLevel, boolean visible, boolean stackable, TextColor displayColor, List<AttributeEntry> modifiers) {
+		Perk perk = new Perk(name, maxLevel);
+		perk.setVisible(visible);
+		perk.setStackable(stackable);
+		perk.setDisplayColor(displayColor);
+		perk.setModifiers(modifiers);
+		return perk;
+	}
+
 	public static JsonElement serialize(Perk perk) {
-		JsonObject obj = new JsonObject();
-		obj.addProperty("name", perk.unlocalizedName);
-		obj.addProperty("maxLevel", perk.maxLevel);
-		obj.addProperty("displayColor", perk.displayColor.serialize());
-		obj.addProperty("visible", perk.visible);
-		obj.addProperty("stackable", perk.stackable);
-
-		JsonArray attr = new JsonArray();
-		for(Attribute attribute : perk.modifiers.keys()) {
-			JsonObject attr_obj = new JsonObject();
-			JsonArray mod_list = new JsonArray();
-			for(AttributeModifier modifier : perk.modifiers.get(attribute)) {
-				JsonObject mod_obj = new JsonObject();
-				mod_obj.addProperty("operation", modifier.getOperation().toValue());
-
-				//Values and/or Scalars
-				double[] scalars = perk.getScalars(attribute, modifier.getOperation().toValue());
-				if(scalars == null) {
-					mod_obj.addProperty("value", modifier.getAmount());
-				} else if(scalars.length == 1) {
-					mod_obj.addProperty("value", modifier.getAmount());
-					mod_obj.addProperty("scalar", scalars[0]);
-				} else if(scalars.length > 1) {
-					JsonArray arr = new JsonArray();
-					for(double d : scalars) {
-						arr.add(d);
-					}
-					mod_obj.add("value", arr);
-				}
-
-				mod_list.add(mod_obj);
-			}
-			attr_obj.addProperty("name", attribute.getDescriptionId());
-			attr_obj.add("modifiers", mod_list);
-
-			attr.add(attr_obj);
-		}
-
-		obj.add("attributes", attr);
-
-		return obj;
+		return CODEC.encodeStart(JsonOps.INSTANCE, perk).getOrThrow(false, s -> {
+			throw new RuntimeException(s);
+		});
 	}
 
 	public static Perk deserialize(JsonElement json) {
-		JsonObject obj = json.getAsJsonObject();
-		String unlocalizedName = obj.get("name").getAsString();
-
-		int maxLevel = obj.has("maxLevel") ? obj.get("maxLevel").getAsInt() : Integer.MAX_VALUE;
-		Perk result = new Perk(unlocalizedName, maxLevel);
-
-		// Retrieve the perk from the config if its name already has been defined
-		RoboticsConfig config = RoboticsConfig.current();
-		if(config.perks.PERKS.containsKey(unlocalizedName)) {
-			result = config.perks.PERKS.get(unlocalizedName);
-		}
-
-		if(obj.has("visible")) result.setVisible(obj.get("visible").getAsBoolean());
-		if(obj.has("stackable")) result.setStackable(obj.get("stackable").getAsBoolean());
-		if(obj.has("displayColor")) result.setDisplayColor(TextColor.parseColor(obj.get("displayColor").getAsString()));
-
-		int i = 0;
-		if(obj.has("attributes")) {
-			for(JsonElement attribute : obj.get("attributes").getAsJsonArray()) {
-				String attributeName = ((JsonObject) attribute).get("name").getAsString();
-				ResourceLocation attributeLoc = ResourceLocation.tryParse(attributeName);
-				if(attributeLoc == null) {
-					throw new JsonSyntaxException("The specified attribute " + attributeName + " could not be found");
-				}
-				Attribute attributeType = ForgeRegistries.ATTRIBUTES.getValue(attributeLoc);
-				if(attributeType == null) {
-					throw new JsonSyntaxException("The specified attribute " + attributeName + " could not be found");
-				}
-				for(JsonElement modifier : ((JsonObject) attribute).get("modifiers").getAsJsonArray()) {
-					JsonObject jsonModifier = ((JsonObject) modifier);
-
-					int operation = jsonModifier.get("operation").getAsInt();
-					double amount;
-					if(!jsonModifier.get("value").isJsonArray()) {
-						amount = jsonModifier.get("value").getAsDouble();
-						if(jsonModifier.has("scalar")) {
-							double scalar = jsonModifier.get("scalar").getAsDouble();
-							result.scalars.put(new Tuple<>(attributeType, operation), new double[] {scalar});
-						}
-					} else {
-						JsonArray jsonScalars = jsonModifier.get("value").getAsJsonArray();
-						double[] scalars = new double[jsonScalars.size()];
-						for(int j = 0; j < jsonScalars.size(); j++) {
-							scalars[j] = jsonScalars.get(j).getAsDouble();
-						}
-						result.scalars.put(new Tuple<>(attributeType, operation), scalars);
-						amount = scalars[0];
-					}
-
-					AttributeModifier mod = new AttributeModifier("modifier_" + (i++), amount, AttributeModifier.Operation.fromValue(operation));
-					result.modifiers.put(attributeType, mod);
-				}
-
-			}
-		}
-
-		return result;
+		return CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
+			throw new RuntimeException(s);
+		});
 	}
 
 	public static void write(FriendlyByteBuf buffer, Perk perk) {
+		/*
 		buffer.writeUtf(perk.unlocalizedName);
 		buffer.writeInt(perk.maxLevel);
 		buffer.writeBoolean(perk.visible);
@@ -288,7 +229,7 @@ public class Perk implements PerkHooks {
 
 		buffer.writeShort(perk.modifiers.keys().size());
 		for(Attribute attr : perk.modifiers.keySet()) {
-			buffer.writeResourceKey(ForgeRegistries.ATTRIBUTES.getResourceKey(attr).get());
+			buffer.writeRegistryId(ForgeRegistries.ATTRIBUTES, attr);
 			buffer.writeShort(perk.modifiers.get(attr).size());
 			for(AttributeModifier modifier : perk.modifiers.get(attr)) {
 				buffer.writeByte(modifier.getOperation().toValue());
@@ -298,16 +239,19 @@ public class Perk implements PerkHooks {
 
 		buffer.writeShort(perk.scalars.size());
 		for(Tuple<Attribute, Integer> key : perk.scalars.keySet()) {
-			buffer.writeResourceKey(ForgeRegistries.ATTRIBUTES.getResourceKey(key.first).get());
+			buffer.writeRegistryId(ForgeRegistries.ATTRIBUTES, key.first);
 			buffer.writeByte(key.second);
 			buffer.writeShort(perk.scalars.get(key).length);
 			for(double d : perk.scalars.get(key)) {
 				buffer.writeDouble(d);
 			}
 		}
+
+		 */
 	}
 
 	public static Perk read(FriendlyByteBuf buffer) {
+		/*
 		String name = buffer.readUtf();
 		int maxLevel = buffer.readInt();
 		Perk result = new Perk(name, maxLevel);
@@ -318,13 +262,7 @@ public class Perk implements PerkHooks {
 
 		short nAttributes = buffer.readShort();
 		for(int i = 0; i < nAttributes; i++) {
-			ResourceKey<Attribute> resourceKey = buffer.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
-			Optional<Holder.Reference<Attribute>> attrHolder = ForgeRegistries.ATTRIBUTES.getDelegate(resourceKey);
-			if(attrHolder.isEmpty()) {
-				Robotics.LOGGER.warn("Could not identify Attribute " + resourceKey + ". Modifiers using this attribute are skipped");
-				continue;
-			}
-			Attribute attribute = attrHolder.get().get();
+			Attribute attribute = buffer.readRegistryIdSafe(Attribute.class);
 			short nModifiers = buffer.readShort();
 			for(int j = 0; j < nModifiers; j++) {
 				byte operation = buffer.readByte();
@@ -336,13 +274,7 @@ public class Perk implements PerkHooks {
 
 		short nScalars = buffer.readShort();
 		for(int i = 0; i < nScalars; i++) {
-			ResourceKey<Attribute> resourceKey = buffer.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
-			Optional<Holder.Reference<Attribute>> attrHolder = ForgeRegistries.ATTRIBUTES.getDelegate(resourceKey);
-			if(attrHolder.isEmpty()) {
-				Robotics.LOGGER.warn("Could not identify Attribute " + resourceKey + ". Modifiers using this attribute are skipped");
-				continue;
-			}
-			Attribute attribute = attrHolder.get().get();
+			Attribute attribute = buffer.readRegistryIdSafe(Attribute.class);
 			int operation = buffer.readByte();
 			short arrSize = buffer.readShort();
 			double[] arr = new double[arrSize];
@@ -353,6 +285,9 @@ public class Perk implements PerkHooks {
 		}
 
 		return result;
+
+		 */
+		return new Perk("dummy", 0);
 	}
 
 	//////////////////////////////////
@@ -402,4 +337,12 @@ public class Perk implements PerkHooks {
 		return iconTexture;
 	}
 
+	public List<AttributeEntry> getModifiers() {
+		return modifiers;
+	}
+
+	private void setModifiers(List<AttributeEntry> modifiers) {
+		this.modifiers.clear();
+		this.modifiers.addAll(modifiers);
+	}
 }
