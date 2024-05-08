@@ -2,12 +2,12 @@ package com.ignis.igrobotics.core.util;
 
 import com.ignis.igrobotics.Robotics;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
+
+import java.util.Collection;
+import java.util.List;
 
 public class Lang {
 
@@ -30,15 +30,15 @@ public class Lang {
     }
 
     public static Object[] transformObjects(Object... args) {
-        Object[] objs = new Object[args.length];
-        for(int i = 0; i < objs.length; i++) {
+        Object[] objects = new Object[args.length];
+        for(int i = 0; i < objects.length; i++) {
             if(args[i] instanceof MobEffectInstance effectInstance) {
-                objs[i] = effectToString(effectInstance);
+                objects[i] = effectToString(effectInstance);
                 continue;
             }
-            objs[i] = args[i];
+            objects[i] = args[i];
         }
-        return objs;
+        return objects;
     }
 
     public static String effectToString(MobEffectInstance effect) {
@@ -54,5 +54,16 @@ public class Lang {
 
     public static Style color(TextColor color) {
         return Component.empty().getStyle().withColor(color);
+    }
+
+    public static Component localiseAll(Collection<?> toLocalise) {
+        Component listing = ComponentUtils.formatList(toLocalise.stream()
+                        .map(Object::toString).map(Lang::localise).toList(),
+                Component.literal(", "));
+        return ComponentUtils.formatList(List.of(
+                        Component.literal("["),
+                        listing,
+                        Component.literal("]")
+                ), Component.empty());
     }
 }

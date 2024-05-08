@@ -9,7 +9,7 @@ import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
@@ -28,11 +28,13 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 @JeiPlugin
 @ParametersAreNonnullByDefault
@@ -123,9 +125,9 @@ public class RoboticsJEIPlugin implements IModPlugin {
             recipeRegistration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
 
         }
-        for(RobotPart part : config.parts.PARTS.values()) {
-            for(Tuple<Perk, Integer> perk : part.getPerks()) {
-                recipeRegistration.addRecipes(perkCategory.getRecipeType(), List.of(new PerkRecipeCategory.PartPerkTuple(perk.first, part)));
+        for(Map.Entry<Item, RobotModule> entry : config.modules.MODULES.entrySet()) {
+            for(Tuple<Perk, Integer> perk : entry.getValue().getPerks()) {
+                recipeRegistration.addRecipes(perkCategory.getRecipeType(), List.of(new PerkRecipeCategory.PartPerkTuple(perk.first, entry.getValue())));
             }
         }
     }

@@ -2,7 +2,7 @@ package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.robot.RobotPart;
+import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
@@ -52,11 +52,11 @@ public class PerkRecipeCategory implements IRecipeCategory<PerkRecipeCategory.Pa
     public void setRecipe(IRecipeLayoutBuilder builder, PartPerkTuple recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.CATALYST, 18, 18).addIngredient(RoboticsJEIPlugin.INGREDIENT_PERK, recipe.first);
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 18, 0).addItemStack(recipe.second.getItemStack(1));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 18, 0).addIngredients(recipe.second.getItems());
     }
 
-    static class PartPerkTuple extends Tuple<Perk, RobotPart> {
-        public PartPerkTuple(Perk first, RobotPart second) {
+    static class PartPerkTuple extends Tuple<Perk, RobotModule> {
+        public PartPerkTuple(Perk first, RobotModule second) {
             super(first, second);
         }
     }

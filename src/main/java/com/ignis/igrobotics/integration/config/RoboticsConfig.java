@@ -31,7 +31,6 @@ public class RoboticsConfig {
     public static final ClientConfig client = new ClientConfig();
     public PerkConfig perks;
     public ModuleConfig modules = new ModuleConfig();
-    public PartConfig parts = new PartConfig();
 
     public static void registerConfigs(ModLoadingContext cxt) {
         ModContainer container = cxt.getActiveContainer();
@@ -44,7 +43,6 @@ public class RoboticsConfig {
         perks = new PerkConfig();
         perks.load(new File(configDir.toString(), "perks.json"));
         modules.load(new File(configDir.toString(), "robot_modules.json"));
-        parts.load(new File(configDir.toString(), "robot_parts.json"));
     }
 
     private static void registerConfig(ModContainer container, IConfig config) {

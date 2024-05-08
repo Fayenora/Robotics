@@ -1,22 +1,19 @@
 package com.ignis.igrobotics.core.robot;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
-import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
-import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModItems;
-import com.ignis.igrobotics.integration.config.PartConfig;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Logic behind a robot part (not the item) as the combination of a {@link EnumRobotPart specific part of the robot} and a {@link EnumRobotMaterial material}. <br>
- * Each part has associated perks loaded in with the config during pre-server startup. <br>
- * There should only exist a single instance for each unique combination, saved in the current {@link com.ignis.igrobotics.integration.config.PartConfig}.<br>
  * To retrieve an instance, use {@link #get(EnumRobotPart, EnumRobotMaterial)}
  * @author Roe
  */
@@ -28,8 +25,6 @@ public class RobotPart {
 	
 	private final EnumRobotPart part;
 	private final EnumRobotMaterial material;
-	
-	private final IPerkMap perks = new PerkMap();
 	
 	private RobotPart(EnumRobotPart part, EnumRobotMaterial material) {
 		this.part = part;
@@ -45,15 +40,7 @@ public class RobotPart {
 	}
 	
 	public static RobotPart get(EnumRobotPart part, EnumRobotMaterial material) {
-		return get(RoboticsConfig.current().parts, part, material);
-	}
-
-	public static RobotPart get(PartConfig config, EnumRobotPart part, EnumRobotMaterial material) {
-		Tuple<EnumRobotPart, EnumRobotMaterial> key = new Tuple<>(part, material);
-		if(!config.PARTS.containsKey(key)) {
-			config.PARTS.put(key, new RobotPart(part, material));
-		}
-		return config.PARTS.get(key);
+		return new RobotPart(part, material);
 	}
 
 	@Nullable
@@ -68,17 +55,14 @@ public class RobotPart {
 		return null;
 	}
 
+	public Item getItem() {
+		if(material == EnumRobotMaterial.NONE) return Items.AIR;
+		return ModItems.MATERIALS[material.getID() - 1][part.getID()].get();
+	}
+
 	public ItemStack getItemStack(int count) {
 		if(material == EnumRobotMaterial.NONE) return ItemStack.EMPTY;
-		return new ItemStack(ModItems.MATERIALS[material.getID() - 1][part.getID()].get(), count);
-	}
-	
-	public static void registerPerks(EnumRobotPart part, EnumRobotMaterial material, IPerkMap perks) {
-		get(part, material).getPerks().merge(perks);
-	}
-	
-	public IPerkMap getPerks() {
-		return perks;
+		return new ItemStack(getItem(), count);
 	}
 	
 	/*
@@ -96,5 +80,10 @@ public class RobotPart {
 	@Override
 	public String toString() {
 		return material + " " + part;
+	}
+
+	public IPerkMap getPerks() {
+		if(getItem().equals(Items.AIR)) return ModCapabilities.NO_PERKS;
+		return RoboticsConfig.current().modules.get(getItem()).getPerks();
 	}
 }

@@ -79,6 +79,19 @@
   "igrobotics.IN_STORAGE": "In storage",
   "igrobotics.OFFLINE": "Offline",
 
+  "igrobotics.right_leg": "Right Leg",
+  "igrobotics.left_leg": "Left Leg",
+  "igrobotics.right_arm": "Right Arm",
+  "igrobotics.left_arm": "Left Arm",
+  "igrobotics.body": "Body",
+  "igrobotics.head": "Head",
+  "igrobotics.core": "Core",
+  "igrobotics.sensor": "Sensor",
+  "igrobotics.skin": "Skin",
+  "igrobotics.reactor": "Reactor",
+  "igrobotics.fist": "Fist",
+  "igrobotics.feet": "Feet",
+
   "igrobotics.found_no_selection": "No command unit in inventory has selected an entity!",
   "igrobotics.max_commands": "This robot cannot handle more tasks!",
   "igrobotics.too_many_robots": "Too many robots in use! Discontinue another owned robot!",
@@ -86,7 +99,7 @@
   "igrobotics.robot_module": "Robot Module",
   "igrobotics.robot_part": "Robot Part",
   "igrobotics.max_energy": "Max Energy",
-  "igrobotics.module.slots": "Module Slots",
+  "igrobotics.module.slots": "Slots",
   "igrobotics.module.action": "Ability",
 
   "igrobotics.action.teleport": "Teleportation",

@@ -4,7 +4,7 @@
 		"stackable": true,
 		"attributes": [
 		{
-			"name": "generic.max_health",
+			"name": "minecraft:generic.max_health",
 			"modifiers": [
 			{
 				"value": 0, 
@@ -21,7 +21,7 @@
 		"maxLevel": 5, 
 		"attributes": [
 		{
-			"name": "generic.attack_damage",
+			"name": "minecraft:generic.attack_damage",
 			"modifiers": [
 			{
 				"value": 0, 
@@ -38,7 +38,7 @@
 		"maxLevel": 10, 
 		"attributes": [
 		{
-			"name": "generic.armor", 
+			"name": "minecraft:generic.armor", 
 			"modifiers": [
 			{
 				"value": 0, 
@@ -55,7 +55,7 @@
 		"maxLevel": 5, 
 		"attributes": [
 		{
-			"name": "generic.armor_toughness",
+			"name": "minecraft:generic.armor_toughness",
 			"modifiers": [
 			{
 				"value": 0, 
@@ -73,7 +73,7 @@
 		"maxLevel": 5, 
 		"attributes": [
 		{
-			"name": "generic.knockback_resistance",
+			"name": "minecraft:generic.knockback_resistance",
 			"modifiers": [
 			{
 				"value": 0, 
@@ -89,7 +89,7 @@
 		"maxLevel": 3, 
 		"attributes": [
 		{
-			"name": "generic.movement_speed",
+			"name": "minecraft:generic.movement_speed",
 			"modifiers": [
 			{
 				"value": [0.15, 0.25, 0.30], 

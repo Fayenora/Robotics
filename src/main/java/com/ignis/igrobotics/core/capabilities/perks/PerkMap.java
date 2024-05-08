@@ -133,4 +133,12 @@ public class PerkMap implements IPerkMap {
 		}
 		return perkMap;
 	}
+
+	public static PerkMap copy(IPerkMap perkMap) {
+		PerkMap clone = new PerkMap();
+		for(Tuple<Perk, Integer> entry : perkMap) {
+			clone.add(entry.first, entry.second);
+		}
+		return clone;
+	}
 }

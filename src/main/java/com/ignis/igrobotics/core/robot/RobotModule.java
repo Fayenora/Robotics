@@ -29,7 +29,6 @@ public class RobotModule {
     private final Ingredient item;
     private IPerkMap perks = new PerkMap();
     private EnumSet<EnumModuleSlot> viableSlots = EnumSet.noneOf(EnumModuleSlot.class);
-
     private ModuleActions action = ModuleActions.NONE;
     /** A cooldown of 0 indicates a passive module */
     private int cooldown = 0;
@@ -131,8 +130,6 @@ public class RobotModule {
                         Robotics.LOGGER.warn("\"" + s + "\" is not a valid module slot. Viable values are: " + StringUtil.enumToString(EnumModuleSlot.values()));
                     }
                 }
-            } else {
-                module.viableSlots.add(EnumModuleSlot.CORE);
             }
             if (obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
             if (obj.has("duration")) module.duration = obj.get("duration").getAsInt();
@@ -195,5 +192,32 @@ public class RobotModule {
 
     public static boolean isModule(ItemStack stack) {
         return RoboticsConfig.current().modules.isModule(stack.getItem());
+    }
+
+    @Override
+    protected RobotModule clone() {
+        RobotModule newModule = new RobotModule(item);
+        newModule.viableSlots = this.viableSlots.clone();
+        newModule.action = this.action;
+        newModule.duration = this.duration;
+        newModule.energyCost = this.energyCost;
+        newModule.cooldown = this.cooldown;
+        newModule.overlay = this.overlay;
+        newModule.perks = PerkMap.copy(this.perks);
+        return newModule;
+    }
+
+    public RobotModule merge(RobotModule other) {
+        RobotModule thisModule = clone();
+        if(thisModule.action == ModuleActions.NONE) {
+            thisModule.action = other.action;
+            thisModule.duration = other.duration;
+            thisModule.energyCost = other.energyCost;
+            thisModule.cooldown = other.cooldown;
+        }
+        thisModule.overlay = overlay == null ? other.overlay : thisModule.overlay;
+        thisModule.viableSlots.addAll(other.viableSlots);
+        thisModule.perks.merge(other.getPerks());
+        return thisModule;
     }
 }

@@ -40,10 +40,12 @@ public class ModuleConfig implements IJsonConfig {
 	private void registerModule(RobotModule module) {
 		if(module == null) return;
 		for(ItemStack stack : module.getItems().getItems()) {
-			if(MODULES.containsKey(stack.getItem())) {
-				Robotics.LOGGER.error("Registered 2 modules on item " + stack.getItem() + "! Only one will work!");
+			Item key = stack.getItem();
+			if(!MODULES.containsKey(key)) {
+				MODULES.put(key, module);
+			} else if(!MODULES.get(key).equals(module)) {
+				MODULES.put(key, MODULES.get(key).merge(module));
 			}
-			MODULES.put(stack.getItem(), module);
 		}
 		Robotics.LOGGER.debug("Registered module " + module);
 		if(module.hasOverlay()) {

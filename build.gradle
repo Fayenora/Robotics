@@ -197,6 +197,8 @@ dependencies {
 
     // Mekanism at runtime
     runtimeOnly(fg.deobf("curse.maven:mekanism-268560:5125665"))
+    // Item Tags at runtime
+    runtimeOnly(fg.deobf("curse.maven:tagtooltips-899941:4687165"))
 
     testImplementation(platform('org.junit:junit-bom:5.9.3'))
     testImplementation('org.junit.jupiter:junit-jupiter')
