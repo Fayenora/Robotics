@@ -1,13 +1,11 @@
 package com.ignis.igrobotics.datagen;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.recipes.AssemblerRecipeBuilder;
 import com.ignis.igrobotics.common.recipes.WireCutterRecipeBuilder;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModItems;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -15,20 +13,11 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-@Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeGenerator extends RecipeProvider {
-
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        event.getGenerator().addProvider(event.includeServer(), (DataProvider.Factory<RecipeGenerator>) RecipeGenerator::new);
-    }
 
     public RecipeGenerator(PackOutput pOutput) {
         super(pOutput);

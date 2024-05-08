@@ -13,9 +13,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -26,16 +23,10 @@ import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 @MethodsReturnNonnullByDefault
-@Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TextureGenerator implements DataProvider {
 
     public static final Path INPUT_PATH = Path.of("C:/Users/Nathan/Desktop/MOOOOODS/Minecraft/Modding/Newer Workspaces/Robotics - 1.19.3/src/main/resources/assets");
     public static final String FORMAT = "png";
-
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        //event.getGenerator().addProvider(event.includeClient(), (Factory<TextureGenerator>) TextureGenerator::new);
-    }
 
     private final PackOutput.PathProvider pathProvider;
 
