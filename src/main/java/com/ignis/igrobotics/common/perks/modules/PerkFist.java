@@ -12,10 +12,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class PerkFist extends Perk {
 
-    public static final float KNOCKUP_STRENGTH = RoboticsConfig.general.fistKnockUp.get().floatValue();
+    public final float KNOCKUP_STRENGTH;
 
     public PerkFist(String name) {
         super(name, 1);
+        KNOCKUP_STRENGTH = RoboticsConfig.general.fistKnockUp.get().floatValue();
     }
 
     @Override

@@ -17,11 +17,12 @@ import java.util.Random;
 
 public class PerkUnreliable extends Perk {
 
-	public static final float CHANCE = RoboticsConfig.general.unreliableChance.get().floatValue();
+	public final float CHANCE;
 	private final Random r = new Random();
 
 	public PerkUnreliable(String name) {
 		super(name, 1);
+		CHANCE = RoboticsConfig.general.unreliableChance.get().floatValue();
 	}
 	
 	@Override

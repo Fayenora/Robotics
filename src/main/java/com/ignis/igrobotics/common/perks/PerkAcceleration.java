@@ -16,13 +16,16 @@ public class PerkAcceleration extends Perk {
 
 	public static final UUID MODIFIER_UUID = UUID.fromString("0b956262-68ed-11ed-9022-0242ac120002");
 	public static final String ACCELERATION = "perk_acceleration";
-	public static final int MAX_ACC_TICKS = RoboticsConfig.general.accelerationChargeUp.get();
-	public static final float MAX_ACCELERATION = RoboticsConfig.general.accelerationMax.get().floatValue();
-	public static final float SPEED_SLOWDOWN = RoboticsConfig.general.accelerationSlowDown.get().floatValue();
+	public final int MAX_ACC_TICKS;
+	public final float MAX_ACCELERATION;
+	public final float SPEED_SLOWDOWN;
 
 	public PerkAcceleration(String name) {
 		super(name, 2);
 		setStackable(false);
+		MAX_ACC_TICKS = RoboticsConfig.general.accelerationChargeUp.get();
+		MAX_ACCELERATION = RoboticsConfig.general.accelerationMax.get().floatValue();
+		SPEED_SLOWDOWN = RoboticsConfig.general.accelerationSlowDown.get().floatValue();
 	}
 
 	@Override

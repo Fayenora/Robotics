@@ -14,11 +14,12 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class PerkSolarPanel extends Perk {
 
-	public static final int GENERATION_MULT = RoboticsConfig.general.solarGeneratorMult.get();
+	public final int GENERATION_MULT;
 
 	public PerkSolarPanel(String name) {
 		super(name, Integer.MAX_VALUE);
 		setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+		GENERATION_MULT = RoboticsConfig.general.solarGeneratorMult.get();
 	}
 	
 	@Override
