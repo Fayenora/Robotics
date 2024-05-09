@@ -1,0 +1,16 @@
+{
+  "name": "perk.health",
+  "stackable": true,
+  "attributes": [
+    {
+      "name": "minecraft:generic.max_health",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}
