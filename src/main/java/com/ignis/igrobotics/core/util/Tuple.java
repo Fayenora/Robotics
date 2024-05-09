@@ -1,5 +1,7 @@
 package com.ignis.igrobotics.core.util;
 
+import com.mojang.datafixers.util.Pair;
+
 public class Tuple<A, B> {
 	
 	public A first;
@@ -27,6 +29,10 @@ public class Tuple<A, B> {
 	public boolean equals(Object obj) {
 		if(!(obj instanceof Tuple)) return false;
 		return first.equals(((Tuple<?, ?>) obj).getFirst()) && second.equals(((Tuple<?, ?>) obj).getSecond());
+	}
+
+	public static <A, B> Pair<A, B> toPair(Tuple<A, B> tuple) {
+		return new Pair<>(tuple.first, tuple.second);
 	}
 
 }

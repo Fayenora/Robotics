@@ -1,20 +1,35 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class PerkMap implements IPerkMap {
+
+	public static final Codec<PerkMap> CODEC = Codec.list(Codec.pair(
+			Perk.CODEC.fieldOf("name").codec(),
+			Codec.INT.optionalFieldOf("level", 0).codec()
+	)).xmap(PerkMap::new, map -> StreamSupport.stream(map.spliterator(), false).map(Tuple::toPair).toList());
 	
 	HashMap<String, Perk> perks = new HashMap<>();
 	HashMap<String, Integer> levels = new HashMap<>();
+
+	public PerkMap() {}
+
+	private PerkMap(List<Pair<Perk, Integer>> perks) {
+		for(Pair<Perk, Integer> p : perks) {
+			add(p.getFirst(), p.getSecond());
+		}
+	}
 	
 	@Override
 	public void add(Perk perk, int level) {
@@ -83,35 +98,17 @@ public class PerkMap implements IPerkMap {
 			}
 		};
 	}
-	
-	public static JsonElement serialize(IPerkMap src) {
-		JsonArray arr = new JsonArray();
-		for(Tuple<Perk, Integer> tup : src) {
-			JsonObject jsonPerk = Perk.serialize(tup.getFirst()).getAsJsonObject();
-			jsonPerk.addProperty("level", tup.getSecond());
-			arr.add(jsonPerk);
-		}
-		return arr;
+
+	public static JsonElement serialize(PerkMap perkMap) {
+		return CODEC.encodeStart(JsonOps.INSTANCE, perkMap).getOrThrow(false, s -> {
+			throw new RuntimeException(s);
+		});
 	}
 
 	public static IPerkMap deserialize(JsonElement json) {
-		PerkMap perkMap = new PerkMap();
-		perkMap.deserializeNBT(json);
-		return perkMap;
-	}
-
-	public void deserializeNBT(JsonElement json) {
-		JsonArray arr = json.getAsJsonArray();
-		
-		for(JsonElement el : arr) {
-			Perk perk = Perk.deserialize(el.getAsJsonObject().get("name"));
-			int level = el.getAsJsonObject().get("level").getAsInt();
-			this.add(perk, level);
-		}
-	}
-
-	public JsonElement serializeNBT() {
-		return serialize(this);
+		return CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
+			throw new RuntimeException(s);
+		});
 	}
 
 	public static void write(FriendlyByteBuf buffer, PerkMap perkMap) {
