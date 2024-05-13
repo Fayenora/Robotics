@@ -29,7 +29,6 @@ public class RoboticsConfig {
 
     public static final GeneralConfig general = new GeneralConfig();
     public static final ClientConfig client = new ClientConfig();
-    public PerkConfig perks;
     public ModuleConfig modules = new ModuleConfig();
 
     public static void registerConfigs(ModLoadingContext cxt) {
@@ -40,8 +39,6 @@ public class RoboticsConfig {
 
     public void loadJsonConfigs() {
         Path configDir = getOrCreateDirectory(FMLPaths.CONFIGDIR.get().resolve(Robotics.MODNAME));
-        perks = new PerkConfig();
-        perks.load(new File(configDir.toString(), "perks.json"));
         modules.load(new File(configDir.toString(), "robot_modules.json"));
     }
 

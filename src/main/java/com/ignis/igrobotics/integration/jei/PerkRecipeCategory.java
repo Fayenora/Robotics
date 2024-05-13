@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -45,7 +46,7 @@ public class PerkRecipeCategory implements IRecipeCategory<PerkRecipeCategory.Pa
 
     @Override
     public IDrawable getIcon() {
-        return guiHelper.createDrawableIngredient(RoboticsJEIPlugin.INGREDIENT_PERK, RoboticsConfig.current().perks.PERK_CHARGE);
+        return guiHelper.createDrawableIngredient(RoboticsJEIPlugin.INGREDIENT_PERK, ModPerks.PERK_CHARGE.get());
     }
 
     @Override

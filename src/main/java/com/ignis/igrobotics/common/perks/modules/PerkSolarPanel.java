@@ -14,18 +14,14 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class PerkSolarPanel extends Perk {
 
-	public final int GENERATION_MULT;
-
 	public PerkSolarPanel(String name) {
 		super(name, Integer.MAX_VALUE);
-		setDisplayColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
-		GENERATION_MULT = RoboticsConfig.general.solarGeneratorMult.get();
 	}
 	
 	@Override
 	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		int skylight = entity.level().getBrightness(LightLayer.SKY, entity.blockPosition().above()) - entity.level().getSkyDarken();
-		int energy_gain = skylight * GENERATION_MULT * level;
+		int energy_gain = skylight * RoboticsConfig.general.solarGeneratorMult.get() * level;
 		entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
 			energy.receiveEnergy(energy_gain, false);
 		});
@@ -33,11 +29,11 @@ public class PerkSolarPanel extends Perk {
 
 	@Override
 	public Component getDisplayText(int level) {
-		return Lang.localise(getUnlocalizedName()).withStyle(Style.EMPTY.withColor(displayColor));
+		return localized().withStyle(Style.EMPTY.withColor(displayColor));
 	}
 
 	@Override
 	public Component getDescriptionText() {
-		return Lang.localise("perk.solar_panel.desc", GENERATION_MULT * 15);
+		return Lang.localise("perk.solar_panel.desc", RoboticsConfig.general.solarGeneratorMult.get() * 15);
 	}
 }

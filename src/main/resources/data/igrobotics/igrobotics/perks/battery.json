@@ -1,14 +1,14 @@
 {
-  "name": "igrobotics:health",
+  "name": "igrobotics:battery",
   "stackable": true,
   "attributes": [
     {
-      "name": "minecraft:generic.max_health",
+      "name": "igrobotics:robot.energy_capacity",
       "modifiers": [
         {
           "value": 0,
           "operation": 0,
-          "scalar": 1
+          "scalar": 500000
         }
       ]
     }

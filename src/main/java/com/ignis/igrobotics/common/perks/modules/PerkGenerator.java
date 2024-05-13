@@ -13,14 +13,15 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class PerkGenerator extends Perk {
 	
 	BiFunction<ItemStack, Mob, Integer> validInputs;
 	public final String COOLDOWN;
-	public final int energyGenerationRate;
+	public final Supplier<Integer> energyGenerationRate;
 	
-	public PerkGenerator(String name, int energyGeneration, BiFunction<ItemStack, Mob, Integer> validInputs) {
+	public PerkGenerator(String name, Supplier<Integer> energyGeneration, BiFunction<ItemStack, Mob, Integer> validInputs) {
 		super(name, 1);
 		this.validInputs = validInputs;
 		COOLDOWN = name + ".cooldown";
@@ -47,18 +48,18 @@ public class PerkGenerator extends Perk {
 			
 			energy.receiveEnergy(energyToRestore, false);
 			inventory.extractItem(i, 1, false);
-			values.set(COOLDOWN, energyToRestore / this.energyGenerationRate); //Put in some cooldown
+			values.set(COOLDOWN, energyToRestore / this.energyGenerationRate.get()); //Put in some cooldown
 			break;
 		}
 	}
 
 	@Override
 	public Component getDisplayText(int level) {
-		return Lang.localise(getUnlocalizedName()).withStyle(Style.EMPTY.withColor(displayColor));
+		return localized().withStyle(Style.EMPTY.withColor(displayColor));
 	}
 
 	@Override
 	public Component getDescriptionText() {
-		return Lang.localise("perk.generator.desc", energyGenerationRate);
+		return Lang.localise("perk.generator.desc", energyGenerationRate.get());
 	}
 }

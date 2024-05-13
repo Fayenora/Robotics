@@ -8,8 +8,11 @@ import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Mob;
 
@@ -17,12 +20,10 @@ import java.util.Random;
 
 public class PerkUnreliable extends Perk {
 
-	public final float CHANCE;
 	private final Random r = new Random();
 
 	public PerkUnreliable(String name) {
 		super(name, 1);
-		CHANCE = RoboticsConfig.general.unreliableChance.get().floatValue();
 	}
 	
 	@Override
@@ -32,7 +33,7 @@ public class PerkUnreliable extends Perk {
 		//FIXME: Works, but creates a concurrent modification exception when the last part of any perk is destroyed, as the map is currently iterating over the perks
 		EnumRobotPart toDestroy = null;
 		for(RobotPart part : parts.getBodyParts()) {
-			if(part.getPerks().contains(RoboticsConfig.current().perks.PERK_UNRELIABLE) && r.nextDouble() < CHANCE) {
+			if(part.getPerks().contains(ModPerks.PERK_UNRELIABLE.get()) && r.nextDouble() < RoboticsConfig.general.unreliableChance.get().floatValue()) {
 				toDestroy = part.getPart();
 			}
 		}
@@ -45,6 +46,6 @@ public class PerkUnreliable extends Perk {
 
 	@Override
 	public Component getDescriptionText() {
-		return Lang.localise("perk.unreliable.desc", String.format("%.3f%%", CHANCE * 100));
+		return Lang.localise("perk.unreliable.desc", String.format("%.3f%%", RoboticsConfig.general.unreliableChance.get().floatValue() * 100));
 	}
 }

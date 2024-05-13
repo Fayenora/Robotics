@@ -1,9 +1,10 @@
 {
-  "name": "igrobotics:health",
+  "name": "igrobotics:skin_slot",
+  "displayColor": "white",
   "stackable": true,
   "attributes": [
     {
-      "name": "minecraft:generic.max_health",
+      "name": "igrobotics:robot.slots.modules.skin",
       "modifiers": [
         {
           "value": 0,

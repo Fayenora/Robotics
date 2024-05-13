@@ -7,10 +7,12 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.MathUtil;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -20,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,38 +63,37 @@ public class Perk implements PerkHooks {
 			Codec.list(CODEC_SCALAR).fieldOf("modifiers").forGetter(c -> c.modifiers)
 	).apply(instance, AttributeEntry::new));
 
-	private static final Codec<Perk> DEFINITION_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.STRING.fieldOf("name").forGetter(Perk::getUnlocalizedName),
+	public static final Codec<Perk> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ResourceLocation.CODEC.fieldOf("name").forGetter(c -> c.name),
 			Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("maxLevel", Integer.MAX_VALUE).forGetter(Perk::getMaxLevel),
+			Codec.BOOL.optionalFieldOf("internalLogic", false).forGetter(c -> ModPerks.REGISTRY.get().containsValue(c)),
 			Codec.BOOL.optionalFieldOf("visible", true).forGetter(Perk::isVisible),
 			Codec.BOOL.optionalFieldOf("stackable", false).forGetter(Perk::isStackable),
 			TextColor.CODEC.optionalFieldOf("displayColor", DEFAULT_COLOR).forGetter(Perk::getDisplayColor),
 			Codec.list(CODEC_ATTRIBUTE).optionalFieldOf("attributes", List.of()).forGetter(Perk::getModifiers)
 	).apply(instance, Perk::initialize));
 
-	public static final Codec<Perk> CODEC = Codec.either(ResourceLocation.CODEC, DEFINITION_CODEC).comapFlatMap(
-			e -> e.map(key ->
-				Optional.ofNullable(RoboticsConfig.current().perks.PERKS.get(key.getPath()))
-						.map(DataResult::success)
-						.orElseGet(() -> DataResult.error(() -> "No perk named '" + key + "'")),
-					DataResult::success
-			),
-			Either::right
-	);
-
-	private final String unlocalizedName;
+	private final ResourceLocation name, iconTexture;
 	private int maxLevel;
 	protected TextColor displayColor = DEFAULT_COLOR;
 	private boolean visible = true;
 	private boolean stackable = false;
-	private final ResourceLocation iconTexture;
 
 	private final List<AttributeEntry> modifiers = new ArrayList<>();
 
+	public Perk(String name) {
+		this.name = Robotics.rl(name);
+		this.iconTexture = Robotics.rl("textures/perk/" + name + ".png");
+	}
+
 	public Perk(String name, int maxLevel) {
-		this.unlocalizedName = name;
+		this(name);
 		this.maxLevel = maxLevel;
-		iconTexture = new ResourceLocation(Robotics.MODID, "textures/perk/" + unlocalizedName.split("\\.")[1].toLowerCase() + ".png");
+	}
+
+	public Perk(ResourceLocation name) {
+		this.name = name;
+		this.iconTexture = new ResourceLocation(name.getNamespace(), "textures/perk/" + name.getPath() + ".png");
 	}
 
 	//////////////////////////////////
@@ -124,9 +126,9 @@ public class Perk implements PerkHooks {
 	public Component getDisplayText(int level) {
 		MutableComponent display;
 		if(getMaxLevel() == 1) {
-			display = Lang.localise(unlocalizedName);
+			display = localized();
 		} else {
-			List<Component> text = List.of(Lang.localise(unlocalizedName), Component.literal(" "), Component.translatable("enchantment.level." + level));
+			List<Component> text = List.of(localized(), Component.literal(" "), Component.translatable("enchantment.level." + level));
 			display = ComponentUtils.formatList(text, CommonComponents.EMPTY, Function.identity());
 		}
 		display.setStyle(display.getStyle().withColor(displayColor));
@@ -135,7 +137,7 @@ public class Perk implements PerkHooks {
 
 	public Component getDescriptionText() {
 		if(modifiers.size() == 0) {
-			return Lang.localise(getUnlocalizedName() + ".desc");
+			return Lang.localiseExisting(getUnlocalizedName() + ".desc");
 		}
 		ArrayList<Component> tooltip = new ArrayList<>();
 		tooltip.add(Lang.localise("perk.desc"));
@@ -145,14 +147,21 @@ public class Perk implements PerkHooks {
 			StringBuilder literal = new StringBuilder();
 			for(AttributeScalar scalar : entry.modifiers) {
 				if(scalar.value.left().isPresent()) {
-					double value = scalar.value.left().get();
-					literal.append(switch (scalar.operation) {
-						case 0 -> Reference.FORMAT.format(value);
-						case 1 -> Reference.FORMAT.format(value) + "%";
-						case 2 -> "x" + String.format("%.2f", value);
-						default -> throw new IllegalStateException("Unexpected value: " + scalar.operation);
-					});
-					literal.append("x").append(Lang.localise("level").getString()).append(" ");
+					double baseValue = scalar.value.left().get();
+					double scaleValue = scalar.scalar.orElse(0d);
+					if(baseValue != 0) {
+						literal.append(Reference.FORMAT.format(baseValue));
+					}
+					if(scaleValue != 0) {
+						literal.append(switch (scalar.operation) {
+							case 0 -> Reference.FORMAT.format(scaleValue);
+							case 1 -> Reference.FORMAT.format(scaleValue) + "%";
+							case 2 -> "x" + String.format("%.2f", scaleValue);
+							default -> throw new IllegalStateException("Unexpected value: " + scalar.operation);
+						});
+						literal.append("x").append(Lang.localise("level").getString());
+					}
+					literal.append(" ");
 				} else if(scalar.value.right().isPresent()) {
 					literal.append(scalar.operation == 2 ? "x" : "");
 					for(int i = 0; i < scalar.value.right().get().size(); i++) {
@@ -179,14 +188,19 @@ public class Perk implements PerkHooks {
 		return ComponentUtils.formatList(List.of(prefix, comp), Component.empty());
 	}
 
+	public MutableComponent localized() {
+		return Lang.localiseExisting(getUnlocalizedName());
+	}
+
 	@Override
 	public String toString() {
-		return Lang.localise(unlocalizedName).getString();
+		return localized().getString();
 	}
 
 	@Override
 	public Perk clone() {
-		Perk otherPerk = new Perk(unlocalizedName, maxLevel);
+		Perk otherPerk = new Perk(name);
+		otherPerk.maxLevel = maxLevel;
 		otherPerk.displayColor = displayColor;
 		otherPerk.visible = visible;
 		otherPerk.stackable = stackable;
@@ -198,8 +212,10 @@ public class Perk implements PerkHooks {
 	// Serialization
 	//////////////////////////////////
 
-	private static Perk initialize(String name, int maxLevel, boolean visible, boolean stackable, TextColor displayColor, List<AttributeEntry> modifiers) {
-		Perk perk = new Perk(name, maxLevel);
+	private static Perk initialize(ResourceLocation key, int maxLevel, boolean internal, boolean visible, boolean stackable, TextColor displayColor, List<AttributeEntry> modifiers) {
+		String name = key.getPath();
+		IForgeRegistry<Perk> registry = ModPerks.REGISTRY.get();
+		Perk perk = internal && registry.containsKey(key) ? registry.getValue(key) : new Perk(name, maxLevel);
 		perk.setVisible(visible);
 		perk.setStackable(stackable);
 		perk.setDisplayColor(displayColor);
@@ -312,8 +328,16 @@ public class Perk implements PerkHooks {
 		this.visible = visible;
 	}
 
+	public ResourceLocation getKey() {
+		return name;
+	}
+
+	public String getId() {
+		return name.toString();
+	}
+
 	public String getUnlocalizedName() {
-		return unlocalizedName;
+		return name.getNamespace() + ".perk." + name.getPath();
 	}
 
 	public int getMaxLevel() {

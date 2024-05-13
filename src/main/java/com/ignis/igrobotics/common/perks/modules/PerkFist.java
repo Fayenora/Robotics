@@ -12,18 +12,15 @@ import net.minecraft.world.phys.Vec3;
 
 public class PerkFist extends Perk {
 
-    public final float KNOCKUP_STRENGTH;
-
     public PerkFist(String name) {
         super(name, 1);
-        KNOCKUP_STRENGTH = RoboticsConfig.general.fistKnockUp.get().floatValue();
     }
 
     @Override
     public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
         if(toAttack instanceof Mob mob) {
             mob.knockback(attacker.getAttributeValue(Attributes.ATTACK_KNOCKBACK), 1, 1);
-            mob.addDeltaMovement(new Vec3(0, KNOCKUP_STRENGTH, 0));
+            mob.addDeltaMovement(new Vec3(0, RoboticsConfig.general.fistKnockUp.get().floatValue(), 0));
             mob.addEffect(new MobEffectInstance(ModMobEffects.KNOCKBACK_RESISTANCE.get(), 1));
         }
         return super.attackEntityAsMob(level, attacker, toAttack, values);

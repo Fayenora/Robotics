@@ -6,6 +6,7 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.definitions.ModAttributes;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.nbt.CompoundTag;
@@ -109,7 +110,7 @@ public class ShieldCapability implements IShielded {
 
     @Override
     public float getMaxHealth() {
-        return BASE_HEALTH + perks().getLevel(RoboticsConfig.current().perks.PERK_SHIELD) * 2;
+        return BASE_HEALTH + perks().getLevel(ModPerks.PERK_SHIELD.get()) * 2;
     }
 
     @Override

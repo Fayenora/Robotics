@@ -1,9 +1,10 @@
 {
-  "name": "igrobotics:health",
+  "name": "igrobotics:reactor_slot",
+  "displayColor": "white",
   "stackable": true,
   "attributes": [
     {
-      "name": "minecraft:generic.max_health",
+      "name": "igrobotics:robot.slots.modules.reactor",
       "modifiers": [
         {
           "value": 0,

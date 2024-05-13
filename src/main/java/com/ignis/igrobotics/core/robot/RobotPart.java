@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.robot;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
+import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -83,7 +84,7 @@ public class RobotPart {
 	}
 
 	public IPerkMap getPerks() {
-		if(getItem().equals(Items.AIR)) return ModCapabilities.NO_PERKS;
-		return RoboticsConfig.current().modules.get(getItem()).getPerks();
+		RobotModule perkModule = RoboticsConfig.current().modules.get(getItem());
+		return perkModule == null ? ModCapabilities.NO_PERKS : perkModule.getPerks();
 	}
 }

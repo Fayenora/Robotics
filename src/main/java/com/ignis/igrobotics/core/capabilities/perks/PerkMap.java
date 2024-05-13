@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,19 +32,19 @@ public class PerkMap implements IPerkMap {
 	
 	@Override
 	public void add(Perk perk, int level) {
-		int currLevel = levels.getOrDefault(perk.getUnlocalizedName(), 0);
-		perks.put(perk.getUnlocalizedName(), perk);
-		levels.put(perk.getUnlocalizedName(), currLevel + level);
+		int currLevel = levels.getOrDefault(perk.getId(), 0);
+		perks.put(perk.getId(), perk);
+		levels.put(perk.getId(), currLevel + level);
 	}
 	
 	@Override
 	public void remove(Perk perk, int level) {
-		int currLevel = levels.getOrDefault(perk.getUnlocalizedName(), 0);
+		int currLevel = levels.getOrDefault(perk.getId(), 0);
 		if(currLevel - level <= 0) {
-			perks.remove(perk.getUnlocalizedName());
-			levels.remove(perk.getUnlocalizedName());
+			perks.remove(perk.getId());
+			levels.remove(perk.getId());
 		} else {
-			levels.put(perk.getUnlocalizedName(), currLevel - level);
+			levels.put(perk.getId(), currLevel - level);
 		}
 	}
 	
@@ -76,7 +75,7 @@ public class PerkMap implements IPerkMap {
 
 	@Override
 	public int getLevel(Perk perk) {
-		return levels.getOrDefault(perk.getUnlocalizedName(), 0);
+		return levels.getOrDefault(perk.getId(), 0);
 	}
 
 	@Override
@@ -125,8 +124,8 @@ public class PerkMap implements IPerkMap {
 		for(int i = 0; i < nPerks; i++) {
 			Perk perk = Perk.read(buffer);
 			int level = buffer.readInt();
-			perkMap.perks.put(perk.getUnlocalizedName(), perk);
-			perkMap.levels.put(perk.getUnlocalizedName(), level);
+			perkMap.perks.put(perk.getId(), perk);
+			perkMap.levels.put(perk.getId(), level);
 		}
 		return perkMap;
 	}

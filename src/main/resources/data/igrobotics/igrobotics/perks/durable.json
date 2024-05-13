@@ -1,9 +1,10 @@
 {
-  "name": "igrobotics:health",
+  "name": "igrobotics:durable",
   "stackable": true,
+  "maxLevel": 10,
   "attributes": [
     {
-      "name": "minecraft:generic.max_health",
+      "name": "minecraft:generic.armor",
       "modifiers": [
         {
           "value": 0,

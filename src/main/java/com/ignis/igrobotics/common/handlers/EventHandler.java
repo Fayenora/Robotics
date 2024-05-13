@@ -6,6 +6,7 @@ import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.blocks.StorageBlock;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModBlocks;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.client.PacketSyncConfigs;
@@ -32,7 +33,7 @@ public class EventHandler {
         if(!(event.getEntity() instanceof PathfinderMob mob)) return;
         if(mob.getMobType() == MobType.UNDEAD) {
             mob.goalSelector.addGoal(3, new AvoidEntityGoal<>(mob, Mob.class, 32, 0, 0.1, entity ->
-                        entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS).contains(RoboticsConfig.current().perks.PERK_LUMINOUS)
+                        entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS).contains(ModPerks.PERK_LUMINOUS.get())
             ));
         }
     }

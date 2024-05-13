@@ -27,6 +27,6 @@ public class PerkUnarmedAttack extends Perk {
 
     @Override
     public Component getDisplayText(int level) {
-        return ComponentUtils.formatList(List.of(Component.literal("+" + level + " "), Lang.localise(getUnlocalizedName())), Component.empty());
+        return ComponentUtils.formatList(List.of(Component.literal("+" + level + " "), localized()), Component.empty());
     }
 }

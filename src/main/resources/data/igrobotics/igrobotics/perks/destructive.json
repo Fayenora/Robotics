@@ -1,14 +1,15 @@
 {
-  "name": "igrobotics:health",
+  "name": "igrobotics:destructive",
   "stackable": true,
+  "maxLevel": 5,
   "attributes": [
     {
-      "name": "minecraft:generic.max_health",
+      "name": "minecraft:generic.attack_damage",
       "modifiers": [
         {
           "value": 0,
           "operation": 0,
-          "scalar": 1
+          "scalar": 0.5
         }
       ]
     }

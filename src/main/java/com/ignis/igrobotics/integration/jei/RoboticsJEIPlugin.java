@@ -13,8 +13,8 @@ import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.integration.cc.ProgrammingScreen;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
@@ -26,15 +26,17 @@ import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @JeiPlugin
 @ParametersAreNonnullByDefault
@@ -48,8 +50,8 @@ public class RoboticsJEIPlugin implements IModPlugin {
     private static PerkRecipeCategory perkCategory;
 
     public static final IIngredientType<Perk> INGREDIENT_PERK = () -> Perk.class;
-    public static IModIngredientRegistration ingredientRegistration;
-    public static IRecipeRegistration recipeRegistration;
+    private static IModIngredientRegistration ingredientRegistration;
+    private static IRecipeRegistration recipeRegistration;
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
@@ -65,10 +67,10 @@ public class RoboticsJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
+        Optional<Registry<Perk>> perkRegistry = ServerLifecycleHooks.getCurrentServer().registryAccess().registry(ModPerks.KEY);
+        if(perkRegistry.isEmpty()) return;
         ingredientRegistration = registration;
-        if(Robotics.proxy.isLocalServer()) {
-            registerPerkIngredientType(RoboticsConfig.current());
-        }
+        ingredientRegistration.register(INGREDIENT_PERK, perkRegistry.get().stream().toList(), new IngredientPerk(), new IngredientPerk());
     }
 
     @Override
@@ -79,11 +81,16 @@ public class RoboticsJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        recipeRegistration = registration;
+        Optional<Registry<Perk>> perkRegistry = ServerLifecycleHooks.getCurrentServer().registryAccess().registry(ModPerks.KEY);
         registration.addRecipes(assemblerCategory.getRecipeType(), AssemblerRecipes.recipes);
         registration.addRecipes(wireCutterCategory.getRecipeType(), WireCutterRecipes.recipes);
-        recipeRegistration = registration;
-        if(Robotics.proxy.isLocalServer()) {
-            registerPerkDescriptions(RoboticsConfig.current());
+        if(perkRegistry.isPresent()) {
+            for(Perk perk : perkRegistry.get()) {
+                Component descriptionText = perk.getDescriptionText();
+                if(descriptionText == null) return;
+                registration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
+            }
         }
     }
 
@@ -114,21 +121,9 @@ public class RoboticsJEIPlugin implements IModPlugin {
         });
     }
 
-    public static void registerPerkIngredientType(RoboticsConfig config) {
-        ingredientRegistration.register(INGREDIENT_PERK, config.perks.PERKS.values(), new IngredientPerk(), new IngredientPerk());
-    }
-
-    public static void registerPerkDescriptions(RoboticsConfig config) {
-        for(Perk perk : config.perks.PERKS.values()) {
-            Component descriptionText = perk.getDescriptionText();
-            if(descriptionText == null) continue;
-            recipeRegistration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
-
-        }
-        for(Map.Entry<Item, RobotModule> entry : config.modules.MODULES.entrySet()) {
-            for(Tuple<Perk, Integer> perk : entry.getValue().getPerks()) {
-                recipeRegistration.addRecipes(perkCategory.getRecipeType(), List.of(new PerkRecipeCategory.PartPerkTuple(perk.first, entry.getValue())));
-            }
+    public static void registerModulePerkRelation(RobotModule module) {
+        for(Tuple<Perk, Integer> perk : module.getPerks()) {
+            recipeRegistration.addRecipes(perkCategory.getRecipeType(), List.of(new PerkRecipeCategory.PartPerkTuple(perk.first, module)));
         }
     }
 

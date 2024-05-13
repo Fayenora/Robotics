@@ -18,29 +18,29 @@ public class AdvancedPerkMap implements IPerkMap {
 	@Override
 	public void add(Perk perk, int level) {
 		if(level == 0) return;
-		int currLevel = levels.getOrDefault(perk.getUnlocalizedName(), 0);
+		int currLevel = levels.getOrDefault(perk.getId(), 0);
 		int updatedLevel = (perk.isStackable() ? currLevel + level : Math.max(currLevel, level));
-		perks.put(perk.getUnlocalizedName(), perk);
-		levels.put(perk.getUnlocalizedName(), updatedLevel);
+		perks.put(perk.getId(), perk);
+		levels.put(perk.getId(), updatedLevel);
 		
 		//If the perk is not stackable, we also need to keep track of how often which level was added
 		if(!perk.isStackable()) {
-			if(!levelCounts.containsKey(perk.getUnlocalizedName())) {
-				levelCounts.put(perk.getUnlocalizedName(), new int[perk.getMaxLevel()]);
+			if(!levelCounts.containsKey(perk.getId())) {
+				levelCounts.put(perk.getId(), new int[perk.getMaxLevel()]);
 			}
-			levelCounts.get(perk.getUnlocalizedName())[level - 1]++;
+			levelCounts.get(perk.getId())[level - 1]++;
 		}
 	}
 
 	@Override
 	public void remove(Perk perk, int level) {
 		if(level == 0) return;
-		String key = perk.getUnlocalizedName();
+		String key = perk.getId();
 		if(!perks.containsKey(key)) return;
 		
 		int updatedLevel;
 		if(perk.isStackable()) {
-			updatedLevel = levels.getOrDefault(perk.getUnlocalizedName(), 0) - level;
+			updatedLevel = levels.getOrDefault(perk.getId(), 0) - level;
 		} else {
 			//If the perk is not stackable, removing is more complicated...
 			int[] arr = levelCounts.get(key);
@@ -68,7 +68,7 @@ public class AdvancedPerkMap implements IPerkMap {
 		if(other instanceof AdvancedPerkMap otherMap) {
 			for(Tuple<Perk, Integer> tup : other) {
 				Perk perk = tup.getFirst();
-				String key = perk.getUnlocalizedName();
+				String key = perk.getId();
 				if(!tup.getFirst().isStackable()) {
 					for(int i = 0; i < perk.getMaxLevel(); i++) {
 						for(int j = 0; j < otherMap.levelCounts.get(key)[i]; j++) {
@@ -89,7 +89,7 @@ public class AdvancedPerkMap implements IPerkMap {
 		if(toRemove instanceof AdvancedPerkMap otherMap) {
 			for(Tuple<Perk, Integer> tup : toRemove) {
 				Perk perk = tup.getFirst();
-				String key = perk.getUnlocalizedName();
+				String key = perk.getId();
 				if(!tup.getFirst().isStackable()) {
 					for(int i = 0; i < perk.getMaxLevel(); i++) {
 						for(int j = 0; j < otherMap.levelCounts.get(key)[i]; j++) {
@@ -119,7 +119,7 @@ public class AdvancedPerkMap implements IPerkMap {
 
 	@Override
 	public int getLevel(Perk perk) {
-		return levels.getOrDefault(perk.getUnlocalizedName(), 0);
+		return levels.getOrDefault(perk.getId(), 0);
 	}
 
 	@Override

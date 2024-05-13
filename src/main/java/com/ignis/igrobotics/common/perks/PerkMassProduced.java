@@ -9,7 +9,7 @@ import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.definitions.ModPerks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -62,7 +62,7 @@ public class PerkMassProduced extends Perk {
 			Optional<IPerkMapCap> perkMap = entity.getCapability(ModCapabilities.PERKS).resolve();
 			if(otherRobot.isEmpty() || !otherRobot.get().isActive()) return false;
 			if(!RobotBehavior.hasAccess(robot.getOwner(), ent, EnumPermission.ALLY)) return false;
-			return perkMap.isPresent() && perkMap.get().contains(RoboticsConfig.current().perks.PERK_MASS_PRODUCED);
+			return perkMap.isPresent() && perkMap.get().contains(ModPerks.PERK_MASS_PRODUCED.get());
 		}).size();
 
 		if(allies <= 1) return; //No allies but itself

@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.integration.jei;
 
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.util.Lang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientRenderer;
@@ -30,17 +28,17 @@ public class IngredientPerk implements IIngredientHelper<Perk>, IIngredientRende
 
     @Override
     public String getDisplayName(Perk ingredient) {
-        return Lang.localise(ingredient.getUnlocalizedName()).getString();
+        return ingredient.toString();
     }
 
     @Override
     public String getUniqueId(Perk ingredient, UidContext context) {
-        return ingredient.getUnlocalizedName();
+        return ingredient.getKey().toString();
     }
 
     @Override
     public ResourceLocation getResourceLocation(Perk ingredient) {
-        return new ResourceLocation(Robotics.MODID, ingredient.getUnlocalizedName().toLowerCase());
+        return ingredient.getKey();
     }
 
     @Override
@@ -63,7 +61,7 @@ public class IngredientPerk implements IIngredientHelper<Perk>, IIngredientRende
 
     @Override
     public List<Component> getTooltip(Perk ingredient, TooltipFlag tooltipFlag) {
-        MutableComponent display = Lang.localise(ingredient.getUnlocalizedName());
+        MutableComponent display = ingredient.localized();
         display.setStyle(display.getStyle().withColor(ingredient.getDisplayColor()));
         return List.of(display);
     }
