@@ -82,7 +82,7 @@ public class RoboticsJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         recipeRegistration = registration;
-        Optional<Registry<Perk>> perkRegistry = ServerLifecycleHooks.getCurrentServer().registryAccess().registry(ModPerks.KEY);
+        Optional<Registry<Perk>> perkRegistry = Robotics.proxy.getLevel().registryAccess().registry(ModPerks.KEY);
         registration.addRecipes(assemblerCategory.getRecipeType(), AssemblerRecipes.recipes);
         registration.addRecipes(wireCutterCategory.getRecipeType(), WireCutterRecipes.recipes);
         if(perkRegistry.isPresent()) {
