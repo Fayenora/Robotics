@@ -7,9 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.server.IntegratedServer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
@@ -61,6 +64,16 @@ public class ClientProxy extends ServerProxy {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public RegistryAccess getRegistryAccess() {
+        IntegratedServer integratedServer = Minecraft.getInstance().getSingleplayerServer();
+        if(integratedServer != null) return integratedServer.registryAccess();
+        ClientPacketListener clientPacketListener = Minecraft.getInstance().getConnection();
+        if(clientPacketListener != null) return clientPacketListener.registryAccess();
+        return super.getRegistryAccess();
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -98,57 +98,12 @@ public class ModModules {
         }
     }
 
-    /**
-     * Server side perk map population. See {@link com.ignis.igrobotics.client.ClientEventHandler#onServerJoin(ClientPlayerNetworkEvent.LoggingIn)} for client
-     */
-    @SubscribeEvent
-    public static void onServerWorldLoad(ServerStartedEvent event) {
-        populatePerkMaps(event.getServer().registryAccess());
-    }
-
     public static void reloadModules(RegistryAccess access) {
         modules.clear();
         overlays.clear();
         Registry<RobotModule> reg = access.registryOrThrow(KEY);
         for(RobotModule module : reg) {
             registerModule(module);
-        }
-    }
-
-    public static void populatePerkMaps(RegistryAccess registryAccess) {
-        Iterator<IPerkMap> it = queuedPerkMaps.keySet().iterator();
-        Robotics.LOGGER.info("queuedPerkMaps: " + queuedPerkMaps.size());
-        Registry<Perk> perkRegistry = registryAccess.registryOrThrow(ModPerks.KEY);
-        while(it.hasNext()) {
-            IPerkMap perkMap = it.next();
-            for(ResourceLocation perkKey : queuedPerkMaps.get(perkMap).keySet()) {
-                Perk perk = perkRegistry.get(perkKey);
-                if(perk == null) {
-                    Robotics.LOGGER.warn("Perk \"" + perkKey + "\" does not exist. ");
-                }
-                perkMap.add(perk, queuedPerkMaps.get(perkMap).get(perkKey));
-            }
-            it.remove();
-        }
-    }
-
-    public static void queueInit(IPerkMap perkMap, List<Pair<ResourceLocation, Integer>> perks) {
-        HashMap<ResourceLocation, Integer> map = new HashMap<>();
-        perks.forEach(p -> map.put(p.getFirst(), p.getSecond()));
-        queuedPerkMaps.put(perkMap, map);
-    }
-
-    public static void mergeQueued(IPerkMap map1, IPerkMap map2) {
-        if(queuedPerkMaps.containsKey(map2)) {
-            if(queuedPerkMaps.containsKey(map1)) {
-                HashMap<ResourceLocation, Integer> perks = queuedPerkMaps.get(map1);
-                for(ResourceLocation perkKey : queuedPerkMaps.get(map2).keySet()) {
-                    perks.put(perkKey, perks.getOrDefault(perkKey, 0) + queuedPerkMaps.get(map2).get(perkKey));
-                }
-                queuedPerkMaps.put(map1, perks);
-            } else {
-                queueInit(map1, PerkMap.toCodecFormat(map2));
-            }
         }
     }
 }

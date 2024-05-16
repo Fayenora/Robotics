@@ -2,6 +2,7 @@ package com.ignis.igrobotics.network.proxy;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -18,6 +19,11 @@ public class ServerProxy implements IProxy {
     @Override
     public Level getLevel() {
         return ServerLifecycleHooks.getCurrentServer().overworld();
+    }
+
+    @Override
+    public RegistryAccess getRegistryAccess() {
+        return ServerLifecycleHooks.getCurrentServer().registryAccess();
     }
 
     @Override

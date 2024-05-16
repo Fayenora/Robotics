@@ -69,7 +69,6 @@ public class ClientEventHandler {
     public static void onServerJoin(ClientPlayerNetworkEvent.LoggingIn event) {
         RegistryAccess registryAccess = event.getPlayer().level().registryAccess();
         ModModules.reloadModules(registryAccess);
-        ModModules.populatePerkMaps(registryAccess);
     }
 
     @OnlyIn(Dist.CLIENT)

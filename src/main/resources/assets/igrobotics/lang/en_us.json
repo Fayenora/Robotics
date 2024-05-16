@@ -126,6 +126,7 @@
   "attribute.name.robot.slots.modules.right_arm": "Right Arms",
   "attribute.name.robot.slots.modules.right_leg": "Right Legs",
   "igrobotics.perks": "Perks",
+  "igrobotics.perk.undefined": "§kloading-error",
   "igrobotics.perk.health": "Health",
   "igrobotics.perk.battery": "Battery",
   "igrobotics.perk.steady": "Steady",

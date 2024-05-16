@@ -1,6 +1,9 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.definitions.ModPerks;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,36 +14,34 @@ import java.util.Iterator;
  */
 public class AdvancedPerkMap implements IPerkMap {
 
-	private final HashMap<String, int[]> levelCounts = new HashMap<>();
-	HashMap<String, Integer> levels = new HashMap<>();
-	HashMap<String, Perk> perks = new HashMap<>();
+	private final HashMap<ResourceLocation, int[]> levelCounts = new HashMap<>();
+	HashMap<ResourceLocation, Integer> levels = new HashMap<>();
 
 	@Override
 	public void add(Perk perk, int level) {
 		if(level == 0) return;
-		int currLevel = levels.getOrDefault(perk.getId(), 0);
+		int currLevel = levels.getOrDefault(perk.getKey(), 0);
 		int updatedLevel = (perk.isStackable() ? currLevel + level : Math.max(currLevel, level));
-		perks.put(perk.getId(), perk);
-		levels.put(perk.getId(), updatedLevel);
+		levels.put(perk.getKey(), updatedLevel);
 		
 		//If the perk is not stackable, we also need to keep track of how often which level was added
 		if(!perk.isStackable()) {
-			if(!levelCounts.containsKey(perk.getId())) {
-				levelCounts.put(perk.getId(), new int[perk.getMaxLevel()]);
+			if(!levelCounts.containsKey(perk.getKey())) {
+				levelCounts.put(perk.getKey(), new int[perk.getMaxLevel()]);
 			}
-			levelCounts.get(perk.getId())[level - 1]++;
+			levelCounts.get(perk.getKey())[level - 1]++;
 		}
 	}
 
 	@Override
 	public void remove(Perk perk, int level) {
 		if(level == 0) return;
-		String key = perk.getId();
-		if(!perks.containsKey(key)) return;
+		ResourceLocation key = perk.getKey();
+		if(!levels.containsKey(key)) return;
 		
 		int updatedLevel;
 		if(perk.isStackable()) {
-			updatedLevel = levels.getOrDefault(perk.getId(), 0) - level;
+			updatedLevel = levels.getOrDefault(perk.getKey(), 0) - level;
 		} else {
 			//If the perk is not stackable, removing is more complicated...
 			int[] arr = levelCounts.get(key);
@@ -56,7 +57,6 @@ public class AdvancedPerkMap implements IPerkMap {
 		if(updatedLevel <= 0) {
 			levelCounts.remove(key);
 			levels.remove(key);
-			perks.remove(key);
 			return;
 		}
 		levels.put(key, updatedLevel);
@@ -68,7 +68,7 @@ public class AdvancedPerkMap implements IPerkMap {
 		if(other instanceof AdvancedPerkMap otherMap) {
 			for(Tuple<Perk, Integer> tup : other) {
 				Perk perk = tup.getFirst();
-				String key = perk.getId();
+				ResourceLocation key = perk.getKey();
 				if(!tup.getFirst().isStackable()) {
 					for(int i = 0; i < perk.getMaxLevel(); i++) {
 						for(int j = 0; j < otherMap.levelCounts.get(key)[i]; j++) {
@@ -89,7 +89,7 @@ public class AdvancedPerkMap implements IPerkMap {
 		if(toRemove instanceof AdvancedPerkMap otherMap) {
 			for(Tuple<Perk, Integer> tup : toRemove) {
 				Perk perk = tup.getFirst();
-				String key = perk.getId();
+				ResourceLocation key = perk.getKey();
 				if(!tup.getFirst().isStackable()) {
 					for(int i = 0; i < perk.getMaxLevel(); i++) {
 						for(int j = 0; j < otherMap.levelCounts.get(key)[i]; j++) {
@@ -109,24 +109,22 @@ public class AdvancedPerkMap implements IPerkMap {
 	public void clear() {
 		levelCounts.clear();
 		levels.clear();
-		perks.clear();
 	}
 
 	@Override
 	public boolean contains(Perk perk) {
-		return perks.containsValue(perk);
+		return levels.containsKey(perk.getKey());
 	}
 
 	@Override
 	public int getLevel(Perk perk) {
-		return levels.getOrDefault(perk.getId(), 0);
+		return levels.getOrDefault(perk.getKey(), 0);
 	}
 
 	@Override
 	public Iterator<Tuple<Perk, Integer>> iterator() {
 		return new Iterator<>() {
-			final Iterator<Perk> perkIt = perks.values().iterator();
-			final Iterator<Integer> levelIt = levels.values().iterator();
+			final Iterator<ResourceLocation> perkIt = levels.keySet().iterator();
 
 			@Override
 			public boolean hasNext() {
@@ -135,8 +133,13 @@ public class AdvancedPerkMap implements IPerkMap {
 
 			@Override
 			public Tuple<Perk, Integer> next() {
-				Perk perk = perkIt.next();
-				int effectiveLevel = Math.min(perk.getMaxLevel(), levelIt.next());
+				ResourceLocation perkKey = perkIt.next();
+				Perk perk = Robotics.proxy.getRegistryAccess().registryOrThrow(ModPerks.KEY).get(perkKey);
+				if(perk == null) {
+					Robotics.LOGGER.warn("Perk " + perkKey + " does not exist!");
+					return new Tuple<>(ModPerks.PERK_UNDEFINED.get(), 1);
+				}
+				int effectiveLevel = Math.min(perk.getMaxLevel(), levels.get(perkKey));
 				return new Tuple<>(perk, effectiveLevel);
 			}
 		};

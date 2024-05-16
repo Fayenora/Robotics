@@ -70,7 +70,7 @@ public class Robotics {
     @SubscribeEvent
     public void registerDataPack(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(ModPerks.KEY, Perk.CODEC, Perk.CODEC);
-        event.dataPackRegistry(ModModules.KEY, RobotModule.CODEC, RobotModule.CODEC);
+        event.dataPackRegistry(ModModules.KEY, RobotModule.CODEC, RobotModule.NETWORK_CODEC);
     }
 
     public static ResourceLocation rl(String path) {

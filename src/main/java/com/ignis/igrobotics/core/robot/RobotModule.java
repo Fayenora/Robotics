@@ -14,10 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,9 @@ public class RobotModule {
             return DataResult.success(Ingredient.EMPTY);
         }
     }, Ingredient::toJson);
+    public static final Codec<Ingredient> NETWORK_INGREDIENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.list(ItemStack.CODEC).fieldOf("stacks").forGetter(i -> Arrays.asList(i.getItems()))
+    ).apply(instance, l -> Ingredient.of(l.stream())));
     public static final Codec<RobotModule> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
             Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
@@ -39,7 +44,17 @@ public class RobotModule {
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
             Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
             ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(c -> Optional.ofNullable(c.overlay)),
-            PerkMap.LOADING_CODEC.optionalFieldOf("perks", new PerkMap()).forGetter(c -> (PerkMap) c.perks)
+            PerkMap.CODEC.optionalFieldOf("perks", new PerkMap()).forGetter(c -> (PerkMap) c.perks)
+    ).apply(instance, RobotModule::initialize));
+    public static final Codec<RobotModule> NETWORK_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            NETWORK_INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
+            Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
+            StringRepresentable.fromEnum(ModuleActions::values).optionalFieldOf("action", ModuleActions.NONE).forGetter(RobotModule::getAction),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
+            Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
+            ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(c -> Optional.ofNullable(c.overlay)),
+            PerkMap.CODEC.optionalFieldOf("perks", new PerkMap()).forGetter(c -> (PerkMap) c.perks)
     ).apply(instance, RobotModule::initialize));
 
     private final Ingredient item;
@@ -166,7 +181,6 @@ public class RobotModule {
         }
         thisModule.overlay = overlay == null ? other.overlay : thisModule.overlay;
         thisModule.viableSlots.addAll(other.viableSlots);
-        ModModules.mergeQueued(thisModule.getPerks(), other.getPerks());
         thisModule.perks.merge(other.getPerks());
         return thisModule;
     }

@@ -1,7 +1,8 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Tuple;
-import com.ignis.igrobotics.definitions.ModModules;
+import com.ignis.igrobotics.definitions.ModPerks;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
@@ -14,20 +15,19 @@ import java.util.stream.StreamSupport;
 
 public class PerkMap implements IPerkMap {
 
-	public static final Codec<PerkMap> LOADING_CODEC = Codec.list(Codec.pair(
+	public static final Codec<PerkMap> CODEC = Codec.list(Codec.pair(
 			ResourceLocation.CODEC.fieldOf("name").codec(),
 			ExtraCodecs.POSITIVE_INT.optionalFieldOf("level", 1).codec()
-	)).xmap(PerkMap::init, PerkMap::toCodecFormat);
-	
-	HashMap<String, Perk> perks = new HashMap<>();
-	HashMap<String, Integer> levels = new HashMap<>();
+	)).xmap(PerkMap::new, PerkMap::toCodecFormat);
+
+	HashMap<ResourceLocation, Integer> levels = new HashMap<>();
 
 	public PerkMap() {}
 
-	private static PerkMap init(List<Pair<ResourceLocation, Integer>> perks) {
-		PerkMap map = new PerkMap();
-		ModModules.queueInit(map, perks);
-		return map;
+	public PerkMap(List<Pair<ResourceLocation, Integer>> perks) {
+		for(Pair<ResourceLocation, Integer> perk : perks) {
+			add(perk.getFirst(), perk.getSecond());
+		}
 	}
 
 	public static List<Pair<ResourceLocation, Integer>> toCodecFormat(IPerkMap perkMap) {
@@ -36,19 +36,21 @@ public class PerkMap implements IPerkMap {
 	
 	@Override
 	public void add(Perk perk, int level) {
-		int currLevel = levels.getOrDefault(perk.getId(), 0);
-		perks.put(perk.getId(), perk);
-		levels.put(perk.getId(), currLevel + level);
+		add(perk.getKey(), level);
+	}
+
+	private void add(ResourceLocation perkKey, int level) {
+		int currLevel = levels.getOrDefault(perkKey, 0);
+		levels.put(perkKey, currLevel + level);
 	}
 	
 	@Override
 	public void remove(Perk perk, int level) {
-		int currLevel = levels.getOrDefault(perk.getId(), 0);
+		int currLevel = levels.getOrDefault(perk.getKey(), 0);
 		if(currLevel - level <= 0) {
-			perks.remove(perk.getId());
-			levels.remove(perk.getId());
+			levels.remove(perk.getKey());
 		} else {
-			levels.put(perk.getId(), currLevel - level);
+			levels.put(perk.getKey(), currLevel - level);
 		}
 	}
 	
@@ -68,25 +70,23 @@ public class PerkMap implements IPerkMap {
 
 	@Override
 	public void clear() {
-		perks.clear();
 		levels.clear();
 	}
 
 	@Override
 	public boolean contains(Perk perk) {
-		return perks.containsValue(perk);
+		return levels.containsKey(perk.getKey());
 	}
 
 	@Override
 	public int getLevel(Perk perk) {
-		return levels.getOrDefault(perk.getId(), 0);
+		return levels.getOrDefault(perk.getKey(), 0);
 	}
 
 	@Override
 	public Iterator<Tuple<Perk, Integer>> iterator() {
 		return new Iterator<>() {
-			final Iterator<Perk> perkIt = perks.values().iterator();
-			final Iterator<Integer> levelIt = levels.values().iterator();
+			final Iterator<ResourceLocation> perkIt = levels.keySet().iterator();
 
 			@Override
 			public boolean hasNext() {
@@ -95,8 +95,13 @@ public class PerkMap implements IPerkMap {
 
 			@Override
 			public Tuple<Perk, Integer> next() {
-				Perk perk = perkIt.next();
-				int effectiveLevel = Math.min(perk.getMaxLevel(), levelIt.next());
+				ResourceLocation perkKey = perkIt.next();
+				Perk perk = Robotics.proxy.getRegistryAccess().registryOrThrow(ModPerks.KEY).get(perkKey);
+				if(perk == null) {
+					Robotics.LOGGER.warn("Perk " + perkKey + " does not exist!");
+					return new Tuple<>(ModPerks.PERK_UNDEFINED.get(), 1);
+				}
+				int effectiveLevel = Math.min(perk.getMaxLevel(), levels.get(perkKey));
 				return new Tuple<>(perk, effectiveLevel);
 			}
 		};

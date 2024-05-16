@@ -29,8 +29,9 @@ public class ModPerks {
 
     public static final ResourceKey<Registry<Perk>> KEY = ResourceKey.createRegistryKey(new ResourceLocation(Robotics.MODID, "perks"));
     public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(KEY, KEY.location().getNamespace());
-    public static final Supplier<IForgeRegistry<Perk>> REGISTRY = PERKS.makeRegistry(() -> new RegistryBuilder<Perk>().allowModification().disableSaving().disableSync());
+    public static final Supplier<IForgeRegistry<Perk>> REGISTRY = PERKS.makeRegistry(() -> new RegistryBuilder<Perk>().allowModification().disableSaving().disableSync().setDefaultKey(new ResourceLocation(Robotics.MODID, "undefined")));
 
+    public static final RegistryObject<Perk> PERK_UNDEFINED = register("undefined", s -> new Perk(s, 1).setDisplayColor(ChatFormatting.RED));
     public static final RegistryObject<Perk> PERK_ACCELERATION = register("acceleration", PerkAcceleration::new);
     public static final RegistryObject<Perk> PERK_CHARGE = register("charge", PerkCharge::new);
     public static final RegistryObject<Perk> PERK_SOLAR_PANEL = register("solar_panel", PerkSolarPanel::new);
