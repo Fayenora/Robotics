@@ -7,8 +7,10 @@ import com.ignis.igrobotics.common.handlers.RobotBehavior;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
+import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.cc.vanilla.ScreenInvokator;
 import dan200.computercraft.shared.network.container.ComputerContainerData;
@@ -31,9 +33,12 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.Map;
 
 public class RoboticsMenus {
+
+    public static final List<Attribute> UNNECESSARY_INFO = ModAttributes.MODIFIER_SLOTS.subList(EnumModuleSlot.HEAD.ordinal(), EnumModuleSlot.CORE.ordinal());
 
     public static void openMenu(Player player, MenuType<?> type, Object extraData) {
         if(!(player instanceof ServerPlayer serverPlayer)) return;
@@ -79,7 +84,7 @@ public class RoboticsMenus {
                             buf.writeInt(target.getId());
                             robot.getAccess().write(buf);
                             for(Map.Entry<ResourceKey<Attribute>, Attribute> entry : ForgeRegistries.ATTRIBUTES.getEntries()) {
-                                if(living.getAttributes().hasAttribute(entry.getValue())) {
+                                if(living.getAttributes().hasAttribute(entry.getValue()) && !UNNECESSARY_INFO.contains(entry.getValue())) {
                                     buf.writeResourceKey(entry.getKey());
                                     buf.writeFloat((float) living.getAttributes().getValue(entry.getValue()));
                                 }

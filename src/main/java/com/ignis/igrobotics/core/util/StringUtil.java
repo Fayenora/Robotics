@@ -4,6 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -81,6 +82,22 @@ public class StringUtil {
 			return (rf / 1e3) + "kRF";
 		}
 		return rf + "RF";
+	}
+
+	public static String prettyPrintLargeNumber(Number number, DecimalFormat format) {
+		if(number.longValue() > 1e12) {
+			return format.format(number.longValue() / 1e12) + "T";
+		}
+		if(number.longValue() > 1e9) {
+			return format.format(number.longValue() / 1e9) + "B";
+		}
+		if(number.intValue() > 1e6) {
+			return format.format(number.intValue() / 1e6) + "M";
+		}
+		if(number.intValue() > 1e3) {
+			return format.format(number.intValue() / 1e3) + "K";
+		}
+		return format.format(number.longValue());
 	}
 
 }

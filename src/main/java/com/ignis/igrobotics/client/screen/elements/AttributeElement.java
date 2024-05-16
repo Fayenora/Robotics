@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.core.util.StringUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -34,7 +35,7 @@ public class AttributeElement extends GuiElement {
         super(x, y, 67, 15);
         this.attribute = Component.translatable(attribute.getDescriptionId());
         this.color = new Color(Reference.ATTRIBUTE_COLORS.getOrDefault(attribute, TextColor.fromRgb(Reference.FONT_COLOR)).getValue());
-        this.value = FORMAT.format(value);
+        this.value = StringUtil.prettyPrintLargeNumber(value, FORMAT);
     }
 
     @Override
