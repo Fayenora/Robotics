@@ -30,6 +30,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -67,10 +68,9 @@ public class RoboticsJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        Optional<Registry<Perk>> perkRegistry = Robotics.proxy.getLevel().registryAccess().registry(ModPerks.KEY);
-        if(perkRegistry.isEmpty()) return;
+        Registry<Perk> perkRegistry = Robotics.proxy.getRegistryAccess().registryOrThrow(ModPerks.KEY);
         ingredientRegistration = registration;
-        ingredientRegistration.register(INGREDIENT_PERK, perkRegistry.get().stream().toList(), new IngredientPerk(), new IngredientPerk());
+        ingredientRegistration.register(INGREDIENT_PERK, perkRegistry.stream().toList(), new IngredientPerk(), new IngredientPerk());
     }
 
     @Override
@@ -82,15 +82,13 @@ public class RoboticsJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         recipeRegistration = registration;
-        Optional<Registry<Perk>> perkRegistry = Robotics.proxy.getLevel().registryAccess().registry(ModPerks.KEY);
         registration.addRecipes(assemblerCategory.getRecipeType(), AssemblerRecipes.recipes);
         registration.addRecipes(wireCutterCategory.getRecipeType(), WireCutterRecipes.recipes);
-        if(perkRegistry.isPresent()) {
-            for(Perk perk : perkRegistry.get()) {
-                Component descriptionText = perk.getDescriptionText();
-                if(descriptionText == null) return;
-                registration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
-            }
+        Registry<Perk> perkRegistry = Robotics.proxy.getRegistryAccess().registryOrThrow(ModPerks.KEY);
+        for(Perk perk : perkRegistry) {
+            Component descriptionText = perk.getDescriptionText();
+            if(descriptionText == null) return;
+            registration.addIngredientInfo(perk, INGREDIENT_PERK, descriptionText);
         }
     }
 

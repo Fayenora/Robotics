@@ -58,11 +58,13 @@ public class WireCutterRecipes implements IRecipeSerializer<MachineRecipe<?>> {
             outputs[i] = buf.readItem();
         }
 
-        return new MachineRecipe.Builder(ModMachines.WIRE_CUTTER, loc)
+        MachineRecipe<?> recipe = new MachineRecipe.Builder(ModMachines.WIRE_CUTTER, loc)
                 .setInputs(inputs)
                 .setOutputs(outputs)
                 .setEnergyRequirement(energy)
                 .setProcessingTime(processing_time).build();
+        recipes.add(recipe);
+        return recipe;
     }
 
     @Override

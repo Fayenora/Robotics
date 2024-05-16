@@ -95,11 +95,13 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
             outputs[i] = buf.readItem();
         }
 
-        return new MachineRecipe.Builder(ModMachines.ASSEMBLER, loc)
+        MachineRecipe<?> recipe = new MachineRecipe.Builder(ModMachines.ASSEMBLER, loc)
                 .setInputs(inputs)
                 .setOutputs(outputs)
                 .setEnergyRequirement(energy)
                 .setProcessingTime(processing_time).build();
+        recipes.add(recipe);
+        return recipe;
     }
 
     @Override
