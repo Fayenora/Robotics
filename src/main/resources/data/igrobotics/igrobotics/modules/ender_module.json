@@ -1,0 +1,11 @@
+{
+  "items": {
+    "item": "igrobotics:ender_module"
+  },
+  "slots": [
+    "core"
+  ],
+  "action": "teleport",
+  "cooldown": 10,
+  "energyCost": 10000
+}

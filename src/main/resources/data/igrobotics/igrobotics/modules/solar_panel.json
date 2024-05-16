@@ -1,0 +1,15 @@
+{
+  "items": {
+    "item": "igrobotics:solar_panel"
+  },
+  "texture": "igrobotics:textures/robot/modules/solar_panel.png",
+  "slots": [
+    "skin"
+  ],
+  "perks": [
+    {
+      "level": 1,
+      "name": "igrobotics:solar_panel"
+    }
+  ]
+}

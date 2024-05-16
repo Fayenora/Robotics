@@ -1,0 +1,11 @@
+{
+  "items": {
+    "tag": "igrobotics:material/lead"
+  },
+  "perks": [
+    {
+      "name": "igrobotics:steady",
+      "level": 1
+    }
+  ]
+}

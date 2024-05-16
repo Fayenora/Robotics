@@ -1,0 +1,19 @@
+{
+  "items": {
+    "type": "forge:intersection",
+    "children": [
+      {
+        "tag": "igrobotics:material/lead"
+      },
+      {
+        "tag": "igrobotics:part/body"
+      }
+    ]
+  },
+  "perks": [
+    {
+      "name": "igrobotics:steady",
+      "level": 2
+    }
+  ]
+}

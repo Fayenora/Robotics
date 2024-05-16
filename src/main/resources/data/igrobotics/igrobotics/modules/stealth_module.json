@@ -1,0 +1,12 @@
+{
+  "items": {
+    "item": "igrobotics:stealth_module"
+  },
+  "slots": [
+    "skin"
+  ],
+  "action": "stealth",
+  "cooldown": 30,
+  "duration": 10,
+  "energyCost": 100000
+}

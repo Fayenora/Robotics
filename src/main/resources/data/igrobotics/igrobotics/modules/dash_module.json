@@ -1,0 +1,11 @@
+{
+  "items": {
+    "item": "igrobotics:dash_module"
+  },
+  "slots": [
+    "feet"
+  ],
+  "action": "dash",
+  "cooldown": 3,
+  "energyCost": 5000
+}

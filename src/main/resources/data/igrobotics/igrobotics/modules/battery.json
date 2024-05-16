@@ -1,0 +1,14 @@
+{
+  "items": {
+    "item": "igrobotics:battery"
+  },
+  "slots": [
+    "core"
+  ],
+  "perks": [
+    {
+      "level": 2,
+      "name": "igrobotics:battery"
+    }
+  ]
+}

@@ -6,11 +6,11 @@ import com.ignis.igrobotics.common.modules.ModuleActions;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.PosUtil;
-import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.definitions.ModModules;
 import com.ignis.igrobotics.definitions.ModSounds;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,8 +38,8 @@ public class ClientEventHandler {
     public static void onToolTip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         Level level = Minecraft.getInstance().level;
-        if(RoboticsConfig.current().modules.isModule(stack.getItem())) {
-            RobotModule module = RoboticsConfig.current().modules.get(stack);
+        if(ModModules.isModule(stack)) {
+            RobotModule module = ModModules.get(stack);
             if(!module.getViableSlots().isEmpty()) {
                 Component tooltipSlots = ComponentUtils.formatList(List.of(Lang.localise("module.slots"), Component.literal(": "), Lang.localiseAll(module.getViableSlots())), Component.empty());
                 event.getToolTip().add(tooltipSlots);
@@ -62,6 +63,13 @@ public class ClientEventHandler {
                 event.getToolTip().add(ComponentUtils.formatList(tooltip, Component.literal(": ")));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerJoin(ClientPlayerNetworkEvent.LoggingIn event) {
+        RegistryAccess registryAccess = event.getPlayer().level().registryAccess();
+        ModModules.reloadModules(registryAccess);
+        ModModules.populatePerkMaps(registryAccess);
     }
 
     @OnlyIn(Dist.CLIENT)

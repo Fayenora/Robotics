@@ -1,0 +1,11 @@
+{
+  "items": {
+    "tag": "igrobotics:material/iron"
+  },
+  "perks": [
+    {
+      "name": "igrobotics:mass_produced",
+      "level": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "tag": "igrobotics:part/right_arm"
+    },
+    {
+      "tag": "igrobotics:part/left_arm"
+    }
+  ],
+  "perks": [
+    {
+      "name": "igrobotics:destructive",
+      "level": 1
+    },
+    {
+      "name": "igrobotics:fist_slot",
+      "level": 1
+    }
+  ]
+}

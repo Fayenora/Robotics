@@ -4,7 +4,7 @@ import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.definitions.ModModules;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -29,7 +29,7 @@ public class ModuleRenderLayer extends GeoRenderLayer<RobotEntity> {
         IRobot robotics = robot.getCapability(ModCapabilities.ROBOT).resolve().get();
 
         if(!robotics.hasRenderLayer(layerId)) return;
-        RobotModule module = RoboticsConfig.current().modules.overlays.get(layerId);
+        RobotModule module = ModModules.byOverlayID(layerId);
         RenderType armorRenderType = RenderType.entityCutoutNoCull(module.getOverlay());
 
         getRenderer().reRender(getDefaultBakedModel(robot), poseStack, bufferSource, robot, armorRenderType,

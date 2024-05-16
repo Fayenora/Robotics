@@ -1,6 +1,7 @@
 package com.ignis.igrobotics;
 
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.robot.SelectionType;
 import com.ignis.igrobotics.definitions.*;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
@@ -69,6 +70,7 @@ public class Robotics {
     @SubscribeEvent
     public void registerDataPack(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(ModPerks.KEY, Perk.CODEC, Perk.CODEC);
+        event.dataPackRegistry(ModModules.KEY, RobotModule.CODEC, RobotModule.CODEC);
     }
 
     public static ResourceLocation rl(String path) {

@@ -1,0 +1,12 @@
+{
+  "items": {
+    "item": "igrobotics:reinforce_module"
+  },
+  "slots": [
+    "skin"
+  ],
+  "action": "reinforce",
+  "cooldown": 40,
+  "duration": 15,
+  "energyCost": 100000
+}

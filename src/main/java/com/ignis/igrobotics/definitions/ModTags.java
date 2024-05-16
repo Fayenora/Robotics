@@ -11,6 +11,9 @@ import net.minecraft.world.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The tags defined here are only used for the generator {@link com.ignis.igrobotics.datagen.TagGenerator}
+ */
 public class ModTags {
 
     public static final List<TagKey<Item>> PART_TAGS = new ArrayList<>();
@@ -21,7 +24,7 @@ public class ModTags {
             MATERIAL_TAGS.add(tag("material/" +material.getName()));
         }
         for(EnumModuleSlot part : EnumModuleSlot.values()) {
-            PART_TAGS.add(tag("part/" + part.getName()));
+            PART_TAGS.add(tag("part/" + part.getSerializedName()));
         }
     }
 

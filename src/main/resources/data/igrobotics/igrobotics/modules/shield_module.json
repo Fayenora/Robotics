@@ -1,0 +1,16 @@
+{
+  "items": {
+    "item": "igrobotics:shield_module"
+  },
+  "perks": [
+    {
+      "name": "igrobotics:shield",
+      "level": 2
+    }
+  ],
+  "slots": [
+    "core"
+  ],
+  "action": "shield",
+  "cooldown": 2
+}

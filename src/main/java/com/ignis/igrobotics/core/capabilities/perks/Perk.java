@@ -2,23 +2,20 @@ package com.ignis.igrobotics.core.capabilities.perks;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.gson.JsonElement;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.definitions.ModPerks;
 import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.*;
+import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -65,7 +62,7 @@ public class Perk implements PerkHooks {
 
 	public static final Codec<Perk> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.fieldOf("name").forGetter(c -> c.name),
-			Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("maxLevel", Integer.MAX_VALUE).forGetter(Perk::getMaxLevel),
+			ExtraCodecs.POSITIVE_INT.optionalFieldOf("maxLevel", Integer.MAX_VALUE).forGetter(Perk::getMaxLevel),
 			Codec.BOOL.optionalFieldOf("internalLogic", false).forGetter(c -> ModPerks.REGISTRY.get().containsValue(c)),
 			Codec.BOOL.optionalFieldOf("visible", true).forGetter(Perk::isVisible),
 			Codec.BOOL.optionalFieldOf("stackable", false).forGetter(Perk::isStackable),
@@ -216,94 +213,12 @@ public class Perk implements PerkHooks {
 		String name = key.getPath();
 		IForgeRegistry<Perk> registry = ModPerks.REGISTRY.get();
 		Perk perk = internal && registry.containsKey(key) ? registry.getValue(key) : new Perk(name, maxLevel);
+		perk.maxLevel = maxLevel;
 		perk.setVisible(visible);
 		perk.setStackable(stackable);
 		perk.setDisplayColor(displayColor);
 		perk.setModifiers(modifiers);
 		return perk;
-	}
-
-	public static JsonElement serialize(Perk perk) {
-		return CODEC.encodeStart(JsonOps.INSTANCE, perk).getOrThrow(false, s -> {
-			throw new RuntimeException(s);
-		});
-	}
-
-	public static Perk deserialize(JsonElement json) {
-		return CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
-			throw new RuntimeException(s);
-		});
-	}
-
-	public static void write(FriendlyByteBuf buffer, Perk perk) {
-		/*
-		buffer.writeUtf(perk.unlocalizedName);
-		buffer.writeInt(perk.maxLevel);
-		buffer.writeBoolean(perk.visible);
-		buffer.writeBoolean(perk.stackable);
-		buffer.writeInt(perk.displayColor.getValue());
-
-		buffer.writeShort(perk.modifiers.keys().size());
-		for(Attribute attr : perk.modifiers.keySet()) {
-			buffer.writeRegistryId(ForgeRegistries.ATTRIBUTES, attr);
-			buffer.writeShort(perk.modifiers.get(attr).size());
-			for(AttributeModifier modifier : perk.modifiers.get(attr)) {
-				buffer.writeByte(modifier.getOperation().toValue());
-				buffer.writeDouble(modifier.getAmount());
-			}
-		}
-
-		buffer.writeShort(perk.scalars.size());
-		for(Tuple<Attribute, Integer> key : perk.scalars.keySet()) {
-			buffer.writeRegistryId(ForgeRegistries.ATTRIBUTES, key.first);
-			buffer.writeByte(key.second);
-			buffer.writeShort(perk.scalars.get(key).length);
-			for(double d : perk.scalars.get(key)) {
-				buffer.writeDouble(d);
-			}
-		}
-
-		 */
-	}
-
-	public static Perk read(FriendlyByteBuf buffer) {
-		/*
-		String name = buffer.readUtf();
-		int maxLevel = buffer.readInt();
-		Perk result = new Perk(name, maxLevel);
-
-		result.setVisible(buffer.readBoolean());
-		result.setStackable(buffer.readBoolean());
-		result.setDisplayColor(TextColor.fromRgb(buffer.readInt()));
-
-		short nAttributes = buffer.readShort();
-		for(int i = 0; i < nAttributes; i++) {
-			Attribute attribute = buffer.readRegistryIdSafe(Attribute.class);
-			short nModifiers = buffer.readShort();
-			for(int j = 0; j < nModifiers; j++) {
-				byte operation = buffer.readByte();
-				double amount = buffer.readDouble();
-				AttributeModifier modifier = new AttributeModifier("modifier_" + (j++), amount, AttributeModifier.Operation.fromValue(operation));
-				result.modifiers.put(attribute, modifier);
-			}
-		}
-
-		short nScalars = buffer.readShort();
-		for(int i = 0; i < nScalars; i++) {
-			Attribute attribute = buffer.readRegistryIdSafe(Attribute.class);
-			int operation = buffer.readByte();
-			short arrSize = buffer.readShort();
-			double[] arr = new double[arrSize];
-			for(int j = 0; j < arrSize; j++) {
-				arr[j] = buffer.readDouble();
-			}
-			result.scalars.put(new Tuple<>(attribute, operation), arr);
-		}
-
-		return result;
-
-		 */
-		return new Perk("dummy", 0);
 	}
 
 	//////////////////////////////////

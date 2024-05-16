@@ -6,6 +6,7 @@ import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.robot.SelectionType;
 import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.definitions.ModModules;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -146,7 +147,7 @@ public class RobotAPI implements ILuaAPI {
         } else {
             moduleItem = getModules().get(slot - 1);
         }
-        RobotModule module = RobotModule.get(moduleItem);
+        RobotModule module = ModModules.get(moduleItem);
         if(module == null) return false;
         return module.activate(entity);
     }

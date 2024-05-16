@@ -1,6 +1,9 @@
 package com.ignis.igrobotics.core.robot;
 
-public enum EnumModuleSlot {
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
+
+public enum EnumModuleSlot implements StringRepresentable {
     HEAD("head"),
     BODY("body"),
     LEFT_ARM("left_arm"),
@@ -28,12 +31,13 @@ public enum EnumModuleSlot {
         return values()[id];
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return name;
     }
 
     @Override
-    public String toString() {
+    public @NotNull String getSerializedName() {
         return name;
     }
 }

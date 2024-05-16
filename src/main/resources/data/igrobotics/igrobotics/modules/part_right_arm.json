@@ -1,0 +1,8 @@
+{
+  "items": {
+    "tag": "igrobotics:part/right_arm"
+  },
+  "slots": [
+    "left_arm"
+  ]
+}

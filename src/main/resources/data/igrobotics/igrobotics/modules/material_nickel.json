@@ -1,0 +1,11 @@
+{
+  "items": {
+    "tag": "igrobotics:material/nickel"
+  },
+  "perks": [
+    {
+      "name": "igrobotics:robust",
+      "level": 1
+    }
+  ]
+}

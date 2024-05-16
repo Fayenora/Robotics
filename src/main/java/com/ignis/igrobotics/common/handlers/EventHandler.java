@@ -7,10 +7,6 @@ import com.ignis.igrobotics.common.blocks.StorageBlock;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModPerks;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
-import com.ignis.igrobotics.network.NetworkHandler;
-import com.ignis.igrobotics.network.messages.client.PacketSyncConfigs;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -19,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,13 +47,5 @@ public class EventHandler {
         int offset = state.getValue(StorageBlock.HALF).equals(DoubleBlockHalf.LOWER) ? 0: 1;
         if(!(event.getLevel().getBlockEntity(event.getPos().below(offset)) instanceof StorageBlockEntity storage)) return;
         storage.exitStorage(null);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if(!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
-        if(!Robotics.proxy.isLocalServer()) {
-            NetworkHandler.sendToPlayer(new PacketSyncConfigs(RoboticsConfig.current()), serverPlayer);
-        }
     }
 }

@@ -1,11 +1,11 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
-import com.google.gson.JsonElement;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.definitions.ModModules;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,20 +14,24 @@ import java.util.stream.StreamSupport;
 
 public class PerkMap implements IPerkMap {
 
-	public static final Codec<PerkMap> CODEC = Codec.list(Codec.pair(
-			Perk.CODEC.fieldOf("name").codec(),
-			Codec.INT.optionalFieldOf("level", 0).codec()
-	)).xmap(PerkMap::new, map -> StreamSupport.stream(map.spliterator(), false).map(Tuple::toPair).toList());
+	public static final Codec<PerkMap> LOADING_CODEC = Codec.list(Codec.pair(
+			ResourceLocation.CODEC.fieldOf("name").codec(),
+			ExtraCodecs.POSITIVE_INT.optionalFieldOf("level", 1).codec()
+	)).xmap(PerkMap::init, PerkMap::toCodecFormat);
 	
 	HashMap<String, Perk> perks = new HashMap<>();
 	HashMap<String, Integer> levels = new HashMap<>();
 
 	public PerkMap() {}
 
-	private PerkMap(List<Pair<Perk, Integer>> perks) {
-		for(Pair<Perk, Integer> p : perks) {
-			add(p.getFirst(), p.getSecond());
-		}
+	private static PerkMap init(List<Pair<ResourceLocation, Integer>> perks) {
+		PerkMap map = new PerkMap();
+		ModModules.queueInit(map, perks);
+		return map;
+	}
+
+	public static List<Pair<ResourceLocation, Integer>> toCodecFormat(IPerkMap perkMap) {
+		return StreamSupport.stream(perkMap.spliterator(), false).map(Tuple::toPair).map(p -> p.mapFirst(Perk::getKey)).toList();
 	}
 	
 	@Override
@@ -96,38 +100,6 @@ public class PerkMap implements IPerkMap {
 				return new Tuple<>(perk, effectiveLevel);
 			}
 		};
-	}
-
-	public static JsonElement serialize(PerkMap perkMap) {
-		return CODEC.encodeStart(JsonOps.INSTANCE, perkMap).getOrThrow(false, s -> {
-			throw new RuntimeException(s);
-		});
-	}
-
-	public static IPerkMap deserialize(JsonElement json) {
-		return CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, s -> {
-			throw new RuntimeException(s);
-		});
-	}
-
-	public static void write(FriendlyByteBuf buffer, PerkMap perkMap) {
-		buffer.writeShort(perkMap.perks.size());
-		for(String perkName : perkMap.perks.keySet()) {
-			Perk.write(buffer, perkMap.perks.get(perkName));
-			buffer.writeInt(perkMap.levels.get(perkName));
-		}
-	}
-
-	public static PerkMap read(FriendlyByteBuf buffer) {
-		PerkMap perkMap = new PerkMap();
-		int nPerks = buffer.readShort();
-		for(int i = 0; i < nPerks; i++) {
-			Perk perk = Perk.read(buffer);
-			int level = buffer.readInt();
-			perkMap.perks.put(perk.getId(), perk);
-			perkMap.levels.put(perk.getId(), level);
-		}
-		return perkMap;
 	}
 
 	public static PerkMap copy(IPerkMap perkMap) {

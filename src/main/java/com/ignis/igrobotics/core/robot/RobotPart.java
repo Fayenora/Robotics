@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.definitions.ModItems;
+import com.ignis.igrobotics.definitions.ModModules;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -84,7 +85,7 @@ public class RobotPart {
 	}
 
 	public IPerkMap getPerks() {
-		RobotModule perkModule = RoboticsConfig.current().modules.get(getItem());
+		RobotModule perkModule = ModModules.get(getItem());
 		return perkModule == null ? ModCapabilities.NO_PERKS : perkModule.getPerks();
 	}
 }

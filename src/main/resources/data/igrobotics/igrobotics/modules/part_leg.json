@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "tag": "igrobotics:part/left_leg"
+    },
+    {
+      "tag": "igrobotics:part/right_leg"
+    }
+  ],
+  "perks": [
+    {
+      "name": "igrobotics:swift",
+      "level": 1
+    },
+    {
+      "name": "igrobotics:feet_slot",
+      "level": 1
+    }
+  ]
+}

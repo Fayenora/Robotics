@@ -1,0 +1,11 @@
+{
+  "items": {
+    "item": "igrobotics:charge_legs"
+  },
+  "slots" : [
+    "feet"
+  ],
+  "action": "jump",
+  "cooldown": 5,
+  "energyCost": 5000
+}

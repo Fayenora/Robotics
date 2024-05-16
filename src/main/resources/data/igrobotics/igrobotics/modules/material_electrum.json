@@ -1,0 +1,15 @@
+{
+  "items": {
+    "tag": "igrobotics:material/electrum"
+  },
+  "perks": [
+    {
+      "name": "igrobotics:charge",
+      "level": 1
+    },
+    {
+      "name": "igrobotics:efficient",
+      "level": 1
+    }
+  ]
+}

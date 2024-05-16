@@ -2,16 +2,18 @@ package com.ignis.igrobotics.common.modules;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This enum bundles all module actions and gives them an identifier
  */
-public enum ModuleActions {
+public enum ModuleActions implements StringRepresentable {
     NONE(IModuleAction.NO_ACTION, TextColor.fromRgb(0)),
     TELEPORT(new EnderModule(), TextColor.fromLegacyFormat(ChatFormatting.DARK_PURPLE)),
     REINFORCE(new MobEffectModule(  new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 0, 2),
@@ -33,5 +35,10 @@ public enum ModuleActions {
 
     public boolean execute(LivingEntity caster, int duration) {
         return action.execute(caster, duration);
+    }
+
+    @Override
+    public @NotNull String getSerializedName() {
+        return toString().toLowerCase();
     }
 }

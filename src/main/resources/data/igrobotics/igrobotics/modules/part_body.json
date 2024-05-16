@@ -1,0 +1,26 @@
+{
+  "items": {
+    "tag": "igrobotics:part/body"
+  },
+  "slots": [
+    "body"
+  ],
+  "perks": [
+    {
+      "name": "igrobotics:health",
+      "level": 2
+    },
+    {
+      "name": "igrobotics:module_slot",
+      "level": 2
+    },
+    {
+      "name": "igrobotics:skin_slot",
+      "level": 1
+    },
+    {
+      "name": "igrobotics:reactor_slot",
+      "level": 1
+    }
+  ]
+}

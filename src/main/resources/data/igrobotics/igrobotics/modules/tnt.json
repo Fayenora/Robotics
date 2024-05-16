@@ -1,0 +1,10 @@
+{
+  "items": {
+    "item": "minecraft:tnt"
+  },
+  "slots": [
+    "core"
+  ],
+  "action": "selfdestruct",
+  "energyCost": 250000
+}

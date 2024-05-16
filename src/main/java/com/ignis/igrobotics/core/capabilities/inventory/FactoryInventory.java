@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.*;
+import com.ignis.igrobotics.definitions.ModModules;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +27,8 @@ public class FactoryInventory extends MachineInventory {
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         RobotPart part = RobotPart.getFromItem(stack.getItem());
         if(part == null) {
-            if(slot >= 6 && RobotModule.isModule(stack)) {
-                EnumSet<EnumModuleSlot> allowedSlots = RobotModule.get(stack).getViableSlots();
+            if(slot >= 6 && ModModules.isModule(stack)) {
+                EnumSet<EnumModuleSlot> allowedSlots = ModModules.get(stack).getViableSlots();
                 EnumModuleSlot slotType = typeFromSlotId(slot);
                 return allowedSlots.contains(slotType);
             }

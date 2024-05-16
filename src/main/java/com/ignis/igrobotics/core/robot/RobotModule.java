@@ -1,30 +1,46 @@
 package com.ignis.igrobotics.core.robot;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.modules.ModuleActions;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
-import com.ignis.igrobotics.core.util.StringUtil;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.definitions.ModModules;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dan200.computercraft.api.lua.LuaFunction;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 public class RobotModule {
 
-    public static final String TEXTURE_PATH = Robotics.MODID + ":textures/robot/modules/";
+    public static final Codec<Ingredient> INGREDIENT_CODEC = ExtraCodecs.JSON.comapFlatMap(json -> {
+        try {
+            return DataResult.success(Ingredient.fromJson(json));
+        } catch(JsonSyntaxException e) {
+            return DataResult.success(Ingredient.EMPTY);
+        }
+    }, Ingredient::toJson);
+    public static final Codec<RobotModule> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
+            Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
+            StringRepresentable.fromEnum(ModuleActions::values).optionalFieldOf("action", ModuleActions.NONE).forGetter(RobotModule::getAction),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
+            Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
+            ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(c -> Optional.ofNullable(c.overlay)),
+            PerkMap.LOADING_CODEC.optionalFieldOf("perks", new PerkMap()).forGetter(c -> (PerkMap) c.perks)
+    ).apply(instance, RobotModule::initialize));
 
     private final Ingredient item;
     private IPerkMap perks = new PerkMap();
@@ -114,84 +130,17 @@ public class RobotModule {
         return action;
     }
 
-    public static RobotModule deserialize(JsonElement json) {
-        JsonObject obj = json.getAsJsonObject();
-
-        try {
-            Ingredient item = Ingredient.fromJson(obj.get("items"));
-            RobotModule module = new RobotModule(item);
-
-            if(obj.has("slots")) {
-                for(JsonElement tag : obj.get("slots").getAsJsonArray()) {
-                    String s = tag.getAsString().toUpperCase();
-                    try {
-                        module.viableSlots.add(EnumModuleSlot.valueOf(s));
-                    } catch(IllegalArgumentException ignored) {
-                        Robotics.LOGGER.warn("\"" + s + "\" is not a valid module slot. Viable values are: " + StringUtil.enumToString(EnumModuleSlot.values()));
-                    }
-                }
-            }
-            if (obj.has("cooldown")) module.cooldown = obj.get("cooldown").getAsInt();
-            if (obj.has("duration")) module.duration = obj.get("duration").getAsInt();
-            if (obj.has("energyCost")) module.energyCost = obj.get("energyCost").getAsInt();
-            if (obj.has("action")) {
-                try {
-                    module.action = ModuleActions.valueOf(obj.get("action").getAsString().toUpperCase());
-                } catch(IllegalArgumentException e) {
-                    Robotics.LOGGER.warn("Did not find action \"" + obj.get("action").getAsString() + "\". Viable actions are: " + StringUtil.enumToString(ModuleActions.values()));
-                }
-            }
-            if (obj.has("texture")) {
-                String path = obj.get("texture").getAsString();
-                if (!path.endsWith(".png")) path += ".png";
-                module.overlay = new ResourceLocation(TEXTURE_PATH + path);
-            }
-
-            if(obj.has("perks")) {
-                module.perks = PerkMap.deserialize(obj.get("perks"));
-            }
-
-            return module;
-        } catch(JsonSyntaxException e) {
-            Robotics.LOGGER.warn("Failed to register module: " + e.getLocalizedMessage());
-            return null;
-        }
-    }
-
-    public static void write(FriendlyByteBuf buffer, RobotModule module) {
-        if(!(module.perks instanceof PerkMap perkMap)) return;
-        module.item.toNetwork(buffer);
-        PerkMap.write(buffer, perkMap);
-        buffer.writeBoolean(module.hasOverlay());
-        if(module.hasOverlay()) {
-            buffer.writeResourceLocation(module.overlay);
-        }
-        buffer.writeEnumSet(module.viableSlots, EnumModuleSlot.class);
-        buffer.writeEnum(module.action);
-    }
-
-    public static RobotModule read(FriendlyByteBuf buffer) {
-        Ingredient ingredient = Ingredient.fromNetwork(buffer);
-        RobotModule module = new RobotModule(ingredient);
-        module.perks = PerkMap.read(buffer);
-        if(buffer.readBoolean()) {
-            module.overlay = buffer.readResourceLocation();
-        }
-        module.viableSlots = buffer.readEnumSet(EnumModuleSlot.class);
-        module.action = buffer.readEnum(ModuleActions.class);
+    private static RobotModule initialize(Ingredient items, List<EnumModuleSlot> slots, ModuleActions action, int cooldown, int duration, int energyCost,
+                                          Optional<ResourceLocation> overlay, IPerkMap perks) {
+        RobotModule module = new RobotModule(items);
+        module.viableSlots = slots.isEmpty() ? EnumSet.noneOf(EnumModuleSlot.class) : EnumSet.copyOf(slots);
+        module.action = action;
+        module.cooldown = cooldown;
+        module.duration = duration;
+        module.energyCost = energyCost;
+        overlay.ifPresent(resourceLocation -> module.overlay = resourceLocation);
+        module.perks = perks;
         return module;
-    }
-
-    public static RobotModule get(Item item) {
-        return RoboticsConfig.current().modules.get(item);
-    }
-
-    public static RobotModule get(ItemStack stack) {
-        return RoboticsConfig.current().modules.get(stack);
-    }
-
-    public static boolean isModule(ItemStack stack) {
-        return RoboticsConfig.current().modules.isModule(stack.getItem());
     }
 
     @Override
@@ -217,6 +166,7 @@ public class RobotModule {
         }
         thisModule.overlay = overlay == null ? other.overlay : thisModule.overlay;
         thisModule.viableSlots.addAll(other.viableSlots);
+        ModModules.mergeQueued(thisModule.getPerks(), other.getPerks());
         thisModule.perks.merge(other.getPerks());
         return thisModule;
     }

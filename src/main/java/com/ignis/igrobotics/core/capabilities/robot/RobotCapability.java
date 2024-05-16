@@ -15,6 +15,7 @@ import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.InventoryUtil;
+import com.ignis.igrobotics.definitions.ModModules;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -40,8 +41,8 @@ public class RobotCapability implements IRobot {
 
     public static final int MAX_SWELL = 60;
 
-    protected LivingEntity entity;
-    protected SynchedEntityData dataManager;
+    protected final LivingEntity entity;
+    protected final SynchedEntityData dataManager;
     private AccessConfig access = new AccessConfig();
 
     private final Map<EnumModuleSlot, NonNullList<ItemStack>> modules = new HashMap<>();
@@ -188,19 +189,19 @@ public class RobotCapability implements IRobot {
     private void setModule(EnumModuleSlot slotType, int slot, ItemStack item) {
         if(modules.get(slotType).size() < slot) return;
         if(!modules.get(slotType).get(slot).isEmpty()) {
-            RobotModule oldModule = RobotModule.get(modules.get(slotType).get(slot));
+            RobotModule oldModule = ModModules.get(modules.get(slotType).get(slot));
             entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldModule.getPerks()));
             if(oldModule.hasOverlay()) {
-                int overlayId = RoboticsConfig.current().modules.overlays.indexOf(oldModule);
+                int overlayId = ModModules.getOverlayID(oldModule);
                 removeRenderLayer(overlayId);
             }
         }
         modules.get(slotType).set(slot, item);
         if(!item.isEmpty()) {
-            RobotModule module = RobotModule.get(item);
+            RobotModule module = ModModules.get(item);
             entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.merge(module.getPerks()));
             if(module.hasOverlay()) {
-                int overlayId = RoboticsConfig.current().modules.overlays.indexOf(module);
+                int overlayId = ModModules.getOverlayID(module);
                 addRenderLayer(overlayId);
             }
         }

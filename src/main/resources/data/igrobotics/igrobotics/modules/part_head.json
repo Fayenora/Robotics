@@ -1,0 +1,14 @@
+{
+  "items": {
+    "tag": "igrobotics:part/head"
+  },
+  "slots": [
+    "head"
+  ],
+  "perks": [
+    {
+      "name": "igrobotics:sensor_slot",
+      "level": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "items": {
+    "item": "nuclearcraft:californium_rtg"
+  },
+  "slots": [
+    "reactor"
+  ],
+  "perks": [
+    {
+      "level": 400,
+      "name": "igrobotics:energy_generation"
+    }
+  ]
+}

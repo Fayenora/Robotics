@@ -1,0 +1,14 @@
+{
+  "items": {
+    "item": "nuclearcraft:uranium_rtg"
+  },
+  "slots": [
+    "reactor"
+  ],
+  "perks": [
+    {
+      "level": 4,
+      "name": "igrobotics:energy_generation"
+    }
+  ]
+}

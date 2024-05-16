@@ -1,0 +1,11 @@
+{
+  "items": {
+    "tag": "igrobotics:material/steel"
+  },
+  "perks": [
+    {
+      "name": "igrobotics:durable",
+      "level": 1
+    }
+  ]
+}
