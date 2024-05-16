@@ -1,24 +1,22 @@
 package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.screen.RobotScreen;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 public class RobotMenu extends BaseMenu {
@@ -55,34 +53,6 @@ public class RobotMenu extends BaseMenu {
                     this.addSlot(new SlotCustom(handler, 1, 77, 62)); //Offhand
                 }
             });
-        });
-
-        addSlotListener(new ContainerListener() {
-            @Override
-            public void slotChanged(AbstractContainerMenu pContainerToSend, int pDataSlotIndex, ItemStack pStack) {
-                Robotics.proxy.getScreen().ifPresent(screen -> {
-                    if(!(screen instanceof RobotScreen robotScreen)) return;
-                    robotScreen.entityToRender.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
-                        if(!(inventory instanceof IItemHandlerModifiable modifiableInventory)) return;
-                        int slot = switch(pDataSlotIndex) {
-                            case 36 -> 5;
-                            case 37 -> 4;
-                            case 38 -> 3;
-                            case 39 -> 2;
-                            case 52 -> 1;
-                            case 53 -> 0;
-                            default -> -1;
-                        };
-                        if(slot < 0) return;
-                        modifiableInventory.setStackInSlot(slot, pStack);
-                    });
-                });
-            }
-
-            @Override
-            public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
-
-            }
         });
     }
 
