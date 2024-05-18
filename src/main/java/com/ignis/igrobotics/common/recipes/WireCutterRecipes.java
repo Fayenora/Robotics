@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.recipes;
 
 import com.google.gson.JsonObject;
+import com.ignis.igrobotics.core.CountedIngredient;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModItems;
@@ -33,7 +34,7 @@ public class WireCutterRecipes implements IRecipeSerializer<MachineRecipe<?>> {
     public @NotNull MachineRecipe<?> fromJson(ResourceLocation loc, JsonObject json) {
         int processing_time = json.get("processing_time").getAsInt();
         int energy = json.get("energy").getAsInt();
-        Ingredient ingredient = InventoryUtil.fromJson(json.get("ingredient"));
+        Ingredient ingredient = CountedIngredient.fromJson(json.get("ingredient"));
         ItemStack result = CraftingHelper.getItemStack(json.getAsJsonObject("result"), true);
 
         MachineRecipe<?> recipe = new MachineRecipe.Builder(ModMachines.WIRE_CUTTER, loc)

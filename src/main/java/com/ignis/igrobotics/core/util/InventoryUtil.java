@@ -1,6 +1,5 @@
 package com.ignis.igrobotics.core.util;
 
-import com.google.gson.JsonElement;
 import com.ignis.igrobotics.Robotics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -11,13 +10,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class InventoryUtil {
@@ -163,7 +162,7 @@ public class InventoryUtil {
 	 */
 	@Nullable
 	public static ItemStack searchPlayerForItem(Player player, Item searchFor, Predicate<ItemStack> predicate) {
-		ArrayList<ItemStack> stacksToSearch = new ArrayList<>();
+		List<ItemStack> stacksToSearch = new ArrayList<>();
 		//Add held items
 		stacksToSearch.add(player.getMainHandItem());
 		stacksToSearch.add(player.getOffhandItem());
@@ -191,25 +190,6 @@ public class InventoryUtil {
 			toReturn[i] = stack.copy();
 		}
 		return toReturn;
-	}
-	
-	public static int getCount(Ingredient ingredient) {
-		return ingredient.getItems()[0].getCount();
-	}
-	
-	public static Ingredient getIngredient(Item item, int amount) {
-		return Ingredient.of(new ItemStack(item, amount));
-	}
-
-	public static Ingredient fromJson(JsonElement json) {
-		Ingredient ingredient = Ingredient.fromJson(json);
-		if(json.isJsonObject() && json.getAsJsonObject().has("amount")) {
-			int amount = json.getAsJsonObject().get("amount").getAsInt();
-			for(ItemStack stack : ingredient.getItems()) {
-				stack.setCount(amount);
-			}
-		}
-		return ingredient;
 	}
 
 }

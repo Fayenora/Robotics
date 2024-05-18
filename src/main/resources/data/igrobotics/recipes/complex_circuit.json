@@ -3,7 +3,10 @@
 	"pattern": "rwiv",
     "key": {
         "r": {
-          "item": "minecraft:redstone",
+          "type": "igrobotics:counted",
+          "items": {
+            "tag": "forge:dusts/redstone"
+          },
           "amount": 3
         }, 
 		"w": {

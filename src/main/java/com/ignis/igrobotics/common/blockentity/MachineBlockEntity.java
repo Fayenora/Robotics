@@ -2,6 +2,7 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.SoundHandler;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
+import com.ignis.igrobotics.core.CountedIngredient;
 import com.ignis.igrobotics.core.Machine;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
@@ -233,7 +234,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
             currentlyProcessedItems[i] = getStacks(inputs)[i].copy();
 
             if(recipe.getInputs()[i] != null && !(recipe.getInputs()[i].isEmpty())) {
-                amount = (InventoryUtil.getCount(recipe.getInputs()[i]));
+                amount = CountedIngredient.getCount(recipe.getInputs()[i]);
                 inventory.extractItem(inputs[i], amount, false);
             }
 

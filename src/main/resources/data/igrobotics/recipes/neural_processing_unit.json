@@ -9,7 +9,10 @@
             "item": "igrobotics:complex_wiring"
         }, 
 		"p": {
-            "item": "igrobotics:perceptron_layer", 
+            "type": "igrobotics:counted",
+            "items": {
+              "item": "igrobotics:perceptron_layer"
+            },
 			"amount": 8
         }
     }, 

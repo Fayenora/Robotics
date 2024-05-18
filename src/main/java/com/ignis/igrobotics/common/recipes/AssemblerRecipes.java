@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.core.MachineRecipe;
-import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +50,7 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
             if (" ".equals(entry.getKey()))
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
 
-            ingMap.put(entry.getKey().toCharArray()[0], InventoryUtil.fromJson(entry.getValue()));
+            ingMap.put(entry.getKey().toCharArray()[0], Ingredient.fromJson(entry.getValue()));
         }
 
         Set<Character> keys = Sets.newHashSet(ingMap.keySet());

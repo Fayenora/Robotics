@@ -1,5 +1,6 @@
 package com.ignis.igrobotics;
 
+import com.ignis.igrobotics.core.CountedIngredient;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.robot.SelectionType;
@@ -12,6 +13,7 @@ import com.ignis.igrobotics.network.proxy.ServerProxy;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -20,6 +22,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
 
@@ -60,6 +64,7 @@ public class Robotics {
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerDataPack);
+        modEventBus.addListener(this::registerRecipeSerializers);
     }
 
     @SubscribeEvent
@@ -71,6 +76,13 @@ public class Robotics {
     public void registerDataPack(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(ModPerks.KEY, Perk.CODEC, Perk.CODEC);
         event.dataPackRegistry(ModModules.KEY, RobotModule.CODEC, RobotModule.NETWORK_CODEC);
+    }
+
+    @SubscribeEvent
+    public void registerRecipeSerializers(RegisterEvent event) {
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.RECIPE_SERIALIZERS)) {
+            CraftingHelper.register(Robotics.rl("counted"), CountedIngredient.SERIALIZER);
+        }
     }
 
     public static ResourceLocation rl(String path) {

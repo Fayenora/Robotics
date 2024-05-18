@@ -63,7 +63,8 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
         }
         for(CommandType commandType : ModCommands.COMMAND_TYPES) {
             RobotCommand command = new RobotCommand(commandType);
-            if(!availableTypes.contains(commandType)) continue;
+            // TODO Quick fix applied here. Get config from server
+            //if(!availableTypes.contains(commandType)) continue;
             availableCommands.addElement(new CommandElement(command, 0, 0, button -> {
                 selectedCommands.addElement(new CommandElement(command.clone(), 0, 0, button1 -> {
                     selectedCommands.removeComponent((IElement) button1);
