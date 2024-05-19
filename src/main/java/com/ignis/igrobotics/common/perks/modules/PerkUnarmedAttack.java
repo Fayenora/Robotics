@@ -2,7 +2,6 @@ package com.ignis.igrobotics.common.perks.modules;
 
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.util.Lang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.world.entity.Entity;

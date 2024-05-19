@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.datagen;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModTags;
 import net.minecraft.core.HolderLookup;

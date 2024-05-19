@@ -1,14 +1,7 @@
 package com.ignis.igrobotics.integration.config;
 
-import com.ignis.igrobotics.Robotics;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class RoboticsConfig {
 

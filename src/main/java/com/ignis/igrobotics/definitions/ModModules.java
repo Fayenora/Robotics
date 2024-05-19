@@ -2,27 +2,22 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.modules.ModuleActions;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
 import com.ignis.igrobotics.core.robot.RobotModule;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModModules {

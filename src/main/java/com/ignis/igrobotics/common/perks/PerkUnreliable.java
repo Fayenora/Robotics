@@ -10,9 +10,7 @@ import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Mob;
 

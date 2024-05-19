@@ -4,7 +4,6 @@ import com.ignis.igrobotics.core.util.NBTUtil;
 import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Mob;

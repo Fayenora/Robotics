@@ -4,8 +4,6 @@ package com.ignis.igrobotics.common.perks;
 import com.ignis.igrobotics.common.handlers.PerkBehavior;
 import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.util.Lang;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Mob;

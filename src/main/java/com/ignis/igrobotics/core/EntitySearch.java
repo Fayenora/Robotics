@@ -2,7 +2,6 @@ package com.ignis.igrobotics.core;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.EntityFinder;
-import com.ignis.igrobotics.network.messages.EntityByteBufUtil;
 import com.ignis.igrobotics.network.messages.IBufferSerializable;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;

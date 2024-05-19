@@ -3,7 +3,6 @@ package com.ignis.igrobotics.common.recipes;
 import com.google.gson.JsonObject;
 import com.ignis.igrobotics.core.CountedIngredient;
 import com.ignis.igrobotics.core.MachineRecipe;
-import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.network.FriendlyByteBuf;

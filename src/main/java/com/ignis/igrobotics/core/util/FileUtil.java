@@ -5,7 +5,6 @@ import com.ignis.igrobotics.Robotics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;

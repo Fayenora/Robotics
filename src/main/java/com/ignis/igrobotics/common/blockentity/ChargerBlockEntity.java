@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.common.blocks.ChargerBlock;
-import com.ignis.igrobotics.core.util.EntityFinder;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
+import com.ignis.igrobotics.core.util.EntityFinder;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

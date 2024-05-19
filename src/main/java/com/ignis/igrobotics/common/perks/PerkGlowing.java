@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.common.perks;
 
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.util.Lang;
-import net.minecraft.network.chat.Component;
 
 public class PerkGlowing extends Perk {
 
