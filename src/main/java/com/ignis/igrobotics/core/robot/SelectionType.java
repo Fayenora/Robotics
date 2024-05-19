@@ -33,7 +33,8 @@ public class SelectionType<T> {
     public static final List<SelectionType<?>> TYPES = new ArrayList<>();
 
     // TODO: This type of abstraction may have made sense when selection types did not have that much responsibility.
-    //  SelectionTypes should now probably be implemented in subclasses, as this is just ugly to look at
+    //  SelectionTypes should now probably be implemented in subclasses, as this is just ugly to look at+
+    //  Move to a registry!
     public static final SelectionType<ItemStack> ITEM = register("<Item>", ItemStack.class, Items.IRON_SWORD::getDefaultInstance, ItemStack::serializeNBT, ItemStack::of, string -> new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(string))), stack -> ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
     public static final SelectionType<Block> BLOCK = register("<Block>", Block.class, () -> Blocks.COBBLESTONE, null, null, string -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(string)), block -> ForgeRegistries.BLOCKS.getKey(block).toString());
     public static final SelectionType<GlobalPos> POS = register("<Pos>", GlobalPos.class, () -> GlobalPos.of(ServerLifecycleHooks.getCurrentServer().overworld().dimension(), BlockPos.ZERO), PosUtil::writePos, PosUtil::readPos, PosUtil::parseBlockPos, GlobalPos::toString);

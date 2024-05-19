@@ -105,12 +105,12 @@ public class CommanderItem extends Item {
         if(currentEntity instanceof Mob mob && currentEntity.getCapability(ModCapabilities.COMMANDS).isPresent()) {
             Selection<EntitySearch> targetSelection = Selection.of(new EntitySearch(target.getUUID()));
             if(!target.getType().getCategory().isFriendly()) {
-                RobotCommand attack = new RobotCommand(ModCommands.ATTACK_SPECIFIC, List.of(targetSelection));
+                RobotCommand attack = new RobotCommand(ModCommands.ATTACK_SPECIFIC.get(), List.of(targetSelection));
                 if(addNewCommand(player, mob, attack, true, "commandGroup.command.attack", target.getDisplayName())) {
                     return InteractionResult.CONSUME;
                 }
             } else if(target.getType().getCategory() == MobCategory.CREATURE) {
-                RobotCommand defend = new RobotCommand(ModCommands.DEFEND, List.of(targetSelection));
+                RobotCommand defend = new RobotCommand(ModCommands.DEFEND.get(), List.of(targetSelection));
                 if(addNewCommand(player, mob, defend, false, "commandGroup.command.defend", target.getDisplayName())) {
                     return InteractionResult.CONSUME;
                 }
@@ -208,13 +208,13 @@ public class CommanderItem extends Item {
             if(blockEntity instanceof StorageBlockEntity) return;
             if(state.getAnalogOutputSignal(level, pos) > 10) {
                 ItemStack dominantItem = InventoryUtil.dominantItem(blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
-                RobotCommand retrieve = new RobotCommand(ModCommands.RETRIEVE, List.of(Selection.of(dominantItem), Selection.of(globalPos)));
+                RobotCommand retrieve = new RobotCommand(ModCommands.RETRIEVE.get(), List.of(Selection.of(dominantItem), Selection.of(globalPos)));
                 if(addNewCommand(player, mob, retrieve, true, "commandGroup.command.retrieve", dominantItem.getItem())) {
                     return;
                 }
             } else if(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) {
                 ItemStack dominantItem = InventoryUtil.dominantItem(mob.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get());
-                RobotCommand store = new RobotCommand(ModCommands.STORE, List.of(Selection.of(dominantItem), Selection.of(globalPos)));
+                RobotCommand store = new RobotCommand(ModCommands.STORE.get(), List.of(Selection.of(dominantItem), Selection.of(globalPos)));
                 if(addNewCommand(player, mob, store, true, "commandGroup.command.store", dominantItem.getItem())) {
                     return;
                 }
@@ -222,13 +222,13 @@ public class CommanderItem extends Item {
         }
         if(mob.getMainHandItem().getItem() instanceof BlockItem) {
             GlobalPos sidePos = GlobalPos.of(globalPos.dimension(), pos.relative(cxt.getClickedFace()));
-            RobotCommand place = new RobotCommand(ModCommands.PLACE, List.of(Selection.of(sidePos), Selection.of(sidePos)));
+            RobotCommand place = new RobotCommand(ModCommands.PLACE.get(), List.of(Selection.of(sidePos), Selection.of(sidePos)));
             if(addNewCommand(player, mob, place, true, "commandGroup.command.place")) {
                 return;
             }
         }
         if(mob.getMainHandItem().isCorrectToolForDrops(level.getBlockState(pos))) {
-            RobotCommand break_command = new RobotCommand(ModCommands.BREAK, List.of(Selection.of(globalPos), Selection.of(globalPos)));
+            RobotCommand break_command = new RobotCommand(ModCommands.BREAK.get(), List.of(Selection.of(globalPos), Selection.of(globalPos)));
             if(addNewCommand(player, mob, break_command, true, "commandGroup.command.break")) {
                 return;
             }

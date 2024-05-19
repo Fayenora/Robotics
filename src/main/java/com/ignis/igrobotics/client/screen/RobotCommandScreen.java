@@ -56,12 +56,7 @@ public class RobotCommandScreen extends BaseContainerScreen<RobotCommandMenu> {
         selectedCommands = new ScrollableElement(leftPos + 9, topPos + 9, 116, 165);
         availableCommands = new ScrollableElement(leftPos + 132, topPos + 9, 116, 165);
 
-        //Available Commands
-        List<CommandType> availableTypes = new ArrayList<>();
-        for(String typeString : RoboticsConfig.general.availableCommands.get()) {
-            availableTypes.add(ModCommands.byName(typeString));
-        }
-        for(CommandType commandType : ModCommands.COMMAND_TYPES) {
+        for(CommandType commandType : ModCommands.REGISTRY.get()) {
             RobotCommand command = new RobotCommand(commandType);
             // TODO Quick fix applied here. Get config from server
             //if(!availableTypes.contains(commandType)) continue;

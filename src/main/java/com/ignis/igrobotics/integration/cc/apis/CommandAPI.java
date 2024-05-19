@@ -11,6 +11,7 @@ import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.apis.IAPIEnvironment;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class CommandAPI implements ILuaAPI {
         sel2.ifPresent(selections::add);
         sel3.ifPresent(selections::add);
         sel4.ifPresent(selections::add);
-        CommandType commandType = ModCommands.byName(type);
+        CommandType commandType = ModCommands.REGISTRY.get().getValue(new ResourceLocation(type));
         if(commandType == null) {
             throw new LuaException(type + " is not a valid command type. See getAvailableCommands for a list of viable commands");
         }

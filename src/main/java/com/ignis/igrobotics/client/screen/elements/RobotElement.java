@@ -87,7 +87,7 @@ public class RobotElement extends ButtonElement {
             UUID playerUUID = Minecraft.getInstance().player.getUUID();
             var selectionPlayer = Selection.of(new EntitySearch(playerUUID));
             var selectionFollowRange = Selection.of(DEFAULT_FOLLOW_RANGE);
-            moveHere.setNetworkAction(() -> new PacketAddCommand(robot.getId(), new RobotCommand(ModCommands.FOLLOW, List.of(selectionPlayer, selectionFollowRange))));
+            moveHere.setNetworkAction(() -> new PacketAddCommand(robot.getId(), new RobotCommand(ModCommands.FOLLOW.get(), List.of(selectionPlayer, selectionFollowRange))));
             addElement(moveHere);
         }
 

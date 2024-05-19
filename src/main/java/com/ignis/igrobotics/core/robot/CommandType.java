@@ -52,14 +52,6 @@ public class CommandType {
         }
     }
 
-    public static CommandType byId(int id) {
-        return ModCommands.byId(id);
-    }
-
-    public int getId() {
-        return ModCommands.getId(this);
-    }
-
     public String getName() {
         return name;
     }

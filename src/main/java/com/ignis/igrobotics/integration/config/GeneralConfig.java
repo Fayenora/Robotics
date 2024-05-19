@@ -1,8 +1,6 @@
 package com.ignis.igrobotics.integration.config;
 
-import com.ignis.igrobotics.core.robot.CommandType;
 import com.ignis.igrobotics.core.util.StringUtil;
-import com.ignis.igrobotics.definitions.ModCommands;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -79,11 +77,9 @@ public class GeneralConfig extends BaseConfig {
 
         builder.push("Commands");
 
+        // FIXME Whitelist/Blacklist & Sending to clients?
         availableCommands = builder.comment("Available commands. Note that limiting these does not remove already applied commands!")
-                .defineList("Available Commands", ModCommands.COMMAND_TYPES.stream().map(CommandType::toString).toList(), typeString -> {
-                    if(!(typeString instanceof String string)) return false;
-                    return ModCommands.byName(string) != null;
-        });
+                .defineList("Available Commands", List.of(), o -> true);
 
         builder.pop();
 

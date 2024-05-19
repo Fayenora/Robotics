@@ -1,7 +1,10 @@
 package com.ignis.igrobotics.core.robot;
 
+import com.ignis.igrobotics.core.util.NBTUtil;
+import com.ignis.igrobotics.definitions.ModCommands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Mob;
@@ -74,7 +77,7 @@ public class RobotCommand {
 
     public static void writeToNBT(CompoundTag comp, RobotCommand command) {
         //Type of command
-        comp.putInt("id", command.type.getId());
+        comp.put("type", NBTUtil.serializeEntry(ModCommands.REGISTRY.get(), command.getType()));
 
         //Individual selections of the command
         ListTag selectorList = new ListTag();
@@ -98,7 +101,7 @@ public class RobotCommand {
 
     public static RobotCommand readSingleCommandFromNBT(CompoundTag comp) {
         //Type of command
-        int id = comp.getInt("id");
+        CommandType type = NBTUtil.deserializeEntry(ModCommands.REGISTRY.get(), comp.get("type"));
 
         //Individual selections of the command
         ListTag selectorList = comp.getList("selectors", Tag.TAG_COMPOUND);
@@ -107,6 +110,6 @@ public class RobotCommand {
             selections.add(Selection.read((CompoundTag) value));
         }
 
-        return new RobotCommand(CommandType.byId(id), selections);
+        return new RobotCommand(type, selections);
     }
 }
