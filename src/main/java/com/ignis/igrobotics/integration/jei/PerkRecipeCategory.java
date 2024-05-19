@@ -6,7 +6,6 @@ import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModPerks;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;

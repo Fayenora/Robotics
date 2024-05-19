@@ -14,7 +14,6 @@ import com.ignis.igrobotics.core.robot.CommandType;
 import com.ignis.igrobotics.core.robot.RobotCommand;
 import com.ignis.igrobotics.definitions.ModCommands;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
-import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.server.PacketSetCommands;
 import com.mojang.blaze3d.systems.RenderSystem;
