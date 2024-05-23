@@ -57,6 +57,7 @@ public class Robotics {
         ModMobEffects.EFFECTS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
         ModPerks.PERKS.register(modEventBus);
+        ModCommands.COMMANDS.register(modEventBus);
 
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 

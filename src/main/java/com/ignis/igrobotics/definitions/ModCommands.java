@@ -33,10 +33,9 @@ import java.util.function.Supplier;
 @SuppressWarnings({"unchecked", "unused"})
 public class ModCommands {
 
-    public static final ResourceKey<Registry<CommandType>> KEY = ResourceKey.createRegistryKey(new ResourceLocation(Robotics.MODID, "commands"));
+    public static final ResourceKey<Registry<CommandType>> KEY = ResourceKey.createRegistryKey(Robotics.rl("commands"));
     public static final DeferredRegister<CommandType> COMMANDS = DeferredRegister.create(KEY, Robotics.MODID);
     public static final Supplier<IForgeRegistry<CommandType>> REGISTRY = COMMANDS.makeRegistry(RegistryBuilder::new);
-    public static final List<CommandType> COMMAND_TYPES = new ArrayList<>();
 
     public static final RegistryObject<CommandType> STAY = register("stay", GlobalPos.class, MoveToBlockGoal::new);
     public static final RegistryObject<CommandType> ATTACK = register("attack", EntityType.class, NearestAttackableTargetGoal::new);
