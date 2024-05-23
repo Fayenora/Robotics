@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,9 @@ public class FactoryModulesScreen extends BaseContainerScreen<FactoryModulesMenu
     @Override
     protected void init() {
         super.init();
-        addElement(new EnergyBarElement(leftPos + 8, topPos + 8, 203, () -> menu.data.get(3), () -> menu.data.get(4)));
+        factory.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+            addElement(new EnergyBarElement(energy, leftPos + 8, topPos + 8, 203));
+        });
 
         List<MenuType<?>> possibleMenus = List.of(ModMenuTypes.FACTORY.get(), ModMenuTypes.FACTORY_MODULES.get());
         sideBar = new SideBarSwitchElement(ModMenuTypes.FACTORY_MODULES.get(), possibleMenus, leftPos + imageWidth - 1, topPos + 3, 18, 17, factory.getBlockPos());

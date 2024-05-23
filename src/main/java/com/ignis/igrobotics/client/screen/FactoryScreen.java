@@ -31,6 +31,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -57,7 +58,9 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnergyBarElement(leftPos + 8, topPos + 8, 203, () -> menu.data.get(3), () -> menu.data.get(4)));
+        factory.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+            addElement(new EnergyBarElement(energy, leftPos + 8, topPos + 8, 203));
+        });
 
         List<MenuType<?>> possibleMenus = List.of(ModMenuTypes.FACTORY.get(), ModMenuTypes.FACTORY_MODULES.get());
         sideBar = new SideBarSwitchElement(ModMenuTypes.FACTORY.get(), possibleMenus, leftPos + imageWidth - 1, topPos + 3, 18, 17, factory.getBlockPos());

@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
@@ -30,7 +31,9 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
     @Override
     protected void init() {
         super.init();
-        addElement(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
+        menu.blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
+            addElement(new EnergyBarElement(energyStorage, leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height));
+        });
         addRenderableOnly(new ArrowElement(leftPos + arrow.x, topPos + arrow.y, Direction.EAST, () -> (float) menu.data.get(2) / menu.data.get(1)));
     }
 

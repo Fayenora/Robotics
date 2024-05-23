@@ -105,7 +105,7 @@ public class RobotElement extends ButtonElement {
         addElement(powerButton);
 
         if(energy != null && view.getState() != RobotView.RobotState.OFFLINE) {
-            energyBar = new EnergyBarElement(getX() + 117, getY() + 2, 20, energy::getEnergyStored, energy::getMaxEnergyStored);
+            energyBar = new EnergyBarElement(energy, getX() + 117, getY() + 2, 20);
             addElement(energyBar);
         } else {
             ButtonElement unknownEnergy = new ButtonElement(getX() + 117, getY() + 2, 13, 19);

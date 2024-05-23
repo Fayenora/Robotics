@@ -59,7 +59,7 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
         addElement(sidebar);
         entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
-            addElement(new EnergyBarElement(leftPos + 155, topPos + 7, 71, energy::getEnergyStored, energy::getMaxEnergyStored));
+            addElement(new EnergyBarElement(energy, leftPos + 155, topPos + 7, 71));
         });
     }
 

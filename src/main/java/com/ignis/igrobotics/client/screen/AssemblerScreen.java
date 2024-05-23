@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
@@ -35,11 +36,13 @@ public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
     @Override
     protected void init() {
         super.init();
-        addElement(new EnergyBarElement(leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height, () -> menu.data.get(3), () -> menu.data.get(4)));
         addRenderableOnly(new ArrowElement(leftPos + arr_down.x, topPos + arr_down.y, Direction.DOWN, () -> getMachineProgress(menu.data, Direction.DOWN)));
         addRenderableOnly(new ArrowElement(leftPos + arr_up.x, topPos + arr_up.y, Direction.UP, () -> getMachineProgress(menu.data, Direction.UP)));
         addRenderableOnly(new ArrowElement(leftPos + arr_right.x, topPos + arr_right.y, Direction.WEST, () -> getMachineProgress(menu.data, Direction.WEST)));
         addRenderableOnly(new ArrowElement(leftPos + arr_left.x, topPos + arr_left.y, Direction.EAST, () -> getMachineProgress(menu.data, Direction.EAST)));
+        menu.blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+            addElement(new EnergyBarElement(energy, leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height));
+        });
     }
 
     @Override

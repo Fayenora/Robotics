@@ -12,24 +12,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 @MethodsReturnNonnullByDefault
 public class EnergyBarElement extends GuiElement {
 
-    private final Supplier<Integer> energy, maxEnergy;
+    private final IEnergyStorage energyStorage;
 
-    public EnergyBarElement(int x, int y, int height, Supplier<Integer> energy, Supplier<Integer> maxEnergy) {
-        this(Component.translatable("gui.energy_bar"), x, y, height, energy, maxEnergy);
+    public EnergyBarElement(IEnergyStorage energyStorage, int x, int y, int height) {
+        this(Component.translatable("gui.energy_bar"), energyStorage, x, y, height);
     }
 
-    public EnergyBarElement(Component name, int x, int y, int height, Supplier<Integer> energy, Supplier<Integer> maxEnergy) {
+    public EnergyBarElement(Component name, IEnergyStorage energyStorage, int x, int y, int height) {
         super(name, x, y, 13, height);
-        this.energy = energy;
-        this.maxEnergy = maxEnergy;
+        this.energyStorage = energyStorage;
     }
 
     @Override
@@ -42,14 +41,12 @@ public class EnergyBarElement extends GuiElement {
 
     @Override
     public List<Component> getTooltip(int mouseX, int mouseY) {
-        List<Component> line = List.of(Lang.localise("stored_energy"), Component.literal(": "+ energy.get() + "/" + maxEnergy.get() + " RF"));
+        List<Component> line = List.of(Lang.localise("stored_energy"), Component.literal(": "+ energyStorage.getEnergyStored() + "/" + energyStorage.getMaxEnergyStored() + " RF"));
         return List.of(ComponentUtils.formatList(line, CommonComponents.EMPTY));
     }
 
     protected int scaleEnergy(int pixels) {
-        int max = maxEnergy.get();
-        int current = energy.get();
-        if(max <= 0) return 0;
-        return Math.min(pixels, pixels * current / max);
+        if(energyStorage.getMaxEnergyStored() <= 0) return 0;
+        return Math.min(pixels, pixels * energyStorage.getEnergyStored() / energyStorage.getMaxEnergyStored());
     }
 }

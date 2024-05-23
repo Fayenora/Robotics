@@ -88,7 +88,9 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.ROBOT_INFO.get(), RobotBehavior.possibleMenus(entity), leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
         sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
         addElement(sidebar);
-        addElement(new EnergyBarElement(leftPos + 155, topPos + 8, 165, () -> menu.data.get(0), () -> menu.data.get(1)));
+        entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+            addElement(new EnergyBarElement(energy, leftPos + 155, topPos + 8, 165));
+        });
 
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             this.pickUpButton = new ButtonElement(leftPos + 135, topPos + 7, 17, 17, robot.getPickUpState(), 3);

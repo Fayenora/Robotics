@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -28,7 +29,7 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
 
     private final StorageBlockEntity storage;
     public ButtonElement releaseRobot, dismantleRobot;
-    public EnergyBarElement storageEnergy, robotEnergy;
+    public EnergyBarElement robotEnergy;
 
     public StorageScreen(StorageMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
@@ -38,10 +39,13 @@ public class StorageScreen extends BaseContainerScreen<StorageMenu> {
     @Override
     protected void init() {
         super.init();
-        storageEnergy = new EnergyBarElement(leftPos + 8, topPos + 7, 71, () -> menu.data.get(0), () -> menu.data.get(1));
-        addElement(storageEnergy);
+        storage.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
+            addElement(new EnergyBarElement(energyStorage, leftPos + 8, topPos + 7, 71));
+        });
         if(storage.getEntity().isEmpty()) return;
-        robotEnergy = new EnergyBarElement(leftPos + 155, topPos + 7, 71, () -> menu.data.get(2), () -> menu.data.get(3));
+        storage.getEntity().get().getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
+            robotEnergy = new EnergyBarElement(energyStorage, leftPos + 155, topPos + 7, 71);
+        });
         releaseRobot = new ButtonElement(leftPos + 55, topPos + 7, 41, 17, Lang.localise("deploy"), button -> {});
         releaseRobot.initTextureLocation(Reference.MISC, 83, 17);
         releaseRobot.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_FACTORY_BUTTON, new NetworkInfo(storage.getBlockPos())));
