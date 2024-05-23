@@ -1,6 +1,8 @@
-package com.ignis.igrobotics.network.container;
+package com.ignis.igrobotics.network.container.properties;
 
 import com.ignis.igrobotics.client.menu.BaseMenu;
+import com.ignis.igrobotics.network.container.PropertyData;
+import com.ignis.igrobotics.network.container.PropertyType;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class IntPropertyData extends PropertyData {

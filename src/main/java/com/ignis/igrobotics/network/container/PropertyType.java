@@ -1,5 +1,8 @@
 package com.ignis.igrobotics.network.container;
 
+import com.ignis.igrobotics.network.container.properties.BytePropertyData;
+import com.ignis.igrobotics.network.container.properties.IntPropertyData;
+import com.ignis.igrobotics.network.container.properties.ShortPropertyData;
 import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nullable;
@@ -14,6 +17,10 @@ import java.util.function.Supplier;
  */
 public enum PropertyType {
 
+    BYTE(Byte.TYPE, (byte) 0, (getter, setter) -> SyncableByte.create(() -> (byte) getter.get(), setter::accept),
+            (property, buffer) -> new BytePropertyData(property, buffer.readByte())),
+    SHORT(Short.TYPE, (short) 0, (getter, setter) -> SyncableShort.create(() -> (short) getter.get(), setter::accept),
+            (property, buffer) -> new ShortPropertyData(property, buffer.readShort())),
     INT(Integer.TYPE, 0, (getter, setter) -> SyncableInt.create(() -> (int) getter.get(), setter::accept),
             (property, buffer) -> new IntPropertyData(property, buffer.readVarInt()));
 

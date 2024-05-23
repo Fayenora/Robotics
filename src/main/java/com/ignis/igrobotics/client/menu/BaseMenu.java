@@ -2,9 +2,7 @@ package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.network.NetworkHandler;
-import com.ignis.igrobotics.network.container.ISyncableData;
-import com.ignis.igrobotics.network.container.PropertyData;
-import com.ignis.igrobotics.network.container.SyncableInt;
+import com.ignis.igrobotics.network.container.*;
 import com.ignis.igrobotics.network.messages.client.PacketContainerData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,6 +36,20 @@ public abstract class BaseMenu extends AbstractContainerMenu {
     public void handleWindowProperty(short property, int value) {
         ISyncableData data = getTrackedData(property);
         if(data instanceof SyncableInt syncable) {
+            syncable.set(value);
+        }
+    }
+
+    public void handleWindowProperty(short property, byte value) {
+        ISyncableData data = getTrackedData(property);
+        if(data instanceof SyncableByte syncable) {
+            syncable.set(value);
+        }
+    }
+
+    public void handleWindowProperty(short property, short value) {
+        ISyncableData data = getTrackedData(property);
+        if(data instanceof SyncableShort syncable) {
             syncable.set(value);
         }
     }

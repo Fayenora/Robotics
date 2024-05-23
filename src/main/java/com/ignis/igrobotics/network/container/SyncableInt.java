@@ -1,5 +1,7 @@
 package com.ignis.igrobotics.network.container;
 
+import com.ignis.igrobotics.network.container.properties.IntPropertyData;
+
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
