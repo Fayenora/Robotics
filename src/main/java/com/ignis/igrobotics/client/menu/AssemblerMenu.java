@@ -34,12 +34,12 @@ public class AssemblerMenu extends BaseMenu {
     }
 
     public AssemblerMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.ASSEMBLER.get(), id);
+        super(ModMenuTypes.ASSEMBLER.get(), playerInv, id);
         this.blockEntity = (AssemblerBlockEntity) blockEntity;
         this.level = playerInv.player.level();
         this.data = data;
 
-        addPlayerInv(playerInv, Reference.GUI_ASSEMBLER_DIMENSIONS);
+        addPlayerInv(Reference.GUI_ASSEMBLER_DIMENSIONS);
         addDataSlots(data);
 
         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {

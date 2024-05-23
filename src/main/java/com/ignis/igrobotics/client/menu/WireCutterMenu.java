@@ -33,12 +33,12 @@ public class WireCutterMenu extends BaseMenu {
     }
 
     public WireCutterMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.WIRE_CUTTER.get(), id);
+        super(ModMenuTypes.WIRE_CUTTER.get(), playerInv, id);
         this.blockEntity = (WireCutterBlockEntity) blockEntity;
         this.level = playerInv.player.level();
         this.data = data;
 
-        addPlayerInv(playerInv, Reference.GUI_DEFAULT_DIMENSIONS);
+        addPlayerInv(Reference.GUI_DEFAULT_DIMENSIONS);
         addDataSlots(data);
 
         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {

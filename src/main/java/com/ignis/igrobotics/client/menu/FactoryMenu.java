@@ -26,13 +26,13 @@ public class FactoryMenu extends BaseMenu {
     }
 
     public FactoryMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.FACTORY.get(), id);
+        super(ModMenuTypes.FACTORY.get(), playerInv, id);
         this.blockEntity = (FactoryBlockEntity) blockEntity;
         this.level = playerInv.player.level();
         this.data = data;
 
         addDataSlots(data);
-        addPlayerInv(playerInv, 36, 137);
+        addPlayerInv(36, 137);
         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             addSlot(new SlotItemHandler(handler, 0, 27, 17)); //Head
             addSlot(new SlotItemHandler(handler, 1, 186, 17)); //Body

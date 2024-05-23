@@ -33,14 +33,14 @@ public class FactoryModulesMenu extends BaseMenu {
     }
 
     public FactoryModulesMenu(int id, Inventory playerInv, Map<EnumModuleSlot, Integer> moduleSlots, BlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.FACTORY_MODULES.get(), id);
+        super(ModMenuTypes.FACTORY_MODULES.get(), playerInv, id);
         this.blockEntity = (FactoryBlockEntity) blockEntity;
         this.level = playerInv.player.level();
         this.data = data;
         this.moduleSlots = moduleSlots;
 
         addDataSlots(data);
-        addPlayerInv(playerInv, 36, 137);
+        addPlayerInv(36, 137);
         if(this.blockEntity.getEntity().isEmpty()) return;
         this.blockEntity.getEntity().get().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {

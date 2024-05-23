@@ -79,7 +79,7 @@ public class RoboticsMenus {
             if(!(target instanceof LivingEntity living)) return;
             target.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
                 NetworkHooks.openScreen(serverPlayer,
-                        new SimpleMenuProvider((id, f2, f3) -> new RobotInfoMenu(id, target, constructContainerData(target)), Lang.localise("container.robot_info")),
+                        new SimpleMenuProvider((id, playerInv, f3) -> new RobotInfoMenu(id, playerInv, target, constructContainerData(target)), Lang.localise("container.robot_info")),
                         buf -> {
                             buf.writeInt(target.getId());
                             robot.getAccess().write(buf);

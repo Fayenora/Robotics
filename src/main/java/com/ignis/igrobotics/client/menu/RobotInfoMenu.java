@@ -24,7 +24,7 @@ public class RobotInfoMenu extends BaseMenu {
     public final HashMap<Attribute, Float> attributes = new HashMap<>();
 
     public RobotInfoMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv.player.level().getEntity(extraData.readInt()), new SimpleContainerData(2));
+        this(id, inv, inv.player.level().getEntity(extraData.readInt()), new SimpleContainerData(2));
         access.read(extraData);
         while(extraData.isReadable()) {
             ResourceKey<Attribute> key = extraData.readResourceKey(ForgeRegistries.ATTRIBUTES.getRegistryKey());
@@ -33,8 +33,8 @@ public class RobotInfoMenu extends BaseMenu {
         }
     }
 
-    public RobotInfoMenu(int id, Entity entity, ContainerData data) {
-        super(ModMenuTypes.ROBOT_INFO.get(), id);
+    public RobotInfoMenu(int id, Inventory playerInv, Entity entity, ContainerData data) {
+        super(ModMenuTypes.ROBOT_INFO.get(), playerInv, id);
         this.robot = (LivingEntity) entity;
         this.data = data;
 

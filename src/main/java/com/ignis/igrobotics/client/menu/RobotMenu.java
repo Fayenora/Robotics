@@ -2,8 +2,10 @@ package com.ignis.igrobotics.client.menu;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
+import com.ignis.igrobotics.network.container.SyncableInt;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,12 +30,17 @@ public class RobotMenu extends BaseMenu {
     }
 
     public RobotMenu(int id, Inventory playerInv, Entity entity, ContainerData data) {
-        super(ModMenuTypes.ROBOT.get(), id);
+        super(ModMenuTypes.ROBOT.get(), playerInv, id);
         this.robot = (LivingEntity) entity;
         this.data = data;
 
-        addPlayerInv(playerInv, Reference.GUI_ROBOT_DIMENSIONS);
-        addDataSlots(data);
+        addPlayerInv(Reference.GUI_ROBOT_DIMENSIONS);
+        robot.getCapability(ForgeCapabilities.ENERGY).ifPresent(e -> {
+            if(e instanceof ModifiableEnergyStorage energy) {
+                track(SyncableInt.create(energy::getEnergyStored, energy::setEnergy));
+                track(SyncableInt.create(energy::getMaxEnergyStored, energy::setMaxEnergyStored));
+            }
+        });
 
         robot.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             for(int i = 0; i < 4; i++) {
