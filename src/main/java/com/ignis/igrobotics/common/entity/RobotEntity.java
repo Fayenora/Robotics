@@ -10,6 +10,7 @@ import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.definitions.ModEntityTypes;
 import com.ignis.igrobotics.definitions.ModItems;
@@ -99,13 +100,21 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         if(!getCapability(ModCapabilities.PARTS).isPresent()) return InteractionResult.PASS;
         IPartBuilt parts = getCapability(ModCapabilities.PARTS).resolve().get();
         EnumRobotMaterial repairMaterial = parts.getBodyPart(EnumRobotPart.BODY).getMaterial();
-        Item requiredItem = ModItems.PLATES[repairMaterial.getID()].get();
+        Item repairItem = ModItems.PLATES[repairMaterial.getID()].get();
         ItemStack stack = player.getItemInHand(hand);
-        if(!stack.getItem().equals(requiredItem)) return InteractionResult.PASS;
-        if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
-        setHealth(getHealth() + 5);
-        playSound(SoundEvents.ANVIL_USE);
-        return InteractionResult.CONSUME;
+        if(stack.getItem().equals(repairItem) && getHealth() < getMaxHealth()) {
+            if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
+            setHealth(getHealth() + 5);
+            playSound(SoundEvents.ANVIL_USE);
+            return InteractionResult.CONSUME;
+        }
+        RobotPart part = RobotPart.getFromItem(stack.getItem());
+        if(part != null && !parts.hasBodyPart(part.getPart())) {
+            if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
+            parts.setBodyPart(part);
+            playSound(SoundEvents.ANVIL_USE);
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
