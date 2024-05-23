@@ -64,12 +64,11 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     SoundInstance activeSound;
     int soundCooldown;
 
-    public static final int DATA_INVENTORY = 0;
     protected ContainerData dataAccess = new ContainerData() {
         @Override
         public int get(int id) {
             return switch (id) {
-                case DATA_INVENTORY -> inventory.getSlots();
+                case 0 -> inventory.getSlots();
                 case 1 -> runTime;
                 case 2 -> currentRunTime;
                 case 3 -> storage.getEnergyStored();
@@ -81,7 +80,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         @Override
         public void set(int id, int value) {
             switch (id) {
-                case DATA_INVENTORY -> inventory.setSize(value);
+                case 0 -> inventory.setSize(value);
                 case 1 -> runTime = value;
                 case 2 -> currentRunTime = value;
                 case 3 -> storage.setEnergy(value);

@@ -21,7 +21,7 @@ public class StringUtil {
 
 	@OnlyIn(Dist.CLIENT)
 	public static List<String> calculateStringSplit(Font font, String string, int maxWidth) {
-		ArrayList<String> parts = new ArrayList<String>();
+		List<String> parts = new ArrayList<>();
 		String remainder = string;
 		while(font.width(remainder) > maxWidth) {
 			//How long can the string be while still fitting in this row?
@@ -69,32 +69,32 @@ public class StringUtil {
 	}
 
 	public static String getEnergyDisplay(long rf) {
-		if(rf > 1e12) {
+		if(rf >= 1e12) {
 			return (rf / 1e12) + "TRF";
 		}
-		if(rf > 1e9) {
+		if(rf >= 1e9) {
 			return (rf / 1e9) + "GRF";
 		}
-		if(rf > 1e6) {
+		if(rf >= 1e6) {
 			return (rf / 1e6) + "MRF";
 		}
-		if(rf > 1e3) {
+		if(rf >= 1e3) {
 			return (rf / 1e3) + "kRF";
 		}
 		return rf + "RF";
 	}
 
 	public static String prettyPrintLargeNumber(Number number, DecimalFormat format) {
-		if(number.longValue() > 1e12) {
+		if(number.longValue() >= 1e12) {
 			return format.format(number.longValue() / 1e12) + "T";
 		}
-		if(number.longValue() > 1e9) {
+		if(number.longValue() >= 1e9) {
 			return format.format(number.longValue() / 1e9) + "B";
 		}
-		if(number.intValue() > 1e6) {
+		if(number.intValue() >= 1e6) {
 			return format.format(number.intValue() / 1e6) + "M";
 		}
-		if(number.intValue() > 1e3) {
+		if(number.intValue() >= 1e3) {
 			return format.format(number.intValue() / 1e3) + "K";
 		}
 		return format.format(number.longValue());

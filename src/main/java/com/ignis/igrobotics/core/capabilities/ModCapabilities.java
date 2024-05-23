@@ -10,7 +10,6 @@ import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
-import com.ignis.igrobotics.core.capabilities.energy.RobotEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.BaseInventory;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
@@ -24,6 +23,7 @@ import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.capabilities.shield.IShielded;
 import com.ignis.igrobotics.core.capabilities.shield.ShieldCapability;
 import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.integration.cc.ComputerCapability;
 import com.ignis.igrobotics.integration.cc.IComputerized;
 import net.minecraft.core.BlockPos;
@@ -125,7 +125,7 @@ public class ModCapabilities {
         ChunkLoadingCapability chunkLoadingCapability = new ChunkLoadingCapability(robot);
         event.addCapability(LOC_LOADER, new AlwaysProvide<>(CHUNK_LOADER, chunkLoadingCapability));
 
-        event.addCapability(LOC_ENERGY, new AlwaysProvideAndSave<>(ForgeCapabilities.ENERGY, new RobotEnergyStorage()));
+        event.addCapability(LOC_ENERGY, new AlwaysProvideAndSave<>(ForgeCapabilities.ENERGY, new EnergyStorage((int) ModAttributes.ENERGY_CAPACITY.getDefaultValue())));
 
         RobotInventory robotInventory = new RobotInventory(robot);
         event.addCapability(LOC_INVENTORY, new AlwaysProvideAndSave<>(ForgeCapabilities.ITEM_HANDLER, robotInventory));

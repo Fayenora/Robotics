@@ -4,6 +4,7 @@ import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.registries.RegistryObject;
@@ -102,9 +103,9 @@ public class GeneralConfig extends BaseConfig {
         energyConsumption = new HashMap<>();
         processingSpeed = new HashMap<>();
 
-        for(RegistryObject<RecipeSerializer<?>> recipe : ModMachines.RECIPE_SERIALIZERS.getEntries()) {
+        for(RegistryObject<RecipeType<?>> recipe : ModMachines.RECIPE_TYPES.getEntries()) {
             String name = recipe.getId().getPath();
-            energyCapacities.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Energy Capacity", 1000000, 0, Integer.MAX_VALUE));
+            energyCapacities.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Energy Capacity", 100000, 0, Integer.MAX_VALUE));
             energyConsumption.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Energy Consumption", 1d, 0, 1000));
             processingSpeed.put(name, builder.defineInRange(StringUtil.titleCase(name) + " Processing Speed", 1d, 0, 1000));
         }

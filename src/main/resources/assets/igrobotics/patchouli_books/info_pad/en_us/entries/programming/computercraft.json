@@ -24,7 +24,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "More interesting than writing simple text messages in a console only the user can see anyways, might be the $(l:igrobotics:programming/command_api)command API$(). The example shows a simple program that moves a robot to another position (where the use could place f.e. a charger) for 20 seconds every 2 minutes.$(br)$(br)For more information, the user is referred to the $(l:https://www.lua.org/manual/5.4/manual.html)Lua reference manual$() and the $(l:https://computercraft.cc/)Computercraft wiki$()."
+      "text": "More interesting than writing simple text messages in a console only the user can see anyways, might be the $(l:igrobotics:programming/command_api)command API$(). The example shows a simple program that moves a robot to another position (where the user could place f.e. a charger) for 20 seconds every 2 minutes.$(br)$(br)For more information, the user is referred to the $(l:https://www.lua.org/manual/5.4/manual.html)Lua reference manual$() and the $(l:https://computercraft.cc/)Computercraft wiki$()."
     },
     {
       "type": "patchouli:image",
