@@ -61,7 +61,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory inv) {
-        return new FactoryMenu(id, inv, this, this.dataAccess);
+        return new FactoryMenu(id, inv, this);
     }
 
     @Override

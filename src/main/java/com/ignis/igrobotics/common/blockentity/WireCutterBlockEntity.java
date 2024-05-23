@@ -53,6 +53,6 @@ public class WireCutterBlockEntity extends MachineBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory inv) {
-        return new WireCutterMenu(id, inv, this, this.dataAccess);
+        return new WireCutterMenu(id, inv, this);
     }
 }

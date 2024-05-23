@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.SoundHandler;
+import com.ignis.igrobotics.client.menu.BaseMenu;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.CountedIngredient;
 import com.ignis.igrobotics.core.Machine;
@@ -9,6 +10,7 @@ import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.capabilities.inventory.MachineInventory;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
+import com.ignis.igrobotics.network.container.SyncableInt;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -21,7 +23,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
@@ -64,40 +65,6 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     SoundInstance activeSound;
     int soundCooldown;
 
-    protected ContainerData dataAccess = new ContainerData() {
-        @Override
-        public int get(int id) {
-            return switch (id) {
-                case 0 -> inventory.getSlots();
-                case 1 -> runTime;
-                case 2 -> currentRunTime;
-                case 3 -> storage.getEnergyStored();
-                case 4 -> storage.getMaxEnergyStored();
-                default -> 0;
-            };
-        }
-
-        @Override
-        public void set(int id, int value) {
-            switch (id) {
-                case 0 -> inventory.setSize(value);
-                case 1 -> runTime = value;
-                case 2 -> currentRunTime = value;
-                case 3 -> storage.setEnergy(value);
-                case 4 -> storage.setMaxEnergyStored(value);
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 5;
-        }
-    };
-
-    public static boolean isRunning(ContainerData data) {
-        return data.get(2) > 0;
-    }
-
     protected MachineBlockEntity(Machine machine, BlockPos pos, BlockState state, int inventorySize, int[] inputs, int[] outputs) {
         super(machine.getBlockEntityType(), pos, state);
         this.machine = machine;
@@ -108,6 +75,13 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         currentlyProcessedItems = InventoryUtil.full(inputs.length, ItemStack.EMPTY);
         this.inputs = inputs;
         this.outputs = outputs;
+    }
+
+    public void addTrackingContent(BaseMenu menu) {
+        menu.track(SyncableInt.create(() -> runTime, value -> runTime = value));
+        menu.track(SyncableInt.create(() -> currentRunTime, value -> currentRunTime = value));
+        menu.track(SyncableInt.create(storage::getEnergyStored, storage::setEnergy));
+        menu.track(SyncableInt.create(storage::getMaxEnergyStored, storage::setMaxEnergyStored));
     }
 
     @Override
@@ -436,6 +410,14 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     // Getters & Setters
     //////////////////////////
 
+    public float getMachineProgress() {
+        return (float) currentRunTime / runTime;
+    }
+
+    public int getRemainingTime() {
+        return Math.max(0, runTime - currentRunTime);
+    }
+
     @Override
     public void fillStackedContents(StackedContents contents) {
         for(int i = 0; i < inventory.getSlots(); i++) {
@@ -507,9 +489,5 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     @Override
     public void clearContent() {
         inventory.clear();
-    }
-
-    public ContainerData getDataAccess() {
-        return dataAccess;
     }
 }

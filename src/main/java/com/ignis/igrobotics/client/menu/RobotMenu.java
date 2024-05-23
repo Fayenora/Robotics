@@ -13,8 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -23,16 +21,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class RobotMenu extends BaseMenu {
     public final LivingEntity robot;
-    public final ContainerData data;
 
     public RobotMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getEntity(extraData.readInt()), new SimpleContainerData(2));
+        this(id, inv, inv.player.level().getEntity(extraData.readInt()));
     }
 
-    public RobotMenu(int id, Inventory playerInv, Entity entity, ContainerData data) {
+    public RobotMenu(int id, Inventory playerInv, Entity entity) {
         super(ModMenuTypes.ROBOT.get(), playerInv, id);
         this.robot = (LivingEntity) entity;
-        this.data = data;
 
         addPlayerInv(Reference.GUI_ROBOT_DIMENSIONS);
         robot.getCapability(ForgeCapabilities.ENERGY).ifPresent(e -> {

@@ -8,7 +8,6 @@ import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.common.blockentity.MachineBlockEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
@@ -107,7 +106,7 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 
-        startButton.setEnabled(!MachineBlockEntity.isRunning(menu.data) && (factory.canStart() || (factory.hasCraftedRobotReady() && !nameBar.getValue().isEmpty())));
+        startButton.setEnabled(!menu.blockEntity.isRunning() && (factory.canStart() || (factory.hasCraftedRobotReady() && !nameBar.getValue().isEmpty())));
         switchColorLeft.setVisible(factory.getEntity().isPresent());
         switchColorRight.setVisible(factory.getEntity().isPresent());
         switchColorLeft.setEnabled(factory.getEntity().isPresent());
@@ -149,8 +148,8 @@ public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {
         super.renderTooltip(graphics, mouseX, mouseY);
         if(startButton.isHovered()) {
             List<Component> tooltip = new ArrayList<>();
-            if(MachineBlockEntity.isRunning(menu.data)) {
-                int remainingTime = Math.max(0, menu.data.get(1) - menu.data.get(2));
+            if(menu.blockEntity.isRunning()) {
+                int remainingTime = menu.blockEntity.getRemainingTime();
                 Component timeDisplay = Component.literal(": " + StringUtil.getTimeDisplay(remainingTime));
                 tooltip.add(ComponentUtils.formatList(List.of(Lang.localise("remaining_time"), timeDisplay), Component.empty()));
             } else if(!startButton.isEnabled()) {

@@ -7,9 +7,7 @@ import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -26,20 +24,18 @@ public class WireCutterMenu extends BaseMenu {
 
     public final WireCutterBlockEntity blockEntity;
     private final Level level;
-    public final ContainerData data;
 
     public WireCutterMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
-    public WireCutterMenu(int id, Inventory playerInv, BlockEntity blockEntity, ContainerData data) {
+    public WireCutterMenu(int id, Inventory playerInv, BlockEntity blockEntity) {
         super(ModMenuTypes.WIRE_CUTTER.get(), playerInv, id);
         this.blockEntity = (WireCutterBlockEntity) blockEntity;
+        this.blockEntity.addTrackingContent(this);
         this.level = playerInv.player.level();
-        this.data = data;
 
         addPlayerInv(Reference.GUI_DEFAULT_DIMENSIONS);
-        addDataSlots(data);
 
         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             //Input-Slots

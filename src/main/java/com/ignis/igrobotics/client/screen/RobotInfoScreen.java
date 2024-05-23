@@ -236,7 +236,8 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             soundToggle.setEnabled(configureButtonsActive);
         });
         permissionConfig.setEnabled(access.getOwner().equals(player.getUUID()));
-        powerButton.setEnabled(access.hasPermission(player, EnumPermission.ALLY) && menu.data.get(0) > 0);
+        powerButton.setEnabled(access.hasPermission(player, EnumPermission.ALLY) &&
+                entity.getCapability(ForgeCapabilities.ENERGY).orElse(ModCapabilities.NO_ENERGY).getEnergyStored() > 0);
         nameBar.setEditable(access.hasPermission(player, EnumPermission.COMMANDS));
         if(ownerSelector != null) ownerSelector.setEnabled(access.getOwner().equals(player.getUUID()));
     }

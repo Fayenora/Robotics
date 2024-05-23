@@ -12,7 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -36,10 +35,10 @@ public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(new ArrowElement(leftPos + arr_down.x, topPos + arr_down.y, Direction.DOWN, () -> getMachineProgress(menu.data, Direction.DOWN)));
-        addRenderableOnly(new ArrowElement(leftPos + arr_up.x, topPos + arr_up.y, Direction.UP, () -> getMachineProgress(menu.data, Direction.UP)));
-        addRenderableOnly(new ArrowElement(leftPos + arr_right.x, topPos + arr_right.y, Direction.WEST, () -> getMachineProgress(menu.data, Direction.WEST)));
-        addRenderableOnly(new ArrowElement(leftPos + arr_left.x, topPos + arr_left.y, Direction.EAST, () -> getMachineProgress(menu.data, Direction.EAST)));
+        addRenderableOnly(new ArrowElement(leftPos + arr_down.x, topPos + arr_down.y, Direction.DOWN, () -> getMachineProgress(Direction.DOWN)));
+        addRenderableOnly(new ArrowElement(leftPos + arr_up.x, topPos + arr_up.y, Direction.UP, () -> getMachineProgress(Direction.UP)));
+        addRenderableOnly(new ArrowElement(leftPos + arr_right.x, topPos + arr_right.y, Direction.WEST, () -> getMachineProgress(Direction.WEST)));
+        addRenderableOnly(new ArrowElement(leftPos + arr_left.x, topPos + arr_left.y, Direction.EAST, () -> getMachineProgress(Direction.EAST)));
         menu.blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
             addElement(new EnergyBarElement(energy, leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height));
         });
@@ -64,22 +63,7 @@ public class AssemblerScreen extends BaseContainerScreen<AssemblerMenu> {
         //Don't
     }
 
-    private float getMachineProgress(ContainerData data, Direction dir) {
-        if(menu.data.get(1) == 0) return 0;
-        switch (dir) {
-            case NORTH, UP -> {
-                if (data.get(5) % 2 == 1) return (float) data.get(2) / data.get(1);
-            }
-            case EAST -> {
-                if (data.get(5) % 4 >= 2) return (float) data.get(2) / data.get(1);
-            }
-            case SOUTH, DOWN -> {
-                if (data.get(5) % 8 >= 4) return (float) data.get(2) / data.get(1);
-            }
-            case WEST -> {
-                if (data.get(5) >= 8) return (float) data.get(2) / data.get(1);
-            }
-        }
-        return 0;
+    private float getMachineProgress(Direction dir) {
+        return menu.blockEntity.isArrowActive(dir) ? menu.blockEntity.getMachineProgress() : 0;
     }
 }

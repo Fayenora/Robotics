@@ -8,9 +8,7 @@ import com.ignis.igrobotics.definitions.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -24,22 +22,20 @@ public class FactoryModulesMenu extends BaseMenu {
 
     public final FactoryBlockEntity blockEntity;
     private final Level level;
-    public final ContainerData data;
 
     private final Map<EnumModuleSlot, Integer> moduleSlots;
 
     public FactoryModulesMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, extraData.readMap(buf -> buf.readEnum(EnumModuleSlot.class), FriendlyByteBuf::readInt), inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
+        this(id, inv, extraData.readMap(buf -> buf.readEnum(EnumModuleSlot.class), FriendlyByteBuf::readInt), inv.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
-    public FactoryModulesMenu(int id, Inventory playerInv, Map<EnumModuleSlot, Integer> moduleSlots, BlockEntity blockEntity, ContainerData data) {
+    public FactoryModulesMenu(int id, Inventory playerInv, Map<EnumModuleSlot, Integer> moduleSlots, BlockEntity blockEntity) {
         super(ModMenuTypes.FACTORY_MODULES.get(), playerInv, id);
         this.blockEntity = (FactoryBlockEntity) blockEntity;
+        this.blockEntity.addTrackingContent(this);
         this.level = playerInv.player.level();
-        this.data = data;
         this.moduleSlots = moduleSlots;
 
-        addDataSlots(data);
         addPlayerInv(36, 137);
         if(this.blockEntity.getEntity().isEmpty()) return;
         this.blockEntity.getEntity().get().getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {

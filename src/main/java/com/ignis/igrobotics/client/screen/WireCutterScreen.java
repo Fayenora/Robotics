@@ -34,7 +34,7 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
         menu.blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
             addElement(new EnergyBarElement(energyStorage, leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height));
         });
-        addRenderableOnly(new ArrowElement(leftPos + arrow.x, topPos + arrow.y, Direction.EAST, () -> (float) menu.data.get(2) / menu.data.get(1)));
+        addRenderableOnly(new ArrowElement(leftPos + arrow.x, topPos + arrow.y, Direction.EAST, menu.blockEntity::getMachineProgress));
     }
 
     @Override
