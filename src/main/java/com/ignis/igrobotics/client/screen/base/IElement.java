@@ -72,10 +72,10 @@ public interface IElement extends ContainerEventHandler, Renderable, NarratableE
 
 	default IElement[] getParentGuiPath() {
 		ArrayList<IElement> path = new ArrayList<>();
-		IElement search = this;
-		while(search != null) {
-			path.add(search);
-			search = search.getParentComponent();
+		IElement thisElement = this;
+		while(thisElement != null) {
+			path.add(thisElement);
+			thisElement = thisElement.getParentComponent();
 		}
 		return path.toArray(new IElement[0]);
 	}

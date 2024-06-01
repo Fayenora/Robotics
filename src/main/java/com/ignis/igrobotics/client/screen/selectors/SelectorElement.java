@@ -56,10 +56,8 @@ public abstract class SelectorElement<A> extends ButtonElement {
      * @return whether the current gui is in front
      */
     protected boolean currentGuiActive() {
-        IBaseGui baseGui = getBaseGui();
-        IElement[] parentPath = getParentGuiPath();
-        IElement currentSubGui = baseGui.getSubGui();
-        for(IElement parent : parentPath) {
+        IElement currentSubGui = getBaseGui().getSubGui();
+        for(IElement parent : getParentGuiPath()) {
             if(parent.equals(currentSubGui)) {
                 return true;
             }

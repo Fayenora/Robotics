@@ -49,7 +49,6 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 		if(selection == null || selection.get() == null) return;
 		Entity entity = CommonSetup.allLivingEntities.get(selection.get());
 		if(!(entity instanceof LivingEntity living)) return;
-		if(getBaseGui().hasSubGui()) return;
 		RenderUtil.enableScissor(graphics, MathUtil.downsizeRect(getShape(), 1));
 		RenderUtil.drawRotatingEntity(graphics.pose(), getX() + width / 2, getY() + height / 2 + 6, (int) (8 / living.getBoundingBox().getSize()), living, angle);
 		RenderUtil.disableScissor(graphics);

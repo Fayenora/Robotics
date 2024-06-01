@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Mob;
 public class NearestAttackableTargetGoal<T extends LivingEntity> extends net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<T> {
 
     public NearestAttackableTargetGoal(Mob mob, EntityType<T> type) {
-        this(mob, (Class<T>) CommonSetup.allLivingEntities.get(type).getClass());
+        this(mob, CommonSetup.getClassOf(type));
     }
 
     public NearestAttackableTargetGoal(Mob pMob, Class<T> targetType) {

@@ -10,10 +10,8 @@ import com.mojang.datafixers.util.Function5;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,8 +22,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -38,8 +34,7 @@ public class ModCommands {
     public static final Supplier<IForgeRegistry<CommandType>> REGISTRY = COMMANDS.makeRegistry(RegistryBuilder::new);
 
     public static final RegistryObject<CommandType> STAY = register("stay", GlobalPos.class, MoveToBlockGoal::new);
-    public static final RegistryObject<CommandType> ATTACK = register("attack", EntityType.class, NearestAttackableTargetGoal::new);
-    public static final RegistryObject<CommandType> ATTACK_SPECIFIC = register("attack_specific", EntitySearch.class, (robot, search) -> {
+    public static final RegistryObject<CommandType> ATTACK = register("attack", EntitySearch.class, (robot, search) -> {
         if(!(robot.level() instanceof ServerLevel server)) return null;
         Entity entity = search.commence(server, robot.position());
         if(!(entity instanceof LivingEntity)) return null;

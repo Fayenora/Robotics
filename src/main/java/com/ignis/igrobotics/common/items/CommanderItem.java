@@ -105,7 +105,7 @@ public class CommanderItem extends Item {
         if(currentEntity instanceof Mob mob && currentEntity.getCapability(ModCapabilities.COMMANDS).isPresent()) {
             Selection<EntitySearch> targetSelection = Selection.of(new EntitySearch(target.getUUID()));
             if(!target.getType().getCategory().isFriendly()) {
-                RobotCommand attack = new RobotCommand(ModCommands.ATTACK_SPECIFIC.get(), List.of(targetSelection));
+                RobotCommand attack = new RobotCommand(ModCommands.ATTACK.get(), List.of(targetSelection));
                 if(addNewCommand(player, mob, attack, true, "commandGroup.command.attack", target.getDisplayName())) {
                     return InteractionResult.CONSUME;
                 }

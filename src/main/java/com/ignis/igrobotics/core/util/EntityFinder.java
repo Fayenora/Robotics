@@ -1,21 +1,25 @@
 package com.ignis.igrobotics.core.util;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -32,13 +36,62 @@ public class EntityFinder {
      * Search for the closest entity in a specified level
      * @param level the level to search
      * @param origin which point the entity should be closest to
+     * @param condition any condition the entity must fulfill
      * @return the entity fulfilling the condition which is closest to origin, if it exists
      */
     @Nullable
     public static Entity getClosestTo(Level level, Vec3 origin, Predicate<Entity> condition) {
-        Iterable<Entity> toSearch;
+        return getClosestTo(level, origin, condition, ServerLevel::getAllEntities);
+    }
+
+    /**
+     * Search for the closest entity in a specified level
+     * @param level the level to search
+     * @param origin which point the entity should be closest to
+     * @param type only search for entities of specified type
+     * @param condition any additional conditions the entity must fulfill
+     * @return the entity fulfilling the condition which is closest to origin, if it exists
+     */
+    @Nullable
+    public static Entity getClosestTo(Level level, Vec3 origin, EntityType<?> type, Predicate<Entity> condition) {
+        return getClosestTo(level, origin, condition, serverLevel ->
+                serverLevel.getEntities(EntityTypeTest.forClass(CommonSetup.getClassOf(type)), condition));
+    }
+
+    /**
+     * Search for the closest entity in a specified level
+     * @param level the level to search
+     * @param origin which point the entity should be closest to
+     * @param range a maximum range
+     * @param condition any additional conditions the entity must fulfill
+     * @return the entity fulfilling the condition which is closest to origin, if it exists
+     */
+    @Nullable
+    public static Entity getClosestTo(Level level, Vec3 origin, int range, Predicate<Entity> condition) {
+        return getClosestTo(level, origin, condition, serverLevel ->
+                serverLevel.getEntities(null, AABB.ofSize(origin, range, range, range)));
+    }
+
+    /**
+     * Search for the closest entity in a specified level
+     * @param level the level to search
+     * @param origin which point the entity should be closest to
+     * @param range a maximum range
+     * @param type only search for entities of specified type
+     * @param condition any additional conditions the entity must fulfill
+     * @return the entity fulfilling the condition which is closest to origin, if it exists
+     */
+    @Nullable
+    public static Entity getClosestTo(Level level, Vec3 origin, EntityType<?> type, int range, Predicate<Entity> condition) {
+        return getClosestTo(level, origin, condition, serverLevel ->
+                serverLevel.getEntities(EntityTypeTest.forClass(CommonSetup.getClassOf(type)), AABB.ofSize(origin, range, range, range), condition));
+    }
+
+    @Nullable
+    private static Entity getClosestTo(Level level, Vec3 origin, Predicate<Entity> condition, Function<ServerLevel, Iterable<? extends Entity>> serverSelection) {
+        Iterable<? extends Entity> toSearch;
         if(level instanceof ServerLevel serverLevel) {
-            toSearch = serverLevel.getAllEntities();
+            toSearch = serverSelection.apply(serverLevel);
         } else {
             Player player = Robotics.proxy.getPlayer();
             if(player == null) return null;

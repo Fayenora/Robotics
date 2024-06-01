@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.util.EntityFinder;
+import com.ignis.igrobotics.core.util.NBTUtil;
 import com.ignis.igrobotics.network.messages.IBufferSerializable;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
@@ -9,17 +10,15 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -28,23 +27,21 @@ import java.util.function.Predicate;
  */
 public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INBTSerializable<CompoundTag> {
 
-    public static final EntitySearch SEARCH_FOR_NONE = new EntitySearch();
-
     //Which criteria to use
-    private byte flags;
+    //Note that UUID and ID are special in the regard that if an entity matches along one of them, it matches the entire search
+    private EnumSet<SearchFlags> flags = EnumSet.noneOf(SearchFlags.class);
 
     @Nullable
     private UUID uuid;
     @Nullable
     private String name;
+    @Nullable
+    private EntityType<?> type;
     private int entityId;
+    private int range;
 
     private Entity cache;
     private final Collection<SearchListener> listeners = new HashSet<>();
-
-    // For future use
-    private EntityTypeTest<?, ?> typeTest;
-    private int range;
 
     private EntitySearch() {}
 
@@ -83,8 +80,7 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         }
         // Commence a player search
         result = commenceForPlayer(preferredLevel);
-        if(result != null) return result;
-        return null;
+        return result;
     }
 
     /**
@@ -94,21 +90,23 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
      * @return an entity matching the search, if one was found
      */
     @Nullable
-    public Entity commenceForLevel(ServerLevel level, Vec3 origin) {
-        if((flags & 1) == 1 && uuid != null) return level.getEntity(uuid);
-        //FIXME: If the client requires an EntityLiving, but a non-living entity matching the search is closer to the player,
-        // the search will yield the non-living entity, causing the client to believe no entity matches the search
-        if((flags & 2) == 2 && name != null) return EntityFinder.getClosestTo(level, origin, entity -> entity.getName().getString().equals(name));
-        if((flags & 4) == 4) return level.getEntity(entityId);
+    private Entity commenceForLevel(ServerLevel level, Vec3 origin) {
+        if(flags.contains(SearchFlags.UUID) && uuid != null) return level.getEntity(uuid);
+        if(flags.contains(SearchFlags.ID)) return level.getEntity(entityId);
+        if(flags.containsAll(List.of(SearchFlags.TYPE, SearchFlags.RANGE))) return EntityFinder.getClosestTo(level, origin, type, range, this);
+        if(flags.contains(SearchFlags.TYPE)) return EntityFinder.getClosestTo(level, origin, type, this);
+        if(flags.contains(SearchFlags.RANGE)) return EntityFinder.getClosestTo(level, origin, range, this);
+        if(!flags.isEmpty()) return EntityFinder.getClosestTo(level, origin, this);
         return null;
     }
 
     @Nullable
     private Entity commenceForPlayer(ServerLevel level) {
         GameProfileCache cache = level.getServer().getProfileCache();
+        if(cache == null || type != EntityType.PLAYER) return null;
         Optional<GameProfile> profile = Optional.empty();
-        if((flags & 1) == 1 && uuid != null) profile = cache.get(uuid);
-        if((flags & 2) == 2 && name != null) profile = cache.get(name);
+        if(flags.contains(SearchFlags.UUID) && uuid != null) profile = cache.get(uuid);
+        if(flags.contains(SearchFlags.NAME) && name != null) profile = cache.get(name);
         // No way to look the player up if he left in case of entity ids
         // Just return a fake player if we found something
         if(profile.isPresent() && profile.get().isComplete()) {
@@ -117,15 +115,19 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         return null;
     }
 
+    /**
+     * Note that we cannot test the range condition
+     * @param livingEntity the input argument
+     * @return
+     */
     @Override
     public boolean test(Entity livingEntity) {
-        if((flags & 1) == 1 && !livingEntity.getUUID().equals(uuid)) {
+        if(flags.contains(SearchFlags.UUID)) return livingEntity.getUUID().equals(uuid);
+        if(flags.contains(SearchFlags.ID)) return livingEntity.getId() == entityId;
+        if(flags.contains(SearchFlags.NAME) && !livingEntity.getName().getString().equals(name)) {
             return false;
         }
-        if((flags & 2) == 2 && !livingEntity.getName().getString().equals(name)) {
-            return false;
-        }
-        if((flags & 4) == 4 && livingEntity.getId() != entityId) {
+        if(flags.contains(SearchFlags.TYPE) && livingEntity.getType() != type) {
             return false;
         }
         // The entity matches our search! Notify any listeners and return true
@@ -137,18 +139,22 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
 
     @Override
     public void read(FriendlyByteBuf buf) {
-        flags = buf.readByte();
-        if((flags & 1) == 1) uuid = buf.readUUID();
-        if((flags & 2) == 2) name = buf.readUtf();
-        if((flags & 4) == 4) entityId = buf.readInt();
+        flags = buf.readEnumSet(SearchFlags.class);
+        if(flags.contains(SearchFlags.UUID)) uuid = buf.readUUID();
+        if(flags.contains(SearchFlags.NAME)) name = buf.readUtf();
+        if(flags.contains(SearchFlags.ID)) entityId = buf.readInt();
+        if(flags.contains(SearchFlags.TYPE)) type = buf.readRegistryId();
+        range = buf.readInt();
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeByte(flags);
+        buf.writeEnumSet(flags, SearchFlags.class);
         if(uuid != null) buf.writeUUID(uuid);
         if(name != null) buf.writeUtf(name);
         if(entityId != 0) buf.writeInt(entityId);
+        if(type != null) buf.writeRegistryId(ForgeRegistries.ENTITY_TYPES, type);
+        buf.writeInt(range);
     }
 
     @Override
@@ -157,6 +163,8 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         if(uuid != null) nbt.putUUID("uuid", uuid);
         if(name != null) nbt.putString("name", name);
         if(entityId != 0) nbt.putInt("entityId", entityId);
+        if(type != null) nbt.put("kind", NBTUtil.serializeEntry(ForgeRegistries.ENTITY_TYPES, type));
+        if(range != 0) nbt.putInt("range", range);
         return nbt;
     }
 
@@ -165,6 +173,8 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         if(nbt.contains("uuid")) setUUID(nbt.getUUID("uuid"));
         if(nbt.contains("name")) setName(nbt.getString("name"));
         if(nbt.contains("entityId")) setEntityId(nbt.getInt("entityId"));
+        if(nbt.contains("kind")) setType(NBTUtil.deserializeEntry(ForgeRegistries.ENTITY_TYPES, nbt.get("kind")));
+        if(nbt.contains("range")) setRange(nbt.getInt("range"));
     }
 
     public static EntitySearch from(FriendlyByteBuf buf) {
@@ -181,18 +191,54 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
 
     public void setUUID(@NotNull UUID uuid) {
         this.uuid = uuid;
-        flags |= 1;
+        flags.add(SearchFlags.UUID);
     }
 
     public void setName(@NotNull String name) {
         this.name = name;
-        flags |= 2;
+        flags.add(SearchFlags.NAME);
+    }
+
+    public void setRange(int range) {
+        this.range = range;
+        if(range > 0) {
+            flags.add(SearchFlags.RANGE);
+        }
     }
 
     public void setEntityId(int entityId) {
         if(entityId == 0) return;
         this.entityId = entityId;
-        flags |= 4;
+        flags.add(SearchFlags.ID);
+    }
+
+    public void setType(EntityType<?> type) {
+        this.type = type;
+        flags.add(SearchFlags.TYPE);
+    }
+
+    public static EntitySearch searchForNone() {
+        return new EntitySearch();
+    }
+
+    public boolean isSearchForNone() {
+        return flags.isEmpty();
+    }
+
+    public boolean searchesFor(SearchFlags flag) {
+        return flags.contains(flag);
+    }
+
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
+    }
+
+    public Optional<EntityType<?>> getType() {
+        return Optional.ofNullable(type);
+    }
+
+    public int getRange() {
+        return range;
     }
 
     public void addListener(SearchListener listener) {
@@ -212,5 +258,13 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         if(name != null) return name;
         if(uuid != null) return uuid.toString();
         return super.toString();
+    }
+
+    public enum SearchFlags {
+        NAME,
+        UUID,
+        ID,
+        RANGE,
+        TYPE
     }
 }

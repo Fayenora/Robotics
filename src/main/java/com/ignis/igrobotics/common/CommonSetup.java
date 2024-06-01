@@ -31,4 +31,9 @@ public class CommonSetup {
             }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Entity> Class<T> getClassOf(EntityType<T> type) {
+        return (Class<T>) allLivingEntities.get(type).getClass();
+    }
 }

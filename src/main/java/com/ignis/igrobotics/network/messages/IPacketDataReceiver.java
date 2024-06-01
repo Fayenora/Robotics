@@ -16,5 +16,10 @@ public interface IPacketDataReceiver {
         if(type.equals(BufferSerializers.ENTITY)) receive((LivingEntity) data);
         if(type.equals(BufferSerializers.ENTITIES)) receive((LivingEntity[]) data);
         if(type.equals(BufferSerializers.CONFIG)) receive((AccessConfig) data);
+        if(data == null) {
+            receive((LivingEntity) data);
+            receive((LivingEntity[]) data);
+            receive((AccessConfig) data);
+        }
     }
 }
