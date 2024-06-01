@@ -29,6 +29,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
 import java.util.UUID;
 
 @MethodsReturnNonnullByDefault
@@ -91,6 +92,12 @@ public class EntitySearchSelector extends SelectorElement<EntitySearch> implemen
     @Override
     public void receive(LivingEntity entity) {
         setCachedEntity(entity);
+    }
+
+    @Override
+    public List<Component> getTooltip(int mouseX, int mouseY) {
+        if(cachedEntity == null) return List.of();
+        return List.of(cachedEntity.getDisplayName());
     }
 
     class GuiSelectEntitySearch extends GuiElement {
@@ -182,8 +189,6 @@ public class EntitySearchSelector extends SelectorElement<EntitySearch> implemen
                 tickBoxUseName.nextState();
                 parent.getName().ifPresent(name -> textFieldName.insertText(name));
             }
-
-
         }
     }
 }

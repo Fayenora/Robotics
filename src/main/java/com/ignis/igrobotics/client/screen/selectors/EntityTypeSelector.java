@@ -4,9 +4,11 @@ import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.GuiSelectEntity;
 import com.ignis.igrobotics.common.CommonSetup;
 import com.ignis.igrobotics.core.robot.Selection;
+import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.core.util.RenderUtil;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
@@ -42,6 +45,12 @@ public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 	@Override
 	protected IElement getMaximizedVersion() {
 		return new GuiSelectEntity(options, this::setSelection);
+	}
+
+	@Override
+	public List<Component> getTooltip(int mouseX, int mouseY) {
+		if(selection.get() == null) return List.of();
+		return List.of(Lang.localiseExisting(selection.get().getDescriptionId()));
 	}
 
 	@Override

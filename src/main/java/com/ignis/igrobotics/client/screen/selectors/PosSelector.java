@@ -9,6 +9,7 @@ import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
@@ -19,6 +20,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,6 +49,18 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get().pos().getX()), getX() + width / 2, getY() + 2, Reference.FONT_COLOR, fontSize, 16);
 		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get().pos().getY()), getX() + width / 2, getY() + 7, Reference.FONT_COLOR, fontSize, 16);
 		RenderUtil.drawCenteredString(graphics, Integer.toString(selection.get().pos().getZ()), getX() + width / 2, getY() + 12, Reference.FONT_COLOR, fontSize, 16);
+	}
+
+	@Override
+	public List<Component> getTooltip(int mouseX, int mouseY) {
+		if(selection.get() == null) return List.of();
+		GlobalPos pos = selection.get();
+		Component display = ComponentUtils.formatList(List.of(
+				Lang.localiseExisting(pos.dimension().location().toString()),
+				Component.literal(String.valueOf(pos.pos().getX())),
+				Component.literal(String.valueOf(pos.pos().getY())),
+				Component.literal(String.valueOf(pos.pos().getZ()))), Component.literal(" "));
+		return List.of(display);
 	}
 
 	class GuiSelectPos extends GuiElement {
