@@ -55,9 +55,9 @@ public class RecipeGenerator extends RecipeProvider {
                     .define('c', ModItems.ADVANCED_CIRCUIT.get())
                     .define('w', ModItems.ADVANCED_WIRING.get())
                     .define('g', Tags.Items.GLASS_PANES)
-                    .pattern("pcp")
-                    .pattern("bwb")
                     .pattern("pgp")
+                    .pattern("bwb")
+                    .pattern("pcp")
                     .save(writer);
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][2].get())

@@ -7,7 +7,7 @@
     ],
     "key": {
         "b": {
-            "tag": "forge:storage_blocks/iron"
+            "item": "igrobotics:plate_iron"
         },
 		"a": {
             "item": "minecraft:anvil", 
