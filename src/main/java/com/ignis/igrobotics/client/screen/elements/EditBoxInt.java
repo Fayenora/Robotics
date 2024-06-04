@@ -7,12 +7,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class EditBoxInt extends EditBox {
 
-    private final int min, max;
+    private int min, max;
 
     public EditBoxInt(int pX, int pY, int pWidth, int pHeight, int min, int max) {
         super(Minecraft.getInstance().font, pX, pY, pWidth, pHeight, Component.empty());
         this.min = min;
         this.max = max;
+    }
+
+    public EditBoxInt(int pX, int pY, int pWidth, int pHeight) {
+        this(pX, pY, pWidth, pHeight, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     @Override
@@ -32,6 +36,12 @@ public class EditBoxInt extends EditBox {
             }
         }
         super.insertText(cleanedText.toString());
+    }
+
+    public void setBounds(int min, int max) {
+        this.min = min;
+        this.max = max;
+        keepIntToBounds();
     }
 
     protected void keepIntToBounds() {

@@ -4,18 +4,17 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
+import com.ignis.igrobotics.client.screen.elements.EditBoxInt;
 import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
-import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -65,18 +64,17 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 
 	class GuiSelectPos extends GuiElement {
 		DimensionSelectElement dimensionSelection;
-		EditBox textFieldX, textFieldY, textFieldZ;
+		EditBoxInt textFieldX, textFieldY, textFieldZ;
 		ButtonElement buttonSelectPos, buttonSelfPos, buttonConfirm;
 
 		public GuiSelectPos() {
 			super(0, 0, 94, 113);
 			initTextureLocation(TEXTURE, 162, 0);
-			Font font = Minecraft.getInstance().font;
 			dimensionSelection = new DimensionSelectElement(getX() + 8, getY() + 6, 79, 14, selection.get().dimension());
 			dimensionSelection.initTextureLocation(TEXTURE, 0, 242);
-			textFieldX = new EditBox(font, getX() + width - 68, getY() + 24, 60, 15, Component.literal("text_box_x"));
-			textFieldY = new EditBox(font, getX() + width - 68, getY() + 46, 60, 15, Component.literal("text_box_y"));
-			textFieldZ = new EditBox(font, getX() + width - 68, getY() + 68, 60, 15, Component.literal("text_box_z"));
+			textFieldX = new EditBoxInt(getX() + width - 68, getY() + 24, 60, 15);
+			textFieldY = new EditBoxInt(getX() + width - 68, getY() + 46, 60, 15);
+			textFieldZ = new EditBoxInt(getX() + width - 68, getY() + 68, 60, 15);
 			updateTextFields();
 			Player player = Minecraft.getInstance().player;
 			if(player == null) return;
@@ -120,10 +118,15 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 		}
 
 		private void updateTextFields() {
+			Level relevantLevel = ServerLifecycleHooks.getCurrentServer().getLevel(selection.get().dimension());
+			if(relevantLevel == null) ServerLifecycleHooks.getCurrentServer().overworld();
+			dimensionSelection.setDim(selection.get().dimension());
 			textFieldX.setValue(Integer.toString(selection.get().pos().getX()));
 			textFieldY.setValue(Integer.toString(selection.get().pos().getY()));
 			textFieldZ.setValue(Integer.toString(selection.get().pos().getZ()));
-			dimensionSelection.setDim(selection.get().dimension());
+			textFieldX.setBounds((int) relevantLevel.getWorldBorder().getMinX(), (int) relevantLevel.getWorldBorder().getMaxX());
+			textFieldY.setBounds(relevantLevel.dimensionType().minY(), relevantLevel.dimensionType().logicalHeight());
+			textFieldZ.setBounds((int) relevantLevel.getWorldBorder().getMinZ(), (int) relevantLevel.getWorldBorder().getMaxZ());
 		}
 
 		@Override
