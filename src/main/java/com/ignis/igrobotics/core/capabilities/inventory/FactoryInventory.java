@@ -52,11 +52,15 @@ public class FactoryInventory extends MachineInventory {
     /**
      * The module slot type associated with this slot id
      * @param slot the slot
-     * @see FactoryModulesMenu#addModuleSlots(IItemHandler, EnumModuleSlot, int, int, boolean)
+     * @see #typeToSlotId(EnumModuleSlot, int) 
      * @return the module type which can fit in the slot
      */
     public static EnumModuleSlot typeFromSlotId(int slot) {
-        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, EnumModuleSlot.values().length)];
+        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, Reference.MAX_MODULES)];
+    }
+
+    public static int typeToSlotId(EnumModuleSlot slotType, int offset) {
+        return slotType.ordinal() * Reference.MAX_MODULES + offset + 6;
     }
 
     @Override

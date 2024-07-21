@@ -1,7 +1,10 @@
 package com.ignis.igrobotics.common.menu;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.menu.slots.FakeSlot;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.inventory.FactoryInventory;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
@@ -52,9 +55,13 @@ public class FactoryModulesMenu extends BaseMenu {
     }
 
     private void addModuleSlots(IItemHandler handler, EnumModuleSlot slotType, int x, int y, boolean reverse) {
-        for(int i = 0; i < moduleSlots.getOrDefault(slotType, 0); i++) {
-            int slotId = slotType.ordinal() * EnumModuleSlot.values().length + i + 6;
-            addSlot(new SlotItemHandler(handler, slotId, x + (reverse ? -22 : 22) * (i % 4) + 1, y + (i > 3 ? 22 : 0) + 1));
+        for(int i = 0; i < Reference.MAX_MODULES; i++) {
+            int slotId = FactoryInventory.typeToSlotId(slotType, i);
+            if(i < moduleSlots.getOrDefault(slotType, 0)) {
+                addSlot(new SlotItemHandler(handler, slotId, x + (reverse ? -22 : 22) * (i % 4) + 1, y + (i > 3 ? 22 : 0) + 1));
+            } else {
+                addSlot(new FakeSlot(slotId));
+            }
         }
     }
 
