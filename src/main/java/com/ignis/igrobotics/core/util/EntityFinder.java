@@ -69,7 +69,7 @@ public class EntityFinder {
     @Nullable
     public static Entity getClosestTo(Level level, Vec3 origin, int range, Predicate<Entity> condition) {
         return getClosestTo(level, origin, condition, serverLevel ->
-                serverLevel.getEntities(null, AABB.ofSize(origin, range, range, range)));
+                serverLevel.getEntities((Entity) null, AABB.ofSize(origin, range, range, range), condition));
     }
 
     /**
@@ -100,12 +100,10 @@ public class EntityFinder {
         double min_distance = Double.MAX_VALUE;
         Entity result = null;
         for(Entity ent : toSearch) {
-            if(condition.test(ent)) {
-                double distance = ent.distanceToSqr(origin);
-                if(distance < min_distance) {
-                    result = ent;
-                    min_distance = distance;
-                }
+            double distance = ent.distanceToSqr(origin);
+            if(ent.isAlive() && condition.test(ent) && distance < min_distance) {
+                result = ent;
+                min_distance = distance;
             }
         }
         return result;

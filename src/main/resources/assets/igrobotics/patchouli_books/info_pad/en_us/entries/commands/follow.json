@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Follow the specified entity at the given distance. This task is valid if the specified entity is alive. "
+      "text": "Follow an entity matching the query at the given distance. This task is valid if and only if the query currently matches a living entity. "
     }
   ]
 }

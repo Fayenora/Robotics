@@ -12,9 +12,9 @@ public class LookDownGoal extends Goal {
 	private final Vec3 idealLookVector;
 	
 	public LookDownGoal(Mob entity) {
+		setFlags(EnumSet.of(Flag.LOOK, Flag.TARGET, Flag.MOVE, Flag.JUMP));
 		this.entity = entity;
 		idealLookVector = Vec3.directionFromRotation(-45, entity.getYHeadRot());
-		setFlags(EnumSet.of(Flag.LOOK));
 	}
 
 	@Override

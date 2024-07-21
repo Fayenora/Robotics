@@ -43,6 +43,7 @@ public class CommandBehavior {
      * List of Entity Searches (Predicates), usually from {@link RobotCommand RobotCommands}
      * Because commands might refer to entities that do not exist (yet), we need to keep a list of these references/searches.
      * In case a new entity gets added/an entity gets changed to match the search, we notify the associated commands.
+     * This covers cases like a robot guarding a portal.
      * <br>
      * NOTE: A EntitySearch is added to the level of the robot which tries to conduct this search.
      * This does not need to mean that the search only searches this level, it might search across all dimensions.
@@ -55,7 +56,7 @@ public class CommandBehavior {
         if(event.getEntity() instanceof ItemEntity) return; // Save some runtime here by ignoring items
         Entity entity = event.getEntity();
         for(EntitySearch search : SEARCHES.values()) {
-            search.test(entity); // The Search will automatically notify any listeners that it found something
+            search.testAndNotify(entity);
         }
     }
 

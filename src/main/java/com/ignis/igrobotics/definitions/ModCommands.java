@@ -10,11 +10,7 @@ import com.mojang.datafixers.util.Function5;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
@@ -34,25 +30,9 @@ public class ModCommands {
     public static final Supplier<IForgeRegistry<CommandType>> REGISTRY = COMMANDS.makeRegistry(RegistryBuilder::new);
 
     public static final RegistryObject<CommandType> STAY = register("stay", GlobalPos.class, MoveToBlockGoal::new);
-    public static final RegistryObject<CommandType> ATTACK = register("attack", EntitySearch.class, (robot, search) -> {
-        if(!(robot.level() instanceof ServerLevel server)) return null;
-        Entity entity = search.commence(server, robot.position());
-        if(!(entity instanceof LivingEntity)) return null;
-        return new SpecificTargetGoal(robot, (LivingEntity) entity);
-    });
-    public static final RegistryObject<CommandType> DEFEND = register("defend", EntitySearch.class, (robot, search) -> {
-        if(!(robot.level() instanceof ServerLevel server)) return null;
-        Entity entity = search.commence(server, robot.position());
-        if(!(entity instanceof LivingEntity)) return null;
-        return new DefendGoal(robot, (LivingEntity) entity, false);
-    });
-    public static final RegistryObject<CommandType> FOLLOW = register("follow", EntitySearch.class, Integer.class, (robot, search, range) -> {
-        if(!(robot.level() instanceof ServerLevel server)) return null;
-        Entity entity = search.commence(server, robot.position());
-        if(!(entity instanceof LivingEntity)) return null;
-        double followRange = robot.getAttributeValue(Attributes.FOLLOW_RANGE);
-        return new FollowGoal(robot, entity, range, (float) followRange);
-    });
+    public static final RegistryObject<CommandType> ATTACK = register("attack", EntitySearch.class, SpecificTargetGoal::new);
+    public static final RegistryObject<CommandType> DEFEND = register("defend", EntitySearch.class, DefendGoal::new);
+    public static final RegistryObject<CommandType> FOLLOW = register("follow", EntitySearch.class, Integer.class, FollowGoal::new);
     public static final RegistryObject<CommandType> RETRIEVE = register("retrieve", ItemStack.class, GlobalPos.class,
             (robot, stack, pos) -> new RetrieveGoal(robot, pos, stack, 20, 400, 200));
     public static final RegistryObject<CommandType> STORE = register("store", ItemStack.class, GlobalPos.class,

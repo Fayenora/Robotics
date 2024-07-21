@@ -1,5 +1,6 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.util.InventoryUtil;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -12,7 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PickupGoal extends FollowGoal {
 
     public PickupGoal(Mob follower, float area) {
-        super(follower, null, 0, area);
+        super(follower, EntitySearch.searchForNone(), 0);
+        this.areaSize = area;
     }
 
     @Override

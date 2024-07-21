@@ -65,7 +65,7 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
      */
     @Nullable
     public Entity commence(ServerLevel preferredLevel, Vec3 origin) {
-        if(cache != null) return cache;
+        if(cache != null && cache.isAlive()) return cache;
         // Commence a search across the preferred level
         Entity result = commenceForLevel(preferredLevel, origin);
         if(result != null) return result;
@@ -130,11 +130,14 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         if(flags.contains(SearchFlags.TYPE) && livingEntity.getType() != type) {
             return false;
         }
-        // The entity matches our search! Notify any listeners and return true
-        for(SearchListener listener : listeners) {
-            listener.onSearchFoundNewResult(livingEntity);
-        }
         return true;
+    }
+
+    public void testAndNotify(Entity entity) {
+        if(!test(entity)) return;
+        for(SearchListener listener : listeners) {
+            listener.onSearchFoundNewResult(entity);
+        }
     }
 
     @Override
@@ -258,6 +261,18 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         if(name != null) return name;
         if(uuid != null) return uuid.toString();
         return super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EntitySearch that)) return false;
+        return entityId == that.entityId && range == that.range && Objects.equals(uuid, that.uuid) && Objects.equals(name, that.name) && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, name, type, entityId, range);
     }
 
     public enum SearchFlags {

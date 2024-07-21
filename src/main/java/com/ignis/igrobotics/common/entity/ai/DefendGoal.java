@@ -1,39 +1,56 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.core.EntitySearch;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 public class DefendGoal extends TargetGoal {
 
     LivingEntity attacker;
-    LivingEntity toDefend;
-    private int timestamp;
+    EntitySearch toDefend;
+    private int timestamp, idleTicks = Reference.TICKS_UNTIL_SEARCHING_AGAIN;
 
-    //TODO Should take an EntitySearch directly and re-commence every time a target was killed / vanished
-    public DefendGoal(Mob defender, LivingEntity toDefend, boolean checkSight) {
-        super(defender, checkSight);
+    public DefendGoal(Mob defender, EntitySearch toDefend) {
+        super(defender, false);
         this.toDefend = toDefend;
-        this.setFlags(EnumSet.of(Goal.Flag.TARGET));
+        this.setFlags(EnumSet.of(Flag.TARGET));
     }
 
     @Override
     public boolean canUse() {
-        this.attacker = toDefend.getLastHurtByMob();
-        int i = toDefend.getLastHurtByMobTimestamp();
-        return i != this.timestamp && this.canAttack(this.attacker, TargetingConditions.DEFAULT);
+        if(idleTicks++ >= Reference.TICKS_UNTIL_SEARCHING_AGAIN || !isViableTarget(targetMob)) {
+            Entity result = toDefend.commence((ServerLevel) mob.level(), mob.position());
+            idleTicks = 0;
+            if(isViableTarget(result) && result instanceof LivingEntity living) {
+                targetMob = living;
+                this.attacker = living.getLastHurtByMob();
+                return true;
+            }
+            return isViableTarget(targetMob);
+        }
+        return true;
+    }
+
+    private boolean isViableTarget(Entity entity) {
+        if(!(entity instanceof LivingEntity living) || living instanceof FakePlayer || !living.isAlive()) return false;
+        return living.getLastHurtByMobTimestamp() != this.timestamp && canAttack(living.getLastHurtByMob(), TargetingConditions.DEFAULT);
     }
 
     @Override
     public void start() {
+        this.idleTicks = Reference.TICKS_UNTIL_SEARCHING_AGAIN;
         this.mob.setTarget(attacker);
-        if (toDefend != null)
-        {
-            this.timestamp = toDefend.getLastHurtByMobTimestamp();
+        if(targetMob != null) {
+            this.timestamp = targetMob.getLastHurtByMobTimestamp();
         }
         super.start();
     }
@@ -41,6 +58,6 @@ public class DefendGoal extends TargetGoal {
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof DefendGoal defendGoal)) return false;
-        return attacker.equals(defendGoal.attacker) && toDefend.equals(defendGoal.toDefend);
+        return Objects.equals(attacker, defendGoal.attacker) && Objects.equals(toDefend, defendGoal.toDefend);
     }
 }

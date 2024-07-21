@@ -32,6 +32,8 @@ public class Reference {
 	public static final int MAX_MODULES = 8;
 	public static final int MAX_INVENTORY_SIZE = 36;
 
+	public static final int TICKS_UNTIL_SEARCHING_AGAIN = 20 * 5;
+
 	public static final EnumRobotMaterial[] WIRE_METALS = new EnumRobotMaterial[] {
 			IRON, GOLD, COPPER, TIN, ALUMINIUM, SILVER, LEAD, BRONZE, CONSTANTAN, ELECTRUM, PLATINUM
 	};

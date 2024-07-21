@@ -1,15 +1,22 @@
 package com.ignis.igrobotics.common.entity.ai;
 
+import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.core.EntitySearch;
 import com.ignis.igrobotics.core.capabilities.commands.CommandApplyException;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 /**
  * A slightly altered version of {@link net.minecraft.world.entity.ai.goal.FollowMobGoal}
@@ -18,37 +25,45 @@ import java.util.EnumSet;
 public class FollowGoal extends Goal {
 
 	protected final Mob entity;
-    protected Entity followingEntityCache, followingEntity;
+    protected Entity followingEntityCache;
+    protected EntitySearch followingEntity;
     private final PathNavigation navigation;
     private int timeToRecalculatePath;
     private final float stopDistance;
     private float oldWaterCost;
-    protected final float areaSize;
+    protected float areaSize;
+    private int idleTicks = Reference.TICKS_UNTIL_SEARCHING_AGAIN;
 
-    //TODO Should take an EntitySearch directly and re-commence every time a target was killed / vanished
-    public FollowGoal(Mob follower, Entity toFollow, float distance, float area) {
+    public FollowGoal(Mob follower, EntitySearch toFollow, int distance) {
         this.entity = follower;
         this.navigation = follower.getNavigation();
-        this.followingEntityCache = toFollow;
         this.followingEntity = toFollow;
         this.stopDistance = distance;
-        this.areaSize = area;
+        this.areaSize = toFollow.getRange() > 0 ? toFollow.getRange() : (float) follower.getAttributeValue(Attributes.FOLLOW_RANGE);
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 
         if (!(follower.getNavigation() instanceof GroundPathNavigation) && !(follower.getNavigation() instanceof FlyingPathNavigation)) {
             throw new CommandApplyException("command.follow.unsupported");
         }
-        if(follower == toFollow) {
-            throw new CommandApplyException("command.follow.selfReference");
-        }
     }
 
     @Override
 	public boolean canUse() {
-    	if(followingEntityCache == null) {
-    		followingEntityCache = followingEntity;
-    	}
-        return entity.distanceTo(followingEntityCache) < areaSize;
+        if(idleTicks++ >= Reference.TICKS_UNTIL_SEARCHING_AGAIN || !isViableTarget(followingEntityCache)) {
+            Entity result = followingEntity.commence((ServerLevel) entity.level(), entity.position());
+            idleTicks = 0;
+            if(isViableTarget(result) && result instanceof LivingEntity living) {
+                followingEntityCache = living;
+                return true;
+            }
+            return isViableTarget(followingEntityCache);
+        }
+        return true;
+    }
+
+    private boolean isViableTarget(Entity entity) {
+        if(!(entity instanceof LivingEntity living) || living instanceof FakePlayer || !living.isAlive()) return false;
+        return this.entity.distanceTo(living) < areaSize;
     }
 
     @Override
@@ -58,6 +73,7 @@ public class FollowGoal extends Goal {
 
     @Override
 	public void start() {
+        this.idleTicks = Reference.TICKS_UNTIL_SEARCHING_AGAIN;
         this.timeToRecalculatePath = 0;
         this.oldWaterCost = this.entity.getPathfindingMalus(BlockPathTypes.WATER);
         this.entity.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
@@ -102,12 +118,12 @@ public class FollowGoal extends Goal {
     }
 
     public Entity following() {
-        return followingEntity;
+        return followingEntityCache;
     }
 
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof FollowGoal followGoal)) return false;
-        return entity.equals(followGoal.entity) && followingEntity.equals(followGoal.followingEntity) && stopDistance == followGoal.stopDistance;
+        return Objects.equals(entity, followGoal.entity) && Objects.equals(followingEntity, followGoal.followingEntity) && stopDistance == followGoal.stopDistance;
     }
 }
