@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.client.menu.AssemblerMenu;
-import com.ignis.igrobotics.client.menu.BaseMenu;
+import com.ignis.igrobotics.common.menu.AssemblerMenu;
+import com.ignis.igrobotics.common.menu.BaseMenu;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.definitions.ModSounds;
 import com.ignis.igrobotics.network.container.SyncableByte;

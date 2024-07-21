@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.common.menu.slots;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -6,11 +6,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public class SlotCustom extends SlotItemHandler {
+public class CustomSlot extends SlotItemHandler {
 
     private boolean active = true, mayPickup = true, mayPlace = true;
 
-    public SlotCustom(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+    public CustomSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
     }
 
@@ -33,16 +33,16 @@ public class SlotCustom extends SlotItemHandler {
         this.active = active;
     }
 
-    public SlotCustom setInteractable(boolean interactable) {
+    public CustomSlot setInteractable(boolean interactable) {
         return setPickable(interactable).setPlaceable(interactable);
     }
 
-    public SlotCustom setPickable(boolean pickable) {
+    public CustomSlot setPickable(boolean pickable) {
         this.mayPickup = pickable;
         return this;
     }
 
-    public SlotCustom setPlaceable(boolean placeable) {
+    public CustomSlot setPlaceable(boolean placeable) {
         this.mayPlace = placeable;
         return this;
     }

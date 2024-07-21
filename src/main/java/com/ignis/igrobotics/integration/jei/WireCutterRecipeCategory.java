@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.client.menu.WireCutterMenu;
+import com.ignis.igrobotics.common.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.definitions.ModMachines;

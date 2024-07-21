@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.RobotInfoMenu;
+import com.ignis.igrobotics.common.menu.RobotInfoMenu;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.*;
 import com.ignis.igrobotics.client.screen.selectors.EntitySelector;

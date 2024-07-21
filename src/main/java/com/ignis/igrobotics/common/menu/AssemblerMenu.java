@@ -1,6 +1,7 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.common.menu;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.common.menu.slots.CustomSlot;
 import com.ignis.igrobotics.common.blockentity.AssemblerBlockEntity;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
@@ -46,7 +47,7 @@ public class AssemblerMenu extends BaseMenu {
             this.addSlot(new SlotItemHandler(handler, 3, slot_left.x, slot_left.y));
 
             //Output-Slot
-            this.addSlot(new SlotCustom(handler, 4, slot_out.x, slot_out.y).setPlaceable(false));
+            this.addSlot(new CustomSlot(handler, 4, slot_out.x, slot_out.y).setPlaceable(false));
         });
     }
 

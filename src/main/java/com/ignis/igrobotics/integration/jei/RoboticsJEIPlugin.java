@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.AssemblerMenu;
-import com.ignis.igrobotics.client.menu.WireCutterMenu;
+import com.ignis.igrobotics.common.menu.AssemblerMenu;
+import com.ignis.igrobotics.common.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;

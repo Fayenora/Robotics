@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.common.menu;
 
 import com.ignis.igrobotics.core.robot.RobotView;
 import com.ignis.igrobotics.definitions.ModMenuTypes;

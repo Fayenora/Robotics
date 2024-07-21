@@ -1,6 +1,7 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.common.menu;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.common.menu.slots.CustomSlot;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
@@ -40,20 +41,20 @@ public class RobotMenu extends BaseMenu {
 
         robot.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             for(int i = 0; i < 4; i++) {
-                this.addSlot(new SlotCustom(handler, 5 - i, 8, 8 + 18 * i));
+                this.addSlot(new CustomSlot(handler, 5 - i, 8, 8 + 18 * i));
             }
             for(int x = 0; x < 3; x++) {
                 for(int y = 0; y < 4; y++) {
-                    this.addSlot(new SlotCustom(handler, x * 4 + y + 6, 98 + 18 * x, 8 + 18 * y));
+                    this.addSlot(new CustomSlot(handler, x * 4 + y + 6, 98 + 18 * x, 8 + 18 * y));
                 }
             }
 
             robot.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
                 if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
-                    this.addSlot(new SlotCustom(handler, 0, 77, 44)); //Mainhand
+                    this.addSlot(new CustomSlot(handler, 0, 77, 44)); //Mainhand
                 }
                 if(parts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
-                    this.addSlot(new SlotCustom(handler, 1, 77, 62)); //Offhand
+                    this.addSlot(new CustomSlot(handler, 1, 77, 62)); //Offhand
                 }
             });
         });
@@ -84,7 +85,7 @@ public class RobotMenu extends BaseMenu {
     @Override
     public void clicked(int p_150400_, int p_150401_, ClickType p_150402_, Player player) {
         for(Slot slot : slots) {
-            if(slot instanceof SlotCustom customSlot) {
+            if(slot instanceof CustomSlot customSlot) {
                 customSlot.setInteractable(player.distanceToSqr(robot) < 64);
             }
         }

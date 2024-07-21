@@ -2,6 +2,7 @@ package com.ignis.igrobotics.core.capabilities.inventory;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.menu.FactoryModulesMenu;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
@@ -51,7 +52,7 @@ public class FactoryInventory extends MachineInventory {
     /**
      * The module slot type associated with this slot id
      * @param slot the slot
-     * @see com.ignis.igrobotics.client.menu.FactoryModulesMenu#addModuleSlots(IItemHandler, EnumModuleSlot, int, int, boolean)
+     * @see FactoryModulesMenu#addModuleSlots(IItemHandler, EnumModuleSlot, int, int, boolean)
      * @return the module type which can fit in the slot
      */
     public static EnumModuleSlot typeFromSlotId(int slot) {

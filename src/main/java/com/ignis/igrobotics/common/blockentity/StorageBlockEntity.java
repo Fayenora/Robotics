@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.client.menu.BaseMenu;
-import com.ignis.igrobotics.client.menu.StorageMenu;
+import com.ignis.igrobotics.common.menu.BaseMenu;
+import com.ignis.igrobotics.common.menu.StorageMenu;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.Machine;

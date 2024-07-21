@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.blockentity;
 
-import com.ignis.igrobotics.client.menu.WireCutterMenu;
+import com.ignis.igrobotics.common.menu.WireCutterMenu;
 import com.ignis.igrobotics.definitions.ModMachines;
 import com.ignis.igrobotics.definitions.ModSounds;
 import net.minecraft.MethodsReturnNonnullByDefault;

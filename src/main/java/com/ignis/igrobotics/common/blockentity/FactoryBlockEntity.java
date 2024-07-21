@@ -2,7 +2,7 @@ package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.FactoryMenu;
+import com.ignis.igrobotics.common.menu.FactoryMenu;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;

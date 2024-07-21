@@ -4,6 +4,7 @@ import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.menu.*;
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.common.handlers.RobotBehavior;
+import com.ignis.igrobotics.common.menu.*;
 import com.ignis.igrobotics.core.access.EnumPermission;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;

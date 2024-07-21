@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.common.menu;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.definitions.ModBlocks;

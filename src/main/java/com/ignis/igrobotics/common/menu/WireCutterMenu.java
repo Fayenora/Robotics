@@ -1,6 +1,7 @@
-package com.ignis.igrobotics.client.menu;
+package com.ignis.igrobotics.common.menu;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.common.menu.slots.CustomSlot;
 import com.ignis.igrobotics.common.blockentity.WireCutterBlockEntity;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
@@ -43,7 +44,7 @@ public class WireCutterMenu extends BaseMenu {
             this.addSlot(new SlotItemHandler(handler, 1, slot_main.x, slot_main.y));
 
             //Output-Slot
-            this.addSlot(new SlotCustom(handler, 2, slot_out.x, slot_out.y).setPlaceable(false));
+            this.addSlot(new CustomSlot(handler, 2, slot_out.x, slot_out.y).setPlaceable(false));
         });
     }
 

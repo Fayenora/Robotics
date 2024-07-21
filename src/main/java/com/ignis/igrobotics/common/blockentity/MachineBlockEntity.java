@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.common.blockentity;
 
 import com.ignis.igrobotics.client.SoundHandler;
-import com.ignis.igrobotics.client.menu.BaseMenu;
+import com.ignis.igrobotics.common.menu.BaseMenu;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.CountedIngredient;
 import com.ignis.igrobotics.core.Machine;
