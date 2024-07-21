@@ -2,7 +2,6 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.*;
 import com.ignis.igrobotics.common.menu.*;
 import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import com.ignis.igrobotics.integration.cc.vanilla.VProgrammingMenu;
