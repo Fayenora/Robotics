@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.client.menu.AssemblerMenu;
+import com.ignis.igrobotics.common.menu.AssemblerMenu;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.core.MachineRecipe;
 import com.ignis.igrobotics.definitions.ModMachines;

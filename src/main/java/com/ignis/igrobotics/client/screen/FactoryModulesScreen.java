@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.FactoryModulesMenu;
+import com.ignis.igrobotics.common.menu.FactoryModulesMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;

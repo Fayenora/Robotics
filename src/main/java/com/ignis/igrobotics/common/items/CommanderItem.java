@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.common.items;
 
-import com.ignis.igrobotics.client.menu.CommanderMenu;
+import com.ignis.igrobotics.common.menu.CommanderMenu;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.entity.RobotEntity;

@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.menu.WireCutterMenu;
+import com.ignis.igrobotics.common.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ArrowElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
