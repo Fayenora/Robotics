@@ -46,7 +46,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class MachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible {
+public abstract class MachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible, IMuffleable {
 
     protected EnergyStorage storage;
     protected MachineInventory inventory;
@@ -58,6 +58,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     private int currentRunTime;
     protected MachineRecipe<?> currentRecipe;
     private ItemStack[] currentlyProcessedItems;
+    private boolean muffled;
 
     private final List<MachineRecipe<?>> RECIPES;
 
@@ -311,6 +312,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         compound.put("energy", storage.serializeNBT());
         compound.putInt("runTime", this.runTime);
         compound.putInt("currentRunTime", this.currentRunTime);
+        compound.putBoolean("muffled", this.muffled);
 
         if(!InventoryUtil.areEmpty(currentlyProcessedItems)) {
             ListTag processedItems = new ListTag();
@@ -326,6 +328,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
         storage.deserializeNBT(compound.getCompound("energy"));
         this.runTime = compound.getInt("runTime");
         this.currentRunTime = compound.getInt("currentRunTime");
+        this.muffled = compound.getBoolean("muffled");
 
         ListTag tagList = compound.getList("ProcessedItems", new CompoundTag().getId());
         if(tagList.size() == 0) {
@@ -370,7 +373,7 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     }
 
     protected boolean canPlaySound() {
-        return isRunning() && !isRemoved();
+        return isRunning() && !isRemoved() && !muffled;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -435,6 +438,15 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity implem
     public void setRecipeUsed(@Nullable Recipe<?> recipe) {
         if(!(recipe instanceof MachineRecipe<?> machineRecipe)) return;
         this.currentRecipe = machineRecipe;
+    }
+
+    @Override
+    public void nextMuffleState() {
+        muffled = !muffled;
+    }
+
+    public boolean isMuffled() {
+        return muffled;
     }
 
     private ItemStack[] getStacks(int[] indices) {

@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.network.messages.server;
 
 import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.blockentity.IMuffleable;
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.blocks.MachineBlock;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
@@ -45,8 +46,12 @@ public class PacketComponentAction implements IMessage {
                 entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> robot.setActivation(!robot.isActive()));
             }
             case ACTION_MUTE_STATE -> {
-                if (entity == null) return;
-                entity.getCapability(ModCapabilities.ROBOT).ifPresent(IRobot::nextMuteState);
+                if (entity != null) {
+                    entity.getCapability(ModCapabilities.ROBOT).ifPresent(IRobot::nextMuteState);
+                }
+                if(blockEntity instanceof IMuffleable muffleable) {
+                    muffleable.nextMuffleState();
+                }
             }
             case ACTION_CHUNK_LOADING_STATE -> {
                 if (entity == null) return;

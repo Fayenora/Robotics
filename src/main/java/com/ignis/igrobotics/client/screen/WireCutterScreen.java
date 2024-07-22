@@ -1,10 +1,15 @@
 package com.ignis.igrobotics.client.screen;
 
+import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.common.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ArrowElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
+import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.network.messages.NetworkInfo;
+import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -34,6 +39,18 @@ public class WireCutterScreen extends BaseContainerScreen<WireCutterMenu> {
         menu.blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
             addElement(new EnergyBarElement(energyStorage, leftPos + energy_bar.x, topPos + energy_bar.y, energy_bar.height));
         });
+        ButtonElement muteButton = new ButtonElement(leftPos + imageWidth - 30, topPos + 9, 17, 17, menu.blockEntity.isMuffled() ? 1 : 0, 2) {
+            @Override
+            public void onPress() {
+                menu.blockEntity.nextMuffleState();
+                super.onPress();
+            }
+        };
+        muteButton.initTextureLocation(Reference.MISC, 51, 119);
+        muteButton.setTooltip(0, Lang.localise("button.mute"));
+        muteButton.setTooltip(1, Lang.localise("button.unmute"));
+        muteButton.setNetworkAction(() -> new PacketComponentAction(PacketComponentAction.ACTION_MUTE_STATE, new NetworkInfo(menu.blockEntity.getBlockPos())));
+        addElement(muteButton);
         addRenderableOnly(new ArrowElement(leftPos + arrow.x, topPos + arrow.y, Direction.EAST, menu.blockEntity::getMachineProgress));
     }
 
