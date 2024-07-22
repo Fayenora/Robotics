@@ -1,12 +1,15 @@
 package com.ignis.igrobotics.common.blocks;
 
 import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -16,29 +19,32 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class StorageBlock extends MachineBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public static final VoxelShape NORTH_TOP = Block.box(0, -16, 1, 16, 16, 16);
     public static final VoxelShape NORTH_BOTTOM = Block.box(0, 0, 1, 16, 32, 16);
@@ -86,6 +92,28 @@ public class StorageBlock extends MachineBlock {
     }
 
     @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block pNeighborBlock, BlockPos pNeighborPos, boolean pMovedByPiston) {
+        if(level.hasNeighborSignal(pos)) {
+            if(!state.getValue(POWERED)) {
+                if(level.getBlockEntity(pos) instanceof StorageBlockEntity storage) {
+                    if(storage.getEntity().isEmpty()) {
+                        AABB upTakeArea = AABB.ofSize(Vec3.atCenterOf(pos)
+                                .relative(state.getValue(MachineBlock.FACING), 0.5)
+                                .relative(state.getValue(HALF) == DoubleBlockHalf.UPPER ? Direction.DOWN : Direction.UP, 0.5),
+                                1, 2, 1);
+                        List<Entity> availableEntities = level.getEntities((Entity) null, upTakeArea, e -> e.getCapability(ModCapabilities.ROBOT).isPresent());
+                        if(!availableEntities.isEmpty()) storage.enterStorage(availableEntities.get(0));
+                    } else storage.exitStorage(state.getValue(MachineBlock.FACING));
+                }
+                level.setBlock(pos, state.setValue(POWERED, true), 2);
+            }
+        } else {
+            level.setBlock(pos, state.setValue(POWERED, false), 2);
+        }
+        super.neighborChanged(state, level, pos, pNeighborBlock, pNeighborPos, pMovedByPiston);
+    }
+
+    @Override
     public void destroy(LevelAccessor level, BlockPos pos, BlockState state) {
         if(state.getValue(HALF) == DoubleBlockHalf.LOWER) {
             level.destroyBlock(pos.above(), false);
@@ -121,7 +149,7 @@ public class StorageBlock extends MachineBlock {
         BlockPos blockpos = context.getClickedPos();
         Level level = context.getLevel();
         if (blockpos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockpos.above()).canBeReplaced(context)) {
-            return super.getStateForPlacement(context).setValue(HALF, DoubleBlockHalf.LOWER);
+            return super.getStateForPlacement(context).setValue(HALF, DoubleBlockHalf.LOWER).setValue(POWERED, level.hasNeighborSignal(blockpos));
         } else {
             return null;
         }
@@ -130,7 +158,7 @@ public class StorageBlock extends MachineBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> definition) {
         super.createBlockStateDefinition(definition);
-        definition.add(HALF);
+        definition.add(HALF, POWERED);
     }
 
     @Override
