@@ -58,6 +58,7 @@ public class Robotics {
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
         ModPerks.PERKS.register(modEventBus);
         ModCommands.COMMANDS.register(modEventBus);
+        ModLootItemFunctions.LOOT_FUNCTIONS.register(modEventBus);
 
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 

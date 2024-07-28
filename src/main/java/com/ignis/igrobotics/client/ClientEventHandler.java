@@ -3,14 +3,19 @@ package com.ignis.igrobotics.client;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.items.CommanderItem;
 import com.ignis.igrobotics.common.modules.ModuleActions;
+import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.PosUtil;
+import com.ignis.igrobotics.core.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModModules;
 import com.ignis.igrobotics.definitions.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +33,8 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
+
+    public static final String BLOCK_DATA_TAG = "BlockEntityTag";
 
     public static int soundCooldown = 0;
 
@@ -62,6 +69,15 @@ public class ClientEventHandler {
                 List<Component> tooltip = List.of(Lang.localise("selected_pos"), PosUtil.prettyPrint(pos));
                 event.getToolTip().add(ComponentUtils.formatList(tooltip, Component.literal(": ")));
             }
+        }
+        if(stack.hasTag() && stack.getTag().contains(BLOCK_DATA_TAG, Tag.TAG_COMPOUND) && stack.getTag().getCompound(BLOCK_DATA_TAG).contains("energy", Tag.TAG_COMPOUND)) {
+            CompoundTag energyTag = stack.getTag().getCompound(BLOCK_DATA_TAG).getCompound("energy");
+            EnergyStorage storage = new EnergyStorage(0);
+            storage.deserializeNBT(energyTag);
+            List<Component> tooltip = List.of(Lang.localise("stored_energy"), Component.literal(
+                    StringUtil.getEnergyDisplay(storage.getEnergyStored()) + " / " +
+                    StringUtil.getEnergyDisplay(storage.getMaxEnergyStored())).withStyle(ChatFormatting.GOLD));
+            event.getToolTip().add(ComponentUtils.formatList(tooltip, Component.literal(": ")));
         }
     }
 
