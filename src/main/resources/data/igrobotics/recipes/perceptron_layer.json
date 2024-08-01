@@ -1,5 +1,6 @@
 {
     "type": "igrobotics:assembler",
+    "category": "misc",
 	"pattern": "cici",
     "key": {
         "c": {

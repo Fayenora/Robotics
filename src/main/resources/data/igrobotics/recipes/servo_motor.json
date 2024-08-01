@@ -1,5 +1,6 @@
 {
     "type": "igrobotics:assembler",
+    "category": "misc",
 	"pattern": "siei",
     "key": {
         "i": {
