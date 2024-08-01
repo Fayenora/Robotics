@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.capabilities.perks;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.Tuple;
 import net.minecraft.ChatFormatting;
@@ -12,10 +13,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterCapability
 public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 
 	/**
@@ -41,6 +44,8 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 	boolean contains(Perk perk);
 
 	int getLevel(Perk perk);
+
+	SimpleDataManager values();
 
 	default ArrayList<Component> getDisplayString() {
 		ArrayList<Component> tooltip = new ArrayList<>();

@@ -38,35 +38,36 @@ public class Robotics {
     public static final Random RANDOM = new Random();
 
     public static IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static IEventBus EVENT_BUS;
 
     static {
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> SelectionType::loadGuis);
     }
 
     public Robotics() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ModItems.ITEMS.register(modEventBus);
-        ModBlocks.BLOCKS.register(modEventBus);
-        ModMachines.BLOCK_ENTITIES.register(modEventBus);
-        ModMachines.RECIPE_TYPES.register(modEventBus);
-        ModMachines.RECIPE_SERIALIZERS.register(modEventBus);
-        ModMenuTypes.MENU_TYPES.register(modEventBus);
-        ModEntityTypes.ENTITY_TYPES.register(modEventBus);
-        ModSounds.SOUNDS.register(modEventBus);
-        ModMobEffects.EFFECTS.register(modEventBus);
-        ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
-        ModPerks.PERKS.register(modEventBus);
-        ModCommands.COMMANDS.register(modEventBus);
-        ModLootItemFunctions.LOOT_FUNCTIONS.register(modEventBus);
+        ModItems.ITEMS.register(EVENT_BUS);
+        ModBlocks.BLOCKS.register(EVENT_BUS);
+        ModMachines.BLOCK_ENTITIES.register(EVENT_BUS);
+        ModMachines.RECIPE_TYPES.register(EVENT_BUS);
+        ModMachines.RECIPE_SERIALIZERS.register(EVENT_BUS);
+        ModMenuTypes.MENU_TYPES.register(EVENT_BUS);
+        ModEntityTypes.ENTITY_TYPES.register(EVENT_BUS);
+        ModSounds.SOUNDS.register(EVENT_BUS);
+        ModMobEffects.EFFECTS.register(EVENT_BUS);
+        ModCreativeTabs.CREATIVE_TABS.register(EVENT_BUS);
+        ModPerks.PERKS.register(EVENT_BUS);
+        ModCommands.COMMANDS.register(EVENT_BUS);
+        ModLootItemFunctions.LOOT_FUNCTIONS.register(EVENT_BUS);
 
         RoboticsConfig.registerConfigs(ModLoadingContext.get());
 
         GeckoLib.initialize();
 
-        modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::registerDataPack);
-        modEventBus.addListener(this::registerRecipeSerializers);
+        EVENT_BUS.addListener(this::commonSetup);
+        EVENT_BUS.addListener(this::registerDataPack);
+        EVENT_BUS.addListener(this::registerRecipeSerializers);
     }
 
     @SubscribeEvent

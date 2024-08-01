@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.robot;
 
 import com.ignis.igrobotics.Reference;
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.WorldData;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.common.entity.ai.LookDownGoal;
@@ -11,7 +12,7 @@ import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.commands.CommandCapability;
 import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
+import com.ignis.igrobotics.core.events.PerkChangeEvent;
 import com.ignis.igrobotics.core.robot.EnumModuleSlot;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.InventoryUtil;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -183,7 +185,7 @@ public class RobotCapability implements IRobot {
         for(int i = 0; i < Math.min(items.size(), modules.get(slotType).size()); i++) {
             setModule(slotType, i, items.get(i));
         }
-        entity.getCapability(ModCapabilities.PERKS).ifPresent(IPerkMapCap::updateAttributeModifiers);
+        entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));
     }
 
     private void setModule(EnumModuleSlot slotType, int slot, ItemStack item) {
@@ -223,12 +225,12 @@ public class RobotCapability implements IRobot {
         }
         modules.put(slotType, list);
 
-        entity.getCapability(ModCapabilities.PERKS).ifPresent(IPerkMapCap::updateAttributeModifiers);
+        entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));
     }
 
     @Override
     public Map<EnumModuleSlot, Integer> getModuleSlots() {
-        HashMap<EnumModuleSlot, Integer> sizes = new HashMap<>();
+        Map<EnumModuleSlot, Integer> sizes = new HashMap<>();
         for(EnumModuleSlot slot : EnumModuleSlot.values()) {
             sizes.put(slot, modules.get(slot).size());
         }

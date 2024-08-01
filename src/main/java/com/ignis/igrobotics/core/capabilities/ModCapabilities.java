@@ -14,10 +14,9 @@ import com.ignis.igrobotics.core.capabilities.inventory.BaseInventory;
 import com.ignis.igrobotics.core.capabilities.inventory.RobotInventory;
 import com.ignis.igrobotics.core.capabilities.parts.IPartBuilt;
 import com.ignis.igrobotics.core.capabilities.parts.PartsCapability;
+import com.ignis.igrobotics.core.capabilities.perks.AdvancedPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.capabilities.perks.PerkMapCapability;
 import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.capabilities.robot.RobotCapability;
 import com.ignis.igrobotics.core.capabilities.shield.IShielded;
@@ -28,6 +27,7 @@ import com.ignis.igrobotics.integration.cc.ComputerCapability;
 import com.ignis.igrobotics.integration.cc.IComputerized;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -45,12 +45,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID)
 public class ModCapabilities {
 
     public static final Capability<IRobot> ROBOT = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IPerkMapCap> PERKS = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IPerkMap> PERKS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IPartBuilt> PARTS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<ICommandable> COMMANDS = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IChunkLoader> CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>(){});
@@ -72,9 +73,7 @@ public class ModCapabilities {
     public static final BaseInventory EMPTY_INVENTORY = new BaseInventory(() -> BlockPos.ZERO, 0);
     public static final EnergyStorage NO_ENERGY = new EnergyStorage(0);
     public static final IPartBuilt NO_PARTS = new PartsCapability();
-    public static final IPerkMapCap NO_PERKS = new IPerkMapCap() {
-        @Override
-        public void updateAttributeModifiers() {}
+    public static final IPerkMap NO_PERKS = new IPerkMap() {
         @Override
         public SimpleDataManager values() {
             return new SimpleDataManager();
@@ -119,7 +118,7 @@ public class ModCapabilities {
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if(!(event.getObject() instanceof RobotEntity robot)) return;
 
-        PerkMapCapability perksCapability = new PerkMapCapability(robot);
+        AdvancedPerkMap perksCapability = new AdvancedPerkMap();
         event.addCapability(LOC_PERKS, new AlwaysProvide<>(PERKS, perksCapability));
 
         ChunkLoadingCapability chunkLoadingCapability = new ChunkLoadingCapability(robot);
@@ -200,6 +199,45 @@ class AlwaysProvideAndSave<C, TAG extends Tag, IMP extends INBTSerializable<TAG>
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if(this.cap.equals(cap)) {
             return optional.cast();
+        }
+        return LazyOptional.empty();
+    }
+}
+
+class ConditionalProvideAndSave<C, IMP extends INBTSerializable<CompoundTag>, IMP2 extends INBTSerializable<CompoundTag>> implements ICapabilitySerializable<CompoundTag> {
+
+    private final Capability<C> cap;
+    private final Entity entity;
+    private final LazyOptional<IMP> optional1;
+    private final LazyOptional<IMP2> optional2;
+    private final Predicate<Entity> condition;
+
+    public ConditionalProvideAndSave(Capability<C> capability, Entity entity, Predicate<Entity> condition, @NonNull IMP impl, @NonNull IMP2 impl2) {
+        this.cap = capability;
+        this.entity = entity;
+        this.optional1 = LazyOptional.of(() -> impl);
+        this.optional2 = LazyOptional.of(() -> impl2);
+        this.condition = condition;
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.put("impl1", optional1.map(INBTSerializable::serializeNBT).orElseThrow());
+        nbt.put("impl2", optional2.map(INBTSerializable::serializeNBT).orElseThrow());
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        optional1.ifPresent((impl) -> impl.deserializeNBT(nbt.getCompound("impl1")));
+        optional2.ifPresent((impl) -> impl.deserializeNBT(nbt.getCompound("impl2")));
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if(this.cap.equals(cap)) {
+            return condition.test(entity) ? optional1.cast() : optional2.cast();
         }
         return LazyOptional.empty();
     }

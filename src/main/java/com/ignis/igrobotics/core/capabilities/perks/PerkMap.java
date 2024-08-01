@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModPerks;
 import com.mojang.datafixers.util.Pair;
@@ -21,6 +22,7 @@ public class PerkMap implements IPerkMap {
 	)).xmap(PerkMap::new, PerkMap::toCodecFormat);
 
 	HashMap<ResourceLocation, Integer> levels = new HashMap<>();
+	private final SimpleDataManager values = new SimpleDataManager();
 
 	public PerkMap() {}
 
@@ -81,6 +83,11 @@ public class PerkMap implements IPerkMap {
 	@Override
 	public int getLevel(Perk perk) {
 		return levels.getOrDefault(perk.getKey(), 0);
+	}
+
+	@Override
+	public SimpleDataManager values() {
+		return values;
 	}
 
 	@Override

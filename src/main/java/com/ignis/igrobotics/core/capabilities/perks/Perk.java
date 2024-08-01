@@ -4,6 +4,10 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.handlers.RobotBehavior;
+import com.ignis.igrobotics.core.access.EnumPermission;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.MathUtil;
 import com.ignis.igrobotics.definitions.ModPerks;
@@ -11,18 +15,21 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Perk implements PerkHooks {
 
@@ -281,5 +288,25 @@ public class Perk implements PerkHooks {
 	private void setModifiers(List<AttributeEntry> modifiers) {
 		this.modifiers.clear();
 		this.modifiers.addAll(modifiers);
+	}
+
+	/////////////////////////////////////
+	// Helper methods for subclasses
+	/////////////////////////////////////
+
+	public static Collection<Entity> entitiesInArea(Entity entity, int areaSize, Predicate<Entity> additionalRequisites) {
+		BlockPos lower = entity.blockPosition().relative(Direction.DOWN, areaSize).relative(Direction.SOUTH, areaSize).relative(Direction.EAST, areaSize);
+		BlockPos upper = entity.blockPosition().relative(Direction.UP, areaSize).relative(Direction.NORTH, areaSize).relative(Direction.WEST, areaSize);
+		AABB area = new AABB(lower, upper);
+		return entity.level().getEntities(entity, area, additionalRequisites);
+	}
+
+	public static Collection<Entity> alliesInArea(Entity entity, int areaSize, UUID owner, Predicate<Entity> additionalRequisites) {
+		return entitiesInArea(entity, areaSize, ent -> {
+			Optional<IRobot> otherRobot = ent.getCapability(ModCapabilities.ROBOT).resolve();
+			if(otherRobot.isEmpty() || !otherRobot.get().isActive()) return false;
+			if(!RobotBehavior.hasAccess(owner, ent, EnumPermission.ALLY)) return false;
+			return additionalRequisites.test(ent);
+		});
 	}
 }

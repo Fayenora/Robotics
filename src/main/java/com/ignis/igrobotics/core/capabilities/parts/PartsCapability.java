@@ -1,8 +1,10 @@
 package com.ignis.igrobotics.core.capabilities.parts;
 
+import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.entity.RobotEntity;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMapCap;
+import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
+import com.ignis.igrobotics.core.events.PerkChangeEvent;
 import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 public class PartsCapability implements IPartBuilt {
 
@@ -75,7 +78,7 @@ public class PartsCapability implements IPartBuilt {
 			return;
 		}
 		
-		IPerkMapCap perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
+		IPerkMap perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
 		
 		//Remove perks from previous part
 		RobotPart current = getBodyPart(part.getPart());
@@ -85,8 +88,8 @@ public class PartsCapability implements IPartBuilt {
 		
 		//Apply perks from new part
 		RobotPart newPart = getBodyPart(part.getPart());
-		perkMap.merge(newPart.getPerks()); 
-		perkMap.updateAttributeModifiers();
+		perkMap.merge(newPart.getPerks());
+		MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perkMap));
 	}
 
 	@Override

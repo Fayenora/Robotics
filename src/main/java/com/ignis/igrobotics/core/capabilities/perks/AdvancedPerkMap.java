@@ -1,6 +1,7 @@
 package com.ignis.igrobotics.core.capabilities.perks;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModPerks;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,7 @@ public class AdvancedPerkMap implements IPerkMap {
 
 	private final HashMap<ResourceLocation, int[]> levelCounts = new HashMap<>();
 	HashMap<ResourceLocation, Integer> levels = new HashMap<>();
+	private final SimpleDataManager values = new SimpleDataManager();
 
 	@Override
 	public void add(Perk perk, int level) {
@@ -119,6 +121,11 @@ public class AdvancedPerkMap implements IPerkMap {
 	@Override
 	public int getLevel(Perk perk) {
 		return levels.getOrDefault(perk.getKey(), 0);
+	}
+
+	@Override
+	public SimpleDataManager values() {
+		return values;
 	}
 
 	@Override

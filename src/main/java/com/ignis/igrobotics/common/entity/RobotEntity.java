@@ -160,6 +160,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState getAnimation(AnimationState<T> animationState) {
+        // TODO Use native walkanimation attributes in living entity
         if(animationState.isMoving()) {
             animationState.getController().setAnimation(RawAnimation.begin().then("animation.robot.walk", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
