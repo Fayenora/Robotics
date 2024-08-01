@@ -44,6 +44,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_IMPACT = register("impact", PerkImpact::new);
     public static final RegistryObject<Perk> PERK_ROBUST = register("robust", PerkRobust::new);
     public static final RegistryObject<Perk> PERK_LUMINOUS = register("luminous", PerkLuminous::new);
+    public static final RegistryObject<Perk> PERK_INVULNERABILITY = register("invulnerability", PerkInvulnerability::new);
     //public static final RegistryObject<Perk> PERK_GLOWING = register("glowing", PerkGlowing::new);
     public static final RegistryObject<Perk> PERK_COAL_GENERATOR = registerGenerator("coal_generator",RoboticsConfig.general.coalGeneratorRate, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
     public static final RegistryObject<Perk> PERK_BIO_GENERATOR = registerGenerator("bio_generator", RoboticsConfig.general.bioGeneratorRate, (stack, ent) -> {
