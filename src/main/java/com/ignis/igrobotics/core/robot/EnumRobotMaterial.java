@@ -6,44 +6,46 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public enum EnumRobotMaterial {
+    // Vanilla
     NONE("none", 0),
     IRON("iron", 1),
     GOLD("gold", 1),
     COPPER("copper", 1),
+
+    // Basic Metals & Alloys
     TIN("tin", 1),
     ALUMINIUM("aluminium", 2),
     NICKEL("nickel", 2),
     SILVER("silver", 2),
     LEAD("lead", 5),
-    BRONZE("bronze", 2),
+    BRONZE("bronze", 3),
     CONSTANTAN("constantan", 2),
     STEEL("steel", 3),
     ELECTRUM("electrum", 2),
-    //INVAR?
+    //INVAR
+    //TITANIUM
 
-    //Thermal Series
+    // Thermal Series
     PLATINUM("platinum", 4),
     IRIDIUM("iridium", 5),
     SIGNALUM("signalum", 3),
     LUMIUM("lumium", 1),
+    ENDERIUM("enderium", 5),
 
-    //Ender IO
+    // Ender IO
     DARK_STEEL("dark_steel", 4),
     END_STEEL("end_steel", 5),
 
-    //Nuclear Craft
-    TOUGH_ALLOY("tough_alloy", 4),
-
-    //Tinkers Construct
-    COBALT("cobalt", 3),
-    ARDITE("ardite", 3),
-    MANYULLIN("manyullin", 4),
-
-    //Mekanism
+    // Mekanism
     OSMIUM("osmium", 3),
 
-    //Psi
-    PSIMETAL("psimetal", 3);
+    // Psi
+    PSIMETAL("psimetal", 3),
+
+    // Non-metals
+    DIAMOND("diamond", 4),
+    NETHERITE("netherite", 4);
+    // AMETHYST
 
     private final String name;
     private final int stiffness;

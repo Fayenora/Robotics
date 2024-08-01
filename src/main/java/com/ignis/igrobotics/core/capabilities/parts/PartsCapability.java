@@ -36,7 +36,7 @@ public class PartsCapability implements IPartBuilt {
 
 		dataManager.define(COLOR, 0);
 		for (EntityDataAccessor<Integer> bodyPart : BODY_PARTS) {
-			dataManager.define(bodyPart, 0);
+			dataManager.define(bodyPart, EnumRobotMaterial.NONE.getID());
 		}
 	}
 
@@ -70,7 +70,7 @@ public class PartsCapability implements IPartBuilt {
 
 	@Override
 	public void setBodyPart(RobotPart part) {
-		if(!entity.getCapability(ModCapabilities.PERKS, null).isPresent()) {
+		if(!entity.getCapability(ModCapabilities.PERKS).isPresent()) {
 			this.dataManager.set(BODY_PARTS[part.getPart().getID()], part.getMaterial().getID());
 			return;
 		}

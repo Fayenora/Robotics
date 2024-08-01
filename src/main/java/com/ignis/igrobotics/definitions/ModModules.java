@@ -2,7 +2,6 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -25,7 +24,6 @@ public class ModModules {
     public static final ResourceKey<Registry<RobotModule>> KEY = ResourceKey.createRegistryKey(new ResourceLocation(Robotics.MODID, "modules"));
     private static final HashMap<Item, RobotModule> modules = new HashMap<>();
     private static final LinkedList<RobotModule> overlays = new LinkedList<>();
-    private static final HashMap<IPerkMap, HashMap<ResourceLocation, Integer>> queuedPerkMaps = new HashMap<>();
 
     public static RobotModule get(Item item) {
         return modules.get(item);
@@ -96,9 +94,13 @@ public class ModModules {
     public static void reloadModules(RegistryAccess access) {
         modules.clear();
         overlays.clear();
-        Registry<RobotModule> reg = access.registryOrThrow(KEY);
+        Registry<RobotModule> reg = getModules(access);
         for(RobotModule module : reg) {
             registerModule(module);
         }
+    }
+
+    public static Registry<RobotModule> getModules(RegistryAccess access) {
+        return access.registryOrThrow(KEY);
     }
 }
