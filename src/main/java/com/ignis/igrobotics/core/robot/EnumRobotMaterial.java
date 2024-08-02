@@ -5,12 +5,16 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
+import javax.annotation.Nullable;
+
 public enum EnumRobotMaterial {
     // Vanilla
     NONE("none", 0),
     IRON("iron", 1),
     GOLD("gold", 1),
-    COPPER("copper", 1),
+    OXIDIZED_COPPER("oxidized_copper", 0),
+    WEATHERED_COPPER("weathered_copper", 0, OXIDIZED_COPPER),
+    COPPER("copper", 1, WEATHERED_COPPER),
 
     // Basic Metals & Alloys
     TIN("tin", 1),
@@ -50,15 +54,21 @@ public enum EnumRobotMaterial {
     private final String name;
     private final int stiffness;
     private final TagKey<Item> metalTag;
+    private final EnumRobotMaterial corrodesTo;
 
     /**
      * @param name the name of the material
      * @param stiffness used for energy processing costs in processing; range [0, 5]
      */
     EnumRobotMaterial(String name, int stiffness) {
+        this(name, stiffness, null);
+    }
+
+    EnumRobotMaterial(String name, int stiffness, @Nullable EnumRobotMaterial corrodesTo) {
         this.name = name;
         this.stiffness = stiffness;
         this.metalTag = ItemTags.create(new ResourceLocation("forge", "ingots/" + name));
+        this.corrodesTo = corrodesTo;
     }
 
     public String getName() {
@@ -94,5 +104,9 @@ public enum EnumRobotMaterial {
     @Override
     public String toString() {
         return name;
+    }
+
+    public EnumRobotMaterial getWeatheredMaterial() {
+        return corrodesTo;
     }
 }

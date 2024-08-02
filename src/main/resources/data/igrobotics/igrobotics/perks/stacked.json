@@ -1,0 +1,16 @@
+{
+  "name": "igrobotics:stacked",
+  "displayColor": "magenta",
+  "attributes": [
+    {
+      "name": "igrobotics:robot.stack_size",
+      "modifiers": [
+        {
+          "value": 1,
+          "operation": 1,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}

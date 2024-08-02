@@ -1,13 +1,14 @@
 {
   "name": "igrobotics:swift",
-  "maxLevel": 3,
+  "stackable": true,
   "attributes": [
     {
       "name": "minecraft:generic.movement_speed",
       "modifiers": [
         {
-          "value": [0.15, 0.25, 0.30],
-          "operation": 1
+          "value": 0,
+          "operation": 0,
+          "scalar": 0.01
         }
       ]
     }

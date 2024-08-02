@@ -1,0 +1,6 @@
+{
+  "name": "igrobotics:attractant",
+  "stackable": true,
+  "displayColor": "light_gray",
+  "internalLogic": true
+}

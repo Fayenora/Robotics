@@ -1,7 +1,6 @@
 {
   "name": "igrobotics:persistent",
   "stackable": true,
-  "maxLevel": 5,
   "attributes": [
     {
       "name": "minecraft:generic.armor_toughness",

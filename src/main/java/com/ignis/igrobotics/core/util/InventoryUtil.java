@@ -10,6 +10,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 
@@ -75,6 +76,15 @@ public class InventoryUtil {
     		remainder = inventory.insertItem(i, remainder, simulate);
     	}
 		return remainder;
+	}
+
+	public static boolean contains(IItemHandler inventory, Item item) {
+		for(int i = 0; i < inventory.getSlots(); i++) {
+			if(inventory.getStackInSlot(i).getItem().equals(item)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static boolean areEmpty(ItemStack[] stacks) {

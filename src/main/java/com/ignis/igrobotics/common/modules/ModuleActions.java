@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This enum bundles all module actions and gives them an identifier
+ * Bundles all module actions and gives them an identifier
  */
 public enum ModuleActions implements StringRepresentable {
     NONE(IModuleAction.NO_ACTION, TextColor.fromRgb(0)),

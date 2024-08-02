@@ -44,7 +44,6 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_IMPACT = register("impact", PerkImpact::new);
     public static final RegistryObject<Perk> PERK_ROBUST = register("robust", PerkRobust::new);
     public static final RegistryObject<Perk> PERK_LUMINOUS = register("luminous", PerkLuminous::new);
-    public static final RegistryObject<Perk> PERK_INVULNERABILITY = register("invulnerability", PerkInvulnerability::new);
     //public static final RegistryObject<Perk> PERK_GLOWING = register("glowing", PerkGlowing::new);
     public static final RegistryObject<Perk> PERK_COAL_GENERATOR = registerGenerator("coal_generator",RoboticsConfig.general.coalGeneratorRate, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
     public static final RegistryObject<Perk> PERK_BIO_GENERATOR = registerGenerator("bio_generator", RoboticsConfig.general.bioGeneratorRate, (stack, ent) -> {
@@ -55,6 +54,21 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_UNARMED_ATTACK = register("unarmed_attack", PerkUnarmedAttack::new);
     public static final RegistryObject<Perk> PERK_FIST = register("fist", PerkFist::new);
     public static final RegistryObject<Perk> PERK_SHIELD = register("shield", Perk::new);
+
+    public static final RegistryObject<Perk> PERK_INVULNERABILITY = register("invulnerability", PerkInvulnerability::new);
+    public static final RegistryObject<Perk> PERK_VOIDANT = register("voidant", PerkVoidant::new);
+    public static final RegistryObject<Perk> PERK_THERMAL_CONDUCTIVITY = register("thermal_conductivity", PerkThermalConductivity::new);
+    public static final RegistryObject<Perk> PERK_ELECTRICAL_CONDUCTIVITY = register("electrical_conductivity", Perk::new);
+    public static final RegistryObject<Perk> PERK_STACKED = register("stacked", Perk::new);
+    public static final RegistryObject<Perk> PERK_LOGISTICIAN = register("logistician", Perk::new);
+    public static final RegistryObject<Perk> PERK_REFLECTIVE = register("reflective", PerkReflective::new);
+    public static final RegistryObject<Perk> PERK_PRECIOUS = register("precious", PerkPrecious::new);
+    public static final RegistryObject<Perk> PERK_MAGNETIC = register("magnetic", PerkMagnetic::new);
+    public static final RegistryObject<Perk> PERK_CORRODABLE = register("corrodable", Perk::new);
+    public static final RegistryObject<Perk> PERK_CONNEXIOM = register("connexiom", PerkConnexiom::new);
+    public static final RegistryObject<Perk> PERK_LINKED = register("linked", PerkLinked::new);
+    public static final RegistryObject<Perk> PERK_ATTRACTANT = register("attractant", PerkAttractant::new);
+    public static final RegistryObject<Perk> PERK_INSPIRE = register("inspire", PerkInspire::new);
 
     private static RegistryObject<Perk> registerGenerator(String name, Supplier<Integer> generationRate, BiFunction<ItemStack, Mob, Integer> validInputs) {
         return PERKS.register(name, () -> new PerkGenerator(name, generationRate, validInputs));

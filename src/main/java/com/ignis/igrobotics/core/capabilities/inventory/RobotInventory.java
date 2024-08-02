@@ -35,6 +35,12 @@ public class RobotInventory extends CombinedInvWrapper implements INBTSerializab
     }
 
     @Override
+    public int getSlotLimit(int slot) {
+        int originalStackSize = super.getSlotLimit(slot);
+        return originalStackSize <= 1 ? originalStackSize : (int) (originalStackSize * entity.getAttributeValue(ModAttributes.STACK_SIZE));
+    }
+
+    @Override
     public CompoundTag serializeNBT() {
         return storageInventory.serializeNBT();
     }

@@ -4,13 +4,18 @@ import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.events.PerkChangeEvent;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.core.robot.RobotPart;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModAttributes;
+import com.ignis.igrobotics.definitions.ModPerks;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +26,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class PerkBehavior {
 
     public static final int PERK_TICK_RATE = 10;
+    public static final float CORROSION_CHANCE_PER_DAY = 0.3f;
 
     @SubscribeEvent
     public static void onPerkChange(PerkChangeEvent event) {
@@ -37,6 +43,25 @@ public class PerkBehavior {
             if(tempAttributeMap.hasAttribute(attribute) && instance != null) {
                 instance.setBaseValue(tempAttributeMap.getValue(attribute));
                 ModAttributes.onAttributeChanged(entity, instance);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onDayChange(TickEvent.ServerTickEvent event) {
+        if(0 == event.getServer().overworld().dayTime()) {
+            for(ServerLevel level : event.getServer().getAllLevels()) {
+                for(Entity entity : level.getAllEntities()) {
+                    entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                        for(EnumRobotPart part : EnumRobotPart.values()) {
+                            if(Math.random() > CORROSION_CHANCE_PER_DAY) continue;
+                            RobotPart robotPart = parts.getBodyPart(part);
+                            if(robotPart.getPerks().contains(ModPerks.PERK_CORRODABLE.get())) {
+                                parts.setBodyPart(part, robotPart.getMaterial().getWeatheredMaterial());
+                            }
+                        }
+                    });
+                }
             }
         }
     }
@@ -67,6 +92,7 @@ public class PerkBehavior {
     public static void onDamage(LivingHurtEvent event) {
         Entity causingEntity = event.getSource().getEntity();
         Entity targetEntity = event.getEntity();
+        float originalAmount = event.getAmount();
         // First, apply the perks of the attacker
         if(causingEntity != null && targetEntity != null) {
             if(!(causingEntity instanceof Mob mob)) return;
@@ -85,6 +111,9 @@ public class PerkBehavior {
                     event.setAmount(tup.getFirst().damageEntity(tup.getSecond(), mob, event.getSource(), event.getAmount(), perks.values()));
                 }
             });
+        }
+        if(event.getAmount() <= 0 && originalAmount != event.getAmount()) {
+            event.setCanceled(true);
         }
     }
 }
