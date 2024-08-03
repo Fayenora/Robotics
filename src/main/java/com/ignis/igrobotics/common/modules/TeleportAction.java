@@ -1,7 +1,11 @@
 package com.ignis.igrobotics.common.modules;
 
+import com.ignis.igrobotics.definitions.ModActions;
+import com.mojang.serialization.Codec;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,9 +16,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 
-public class EnderModule implements IModuleAction {
+public class TeleportAction implements IAction {
 
     public static final int DISTANCE = 5;
+    private final String name;
+    private final TextColor color;
+
+    public TeleportAction(String name, TextColor color) {
+        this.name = name;
+        this.color = color;
+    }
 
     @Override
     public boolean execute(LivingEntity caster, int duration) {
@@ -38,6 +49,11 @@ public class EnderModule implements IModuleAction {
             teleport(caster, d0, d1, d2);
         }
         return true;
+    }
+
+    @Override
+    public Codec<? extends IAction> codec() {
+        return ModActions.TELEPORT.get();
     }
 
     public static boolean teleport(LivingEntity entity, double p_32544_, double p_32545_, double p_32546_) {
@@ -67,5 +83,15 @@ public class EnderModule implements IModuleAction {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public TextColor getColor() {
+        return color;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

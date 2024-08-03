@@ -5,7 +5,7 @@
   "slots": [
     "feet"
   ],
-  "action": "dash",
+  "action": "igrobotics:dash",
   "cooldown": 3,
   "energyCost": 5000
 }

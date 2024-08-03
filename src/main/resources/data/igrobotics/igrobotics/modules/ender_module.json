@@ -5,7 +5,7 @@
   "slots": [
     "core"
   ],
-  "action": "teleport",
+  "action": "igrobotics:teleport",
   "cooldown": 10,
   "energyCost": 10000
 }

@@ -57,6 +57,7 @@ public class Robotics {
         ModSounds.SOUNDS.register(EVENT_BUS);
         ModMobEffects.EFFECTS.register(EVENT_BUS);
         ModCreativeTabs.CREATIVE_TABS.register(EVENT_BUS);
+        ModActions.ACTION_SERIALIZERS.register(EVENT_BUS);
         ModPerks.PERKS.register(EVENT_BUS);
         ModCommands.COMMANDS.register(EVENT_BUS);
         ModLootItemFunctions.LOOT_FUNCTIONS.register(EVENT_BUS);

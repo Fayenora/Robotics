@@ -5,7 +5,21 @@
   "slots": [
     "skin"
   ],
-  "action": "reinforce",
+  "action": {
+    "type": "igrobotics:effect",
+    "name": "reinforce",
+    "displayColor": "gray",
+    "effects": [
+      {
+        "type": "minecraft:resistance",
+        "amplifier": 2
+      },
+      {
+        "type": "minecraft:slowness",
+        "amplifier": 3
+      }
+    ]
+  },
   "cooldown": 40,
   "duration": 15,
   "energyCost": 100000

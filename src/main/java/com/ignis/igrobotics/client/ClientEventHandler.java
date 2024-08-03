@@ -2,7 +2,8 @@ package com.ignis.igrobotics.client;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.items.CommanderItem;
-import com.ignis.igrobotics.common.modules.ModuleActions;
+import com.ignis.igrobotics.common.modules.IAction;
+import com.ignis.igrobotics.definitions.ModActions;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;
@@ -51,8 +52,8 @@ public class ClientEventHandler {
                 Component tooltipSlots = ComponentUtils.formatList(List.of(Lang.localise("module.slots"), Component.literal(": "), Lang.localiseAll(module.getViableSlots())), Component.empty());
                 event.getToolTip().add(tooltipSlots);
             }
-            if(module.getAction() != ModuleActions.NONE) {
-                Component tooltipAction = ComponentUtils.formatList(List.of(componentAction, Lang.localise("action." + module.getAction().toString().toLowerCase()).withStyle(Lang.color(module.getAction().color))), Component.empty());
+            if(module.getAction() != IAction.NO_ACTION) {
+                Component tooltipAction = ComponentUtils.formatList(List.of(componentAction, Lang.localise("action." + module.getAction().toString().toLowerCase()).withStyle(Lang.color(module.getAction().getColor()))), Component.empty());
                 event.getToolTip().add(tooltipAction);
             }
             event.getToolTip().addAll(module.getPerks().getDisplayString());

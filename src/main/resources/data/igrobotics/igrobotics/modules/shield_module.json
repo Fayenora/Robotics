@@ -11,6 +11,6 @@
   "slots": [
     "core"
   ],
-  "action": "shield",
+  "action": "igrobotics:shield",
   "cooldown": 2
 }

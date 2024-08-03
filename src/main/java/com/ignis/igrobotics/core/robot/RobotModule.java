@@ -1,7 +1,8 @@
 package com.ignis.igrobotics.core.robot;
 
 import com.google.gson.JsonSyntaxException;
-import com.ignis.igrobotics.common.modules.ModuleActions;
+import com.ignis.igrobotics.common.modules.IAction;
+import com.ignis.igrobotics.definitions.ModActions;
 import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
@@ -38,7 +39,7 @@ public class RobotModule {
     public static final Codec<RobotModule> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
             Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
-            StringRepresentable.fromEnum(ModuleActions::values).optionalFieldOf("action", ModuleActions.NONE).forGetter(RobotModule::getAction),
+            ModActions.CODEC.optionalFieldOf("action", IAction.NO_ACTION).forGetter(RobotModule::getAction),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
             Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
@@ -48,7 +49,7 @@ public class RobotModule {
     public static final Codec<RobotModule> NETWORK_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             NETWORK_INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
             Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
-            StringRepresentable.fromEnum(ModuleActions::values).optionalFieldOf("action", ModuleActions.NONE).forGetter(RobotModule::getAction),
+            ModActions.CODEC.optionalFieldOf("action", IAction.NO_ACTION).forGetter(RobotModule::getAction),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
             Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
@@ -59,7 +60,7 @@ public class RobotModule {
     private final Ingredient item;
     private IPerkMap perks = new PerkMap();
     private EnumSet<EnumModuleSlot> viableSlots = EnumSet.noneOf(EnumModuleSlot.class);
-    private ModuleActions action = ModuleActions.NONE;
+    private IAction action;
     /** A cooldown of 0 indicates a passive module */
     private int cooldown = 0;
     /** How long this module applies an effect, if it is active */
@@ -71,10 +72,11 @@ public class RobotModule {
 
     protected RobotModule(Ingredient item) {
         this.item = item;
+        action = IAction.NO_ACTION;
     }
 
     public boolean activate(LivingEntity caster) {
-        if(action == ModuleActions.NONE) return false;
+        if(action == ModActions.NONE.get()) return false;
         if(!action.execute(caster, duration)) return false;
         if(energyCost > 0) {
             if(!caster.getCapability(ForgeCapabilities.ENERGY).isPresent()) return false;
@@ -140,11 +142,11 @@ public class RobotModule {
         return viableSlots;
     }
 
-    public ModuleActions getAction() {
+    public IAction getAction() {
         return action;
     }
 
-    private static RobotModule initialize(Ingredient items, List<EnumModuleSlot> slots, ModuleActions action, int cooldown, int duration, int energyCost,
+    private static RobotModule initialize(Ingredient items, List<EnumModuleSlot> slots, IAction action, int cooldown, int duration, int energyCost,
                                           Optional<ResourceLocation> overlay, IPerkMap perks) {
         RobotModule module = new RobotModule(items);
         module.viableSlots = slots.isEmpty() ? EnumSet.noneOf(EnumModuleSlot.class) : EnumSet.copyOf(slots);
@@ -172,7 +174,7 @@ public class RobotModule {
 
     public RobotModule merge(RobotModule other) {
         RobotModule thisModule = clone();
-        if(thisModule.action == ModuleActions.NONE) {
+        if(thisModule.action == ModActions.NONE.get()) {
             thisModule.action = other.action;
             thisModule.duration = other.duration;
             thisModule.energyCost = other.energyCost;

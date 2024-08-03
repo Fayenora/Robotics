@@ -5,7 +5,13 @@
   "slots" : [
     "feet"
   ],
-  "action": "jump",
+  "action": {
+    "type": "igrobotics:dash",
+    "name": "jump",
+    "force": 1,
+    "impact": 1,
+    "direction": "up"
+  },
   "cooldown": 5,
   "energyCost": 5000
 }

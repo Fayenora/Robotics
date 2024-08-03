@@ -5,6 +5,6 @@
   "slots": [
     "core"
   ],
-  "action": "selfdestruct",
+  "action": "igrobotics:self-destruct",
   "energyCost": 250000
 }
