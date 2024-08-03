@@ -30,8 +30,9 @@ public class ModAttributes {
     public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE, false);
     public static final Attribute STACK_SIZE = register("robot.stack_size", 1, 0, 6, true);
     public static final List<Attribute> MODIFIER_SLOTS = new ArrayList<>(EnumModuleSlot.values().length);
-    public static final Attribute MODULE_COST = register("robot.module_efficiency", 1, 0.2, 10, true);
-    public static final Attribute MODULE_RECHARGE = register("robot.module_recharge", 1, 0, 10, true);
+    public static final Attribute MODULE_COST = register("robot.module_cost", 1, 0.2, 10, true);
+    public static final Attribute MODULE_COOLDOWN = register("robot.module_cooldown", 1, 0, 10, true);
+    public static final Attribute MODULE_DURATION = register("robot.module_duration", 1, 0, 10, true);
     public static final Attribute INVENTORY_SLOTS = register("robot.inventory_slots", 12, 0, Reference.MAX_INVENTORY_SIZE, true);
 
     static {
@@ -57,7 +58,8 @@ public class ModAttributes {
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CONSUMPTION);
         event.add(ModEntityTypes.ROBOT.get(), STACK_SIZE);
         event.add(ModEntityTypes.ROBOT.get(), MODULE_COST);
-        event.add(ModEntityTypes.ROBOT.get(), MODULE_RECHARGE);
+        event.add(ModEntityTypes.ROBOT.get(), MODULE_COOLDOWN);
+        event.add(ModEntityTypes.ROBOT.get(), MODULE_DURATION);
         for(Attribute attribute : MODIFIER_SLOTS) {
             event.add(ModEntityTypes.ROBOT.get(), attribute);
         }

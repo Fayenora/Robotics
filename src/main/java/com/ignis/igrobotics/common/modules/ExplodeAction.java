@@ -5,6 +5,7 @@ import com.ignis.igrobotics.definitions.ModActions;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 public class ExplodeAction implements IAction {
 
@@ -21,7 +22,10 @@ public class ExplodeAction implements IAction {
 
     @Override
     public boolean execute(LivingEntity caster, int duration) {
-        if(!caster.isAlive()) return false;
+        Level level = caster.level();
+        if(level.isClientSide || !caster.isAlive()) {
+            return false;
+        }
         caster.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             robot.igniteExplosion(damage, radius);
         });

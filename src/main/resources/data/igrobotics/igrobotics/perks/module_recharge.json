@@ -1,0 +1,16 @@
+{
+  "name": "igrobotics:module_recharge",
+  "displayColor": "white",
+  "attributes": [
+    {
+      "name": "igrobotics:robot.module_cooldown",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": -0.15
+        }
+      ]
+    }
+  ]
+}

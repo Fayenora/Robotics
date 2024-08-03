@@ -1,0 +1,17 @@
+{
+  "name": "igrobotics:module_efficiency",
+  "stackable": true,
+  "displayColor": "white",
+  "attributes": [
+    {
+      "name": "igrobotics:robot.module_cost",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": -0.05
+        }
+      ]
+    }
+  ]
+}

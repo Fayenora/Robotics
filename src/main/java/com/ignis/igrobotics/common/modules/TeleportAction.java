@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BambooSaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -65,24 +66,20 @@ public class TeleportAction implements IAction {
         }
 
         BlockState blockstate = level.getBlockState(blockpos$mutableblockpos);
-        boolean flag = blockstate.blocksMotion();
-        boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
-        if (flag && !flag1) {
+        if (blockstate.blocksMotion() && !blockstate.getFluidState().is(FluidTags.WATER)) {
             net.minecraftforge.event.entity.EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(entity, p_32544_, p_32545_, p_32546_);
             if (event.isCanceled()) return false;
             Vec3 vec3 = entity.position();
-            boolean flag2 = entity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
-            if (flag2) {
+            if (entity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
                 level.gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
                 if (!entity.isSilent()) {
                     level.playSound(null, entity.xo, entity.yo, entity.zo, SoundEvents.ENDERMAN_TELEPORT, entity.getSoundSource(), 1.0F, 1.0F);
                     entity.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
                 }
+                return true;
             }
-            return flag2;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

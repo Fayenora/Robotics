@@ -2,10 +2,12 @@ package com.ignis.igrobotics.core.robot;
 
 import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.common.modules.IAction;
+import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.events.ModuleActivationEvent;
 import com.ignis.igrobotics.definitions.ModActions;
-import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
 import com.ignis.igrobotics.core.capabilities.perks.PerkMap;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,6 +18,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -76,17 +79,35 @@ public class RobotModule {
     }
 
     public boolean activate(LivingEntity caster) {
-        if(action == ModActions.NONE.get()) return false;
-        if(!action.execute(caster, duration)) return false;
-        if(energyCost > 0) {
+        if(action == IAction.NO_ACTION) return false;
+        if(isOnCooldown(caster)) return false;
+        IEnergyStorage energyStorage = null;
+        int modEnergyCost = (int) (energyCost * caster.getAttributeValue(ModAttributes.MODULE_COST));
+        if(modEnergyCost > 0) {
             if(!caster.getCapability(ForgeCapabilities.ENERGY).isPresent()) return false;
-            IEnergyStorage energyStorage = caster.getCapability(ForgeCapabilities.ENERGY).resolve().get();
-            if(energyStorage.getEnergyStored() < energyCost) return false;
-            if (energyStorage instanceof ModifiableEnergyStorage mod) {
-                mod.setEnergy(mod.getEnergyStored() - energyCost);
-            }
+            energyStorage = caster.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+            if(energyStorage.getEnergyStored() < modEnergyCost) return false;
         }
+        if(!MinecraftForge.EVENT_BUS.post(new ModuleActivationEvent(caster, this))) return false;
+        if(!action.execute(caster, (int) (duration * caster.getAttributeValue(ModAttributes.MODULE_DURATION)))) return false;
+        if(modEnergyCost > 0) {
+            energyStorage.extractEnergy(modEnergyCost, false);
+        }
+        setOnCooldown(caster);
         return true;
+    }
+
+    public boolean isOnCooldown(LivingEntity caster) {
+        if(!caster.getCapability(ModCapabilities.PERKS).isPresent()) return true;
+        IPerkMap perkMap = caster.getCapability(ModCapabilities.PERKS).resolve().get();
+        if(caster.tickCount < perkMap.values().get(action.toString())) return false; // Server was loaded anew -> All perk cooldowns reset
+        return caster.tickCount > perkMap.values().get(action.toString()) + getCooldown() * caster.getAttributeValue(ModAttributes.MODULE_COOLDOWN);
+    }
+
+    private void setOnCooldown(LivingEntity caster) {
+        caster.getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
+            perks.values().set(action.toString(), caster.tickCount);
+        });
     }
 
     @Override
@@ -174,7 +195,7 @@ public class RobotModule {
 
     public RobotModule merge(RobotModule other) {
         RobotModule thisModule = clone();
-        if(thisModule.action == ModActions.NONE.get()) {
+        if(thisModule.action == IAction.NO_ACTION) {
             thisModule.action = other.action;
             thisModule.duration = other.duration;
             thisModule.energyCost = other.energyCost;
