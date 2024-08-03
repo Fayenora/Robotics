@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.core.robot;
 
 import com.google.gson.JsonSyntaxException;
-import com.ignis.igrobotics.common.modules.IAction;
+import com.ignis.igrobotics.common.actions.IAction;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.events.ModuleActivationEvent;
 import com.ignis.igrobotics.definitions.ModActions;

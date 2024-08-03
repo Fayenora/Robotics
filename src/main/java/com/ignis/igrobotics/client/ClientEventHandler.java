@@ -2,8 +2,7 @@ package com.ignis.igrobotics.client;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.items.CommanderItem;
-import com.ignis.igrobotics.common.modules.IAction;
-import com.ignis.igrobotics.definitions.ModActions;
+import com.ignis.igrobotics.common.actions.IAction;
 import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
 import com.ignis.igrobotics.core.robot.RobotModule;
 import com.ignis.igrobotics.core.util.Lang;

@@ -1,4 +1,4 @@
-package com.ignis.igrobotics.common.modules;
+package com.ignis.igrobotics.common.actions;
 
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.definitions.ModActions;

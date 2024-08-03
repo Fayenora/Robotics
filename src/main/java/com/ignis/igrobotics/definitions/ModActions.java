@@ -2,11 +2,9 @@ package com.ignis.igrobotics.definitions;
 
 import com.google.common.base.Functions;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.modules.*;
+import com.ignis.igrobotics.common.actions.*;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
