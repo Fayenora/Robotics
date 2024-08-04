@@ -2,6 +2,7 @@ package com.ignis.igrobotics.common.entity.ai;
 
 import com.ignis.igrobotics.common.DimensionNavigator;
 import com.ignis.igrobotics.common.handlers.RobotBehavior;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
@@ -31,7 +32,7 @@ public class RetrieveGoal extends Goal {
 	ItemStack toTake;
 	boolean taskFinished, invalid;
 	private int tickCounter, takeItemsCounter, awayCounter;
-	protected int takeItemTime;
+	private final int takeItemTime;
 	private final int maxStay, minAway;
 	IItemHandler openedInventory;
 	Container openedContainer;
@@ -41,11 +42,11 @@ public class RetrieveGoal extends Goal {
 	 * @param mob the entity that should interact with the storage
 	 * @param from the position of the storage
 	 * @param toTake the ItemStacks to take, matched along Item & Damage
-	 * @param time the time it should take to take out 1 stack
+	 * @param time the base time it should take to take out 1 stack. Is modified by attributes
 	 * @param maxStay maximum ticks to stay at a location when no operation is possible
 	 * @param minAway Minimum ticks to stay away from the chest and do other tasks after this task ran out
 	 */
-	public RetrieveGoal(Mob mob, GlobalPos from, ItemStack toTake, int time, int maxStay, int minAway) {
+	public RetrieveGoal(Mob mob, ItemStack toTake, GlobalPos from, int time, int maxStay, int minAway) {
 		this.entity = mob;
 		navigator = new DimensionNavigator(mob, 16, 16, 1);
 		fakePlayer = new WeakReference<>(FakePlayerFactory.getMinecraft((ServerLevel) entity.level()));
@@ -56,6 +57,10 @@ public class RetrieveGoal extends Goal {
 		awayCounter = minAway; //On instantiation this task should immediately be usable
 		this.takeItemTime = time;
 		setFlags(EnumSet.of(Flag.MOVE, Flag.TARGET, Flag.LOOK));
+	}
+
+	public RetrieveGoal(Mob mob, ItemStack toTake, GlobalPos from) {
+		this(mob, toTake, from, 20, 400, 200);
 	}
 
 	@Override
@@ -118,8 +123,12 @@ public class RetrieveGoal extends Goal {
 		return false;
 	}
 
+	protected int getTakeItemTime() {
+		return (int) (takeItemTime * entity.getAttributeValue(ModAttributes.LOGISTICS_TIME));
+	}
+
 	protected void interactWithContainer(IItemHandler blockInventory, int ticks) {
-		if(ticks % takeItemTime != 0) return;
+		if(ticks % getTakeItemTime() != 0) return;
 		entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(entityInventory -> {
 			for(int i = 0; i < blockInventory.getSlots(); i++) {
 				ItemStack inSlot = blockInventory.extractItem(i, Integer.MAX_VALUE, true);

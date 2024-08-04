@@ -1,0 +1,16 @@
+{
+  "name": "igrobotics:logistician",
+  "displayColor": "magenta",
+  "attributes": [
+    {
+      "name": "igrobotics:robot.logistics_time",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": -0.3
+        }
+      ]
+    }
+  ]
+}

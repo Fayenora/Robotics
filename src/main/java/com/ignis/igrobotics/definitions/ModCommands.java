@@ -33,10 +33,8 @@ public class ModCommands {
     public static final RegistryObject<CommandType> ATTACK = register("attack", EntitySearch.class, SpecificTargetGoal::new);
     public static final RegistryObject<CommandType> DEFEND = register("defend", EntitySearch.class, DefendGoal::new);
     public static final RegistryObject<CommandType> FOLLOW = register("follow", EntitySearch.class, Integer.class, FollowGoal::new);
-    public static final RegistryObject<CommandType> RETRIEVE = register("retrieve", ItemStack.class, GlobalPos.class,
-            (robot, stack, pos) -> new RetrieveGoal(robot, pos, stack, 20, 400, 200));
-    public static final RegistryObject<CommandType> STORE = register("store", ItemStack.class, GlobalPos.class,
-            (robot, stack, pos) -> new StoreGoal(robot, pos, stack, 20, 400, 200));
+    public static final RegistryObject<CommandType> RETRIEVE = register("retrieve", ItemStack.class, GlobalPos.class, RetrieveGoal::new);
+    public static final RegistryObject<CommandType> STORE = register("store", ItemStack.class, GlobalPos.class, StoreGoal::new);
     public static final RegistryObject<CommandType> BREAK = register("break", GlobalPos.class, GlobalPos.class, BreakBlocksGoal::new);
     public static final RegistryObject<CommandType> PLACE = register("place", GlobalPos.class, GlobalPos.class, PlaceBlocksGoal::new);
 

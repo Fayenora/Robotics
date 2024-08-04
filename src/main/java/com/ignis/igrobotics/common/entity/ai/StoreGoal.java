@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StoreGoal extends RetrieveGoal {
 
-	public StoreGoal(Mob mob, GlobalPos from, ItemStack toStore, int time, int maxStay, int minAway) {
-	 	super(mob, from, toStore, time, maxStay, minAway);
+	public StoreGoal(Mob mob, ItemStack toStore, GlobalPos from) {
+		super(mob, toStore, from);
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class StoreGoal extends RetrieveGoal {
 	
 	@Override
 	protected void interactWithContainer(IItemHandler inventory, int ticks) {
-		if(ticks % takeItemTime != 0) return;
+		if(ticks % getTakeItemTime() != 0) return;
 		entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(entityInventory -> {
 			//Start with index 6 to avoid dumping any currently equipped items
 			for(int i = 6; i < entityInventory.getSlots(); i++) {
