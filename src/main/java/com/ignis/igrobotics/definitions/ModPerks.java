@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public class ModPerks {
 
     public static final ResourceKey<Registry<Perk>> KEY = ResourceKey.createRegistryKey(new ResourceLocation(Robotics.MODID, "perks"));
-    public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(KEY, KEY.location().getNamespace());
+    public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(KEY, Robotics.MODID);
     public static final Supplier<IForgeRegistry<Perk>> REGISTRY = PERKS.makeRegistry(() -> new RegistryBuilder<Perk>().allowModification().disableSaving().disableSync().setDefaultKey(new ResourceLocation(Robotics.MODID, "undefined")));
 
     public static final RegistryObject<Perk> PERK_UNDEFINED = register("undefined", s -> new Perk(s, 1).setDisplayColor(ChatFormatting.RED));
@@ -58,7 +58,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_INVULNERABILITY = register("invulnerability", PerkInvulnerability::new);
     public static final RegistryObject<Perk> PERK_VOIDANT = register("voidant", PerkVoidant::new);
     public static final RegistryObject<Perk> PERK_THERMAL_CONDUCTIVITY = register("thermal_conductivity", PerkThermalConductivity::new);
-    public static final RegistryObject<Perk> PERK_ELECTRICAL_CONDUCTIVITY = register("electrical_conductivity", Perk::new);
+    public static final RegistryObject<Perk> PERK_ELECTRICAL_CONDUCTIVITY = register("electrical_conductivity", PerkElectricalConductivity::new);
     public static final RegistryObject<Perk> PERK_STACKED = register("stacked", Perk::new);
     public static final RegistryObject<Perk> PERK_LOGISTICIAN = register("logistician", Perk::new);
     public static final RegistryObject<Perk> PERK_REFLECTIVE = register("reflective", PerkReflective::new);
