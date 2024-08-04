@@ -69,6 +69,8 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_LINKED = register("linked", PerkLinked::new);
     public static final RegistryObject<Perk> PERK_ATTRACTANT = register("attractant", PerkAttractant::new);
     public static final RegistryObject<Perk> PERK_INSPIRE = register("inspire", PerkInspire::new);
+    public static final RegistryObject<Perk> PERK_MODULE_BUFF = register("module_buff", PerkModuleBuff::new);
+    public static final RegistryObject<Perk> PERK_ARMOR_SHRED = register("armor_shred", PerkArmorShred::new);
 
     private static RegistryObject<Perk> registerGenerator(String name, Supplier<Integer> generationRate, BiFunction<ItemStack, Mob, Integer> validInputs) {
         return PERKS.register(name, () -> new PerkGenerator(name, generationRate, validInputs));

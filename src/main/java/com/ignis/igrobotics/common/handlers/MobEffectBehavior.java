@@ -5,11 +5,14 @@ import com.ignis.igrobotics.common.entity.StompedUpBlockEntity;
 import com.ignis.igrobotics.definitions.ModMobEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +33,16 @@ public class MobEffectBehavior {
     @SubscribeEvent
     public static void creativeFall(PlayerFlyableFallEvent event) {
         impactEffect(event.getEntity(), event.getDistance());
+    }
+
+    @SubscribeEvent
+    public static void onDamage(LivingHurtEvent event) {
+        Entity causingEntity = event.getSource().getEntity();
+        LivingEntity targetEntity = event.getEntity();
+        if(causingEntity != null && targetEntity.hasEffect(ModMobEffects.ARMOR_SHRED.get()) && !causingEntity.equals(targetEntity.getLastHurtByMob())) {
+            int currentAmplifier = targetEntity.getEffect(ModMobEffects.ARMOR_SHRED.get()).getAmplifier();
+            targetEntity.addEffect(new MobEffectInstance(ModMobEffects.ARMOR_SHRED.get(), 200, currentAmplifier + 1));
+        }
     }
 
     private static int impactEffect(LivingEntity entity, float fallingDistance) {
