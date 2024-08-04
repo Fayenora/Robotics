@@ -38,9 +38,9 @@ public class PerkCharge extends Perk {
 	}
 
 	@Override
-	public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
+	public float onAttack(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
 		values.set(CHARGE, values.get(CHARGE) + 10);
-		return super.attackEntityAsMob(level, attacker, toAttack, values);
+		return super.onAttack(level, attacker, toAttack, values);
 	}
 
 	@Override

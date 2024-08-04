@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common.handlers;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
 import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.core.events.ModuleActivationEvent;
 import com.ignis.igrobotics.core.events.PerkChangeEvent;
 import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.core.robot.RobotPart;
@@ -89,6 +90,16 @@ public class PerkBehavior {
     }
 
     @SubscribeEvent
+    public static void onModuleActivated(ModuleActivationEvent event) {
+        if(!(event.getCaster() instanceof Mob mob)) return;
+        event.getCaster().getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
+            for(Tuple<Perk, Integer> tup : perks) {
+                tup.getFirst().onModuleActivated(tup.getSecond(), mob, perks.values());
+            }
+        });
+    }
+
+    @SubscribeEvent
     public static void onDamage(LivingHurtEvent event) {
         Entity causingEntity = event.getSource().getEntity();
         Entity targetEntity = event.getEntity();
@@ -97,9 +108,9 @@ public class PerkBehavior {
         if(causingEntity != null && targetEntity != null) {
             if(!(causingEntity instanceof Mob mob)) return;
             causingEntity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
-                int damageChange = 0;
+                float damageChange = 0;
                 for(Tuple<Perk, Integer> tup : perks) {
-                    damageChange += tup.getFirst().attackEntityAsMob(tup.getSecond(), mob, targetEntity, perks.values());
+                    damageChange += tup.getFirst().onAttack(tup.getSecond(), mob, targetEntity, perks.values());
                 }
                 event.setAmount(event.getAmount() + damageChange);
             });
@@ -108,7 +119,7 @@ public class PerkBehavior {
         if(targetEntity instanceof Mob mob) {
             targetEntity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> {
                 for(Tuple<Perk, Integer> tup : perks) {
-                    event.setAmount(tup.getFirst().damageEntity(tup.getSecond(), mob, event.getSource(), event.getAmount(), perks.values()));
+                    event.setAmount(tup.getFirst().onDamage(tup.getSecond(), mob, event.getSource(), event.getAmount(), perks.values()));
                 }
             });
         }

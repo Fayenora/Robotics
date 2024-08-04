@@ -11,7 +11,7 @@ public class PerkConnexiom extends Perk {
     }
 
     @Override
-    public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
-        return super.damageEntity(level, robot, dmgSource, damage, values);
+    public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+        return super.onDamage(level, robot, dmgSource, damage, values);
     }
 }

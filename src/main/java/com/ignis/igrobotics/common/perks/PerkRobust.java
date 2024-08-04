@@ -18,7 +18,7 @@ public class PerkRobust extends Perk {
 	}
 	
 	@Override
-	public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+	public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
 		if(dmgSource.is(DamageTypeTags.BYPASSES_EFFECTS)) return damage;
 		return damage - level * PROTECTION_MULTIPLIER;
 	}

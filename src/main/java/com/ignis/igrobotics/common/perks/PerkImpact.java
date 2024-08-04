@@ -17,7 +17,7 @@ public class PerkImpact extends Perk {
 	}
 
 	@Override
-	public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
+	public float onAttack(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
 		if(!(toAttack instanceof LivingEntity living)) return 0;
 		//Won't kill the target; other functions should handle this
 		//Killing this way would result in onDeath not being called and other unexpected behavior

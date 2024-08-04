@@ -21,8 +21,8 @@ public class PerkInspire extends Perk {
     }
 
     @Override
-    public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
-        if(!(robot.level() instanceof ServerLevel serverLevel)) return super.damageEntity(level, robot, dmgSource, damage, values);
+    public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+        if(!(robot.level() instanceof ServerLevel serverLevel)) return super.onDamage(level, robot, dmgSource, damage, values);
         if(robot.getCapability(ModCapabilities.ROBOT).isPresent()) {
             IRobot iRobot = robot.getCapability(ModCapabilities.ROBOT).resolve().get();
             if(iRobot.hasOwner()) {
@@ -39,6 +39,6 @@ public class PerkInspire extends Perk {
                 robot.addEffect(new MobEffectInstance(MobEffects.GLOWING));
             }
         }
-        return super.damageEntity(level, robot, dmgSource, damage, values);
+        return super.onDamage(level, robot, dmgSource, damage, values);
     }
 }

@@ -17,7 +17,7 @@ public class PerkStrength extends Perk {
 	}
 	
 	@Override
-	public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
+	public float onAttack(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
 		return DAMAGE_MULTIPLIER * level;
 	}
 

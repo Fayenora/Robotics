@@ -12,10 +12,10 @@ public class PerkThermalConductivity extends Perk {
     }
 
     @Override
-    public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+    public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         if(dmgSource.is(DamageTypeTags.IS_FIRE)) {
             robot.invulnerableTime += 50;
         }
-        return super.damageEntity(level, robot, dmgSource, damage, values);
+        return super.onDamage(level, robot, dmgSource, damage, values);
     }
 }

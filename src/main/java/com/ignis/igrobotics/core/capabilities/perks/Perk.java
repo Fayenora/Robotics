@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Perk implements PerkHooks {
+public class Perk implements PerkHooks{
 
 	/** Perks that do not stack should have a lower max level for efficiency reasons.
 	 * Since these obviously cannot stack, it just limits components to have a maximum level of this value */
@@ -84,8 +84,7 @@ public class Perk implements PerkHooks {
 	private final List<AttributeEntry> modifiers = new ArrayList<>();
 
 	public Perk(String name) {
-		this.name = Robotics.rl(name);
-		this.iconTexture = Robotics.rl("textures/perk/" + name + ".png");
+		this(Robotics.rl(name));
 	}
 
 	public Perk(String name, int maxLevel) {
@@ -96,6 +95,11 @@ public class Perk implements PerkHooks {
 	public Perk(ResourceLocation name) {
 		this.name = name;
 		this.iconTexture = new ResourceLocation(name.getNamespace(), "textures/perk/" + name.getPath() + ".png");
+	}
+
+	public Perk(ResourceLocation name, int maxLevel) {
+		this(name);
+		this.maxLevel = maxLevel;
 	}
 
 	//////////////////////////////////
@@ -138,10 +142,10 @@ public class Perk implements PerkHooks {
 	}
 
 	public Component getDescriptionText() {
-		if(modifiers.size() == 0) {
+		if(modifiers.isEmpty()) {
 			return Lang.localiseExisting(getUnlocalizedName() + ".desc");
 		}
-		ArrayList<Component> tooltip = new ArrayList<>();
+		List<Component> tooltip = new ArrayList<>();
 		tooltip.add(Lang.localise("perk.desc"));
 		for(AttributeEntry entry : modifiers) {
 			TextColor color = Reference.ATTRIBUTE_COLORS.getOrDefault(entry.attribute, TextColor.fromLegacyFormat(ChatFormatting.GRAY));
@@ -215,9 +219,8 @@ public class Perk implements PerkHooks {
 	//////////////////////////////////
 
 	private static Perk initialize(ResourceLocation key, int maxLevel, boolean internal, boolean visible, boolean stackable, TextColor displayColor, List<AttributeEntry> modifiers) {
-		String name = key.getPath();
 		IForgeRegistry<Perk> registry = ModPerks.REGISTRY.get();
-		Perk perk = internal && registry.containsKey(key) ? registry.getValue(key) : new Perk(name, maxLevel);
+		Perk perk = internal && registry.containsKey(key) ? registry.getValue(key) : new Perk(key, maxLevel);
 		perk.maxLevel = maxLevel;
 		perk.setVisible(visible);
 		perk.setStackable(stackable);
@@ -234,17 +237,16 @@ public class Perk implements PerkHooks {
 		return stackable;
 	}
 
-	public Perk setStackable(boolean stackable) {
+	private void setStackable(boolean stackable) {
 		this.stackable = stackable;
 		if(!stackable) maxLevel = Math.min(UNSTACKABLE_MAX_LEVEL, maxLevel);
-		return this;
 	}
 
 	public boolean isVisible() {
 		return visible;
 	}
 
-	protected void setVisible(boolean visible) {
+	private void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 

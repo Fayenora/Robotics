@@ -11,13 +11,15 @@ public interface PerkHooks {
 
     default void onEntityJump(int level, Mob entity, SimpleDataManager values) {}
 
+    default void onModuleActivated(int level, Mob entity, SimpleDataManager values) {}
+
     /**
      * Executed when a robot with this perk damages another entity
      * @param level of the perk
      * @param toAttack entity that is attacked
      * @return knockback to add
      */
-    default float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
+    default float onAttack(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
         return 0;
     }
 
@@ -28,7 +30,7 @@ public interface PerkHooks {
      * @param damage amount of damage
      * @return adjusted damage
      */
-    default float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+    default float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         return damage;
     }
 }

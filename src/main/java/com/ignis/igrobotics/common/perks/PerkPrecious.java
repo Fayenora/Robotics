@@ -21,7 +21,7 @@ public class PerkPrecious extends Perk {
     }
 
     @Override
-    public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+    public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         IRobot iRobot = robot.getCapability(ModCapabilities.ROBOT).resolve().get();
         if(iRobot.hasOwner() && dmgSource.getEntity() != null) {
             for(Entity ent : alliesInArea(robot, 16, iRobot.getOwner(), Predicates.alwaysTrue())) {
@@ -30,6 +30,6 @@ public class PerkPrecious extends Perk {
                 });
             }
         }
-        return super.damageEntity(level, robot, dmgSource, damage, values);
+        return super.onDamage(level, robot, dmgSource, damage, values);
     }
 }

@@ -16,15 +16,15 @@ public class PerkVoidant extends Perk {
     }
 
     @Override
-    public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+    public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         if(dmgSource.getEntity() instanceof Mob mob) {
             Collection<MobEffectInstance> effectsToReduce = mob.getActiveEffects().stream().filter(e -> !e.isInfiniteDuration() && !e.isAmbient() && e.isVisible()).toList();
             Optional<MobEffectInstance> effectToRemove = effectsToReduce.stream().skip((long) (effectsToReduce.size() * Math.random())).findFirst();
-            if(effectToRemove.isEmpty()) return super.damageEntity(level, robot, dmgSource, damage, values);
+            if(effectToRemove.isEmpty()) return super.onDamage(level, robot, dmgSource, damage, values);
             MobEffectInstance e = effectToRemove.get();
             MobEffectInstance copy = new MobEffectInstance(e.getEffect(), e.mapDuration(i -> i - 30 * 20), e.getAmplifier(), e.isAmbient(), e.isVisible(), e.showIcon(), null, e.getFactorData());
             mob.forceAddEffect(copy, null);
         }
-        return super.damageEntity(level, robot, dmgSource, damage, values);
+        return super.onDamage(level, robot, dmgSource, damage, values);
     }
 }

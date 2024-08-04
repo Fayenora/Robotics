@@ -16,12 +16,12 @@ public class PerkUnarmedAttack extends Perk {
     }
 
     @Override
-    public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
+    public float onAttack(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
         float damageToAdd = 0;
         if(attacker.getMainHandItem().isEmpty()) {
             damageToAdd = (float) level / 2;
         }
-        return super.attackEntityAsMob(level, attacker, toAttack, values) + damageToAdd;
+        return super.onAttack(level, attacker, toAttack, values) + damageToAdd;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class PerkUnreliable extends Perk {
 	}
 	
 	@Override
-	public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+	public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
 		IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS);
 		
 		//FIXME: Works, but creates a concurrent modification exception when the last part of any perk is destroyed, as the map is currently iterating over the perks

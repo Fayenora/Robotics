@@ -17,12 +17,12 @@ public class PerkFist extends Perk {
     }
 
     @Override
-    public float attackEntityAsMob(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
+    public float onAttack(int level, Mob attacker, Entity toAttack, SimpleDataManager values) {
         if(toAttack instanceof Mob mob) {
             mob.knockback(attacker.getAttributeValue(Attributes.ATTACK_KNOCKBACK), 1, 1);
             mob.addDeltaMovement(new Vec3(0, RoboticsConfig.general.fistKnockUp.get().floatValue(), 0));
             mob.addEffect(new MobEffectInstance(ModMobEffects.KNOCKBACK_RESISTANCE.get(), 1));
         }
-        return super.attackEntityAsMob(level, attacker, toAttack, values);
+        return super.onAttack(level, attacker, toAttack, values);
     }
 }

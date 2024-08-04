@@ -14,11 +14,11 @@ public class PerkReflective extends Perk {
     }
 
     @Override
-    public float damageEntity(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
+    public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         if(dmgSource.getEntity() != null && Math.random() > CHANCE_PER_LEVEL * level) {
             dmgSource.getEntity().hurt(dmgSource, damage);
             return 0;
         }
-        return super.damageEntity(level, robot, dmgSource, damage, values);
+        return super.onDamage(level, robot, dmgSource, damage, values);
     }
 }
