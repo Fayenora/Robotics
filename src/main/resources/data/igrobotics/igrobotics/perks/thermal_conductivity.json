@@ -1,5 +1,5 @@
 {
   "name": "igrobotics:thermal_conductivity",
-  "displayColor": "red",
+  "displayColor": "dark_red",
   "internalLogic": true
 }

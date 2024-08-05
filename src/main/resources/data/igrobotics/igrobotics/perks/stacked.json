@@ -1,6 +1,6 @@
 {
   "name": "igrobotics:stacked",
-  "displayColor": "magenta",
+  "displayColor": "light_purple",
   "attributes": [
     {
       "name": "igrobotics:robot.stack_size",

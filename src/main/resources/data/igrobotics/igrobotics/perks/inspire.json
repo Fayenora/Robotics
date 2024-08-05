@@ -1,6 +1,6 @@
 {
   "name": "igrobotics:inspire",
   "stackable": true,
-  "displayColor": "pink",
+  "displayColor": "light_purple",
   "internalLogic": true
 }

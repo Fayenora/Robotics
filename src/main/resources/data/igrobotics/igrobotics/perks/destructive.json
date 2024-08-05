@@ -1,7 +1,5 @@
 {
   "name": "igrobotics:destructive",
-  "stackable": true,
-  "maxLevel": 5,
   "attributes": [
     {
       "name": "minecraft:generic.attack_damage",

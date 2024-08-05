@@ -1,6 +1,6 @@
 {
   "name": "igrobotics:electrical_conductivity",
   "stackable": true,
-  "displayColor": "cyan",
+  "displayColor": "aqua",
   "internalLogic": true
 }

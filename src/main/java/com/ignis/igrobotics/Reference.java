@@ -50,6 +50,10 @@ public class Reference {
 		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CAPACITY, TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 		ATTRIBUTE_COLORS.put(ModAttributes.ENERGY_CONSUMPTION, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
 		ATTRIBUTE_COLORS.put(ModAttributes.STACK_SIZE, TextColor.fromLegacyFormat(ChatFormatting.LIGHT_PURPLE));
+		ATTRIBUTE_COLORS.put(ModAttributes.LOGISTICS_TIME, TextColor.fromLegacyFormat(ChatFormatting.LIGHT_PURPLE));
+		ATTRIBUTE_COLORS.put(ModAttributes.MODULE_COST, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		ATTRIBUTE_COLORS.put(ModAttributes.MODULE_COOLDOWN, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
+		ATTRIBUTE_COLORS.put(ModAttributes.MODULE_DURATION, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
 		for(Attribute attribute : ModAttributes.MODIFIER_SLOTS) {
 			ATTRIBUTE_COLORS.put(attribute, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
 		}

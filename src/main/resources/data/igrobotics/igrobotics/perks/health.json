@@ -1,5 +1,6 @@
 {
   "name": "igrobotics:health",
+  "displayColor": "green",
   "stackable": true,
   "attributes": [
     {

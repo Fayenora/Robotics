@@ -1,7 +1,7 @@
 {
   "name": "igrobotics:durable",
   "stackable": true,
-  "maxLevel": 10,
+  "displayColor": "gray",
   "attributes": [
     {
       "name": "minecraft:generic.armor",

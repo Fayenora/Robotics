@@ -1,6 +1,7 @@
 {
   "name": "igrobotics:swift",
   "stackable": true,
+  "displayColor": "aqua",
   "attributes": [
     {
       "name": "minecraft:generic.movement_speed",
