@@ -11,6 +11,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashMap;
+
 @SuppressWarnings("unused")
 public class ModItems {
 
@@ -47,7 +49,7 @@ public class ModItems {
     public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", CommanderItem::new);
 
     public static final RegistryObject<Item>[] WIRES = new RegistryObject[Reference.WIRE_METALS.length];
-    public static final RegistryObject<Item>[] PLATES = new RegistryObject[EnumRobotMaterial.valuesWithoutEmpty().length];
+    public static final HashMap<EnumRobotMaterial, RegistryObject<Item>> PLATES = new HashMap<>();
     public static final RegistryObject<Item>[][] MATERIALS = new RegistryObject[EnumRobotMaterial.valuesWithoutEmpty().length][];
 
     static {
@@ -56,7 +58,9 @@ public class ModItems {
             WIRES[i++] = registerBasicItem(material.getName() + "_wire");
         }
         for(EnumRobotMaterial material : EnumRobotMaterial.valuesWithoutEmpty()) {
-            PLATES[material.getID() - 1] = registerBasicItem("plate_" + material.getName());
+            if(material.hasPlate()) {
+                PLATES.put(material, registerBasicItem("plate_" + material.getName()));
+            }
             MATERIALS[material.getID() - 1] = new RegistryObject[EnumRobotPart.values().length];
             for(EnumRobotPart part : EnumRobotPart.values()) {
                 MATERIALS[material.getID() - 1][part.getID()] = ITEMS.register(material.getName() + "_" + part.getName(), () -> new Item(new Item.Properties().stacksTo(1)));

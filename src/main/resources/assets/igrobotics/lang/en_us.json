@@ -293,6 +293,8 @@
   "item.igrobotics.plate_platinum": "Platinum Plating",
   "item.igrobotics.plate_gold": "Gold Plating",
   "item.igrobotics.plate_constantan": "Constantan Plating",
+  "item.igrobotics.plate_enderium": "Enderium Plating",
+  "item.igrobotics.plate_diamond": "Diamond Sheet",
   "item.igrobotics.plate_netherite": "Netherite Plating",
 
   "block.igrobotics.assembler": "Assembler",

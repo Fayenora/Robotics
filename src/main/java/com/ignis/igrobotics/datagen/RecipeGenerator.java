@@ -25,8 +25,8 @@ public class RecipeGenerator extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> writer) {
-        for(EnumRobotMaterial material : EnumRobotMaterial.valuesWithoutEmpty()) {
-            ItemLike plate = ModItems.PLATES[material.getID() - 1].get();
+        for(EnumRobotMaterial material : ModItems.PLATES.keySet()) {
+            ItemLike plate = ModItems.PLATES.get(material).get();
 
             //Plate
             new AssemblerRecipeBuilder(plate)
@@ -109,7 +109,7 @@ public class RecipeGenerator extends RecipeProvider {
     }
 
     private ShapedRecipeBuilder defineLimb(EnumRobotMaterial material, EnumRobotPart part) {
-        ItemLike plate = ModItems.PLATES[material.getID() - 1].get();
+        ItemLike plate = ModItems.PLATES.get(material).get();
         return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][part.getID()].get())
                 .unlockedBy(getHasName(plate), has(plate))
                 .showNotification(false)

@@ -28,9 +28,9 @@ public class ModAttributes {
 
     public static final Attribute ENERGY_CAPACITY = register("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE, true);
     public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE, false);
+    public static final List<Attribute> MODIFIER_SLOTS = new ArrayList<>(EnumModuleSlot.values().length);
     public static final Attribute STACK_SIZE = register("robot.stack_size", 1, 0, 6, true); // Multiplier value -> more is better
     public static final Attribute LOGISTICS_TIME = register("robot.logistics_time", 1, 0.2, 10, false); // Time multiplier for logistics operations -> less is better
-    public static final List<Attribute> MODIFIER_SLOTS = new ArrayList<>(EnumModuleSlot.values().length);
     public static final Attribute MODULE_COST = register("robot.module_cost", 1, 0, 10, false); // Cost multiplier -> less is better
     public static final Attribute MODULE_COOLDOWN = register("robot.module_cooldown", 1, 0.2, 10, false); // Cooldown multiplier -> less is better
     public static final Attribute MODULE_DURATION = register("robot.module_duration", 1, 0, 10, false); // Duration multiplier -> more is better
@@ -68,10 +68,10 @@ public class ModAttributes {
 
     public static AttributeSupplier createRobotAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 12.0D)
+                .add(Attributes.MAX_HEALTH, 4.0D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.05f).build();
     }
 
     @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)

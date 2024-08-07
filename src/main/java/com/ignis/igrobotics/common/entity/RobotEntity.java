@@ -100,7 +100,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
         if(!getCapability(ModCapabilities.PARTS).isPresent()) return InteractionResult.PASS;
         IPartBuilt parts = getCapability(ModCapabilities.PARTS).resolve().get();
         EnumRobotMaterial repairMaterial = parts.getBodyPart(EnumRobotPart.BODY).getMaterial();
-        Item repairItem = ModItems.PLATES[repairMaterial.getID() - 1].get();
+        Item repairItem = ModItems.PLATES.get(repairMaterial).get();
         ItemStack stack = player.getItemInHand(hand);
         if(stack.getItem().equals(repairItem) && getHealth() < getMaxHealth()) {
             if(!player.isCreative()) stack.setCount(stack.getCount() - 1);

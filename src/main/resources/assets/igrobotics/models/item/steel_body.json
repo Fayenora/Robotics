@@ -1,6 +1,0 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "igrobotics:item/robot/steel/robot_body"
-	}
-}

@@ -12,9 +12,9 @@ public enum EnumRobotMaterial {
     NONE("none", 0),
     IRON("iron", 1),
     GOLD("gold", 1),
-    OXIDIZED_COPPER("oxidized_copper", 0),
-    WEATHERED_COPPER("weathered_copper", 0, OXIDIZED_COPPER),
-    COPPER("copper", 1, WEATHERED_COPPER),
+    OXIDIZED_COPPER("oxidized_copper", 0, null, false),
+    WEATHERED_COPPER("weathered_copper", 0, OXIDIZED_COPPER, false),
+    COPPER("copper", 1, WEATHERED_COPPER, true),
 
     // Basic Metals & Alloys
     TIN("tin", 1),
@@ -55,20 +55,22 @@ public enum EnumRobotMaterial {
     private final int stiffness;
     private final TagKey<Item> metalTag;
     private final EnumRobotMaterial corrodesTo;
+    private final boolean hasPlate;
 
     /**
      * @param name the name of the material
      * @param stiffness used for energy processing costs in processing; range [0, 5]
      */
     EnumRobotMaterial(String name, int stiffness) {
-        this(name, stiffness, null);
+        this(name, stiffness, null, true);
     }
 
-    EnumRobotMaterial(String name, int stiffness, @Nullable EnumRobotMaterial corrodesTo) {
+    EnumRobotMaterial(String name, int stiffness, @Nullable EnumRobotMaterial corrodesTo, boolean hasPlate) {
         this.name = name;
         this.stiffness = stiffness;
         this.metalTag = ItemTags.create(new ResourceLocation("forge", "ingots/" + name));
         this.corrodesTo = corrodesTo;
+        this.hasPlate = hasPlate;
     }
 
     public String getName() {
@@ -89,6 +91,10 @@ public enum EnumRobotMaterial {
 
     public static EnumRobotMaterial byId(int id) {
         return EnumRobotMaterial.values()[id];
+    }
+
+    public boolean hasPlate() {
+        return hasPlate;
     }
 
     public static EnumRobotMaterial[] valuesWithoutEmpty() {
