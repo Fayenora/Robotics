@@ -7,10 +7,6 @@
   ],
   "perks": [
     {
-      "name": "igrobotics:health",
-      "level": 2
-    },
-    {
       "name": "igrobotics:module_slot",
       "level": 2
     },

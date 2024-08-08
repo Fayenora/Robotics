@@ -11,11 +11,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @AutoRegisterCapability
@@ -91,5 +93,7 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 	static Component combine(Component prefix, Component comp) {
 		return ComponentUtils.formatList(List.of(prefix, comp), Component.empty());
 	}
+
+	Iterable<Tuple<ResourceLocation, Integer>> baseIterator();
 
 }

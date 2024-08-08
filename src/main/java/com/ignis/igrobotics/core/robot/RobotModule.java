@@ -3,6 +3,7 @@ package com.ignis.igrobotics.core.robot;
 import com.google.gson.JsonSyntaxException;
 import com.ignis.igrobotics.common.actions.IAction;
 import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.core.capabilities.perks.Perk;
 import com.ignis.igrobotics.core.events.ModuleActivationEvent;
 import com.ignis.igrobotics.definitions.ModActions;
 import com.ignis.igrobotics.core.capabilities.perks.IPerkMap;
@@ -43,8 +44,8 @@ public class RobotModule {
             INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
             Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
             ModActions.CODEC.optionalFieldOf("action", IAction.NO_ACTION).forGetter(RobotModule::getAction),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
+            ExtraCodecs.intRange(0, Integer.MAX_VALUE).optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
+            ExtraCodecs.intRange(0, Integer.MAX_VALUE).optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
             Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
             ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(c -> Optional.ofNullable(c.overlay)),
             PerkMap.CODEC.optionalFieldOf("perks", new PerkMap()).forGetter(c -> (PerkMap) c.perks)
@@ -53,8 +54,8 @@ public class RobotModule {
             NETWORK_INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
             Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),
             ModActions.CODEC.optionalFieldOf("action", IAction.NO_ACTION).forGetter(RobotModule::getAction),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
+            ExtraCodecs.intRange(0, Integer.MAX_VALUE).optionalFieldOf("cooldown", 0).forGetter(RobotModule::getCooldown),
+            ExtraCodecs.intRange(0, Integer.MAX_VALUE).optionalFieldOf("duration", 0).forGetter(RobotModule::getDuration),
             Codec.INT.optionalFieldOf("energyCost", 0).forGetter(RobotModule::getEnergyCost),
             ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(c -> Optional.ofNullable(c.overlay)),
             PerkMap.CODEC.optionalFieldOf("perks", new PerkMap()).forGetter(c -> (PerkMap) c.perks)
@@ -205,5 +206,22 @@ public class RobotModule {
         thisModule.viableSlots.addAll(other.viableSlots);
         thisModule.perks.merge(other.getPerks());
         return thisModule;
+    }
+
+    public static class ModuleBuilder {
+        private final RobotModule module;
+
+        public ModuleBuilder(Ingredient ingredient) {
+            this.module = new RobotModule(ingredient);
+        }
+
+        public ModuleBuilder addPerk(Perk perk, int level) {
+            module.perks.add(perk, level);
+            return this;
+        }
+
+        public RobotModule build() {
+            return module;
+        }
     }
 }

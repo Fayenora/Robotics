@@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +34,7 @@ public class PerkMap implements IPerkMap {
 	}
 
 	public static List<Pair<ResourceLocation, Integer>> toCodecFormat(IPerkMap perkMap) {
-		return StreamSupport.stream(perkMap.spliterator(), false).map(Tuple::toPair).map(p -> p.mapFirst(Perk::getKey)).toList();
+		return StreamSupport.stream(perkMap.baseIterator().spliterator(), false).map(Tuple::toPair).toList();
 	}
 	
 	@Override
@@ -48,24 +49,28 @@ public class PerkMap implements IPerkMap {
 	
 	@Override
 	public void remove(Perk perk, int level) {
-		int currLevel = levels.getOrDefault(perk.getKey(), 0);
+		remove(perk.getKey(), level);
+	}
+
+	private void remove(ResourceLocation perkKey, int level) {
+		int currLevel = levels.getOrDefault(perkKey, 0);
 		if(currLevel - level <= 0) {
-			levels.remove(perk.getKey());
+			levels.remove(perkKey);
 		} else {
-			levels.put(perk.getKey(), currLevel - level);
+			levels.put(perkKey, currLevel - level);
 		}
 	}
 	
 	@Override
 	public void merge(IPerkMap other) {
-		for(Tuple<Perk, Integer> tup : other) {
+		for(Tuple<ResourceLocation, Integer> tup : other.baseIterator()) {
 			add(tup.getFirst(), tup.getSecond());
 		}
 	}
 	
 	@Override
 	public void diff(IPerkMap toRemove) {
-		for(Tuple<Perk, Integer> tup : toRemove) {
+		for(Tuple<ResourceLocation, Integer> tup : toRemove.baseIterator()) {
 			remove(tup.getFirst(), tup.getSecond());
 		}
 	}
@@ -116,9 +121,33 @@ public class PerkMap implements IPerkMap {
 
 	public static PerkMap copy(IPerkMap perkMap) {
 		PerkMap clone = new PerkMap();
-		for(Tuple<Perk, Integer> entry : perkMap) {
+		for(Tuple<ResourceLocation, Integer> entry : perkMap.baseIterator()) {
 			clone.add(entry.first, entry.second);
 		}
 		return clone;
+	}
+
+	@Override
+	public Iterable<Tuple<ResourceLocation, Integer>> baseIterator() {
+		return new Iterable<>() {
+			@NotNull
+			@Override
+			public Iterator<Tuple<ResourceLocation, Integer>> iterator() {
+				return new Iterator<>() {
+					final Iterator<ResourceLocation> perkIt = levels.keySet().iterator();
+
+					@Override
+					public boolean hasNext() {
+						return perkIt.hasNext();
+					}
+
+					@Override
+					public Tuple<ResourceLocation, Integer> next() {
+						ResourceLocation perkKey = perkIt.next();
+						return new Tuple<>(perkKey, levels.get(perkKey));
+					}
+				};
+			}
+		};
 	}
 }

@@ -35,6 +35,12 @@ public class ModPerks {
     public static final Supplier<IForgeRegistry<Perk>> REGISTRY = PERKS.makeRegistry(() -> new RegistryBuilder<Perk>().allowModification().disableSaving().disableSync().setDefaultKey(new ResourceLocation(Robotics.MODID, "undefined")));
 
     public static final RegistryObject<Perk> PERK_UNDEFINED = register("undefined", s -> new Perk(s, 1).setDisplayColor(ChatFormatting.RED));
+    public static final RegistryObject<Perk> PERK_HEALTH = register("health", Perk::new);
+    public static final RegistryObject<Perk> PERK_ARMOR = register("durable", Perk::new);
+    public static final RegistryObject<Perk> PERK_TOUGHNESS = register("persistent", Perk::new);
+    public static final RegistryObject<Perk> PERK_MODULAR = register("modular", Perk::new);
+    public static final RegistryObject<Perk> PERK_STEADY = register("steady", Perk::new);
+    public static final RegistryObject<Perk> PERK_EFFICIENT = register("efficient", Perk::new);
     public static final RegistryObject<Perk> PERK_ACCELERATION = register("acceleration", PerkAcceleration::new);
     public static final RegistryObject<Perk> PERK_CHARGE = register("charge", PerkCharge::new);
     public static final RegistryObject<Perk> PERK_SOLAR_PANEL = register("solar_panel", PerkSolarPanel::new);
@@ -43,7 +49,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_STRENGTH = register("strength", PerkStrength::new);
     public static final RegistryObject<Perk> PERK_IMPACT = register("impact", PerkImpact::new);
     public static final RegistryObject<Perk> PERK_ROBUST = register("robust", PerkRobust::new);
-    public static final RegistryObject<Perk> PERK_LUMINOUS = register("luminous", PerkLuminous::new);
+    public static final RegistryObject<Perk> PERK_LUMINOUS = register("luminous", Perk::new);
     //public static final RegistryObject<Perk> PERK_GLOWING = register("glowing", PerkGlowing::new);
     public static final RegistryObject<Perk> PERK_COAL_GENERATOR = registerGenerator("coal_generator",RoboticsConfig.general.coalGeneratorRate, (stack, ent) -> stack.getItem().equals(Items.COAL) ? 8000 : 0);
     public static final RegistryObject<Perk> PERK_BIO_GENERATOR = registerGenerator("bio_generator", RoboticsConfig.general.bioGeneratorRate, (stack, ent) -> {
@@ -56,6 +62,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_SHIELD = register("shield", Perk::new);
 
     public static final RegistryObject<Perk> PERK_INVULNERABILITY = register("invulnerability", PerkInvulnerability::new);
+    public static final RegistryObject<Perk> PERK_VULNERABILITY = register("vulnerability", PerkVulnerability::new);
     public static final RegistryObject<Perk> PERK_VOIDANT = register("voidant", PerkVoidant::new);
     public static final RegistryObject<Perk> PERK_THERMAL_CONDUCTIVITY = register("thermal_conductivity", PerkThermalConductivity::new);
     public static final RegistryObject<Perk> PERK_ELECTRICAL_CONDUCTIVITY = register("electrical_conductivity", PerkElectricalConductivity::new);
@@ -70,6 +77,8 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_ATTRACTANT = register("attractant", PerkAttractant::new);
     public static final RegistryObject<Perk> PERK_INSPIRE = register("inspire", PerkInspire::new);
     public static final RegistryObject<Perk> PERK_MODULE_BUFF = register("module_buff", PerkModuleBuff::new);
+    public static final RegistryObject<Perk> PERK_MODULE_EFFICIENCY = register("module_efficiency", Perk::new);
+    public static final RegistryObject<Perk> PERK_MODULE_COOLDOWN = register("module_cooldown", Perk::new);
     public static final RegistryObject<Perk> PERK_ARMOR_SHRED = register("armor_shred", PerkArmorShred::new);
 
     private static RegistryObject<Perk> registerGenerator(String name, Supplier<Integer> generationRate, BiFunction<ItemStack, Mob, Integer> validInputs) {

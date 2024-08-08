@@ -3,11 +3,8 @@ package com.ignis.igrobotics.datagen;
 import com.ignis.igrobotics.Robotics;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -32,6 +29,7 @@ public class RoboticsDataGenerator {
         //event.getGenerator().addProvider(event.includeClient(), (Factory<TextureGenerator>) TextureGenerator::new);
         // Server Generators
         gen.addProvider(event.includeServer(), new RecipeGenerator(output));
+        gen.addProvider(event.includeServer(), new ModuleGenerator(output));
         gen.addProvider(event.includeServer(), new LootTableProvider(output, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(BlockSelfDropGenerator::new, LootContextParamSets.BLOCK))));
         gen.addProvider(event.includeServer(), new TagGenerator(output, lookupProvider, existingFileHelper));
     }

@@ -5,6 +5,7 @@ import com.ignis.igrobotics.core.SimpleDataManager;
 import com.ignis.igrobotics.core.util.Tuple;
 import com.ignis.igrobotics.definitions.ModPerks;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ public class AdvancedPerkMap implements IPerkMap {
 	public void add(Perk perk, int level) {
 		if(level == 0) return;
 		int currLevel = levels.getOrDefault(perk.getKey(), 0);
-		int updatedLevel = (perk.isStackable() ? currLevel + level : Math.max(currLevel, level));
+		int updatedLevel = (perk.isStackable() ? Math.min(currLevel + level, perk.getMaxLevel()) : Math.max(currLevel, level));
 		levels.put(perk.getKey(), updatedLevel);
 		
 		//If the perk is not stackable, we also need to keep track of how often which level was added
@@ -150,6 +151,30 @@ public class AdvancedPerkMap implements IPerkMap {
 				return new Tuple<>(perk, effectiveLevel);
 			}
 		};
+	}
+
+	@Override
+	public Iterable<Tuple<ResourceLocation, Integer>> baseIterator() {
+		return new Iterable<>() {
+            @NotNull
+            @Override
+            public Iterator<Tuple<ResourceLocation, Integer>> iterator() {
+                return new Iterator<>() {
+                    final Iterator<ResourceLocation> perkIt = levels.keySet().iterator();
+
+                    @Override
+                    public boolean hasNext() {
+                        return perkIt.hasNext();
+                    }
+
+                    @Override
+                    public Tuple<ResourceLocation, Integer> next() {
+                        ResourceLocation perkKey = perkIt.next();
+                        return new Tuple<>(perkKey, levels.get(perkKey));
+                    }
+                };
+            }
+        };
 	}
 
 }

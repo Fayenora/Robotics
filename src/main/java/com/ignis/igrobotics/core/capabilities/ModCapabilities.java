@@ -112,6 +112,26 @@ public class ModCapabilities {
                 }
             };
         }
+        @Override
+        public Iterable<Tuple<ResourceLocation, Integer>> baseIterator() {
+            return new Iterable<>() {
+                @NotNull
+                @Override
+                public Iterator<Tuple<ResourceLocation, Integer>> iterator() {
+                    return new Iterator<Tuple<ResourceLocation, Integer>>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Tuple<ResourceLocation, Integer> next() {
+                            return null;
+                        }
+                    };
+                }
+            };
+        }
     };
 
     @SubscribeEvent
