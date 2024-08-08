@@ -108,7 +108,7 @@
   "igrobotics.action.stealth": "Invisibility",
   "igrobotics.action.dash": "Dash",
   "igrobotics.action.jump": "Jump",
-  "igrobotics.action.selfdestruct": "Self-Destruct",
+  "igrobotics.action.self-destruct": "Self-Destruct",
   "igrobotics.action.shield": "Shield",
 
   "attribute.name.robot.energy_capacity": "Energy Capacity",
@@ -183,6 +183,7 @@
   "igrobotics.perk.stacked": "Stacked",
   "igrobotics.perk.thermal_conductivity": "Thermal Conductivity",
   "igrobotics.perk.voidant": "Voidant",
+  "igrobotics.perk.connexiom": "Connexiom",
 
   "igrobotics.perk.desc": "Increases the stats of the robot: ",
   "igrobotics.perk.robust.desc": "Every damage the robot receives is reduced by %s * [Level]",
@@ -207,6 +208,7 @@
   "igrobotics.perk.inspire.desc": "The owner as well as a random allied robot in the vicinity receive speed and strength buffs when this robot is damaged",
   "igrobotics.perk.invulnerability.desc": "Increased invulnerability time after receiving damage",
   "igrobotics.perk.linked.desc": "All linked robots share a common energy pool",
+  "igrobotics.perk.connexiom.desc": "A large portion of received damage is distributed among robots with the same perk in the vicinity",
   "igrobotics.perk.module_buff.desc": "Speed buff on each module activation",
   "igrobotics.perk.precious.desc": "Allies will aid this robot if attacked",
   "igrobotics.perk.reflective.desc": "A small chance to reflect any direct damage back to the attacker",

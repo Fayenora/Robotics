@@ -8,8 +8,11 @@ import net.minecraft.world.entity.Mob;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class PerkVoidant extends Perk {
+
+    public static final Predicate<MobEffectInstance> REMOVABLE = e -> !e.isInfiniteDuration() && !e.isAmbient() && e.isVisible() && e.getEffect().isBeneficial();
 
     public PerkVoidant(String name) {
         super(name, 1);
@@ -18,7 +21,7 @@ public class PerkVoidant extends Perk {
     @Override
     public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
         if(dmgSource.getEntity() instanceof Mob mob) {
-            Collection<MobEffectInstance> effectsToReduce = mob.getActiveEffects().stream().filter(e -> !e.isInfiniteDuration() && !e.isAmbient() && e.isVisible()).toList();
+            Collection<MobEffectInstance> effectsToReduce = mob.getActiveEffects().stream().filter(REMOVABLE).toList();
             Optional<MobEffectInstance> effectToRemove = effectsToReduce.stream().skip((long) (effectsToReduce.size() * Math.random())).findFirst();
             if(effectToRemove.isEmpty()) return super.onDamage(level, robot, dmgSource, damage, values);
             MobEffectInstance e = effectToRemove.get();

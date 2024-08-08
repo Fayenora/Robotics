@@ -6,7 +6,7 @@
       "name": "igrobotics:robot.stack_size",
       "modifiers": [
         {
-          "value": 1,
+          "value": 0,
           "operation": 1,
           "scalar": 1
         }
