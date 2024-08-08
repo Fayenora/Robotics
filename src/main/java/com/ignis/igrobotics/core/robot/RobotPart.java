@@ -45,10 +45,10 @@ public class RobotPart {
 
 	@Nullable
 	public static RobotPart getFromItem(Item item) {
-		for(int i = 0; i < EnumRobotMaterial.valuesWithoutEmpty().length; i++) {
-			for(int j = 0; j < EnumRobotPart.values().length; j++) {
-				if(ModItems.MATERIALS[i][j].get().equals(item)) {
-					return RobotPart.get(EnumRobotPart.byId(j), EnumRobotMaterial.byId(i + 1));
+		for(EnumRobotMaterial material : ModItems.MATERIALS.keySet()) {
+			for(EnumRobotPart part : ModItems.MATERIALS.get(material).keySet()) {
+				if(ModItems.MATERIALS.get(material).get(part).get().equals(item)) {
+					return RobotPart.get(part, material);
 				}
 			}
 		}
@@ -57,7 +57,7 @@ public class RobotPart {
 
 	public Item getItem() {
 		if(material == EnumRobotMaterial.NONE) return Items.AIR;
-		return ModItems.MATERIALS[material.getID() - 1][part.getID()].get();
+		return ModItems.MATERIALS.get(material).get(part).get();
 	}
 
 	public ItemStack getItemStack(int count) {

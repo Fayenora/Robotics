@@ -65,8 +65,9 @@ public class RoboticsJEIPlugin implements IModPlugin {
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
         Registry<Perk> perkRegistry = Robotics.proxy.getRegistryAccess().registryOrThrow(ModPerks.KEY);
+        List<Perk> perks = perkRegistry.stream().filter(p -> !p.getKey().equals(ModPerks.PERK_UNDEFINED.getId())).toList();
         ingredientRegistration = registration;
-        ingredientRegistration.register(INGREDIENT_PERK, perkRegistry.stream().toList(), new IngredientPerk(), new IngredientPerk());
+        ingredientRegistration.register(INGREDIENT_PERK, perks, new IngredientPerk(), new IngredientPerk());
     }
 
     @Override

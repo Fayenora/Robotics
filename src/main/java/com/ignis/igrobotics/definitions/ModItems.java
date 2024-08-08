@@ -12,6 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class ModItems {
@@ -48,22 +49,22 @@ public class ModItems {
 
     public static final RegistryObject<Item> COMMANDER = ITEMS.register("commander", CommanderItem::new);
 
-    public static final RegistryObject<Item>[] WIRES = new RegistryObject[Reference.WIRE_METALS.length];
-    public static final HashMap<EnumRobotMaterial, RegistryObject<Item>> PLATES = new HashMap<>();
-    public static final RegistryObject<Item>[][] MATERIALS = new RegistryObject[EnumRobotMaterial.valuesWithoutEmpty().length][];
+    public static final Map<EnumRobotMaterial, RegistryObject<Item>> WIRES = new HashMap<>();
+    public static final Map<EnumRobotMaterial, RegistryObject<Item>> PLATES = new HashMap<>();
+    public static final Map<EnumRobotMaterial, Map<EnumRobotPart, RegistryObject<Item>>> MATERIALS = new HashMap<>();
 
     static {
         int i = 0;
         for(EnumRobotMaterial material : Reference.WIRE_METALS) {
-            WIRES[i++] = registerBasicItem(material.getName() + "_wire");
+            WIRES.put(material, registerBasicItem(material.getName() + "_wire"));
         }
         for(EnumRobotMaterial material : EnumRobotMaterial.valuesWithoutEmpty()) {
             if(material.hasPlate()) {
                 PLATES.put(material, registerBasicItem("plate_" + material.getName()));
             }
-            MATERIALS[material.getID() - 1] = new RegistryObject[EnumRobotPart.values().length];
+            MATERIALS.put(material, new HashMap<>());
             for(EnumRobotPart part : EnumRobotPart.values()) {
-                MATERIALS[material.getID() - 1][part.getID()] = ITEMS.register(material.getName() + "_" + part.getName(), () -> new Item(new Item.Properties().stacksTo(1)));
+                MATERIALS.get(material).put(part, ITEMS.register(material.getName() + "_" + part.getName(), () -> new Item(new Item.Properties().stacksTo(1))));
             }
         }
     }

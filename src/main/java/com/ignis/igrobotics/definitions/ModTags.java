@@ -8,23 +8,23 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The tags defined here are only used for the generator {@link com.ignis.igrobotics.datagen.TagGenerator}
  */
 public class ModTags {
 
-    public static final List<TagKey<Item>> PART_TAGS = new ArrayList<>();
-    public static final List<TagKey<Item>> MATERIAL_TAGS = new ArrayList<>();
+    public static final Map<EnumModuleSlot, TagKey<Item>> PART_TAGS = new HashMap<>();
+    public static final Map<EnumRobotMaterial, TagKey<Item>> MATERIAL_TAGS = new HashMap<>();
 
     static {
         for(EnumRobotMaterial material : EnumRobotMaterial.valuesWithoutEmpty()) {
-            MATERIAL_TAGS.add(tag("material/" +material.getName()));
+            MATERIAL_TAGS.put(material, tag("material/" +material.getName()));
         }
         for(EnumModuleSlot part : EnumModuleSlot.values()) {
-            PART_TAGS.add(tag("part/" + part.getSerializedName()));
+            PART_TAGS.put(part, tag("part/" + part.getSerializedName()));
         }
     }
 

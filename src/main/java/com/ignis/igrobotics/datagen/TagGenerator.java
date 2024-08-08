@@ -1,18 +1,23 @@
 package com.ignis.igrobotics.datagen;
 
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.CompletableFuture;
 
+@ParametersAreNonnullByDefault
 public class TagGenerator extends IntrinsicHolderTagsProvider<Item> {
 
     public TagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> pLookupProvider, ExistingFileHelper fileHelper) {
@@ -23,18 +28,14 @@ public class TagGenerator extends IntrinsicHolderTagsProvider<Item> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        int nMaterials = Math.min(ModTags.MATERIAL_TAGS.size(), ModItems.MATERIALS.length);
-        int nParts = Math.min(ModTags.PART_TAGS.size(), ModItems.MATERIALS[0].length);
-        for(int i = 0; i < nMaterials; i++) {
-            TagKey<Item> key = ModTags.MATERIAL_TAGS.get(i);
-            for(var material : ModItems.MATERIALS[i]) {
-                tag(key).add(material.getKey());
-            }
-        }
-        for(int j = 0; j < nParts; j++) {
-            TagKey<Item> key = ModTags.PART_TAGS.get(j);
-            for(int i = 0; i < nMaterials; i++) {
-                tag(key).add(ModItems.MATERIALS[i][j].getKey());
+        for(EnumRobotMaterial material : ModItems.MATERIALS.keySet()) {
+            for(EnumRobotPart part : ModItems.MATERIALS.get(material).keySet()) {
+                TagKey<Item> materialTag = ModTags.MATERIAL_TAGS.get(material);
+                TagKey<Item> partTag = ModTags.PART_TAGS.get(part.toModuleSlot());
+                ResourceKey<Item> itemKey = ModItems.MATERIALS.get(material).get(part).getKey();
+                if(itemKey == null) continue;
+                tag(materialTag).add(itemKey);
+                tag(partTag).add(itemKey);
             }
         }
     }

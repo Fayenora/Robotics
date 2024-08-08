@@ -30,4 +30,15 @@ public enum EnumRobotPart {
     public String toString() {
         return name;
     }
+
+    public EnumModuleSlot toModuleSlot() {
+        return switch (this) {
+            case BODY -> EnumModuleSlot.BODY;
+            case HEAD -> EnumModuleSlot.HEAD;
+            case LEFT_ARM -> EnumModuleSlot.LEFT_ARM;
+            case LEFT_LEG -> EnumModuleSlot.LEFT_LEG;
+            case RIGHT_ARM -> EnumModuleSlot.RIGHT_ARM;
+            case RIGHT_LEG -> EnumModuleSlot.RIGHT_LEG;
+        };
+    }
 }
