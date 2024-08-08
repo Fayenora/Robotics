@@ -47,7 +47,7 @@ public enum EnumRobotMaterial {
     PSIMETAL("psimetal", 3),
 
     // Non-metals
-    DIAMOND("diamond", 4),
+    DIAMOND("diamond", 4, ItemTags.create(new ResourceLocation("forge", "gems/diamond"))),
     NETHERITE("netherite", 4);
     // AMETHYST
 
@@ -65,10 +65,18 @@ public enum EnumRobotMaterial {
         this(name, stiffness, null, true);
     }
 
+    EnumRobotMaterial(String name, int stiffness, TagKey<Item> metalTag) {
+        this(name, stiffness, metalTag, null, true);
+    }
+
     EnumRobotMaterial(String name, int stiffness, @Nullable EnumRobotMaterial corrodesTo, boolean hasPlate) {
+        this(name, stiffness, ItemTags.create(new ResourceLocation("forge", "ingots/" + name)), corrodesTo, hasPlate);
+    }
+
+    EnumRobotMaterial(String name, int stiffness, TagKey<Item> metalTag, @Nullable EnumRobotMaterial corrodesTo, boolean hasPlate) {
         this.name = name;
         this.stiffness = stiffness;
-        this.metalTag = ItemTags.create(new ResourceLocation("forge", "ingots/" + name));
+        this.metalTag = metalTag;
         this.corrodesTo = corrodesTo;
         this.hasPlate = hasPlate;
     }

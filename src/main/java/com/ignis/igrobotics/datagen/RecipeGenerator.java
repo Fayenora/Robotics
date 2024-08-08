@@ -10,12 +10,18 @@ import com.ignis.igrobotics.core.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class RecipeGenerator extends RecipeProvider {
 
@@ -27,6 +33,13 @@ public class RecipeGenerator extends RecipeProvider {
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> writer) {
         for(EnumRobotMaterial material : ModItems.PLATES.keySet()) {
             ItemLike plate = ModItems.PLATES.get(material).get();
+            ItemLike head = ModItems.MATERIALS[material.getID() - 1][0].get();
+            ItemLike body = ModItems.MATERIALS[material.getID() - 1][1].get();
+
+            ICondition condition = new NotCondition(new TagEmptyCondition(material.getMetal().location()));
+            Function<ResourceLocation, Consumer<FinishedRecipe>> requiresMaterial = loc -> recipe -> ConditionalRecipe.builder().addCondition(condition).addRecipe(recipe).build(writer, loc);
+            Function<ItemLike, Consumer<FinishedRecipe>> requiresMaterial2 = item -> requiresMaterial.apply(RecipeBuilder.getDefaultRecipeId(item));
+            Function<EnumRobotPart, Consumer<FinishedRecipe>> requiresMaterial3 = part -> requiresMaterial2.apply(ModItems.MATERIALS[material.getID() - 1][part.getID()].get());
 
             //Plate
             new AssemblerRecipeBuilder(plate)
@@ -34,10 +47,10 @@ public class RecipeGenerator extends RecipeProvider {
                     .define('i', material.getMetal())
                     .energyRequirement(material.getStiffness() * 10000)
                     .processingTime(material.getStiffness() * 100)
-                    .save(writer);
+                    .save(requiresMaterial2.apply(plate));
 
             //Head
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][0].get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, head)
                     .unlockedBy(getHasName(plate), has(plate))
                     .define('n', ModItems.NEURAL_PROCESSING_UNIT.get())
                     .define('p', plate)
@@ -45,10 +58,10 @@ public class RecipeGenerator extends RecipeProvider {
                     .pattern("ppp")
                     .pattern("pnp")
                     .pattern(" c ")
-                    .save(writer);
+                    .save(requiresMaterial2.apply(head));
 
             //Body
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][1].get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, body)
                     .unlockedBy(getHasName(plate), has(plate))
                     .define('p', plate)
                     .define('b', ModItems.MODULE_BATTERY.get())
@@ -58,44 +71,49 @@ public class RecipeGenerator extends RecipeProvider {
                     .pattern("pgp")
                     .pattern("bwb")
                     .pattern("pcp")
-                    .save(writer);
-
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][2].get())
-                    .unlockedBy(getHasName(plate), has(plate))
-                    .requires(ModItems.MATERIALS[material.getID() - 1][3].get()).save(writer, Robotics.MODID + ":" + material.getName() + "_left_to_right_arm");
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][3].get())
-                    .unlockedBy(getHasName(plate), has(plate))
-                    .requires(ModItems.MATERIALS[material.getID() - 1][2].get()).save(writer, Robotics.MODID + ":" + material.getName() + "_right_to_left_arm");
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][4].get())
-                    .unlockedBy(getHasName(plate), has(plate))
-                    .requires(ModItems.MATERIALS[material.getID() - 1][5].get()).save(writer, Robotics.MODID + ":" + material.getName() + "_left_to_right_leg");
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][5].get())
-                    .unlockedBy(getHasName(plate), has(plate))
-                    .requires(ModItems.MATERIALS[material.getID() - 1][4].get()).save(writer, Robotics.MODID + ":" + material.getName() + "_right_to_left_leg");
+                    .save(requiresMaterial2.apply(body));
 
             defineLimb(material, EnumRobotPart.RIGHT_ARM)
                     .pattern("mp ")
                     .pattern("pwp")
                     .pattern(" pm")
-                    .save(writer);
+                    .save(requiresMaterial3.apply(EnumRobotPart.RIGHT_ARM));
 
             defineLimb(material, EnumRobotPart.LEFT_ARM)
                     .pattern(" pm")
                     .pattern("pwp")
                     .pattern("mp ")
-                    .save(writer);
+                    .save(requiresMaterial3.apply(EnumRobotPart.LEFT_ARM));
 
             defineLimb(material, EnumRobotPart.RIGHT_LEG)
                     .pattern(" mp")
                     .pattern("wmp")
                     .pattern("pp ")
-                    .save(writer);
+                    .save(requiresMaterial3.apply(EnumRobotPart.RIGHT_LEG));
 
             defineLimb(material, EnumRobotPart.LEFT_LEG)
                     .pattern("pm ")
                     .pattern("pmw")
                     .pattern(" pp")
-                    .save(writer);
+                    .save(requiresMaterial3.apply(EnumRobotPart.LEFT_LEG));
+
+            // Conversion recipes
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][2].get())
+                    .unlockedBy(getHasName(plate), has(plate))
+                    .requires(ModItems.MATERIALS[material.getID() - 1][3].get())
+                    .save(requiresMaterial.apply(Robotics.rl(material.getName() + "_left_to_right_arm")));
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][3].get())
+                    .unlockedBy(getHasName(plate), has(plate))
+                    .requires(ModItems.MATERIALS[material.getID() - 1][2].get())
+                    .save(requiresMaterial.apply(Robotics.rl(material.getName() + "_right_to_left_arm")));
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][4].get())
+                    .unlockedBy(getHasName(plate), has(plate))
+                    .requires(ModItems.MATERIALS[material.getID() - 1][5].get())
+                    .save(requiresMaterial.apply(Robotics.rl(material.getName() + "_left_to_right_leg")));
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.MATERIALS[material.getID() - 1][5].get())
+                    .unlockedBy(getHasName(plate), has(plate))
+                    .requires(ModItems.MATERIALS[material.getID() - 1][4].get())
+                    .save(requiresMaterial.apply(Robotics.rl(material.getName() + "_right_to_left_leg")));
         }
 
         int i = 0;
