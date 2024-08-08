@@ -27,7 +27,7 @@ import java.util.List;
 public class ModAttributes {
 
     public static final Attribute ENERGY_CAPACITY = register("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE, true);
-    public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 100, -Double.MAX_VALUE, Double.MAX_VALUE, false);
+    public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 30, -Double.MAX_VALUE, Double.MAX_VALUE, false);
     public static final List<Attribute> MODIFIER_SLOTS = new ArrayList<>(EnumModuleSlot.values().length);
     public static final Attribute STACK_SIZE = register("robot.stack_size", 1, 0, 6, true); // Multiplier value -> more is better
     public static final Attribute LOGISTICS_TIME = register("robot.logistics_time", 1, 0.2, 10, false); // Time multiplier for logistics operations -> less is better

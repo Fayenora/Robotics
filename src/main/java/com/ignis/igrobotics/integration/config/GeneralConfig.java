@@ -56,7 +56,7 @@ public class GeneralConfig extends BaseConfig {
 
         startColor = builder.comment("The color a robot has when spawned from a spawn egg").defineEnum("Start Color", DyeColor.RED);
         constructionTime = builder.defineInRange("Construction Time", 1800, 10, Integer.MAX_VALUE);
-        constructionEnergyCost = builder.defineInRange("Construction Energy Cost", 500000, 0, Integer.MAX_VALUE);
+        constructionEnergyCost = builder.defineInRange("Construction Energy Cost", 1000000, 0, Integer.MAX_VALUE);
 
         robotEnergyCapacity = builder.defineInRange("Energy Capacity", 1000000, 1, Long.MAX_VALUE);
         robotBaseConsumption = builder.defineInRange("Base Energy Consumption Per Tick", 100, Long.MIN_VALUE, Long.MAX_VALUE);
