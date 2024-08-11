@@ -29,7 +29,6 @@ public class AttributeElement extends GuiElement {
     private final Component attribute;
     private final String value;
     private int shimmer = 0;
-    private final Random r = new Random();
 
     public AttributeElement(int x, int y, Attribute attribute, float value) {
         super(x, y, 67, 15);
@@ -52,10 +51,11 @@ public class AttributeElement extends GuiElement {
             graphics.blit(TEXTURE, getX() + shimmer, getY() + 3, 0, 193, 5, 9);
             shimmer++;
             shimmer %= width - 5;
-        } else if(r.nextDouble() > 0.999) {
+        } else if(Robotics.RANDOM.nextDouble() > 0.999) {
             shimmer++;
         }
         RenderSystem.disableBlend();
         RenderSystem.disableColorLogicOp();
+        graphics.setColor(1, 1, 1, 1);
     }
 }

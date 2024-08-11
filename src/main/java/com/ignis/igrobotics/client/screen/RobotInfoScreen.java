@@ -17,6 +17,7 @@ import com.ignis.igrobotics.core.capabilities.robot.IRobot;
 import com.ignis.igrobotics.core.robot.Selection;
 import com.ignis.igrobotics.core.util.Lang;
 import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;
@@ -54,6 +55,13 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_info.png");
     private static final Component OWNER_CAPTION = ComponentUtils.formatList(List.of(Component.translatable("owner"), Component.literal(":")), CommonComponents.EMPTY);
+    public static final List<Attribute> ATTRIBUTES_TO_EXCLUDE = new ArrayList<>();;
+
+    static {
+        ATTRIBUTES_TO_EXCLUDE.add(ForgeMod.NAMETAG_DISTANCE.get());
+        ATTRIBUTES_TO_EXCLUDE.add(Attributes.FOLLOW_RANGE);
+        ATTRIBUTES_TO_EXCLUDE.addAll(ModAttributes.MODIFIER_SLOTS);
+    }
 
     private final LivingEntity entity, entityToRender;
     private final AccessConfig access;
@@ -147,7 +155,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
         ScrollableElement attributeBar = new ScrollableElement(leftPos + 4, topPos + 5, 67, 170);
         for(Attribute attribute : menu.attributes.keySet()) {
-            if(attribute.equals(ForgeMod.NAMETAG_DISTANCE.get()) || attribute.equals(Attributes.FOLLOW_RANGE)) continue;
+            if(ATTRIBUTES_TO_EXCLUDE.contains(attribute)) continue;
             attributeBar.addElement(new AttributeElement(0, 0, attribute, menu.attributes.get(attribute)));
         }
         addElement(attributeBar);
