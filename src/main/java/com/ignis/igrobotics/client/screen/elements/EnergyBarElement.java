@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
-import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.common.helpers.util.Lang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;

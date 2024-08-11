@@ -3,8 +3,8 @@ package com.ignis.igrobotics.client.screen.elements;
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.client.screen.base.GuiElement;
-import com.ignis.igrobotics.core.util.RenderUtil;
-import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.common.helpers.util.RenderUtil;
+import com.ignis.igrobotics.common.helpers.util.StringUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -17,7 +17,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
 public class AttributeElement extends GuiElement {

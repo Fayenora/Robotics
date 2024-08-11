@@ -1,12 +1,11 @@
 package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.entity.StompedUpBlockEntity;
+import com.ignis.igrobotics.common.content.entity.StompedUpBlockEntity;
 import com.ignis.igrobotics.definitions.ModMobEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;

@@ -2,12 +2,12 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.menu.CommanderMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.RobotElement;
 import com.ignis.igrobotics.client.screen.elements.ScrollableElement;
-import com.ignis.igrobotics.core.robot.RobotView;
+import com.ignis.igrobotics.common.content.menu.CommanderMenu;
+import com.ignis.igrobotics.common.robot.RobotView;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;

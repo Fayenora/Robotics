@@ -2,12 +2,12 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.menu.StorageMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
-import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.core.util.Lang;
+import com.ignis.igrobotics.common.content.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.content.menu.StorageMenu;
+import com.ignis.igrobotics.common.helpers.util.Lang;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.mojang.blaze3d.systems.RenderSystem;

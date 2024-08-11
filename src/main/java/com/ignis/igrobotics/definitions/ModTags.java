@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumModuleSlot;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;

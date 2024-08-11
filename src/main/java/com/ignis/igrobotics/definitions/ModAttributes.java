@@ -2,10 +2,10 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.energy.ModifiableEnergyStorage;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
-import com.ignis.igrobotics.core.util.InventoryUtil;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.capabilities.ModifiableEnergyStorage;
+import com.ignis.igrobotics.common.helpers.util.InventoryUtil;
+import com.ignis.igrobotics.common.robot.EnumModuleSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

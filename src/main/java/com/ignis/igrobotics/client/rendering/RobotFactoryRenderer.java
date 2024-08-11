@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.rendering;
 
-import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.common.blocks.MachineBlock;
+import com.ignis.igrobotics.common.content.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.content.blocks.MachineBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

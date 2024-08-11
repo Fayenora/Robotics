@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.datagen;
 
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModPerks;
 import net.minecraft.data.PackOutput;
 

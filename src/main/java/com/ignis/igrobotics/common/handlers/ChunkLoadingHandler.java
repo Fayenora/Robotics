@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.chunkloading.IChunkLoader;
-import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.common.capabilities.IChunkLoader;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.helpers.types.Tuple;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;

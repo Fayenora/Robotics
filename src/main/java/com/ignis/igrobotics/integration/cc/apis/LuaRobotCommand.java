@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.integration.cc.apis;
 
-import com.ignis.igrobotics.core.robot.RobotCommand;
-import com.ignis.igrobotics.core.robot.Selection;
-import com.ignis.igrobotics.core.robot.SelectionType;
+import com.ignis.igrobotics.common.helpers.types.Selection;
+import com.ignis.igrobotics.common.helpers.types.SelectionType;
+import com.ignis.igrobotics.common.robot.RobotCommand;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 

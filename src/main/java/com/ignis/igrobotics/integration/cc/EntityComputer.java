@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.integration.cc;
 
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.commands.ICommandable;
-import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.common.capabilities.ICommandable;
+import com.ignis.igrobotics.common.capabilities.IRobot;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
 import com.ignis.igrobotics.integration.cc.apis.CommandAPI;
 import com.ignis.igrobotics.integration.cc.apis.InventoryAPI;
 import com.ignis.igrobotics.integration.cc.apis.RobotAPI;

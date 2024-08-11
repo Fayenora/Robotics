@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.screen.elements;
 
-import com.ignis.igrobotics.core.util.MathUtil;
-import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.common.helpers.util.MathUtil;
+import com.ignis.igrobotics.common.helpers.util.RenderUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.world.entity.LivingEntity;

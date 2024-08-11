@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.common.RoboticsMenus;
+import com.ignis.igrobotics.common.helpers.RoboticsMenus;
 import com.ignis.igrobotics.network.messages.BufferSerializers;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;

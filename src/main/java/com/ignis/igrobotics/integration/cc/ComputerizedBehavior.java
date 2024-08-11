@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.integration.cc;
 
-import com.ignis.igrobotics.core.capabilities.robot.IRobot;
+import com.ignis.igrobotics.common.capabilities.IRobot;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.impl.BundledRedstone;

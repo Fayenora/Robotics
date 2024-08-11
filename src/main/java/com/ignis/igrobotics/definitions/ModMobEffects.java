@@ -1,9 +1,7 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.GenericMobEffect;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextColor;
+import com.ignis.igrobotics.common.content.GenericMobEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

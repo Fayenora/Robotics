@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.robot.RobotCommand;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.robot.RobotCommand;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

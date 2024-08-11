@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.mixins;
 
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

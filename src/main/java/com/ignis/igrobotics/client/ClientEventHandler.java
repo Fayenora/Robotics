@@ -1,13 +1,13 @@
 package com.ignis.igrobotics.client;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.items.CommanderItem;
-import com.ignis.igrobotics.common.actions.IAction;
-import com.ignis.igrobotics.core.capabilities.energy.EnergyStorage;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.core.util.PosUtil;
-import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.common.capabilities.impl.EnergyStorage;
+import com.ignis.igrobotics.common.content.actions.IAction;
+import com.ignis.igrobotics.common.content.items.CommanderItem;
+import com.ignis.igrobotics.common.helpers.util.Lang;
+import com.ignis.igrobotics.common.helpers.util.PosUtil;
+import com.ignis.igrobotics.common.helpers.util.StringUtil;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.ModModules;
 import com.ignis.igrobotics.definitions.ModSounds;
 import net.minecraft.ChatFormatting;

@@ -1,45 +1,32 @@
 modLoader="javafml"
 loaderVersion="[47,)"
-license="MIT License"
-# A URL to refer people to when problems occur with this mod
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+#issueTrackerURL="https://github.com/mekanism/Mekanism/issues"
+license="MIT"
+
 [[mods]]
-modId="igrobotics"
-# The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-# ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
-# see the associated build.gradle script for how to populate this completely automatically during a build
-version="${file.jarVersion}" #mandatory
-displayName="Robotics"
-# A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
-#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
-# A URL for the "homepage" for this mod, displayed in the mod UI
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
-# A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
-credits="A huge thanks to the Forge team for making modding so accessible to everyone"
-authors="Ignis144"
+    modId="igrobotics"
+    version="${file.jarVersion}"
+    displayName="Robotics"
+    #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" # Homepage
+    logoFile="logo.png" #optional
+    authors="Renora Io"
+    credits="A huge thanks to the Forge team for making modding so accessible to everyone"
+    description=''''''
 
-description='''
-
-'''
-[[dependencies.igrobotics]]
-    modId="forge"
-    mandatory=true
-    versionRange="[47,)"
-    # An ordering relationship for the dependency - either BEFORE or AFTER must be specified if the relationship is not mandatory
-    ordering="NONE"
-    side="BOTH"
 [[dependencies.igrobotics]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.20.1,1.20.2)"
-    ordering="NONE"
+    side="BOTH"
+[[dependencies.igrobotics]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
     side="BOTH"
 [[dependencies.igrobotics]]
     modId="geckolib"
     mandatory=true
     versionRange="[4.4.0,)"
-    ordering="NONE"
     side="BOTH"
 [[dependencies.igrobotics]]
     modId="computercraft"

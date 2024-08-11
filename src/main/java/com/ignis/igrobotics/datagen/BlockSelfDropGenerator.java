@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.datagen;
 
-import com.ignis.igrobotics.core.CopyContentsFunction;
+import com.ignis.igrobotics.common.misc.CopyContentsFunction;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;

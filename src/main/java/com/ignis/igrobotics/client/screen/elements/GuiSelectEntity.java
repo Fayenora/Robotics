@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.selectors.SelectorElement;
-import com.ignis.igrobotics.core.util.MathUtil;
+import com.ignis.igrobotics.common.helpers.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;

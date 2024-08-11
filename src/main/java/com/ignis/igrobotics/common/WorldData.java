@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.common;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.access.WorldAccessData;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.robot.RobotView;
+import com.ignis.igrobotics.common.access.WorldAccessData;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.robot.RobotView;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

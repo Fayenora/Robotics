@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.client.rendering.layers;
 
-import com.ignis.igrobotics.common.entity.RobotEntity;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.robot.IRobot;
-import com.ignis.igrobotics.core.robot.RobotModule;
+import com.ignis.igrobotics.common.capabilities.IRobot;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.content.entity.RobotEntity;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.ModModules;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

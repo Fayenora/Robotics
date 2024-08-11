@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.network.messages.server;
 
+import com.ignis.igrobotics.common.access.AccessConfig;
+import com.ignis.igrobotics.common.access.WorldAccessData;
 import com.ignis.igrobotics.common.handlers.RobotBehavior;
-import com.ignis.igrobotics.core.access.AccessConfig;
-import com.ignis.igrobotics.core.access.WorldAccessData;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;

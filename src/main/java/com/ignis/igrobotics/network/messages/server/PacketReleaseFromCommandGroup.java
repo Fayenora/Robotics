@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.network.messages.server;
 
 import com.ignis.igrobotics.common.WorldData;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.util.EntityFinder;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.helpers.EntityFinder;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;

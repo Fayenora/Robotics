@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.client.rendering;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.entity.RobotEntity;
+import com.ignis.igrobotics.common.content.entity.RobotEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 

@@ -1,10 +1,10 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.util.Lang;
-import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
+import com.ignis.igrobotics.common.helpers.types.Tuple;
+import com.ignis.igrobotics.common.helpers.util.Lang;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.ModPerks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

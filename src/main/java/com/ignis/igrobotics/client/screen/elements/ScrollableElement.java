@@ -2,7 +2,7 @@ package com.ignis.igrobotics.client.screen.elements;
 
 import com.ignis.igrobotics.client.screen.base.GuiElement;
 import com.ignis.igrobotics.client.screen.base.IElement;
-import com.ignis.igrobotics.core.util.RenderUtil;
+import com.ignis.igrobotics.common.helpers.util.RenderUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;

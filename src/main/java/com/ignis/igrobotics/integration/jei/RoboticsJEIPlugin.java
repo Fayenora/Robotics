@@ -1,16 +1,16 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.menu.AssemblerMenu;
-import com.ignis.igrobotics.common.menu.WireCutterMenu;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
 import com.ignis.igrobotics.client.screen.WireCutterScreen;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
-import com.ignis.igrobotics.common.recipes.AssemblerRecipes;
-import com.ignis.igrobotics.common.recipes.WireCutterRecipes;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
+import com.ignis.igrobotics.common.content.menu.AssemblerMenu;
+import com.ignis.igrobotics.common.content.menu.WireCutterMenu;
+import com.ignis.igrobotics.common.content.recipes.AssemblerRecipes;
+import com.ignis.igrobotics.common.content.recipes.WireCutterRecipes;
+import com.ignis.igrobotics.common.helpers.types.Tuple;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.ignis.igrobotics.definitions.ModPerks;

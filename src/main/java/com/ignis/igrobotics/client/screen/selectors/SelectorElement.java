@@ -1,10 +1,9 @@
 package com.ignis.igrobotics.client.screen.selectors;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.client.screen.base.IBaseGui;
 import com.ignis.igrobotics.client.screen.base.IElement;
 import com.ignis.igrobotics.client.screen.elements.ButtonElement;
-import com.ignis.igrobotics.core.robot.Selection;
+import com.ignis.igrobotics.common.helpers.types.Selection;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;

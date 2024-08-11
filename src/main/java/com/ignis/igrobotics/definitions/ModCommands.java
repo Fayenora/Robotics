@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.entity.ai.*;
-import com.ignis.igrobotics.core.EntitySearch;
-import com.ignis.igrobotics.core.robot.CommandType;
+import com.ignis.igrobotics.common.content.entity.ai.*;
+import com.ignis.igrobotics.common.helpers.types.EntitySearch;
+import com.ignis.igrobotics.common.robot.CommandType;
 import com.mojang.datafixers.util.Function3;
 import com.mojang.datafixers.util.Function4;
 import com.mojang.datafixers.util.Function5;

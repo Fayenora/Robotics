@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumRobotPart;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;

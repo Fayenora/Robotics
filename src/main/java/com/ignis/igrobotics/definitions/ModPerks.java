@@ -1,12 +1,12 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.perks.*;
-import com.ignis.igrobotics.common.perks.modules.PerkFist;
-import com.ignis.igrobotics.common.perks.modules.PerkGenerator;
-import com.ignis.igrobotics.common.perks.modules.PerkSolarPanel;
-import com.ignis.igrobotics.common.perks.modules.PerkUnarmedAttack;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
+import com.ignis.igrobotics.common.content.perks.*;
+import com.ignis.igrobotics.common.content.perks.modules.PerkFist;
+import com.ignis.igrobotics.common.content.perks.modules.PerkGenerator;
+import com.ignis.igrobotics.common.content.perks.modules.PerkSolarPanel;
+import com.ignis.igrobotics.common.content.perks.modules.PerkUnarmedAttack;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;

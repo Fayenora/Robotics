@@ -2,7 +2,7 @@ package com.ignis.igrobotics.definitions;
 
 import com.google.common.base.Functions;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.actions.*;
+import com.ignis.igrobotics.common.content.actions.*;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

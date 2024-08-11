@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.integration.jei;
 
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientRenderer;

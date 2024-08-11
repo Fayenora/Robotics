@@ -1,11 +1,11 @@
 package com.ignis.igrobotics.datagen;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.recipes.AssemblerRecipeBuilder;
-import com.ignis.igrobotics.common.recipes.WireCutterRecipeBuilder;
-import com.ignis.igrobotics.core.CountedIngredient;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.common.content.recipes.AssemblerRecipeBuilder;
+import com.ignis.igrobotics.common.content.recipes.WireCutterRecipeBuilder;
+import com.ignis.igrobotics.common.misc.CountedIngredient;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumRobotPart;
 import com.ignis.igrobotics.definitions.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;

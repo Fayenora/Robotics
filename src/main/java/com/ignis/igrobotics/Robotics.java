@@ -1,9 +1,9 @@
 package com.ignis.igrobotics;
 
-import com.ignis.igrobotics.core.CountedIngredient;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.robot.SelectionType;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
+import com.ignis.igrobotics.common.helpers.types.SelectionType;
+import com.ignis.igrobotics.common.misc.CountedIngredient;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.*;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import com.ignis.igrobotics.network.NetworkHandler;

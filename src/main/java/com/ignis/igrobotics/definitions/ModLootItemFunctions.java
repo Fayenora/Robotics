@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.CopyContentsFunction;
+import com.ignis.igrobotics.common.misc.CopyContentsFunction;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.Registries;

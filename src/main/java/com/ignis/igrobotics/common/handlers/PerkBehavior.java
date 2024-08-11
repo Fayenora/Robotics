@@ -1,13 +1,13 @@
 package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.events.ModuleActivationEvent;
-import com.ignis.igrobotics.core.events.PerkChangeEvent;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.util.Tuple;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
+import com.ignis.igrobotics.common.content.events.ModuleActivationEvent;
+import com.ignis.igrobotics.common.content.events.PerkChangeEvent;
+import com.ignis.igrobotics.common.helpers.types.Tuple;
+import com.ignis.igrobotics.common.robot.EnumRobotPart;
+import com.ignis.igrobotics.common.robot.RobotPart;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.ignis.igrobotics.definitions.ModPerks;
 import net.minecraft.server.level.ServerLevel;

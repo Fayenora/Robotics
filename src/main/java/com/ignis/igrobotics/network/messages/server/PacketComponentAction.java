@@ -1,13 +1,13 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.common.blockentity.IMuffleable;
-import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.common.blocks.MachineBlock;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.robot.IRobot;
-import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.util.InventoryUtil;
+import com.ignis.igrobotics.common.capabilities.IRobot;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.content.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.content.blockentity.IMuffleable;
+import com.ignis.igrobotics.common.content.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.content.blocks.MachineBlock;
+import com.ignis.igrobotics.common.helpers.util.InventoryUtil;
+import com.ignis.igrobotics.common.robot.RobotPart;
 import com.ignis.igrobotics.network.messages.IMessage;
 import com.ignis.igrobotics.network.messages.NetworkInfo;
 import net.minecraft.network.FriendlyByteBuf;

@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.robot.RobotPart;
-import com.ignis.igrobotics.core.util.InventoryUtil;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.helpers.util.InventoryUtil;
+import com.ignis.igrobotics.common.robot.RobotPart;
 import com.ignis.igrobotics.integration.config.RoboticsConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;

@@ -2,9 +2,9 @@ package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.items.CommanderItem;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
+import com.ignis.igrobotics.common.content.items.CommanderItem;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumRobotPart;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;

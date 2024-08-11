@@ -1,6 +1,6 @@
 package com.ignis.igrobotics;
 
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
 import com.ignis.igrobotics.definitions.ModAttributes;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static com.ignis.igrobotics.core.robot.EnumRobotMaterial.*;
+import static com.ignis.igrobotics.common.robot.EnumRobotMaterial.*;
 
 public class Reference {
 

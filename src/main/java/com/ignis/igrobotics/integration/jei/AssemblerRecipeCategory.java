@@ -1,9 +1,9 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.common.menu.AssemblerMenu;
 import com.ignis.igrobotics.client.screen.AssemblerScreen;
-import com.ignis.igrobotics.core.MachineRecipe;
+import com.ignis.igrobotics.common.content.menu.AssemblerMenu;
+import com.ignis.igrobotics.common.content.recipes.MachineRecipe;
 import com.ignis.igrobotics.definitions.ModMachines;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

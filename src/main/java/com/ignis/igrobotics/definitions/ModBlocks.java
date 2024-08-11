@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.definitions;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.blocks.*;
+import com.ignis.igrobotics.common.content.blocks.*;
 import com.ignis.igrobotics.integration.cc.RedstoneInterface;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

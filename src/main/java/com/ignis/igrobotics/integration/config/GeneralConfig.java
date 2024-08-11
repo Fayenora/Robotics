@@ -1,9 +1,8 @@
 package com.ignis.igrobotics.integration.config;
 
-import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.common.helpers.util.StringUtil;
 import com.ignis.igrobotics.definitions.ModMachines;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;

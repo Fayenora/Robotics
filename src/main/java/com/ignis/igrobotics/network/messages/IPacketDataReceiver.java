@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.messages;
 
-import com.ignis.igrobotics.core.access.AccessConfig;
+import com.ignis.igrobotics.common.access.AccessConfig;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface IPacketDataReceiver {

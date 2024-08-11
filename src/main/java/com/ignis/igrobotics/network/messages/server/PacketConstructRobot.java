@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.messages.server;
 
-import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.content.blockentity.FactoryBlockEntity;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

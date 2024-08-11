@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.messages;
 
-import com.ignis.igrobotics.core.access.AccessConfig;
+import com.ignis.igrobotics.common.access.AccessConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.LivingEntity;

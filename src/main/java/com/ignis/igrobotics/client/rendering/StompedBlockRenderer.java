@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.client.rendering;
 
-import com.ignis.igrobotics.common.entity.StompedUpBlockEntity;
+import com.ignis.igrobotics.common.content.entity.StompedUpBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;

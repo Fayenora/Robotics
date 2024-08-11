@@ -1,6 +1,6 @@
 package com.ignis.igrobotics.network.container;
 
-import com.ignis.igrobotics.common.menu.BaseMenu;
+import com.ignis.igrobotics.common.content.menu.BaseMenu;
 import net.minecraft.network.FriendlyByteBuf;
 
 /**

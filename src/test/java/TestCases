@@ -1,6 +1,13 @@
 # Test Cases to consider
 
-- Robot follows player into new dimension
+- Robot follows entity into new dimension
 - Robots can defend themselves
 - Removal of a command implies goal removal
 - Cobblestone generator
+- Perks
+- Commands
+- Robots search new target after prev target was killed by other means
+- Long distance travel
+- Ranged combat (Potions, Bow, Crossbows)
+- Commands stop on deactivation
+- Commands continue on reactivation

@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
-import com.ignis.igrobotics.core.capabilities.shield.IShielded;
+import com.ignis.igrobotics.common.capabilities.IShielded;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;

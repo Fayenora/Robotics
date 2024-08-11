@@ -1,8 +1,8 @@
 package com.ignis.igrobotics.integration.jei;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.Machine;
-import com.ignis.igrobotics.core.MachineRecipe;
+import com.ignis.igrobotics.common.content.recipes.MachineRecipe;
+import com.ignis.igrobotics.common.helpers.types.Machine;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;

@@ -2,9 +2,9 @@ package com.ignis.igrobotics.common.handlers;
 
 import com.ignis.igrobotics.Robotics;
 import com.ignis.igrobotics.common.WorldData;
-import com.ignis.igrobotics.common.blockentity.StorageBlockEntity;
-import com.ignis.igrobotics.common.blocks.StorageBlock;
-import com.ignis.igrobotics.core.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.capabilities.ModCapabilities;
+import com.ignis.igrobotics.common.content.blockentity.StorageBlockEntity;
+import com.ignis.igrobotics.common.content.blocks.StorageBlock;
 import com.ignis.igrobotics.definitions.ModBlocks;
 import com.ignis.igrobotics.definitions.ModPerks;
 import net.minecraft.world.entity.Mob;

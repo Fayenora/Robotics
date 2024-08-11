@@ -2,11 +2,11 @@ package com.ignis.igrobotics.datagen;
 
 import com.google.gson.JsonElement;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.core.capabilities.perks.Perk;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
-import com.ignis.igrobotics.core.robot.EnumRobotMaterial;
-import com.ignis.igrobotics.core.robot.EnumRobotPart;
-import com.ignis.igrobotics.core.robot.RobotModule;
+import com.ignis.igrobotics.common.capabilities.impl.perk.Perk;
+import com.ignis.igrobotics.common.robot.EnumModuleSlot;
+import com.ignis.igrobotics.common.robot.EnumRobotMaterial;
+import com.ignis.igrobotics.common.robot.EnumRobotPart;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.ignis.igrobotics.definitions.ModPerks;
 import com.ignis.igrobotics.definitions.ModTags;

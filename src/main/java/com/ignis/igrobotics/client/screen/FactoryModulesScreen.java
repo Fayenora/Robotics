@@ -2,12 +2,12 @@ package com.ignis.igrobotics.client.screen;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.menu.FactoryModulesMenu;
 import com.ignis.igrobotics.client.screen.base.BaseContainerScreen;
 import com.ignis.igrobotics.client.screen.elements.EnergyBarElement;
 import com.ignis.igrobotics.client.screen.elements.SideBarSwitchElement;
-import com.ignis.igrobotics.common.blockentity.FactoryBlockEntity;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
+import com.ignis.igrobotics.common.content.blockentity.FactoryBlockEntity;
+import com.ignis.igrobotics.common.content.menu.FactoryModulesMenu;
+import com.ignis.igrobotics.common.robot.EnumModuleSlot;
 import com.ignis.igrobotics.definitions.ModMenuTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;

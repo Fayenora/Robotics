@@ -1,11 +1,11 @@
 package com.ignis.igrobotics.integration.cc.apis;
 
-import com.ignis.igrobotics.core.access.EnumPermission;
-import com.ignis.igrobotics.core.capabilities.robot.IRobot;
-import com.ignis.igrobotics.core.robot.EnumModuleSlot;
-import com.ignis.igrobotics.core.robot.RobotModule;
-import com.ignis.igrobotics.core.robot.SelectionType;
-import com.ignis.igrobotics.core.util.StringUtil;
+import com.ignis.igrobotics.common.access.EnumPermission;
+import com.ignis.igrobotics.common.capabilities.IRobot;
+import com.ignis.igrobotics.common.helpers.types.SelectionType;
+import com.ignis.igrobotics.common.helpers.util.StringUtil;
+import com.ignis.igrobotics.common.robot.EnumModuleSlot;
+import com.ignis.igrobotics.common.robot.RobotModule;
 import com.ignis.igrobotics.definitions.ModModules;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;

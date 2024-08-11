@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.network.messages.client;
 
 import com.ignis.igrobotics.Robotics;
-import com.ignis.igrobotics.common.menu.BaseMenu;
+import com.ignis.igrobotics.common.content.menu.BaseMenu;
 import com.ignis.igrobotics.network.container.PropertyData;
 import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;

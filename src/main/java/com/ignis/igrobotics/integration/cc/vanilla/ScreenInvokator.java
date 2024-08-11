@@ -1,7 +1,7 @@
 package com.ignis.igrobotics.integration.cc.vanilla;
 
 import com.ignis.igrobotics.Reference;
-import com.ignis.igrobotics.core.access.EnumPermission;
+import com.ignis.igrobotics.common.access.EnumPermission;
 import com.ignis.igrobotics.integration.cc.IComputerized;
 import com.ignis.igrobotics.integration.cc.ProgrammingMenu;
 import net.minecraft.world.entity.Entity;
