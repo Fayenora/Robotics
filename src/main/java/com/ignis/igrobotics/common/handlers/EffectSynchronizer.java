@@ -57,4 +57,8 @@ public class EffectSynchronizer {
     public static void removeWatcher(Entity entity, ServerPlayer watcher) {
         entitiesToSynchronize.remove(entity.getId(), watcher.getUUID());
     }
+
+    public static boolean isWatchedBy(Entity entity, ServerPlayer watcher) {
+        return entitiesToSynchronize.containsEntry(entity.getId(), watcher.getUUID());
+    }
 }

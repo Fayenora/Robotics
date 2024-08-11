@@ -5,8 +5,10 @@ import com.ignis.igrobotics.network.messages.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Collection;
@@ -79,19 +81,19 @@ public class PacketSetEntityEffects implements IMessage {
 
     @Override
     public void handle(NetworkEvent.Context cxt) {
-        Player player = Robotics.proxy.getPlayer();
+        Level level = Robotics.proxy.getLevel();
+        Entity entity = level.getEntity(entityId);
+        if(!(entity instanceof LivingEntity living)) return;
 
-        Iterator<MobEffectInstance> iterator = player.getActiveEffects().iterator();
-        while(iterator.hasNext()) {
-            iterator.next();
-            iterator.remove();
+        for(MobEffectInstance instance : living.getActiveEffects()) {
+            living.removeEffectNoUpdate(instance.getEffect());
         }
         for(int i = 0; i < effectIds.length; i++) {
             MobEffect potion = MobEffect.byId(effectIds[i] & 0xFF);
             if (potion == null) continue;
 
             MobEffectInstance effect = new MobEffectInstance(potion, durations[i], amplifiers[i], isAmbient(i), isVisible(i));
-            player.addEffect(effect);
+            living.forceAddEffect(effect, null);
         }
     }
 

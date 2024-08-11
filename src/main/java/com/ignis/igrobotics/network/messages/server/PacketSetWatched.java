@@ -39,8 +39,10 @@ public class PacketSetWatched implements IMessage {
         if(!(ent instanceof LivingEntity)) return;
 
         if(watch) {
+            if(!EffectSynchronizer.isWatchedBy(ent, cxt.getSender())) {
+                NetworkHandler.sendToPlayer(new PacketSetEntityEffects((LivingEntity) ent), cxt.getSender());
+            }
             EffectSynchronizer.addWatcher(ent, cxt.getSender());
-            NetworkHandler.sendToPlayer(new PacketSetEntityEffects((LivingEntity) ent), cxt.getSender());
         } else {
             EffectSynchronizer.removeWatcher(ent, cxt.getSender());
         }
