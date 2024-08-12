@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,9 +48,6 @@ public class ModModules {
         return overlays.get(id);
     }
 
-    /**
-     * Register a {@link RobotModule} for quick lookup through {@link #get(Level, Item)}
-     */
     private static void registerModule(RobotModule module) {
         if(module == null) return;
         for(ItemStack stack : module.getItems().getItems()) {

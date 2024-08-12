@@ -18,9 +18,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
 
+@ParametersAreNonnullByDefault
 public class FactoryModulesScreen extends BaseContainerScreen<FactoryModulesMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_factory_modules.png");
@@ -28,7 +30,7 @@ public class FactoryModulesScreen extends BaseContainerScreen<FactoryModulesMenu
     FactoryBlockEntity factory;
     public SideBarSwitchElement sideBar;
 
-    private Map<EnumModuleSlot, Integer> moduleSlots;
+    private final Map<EnumModuleSlot, Integer> moduleSlots;
 
     public FactoryModulesScreen(FactoryModulesMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

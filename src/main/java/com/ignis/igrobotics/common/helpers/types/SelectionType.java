@@ -47,7 +47,7 @@ public class SelectionType<T> {
         CompoundTag tag = new CompoundTag();
         tag.putInt("value", number);
         return tag;
-    }, tag -> tag.getInt("value"), string -> Integer.valueOf(Arrays.stream(string.split("\\D")).filter(s -> s.length() > 0).findFirst().get()), Object::toString);
+    }, tag -> tag.getInt("value"), string -> Integer.valueOf(Arrays.stream(string.split("\\D")).filter(s -> !s.isEmpty()).findFirst().get()), Object::toString);
     public static final SelectionType<EntitySearch> ENTITY_PREDICATE = register("<Entity-Predicate>", EntitySearch.class, EntitySearch::searchForNone, EntitySearch::serializeNBT, EntitySearch::of, EntitySearch::new, EntitySearch::toString);
 
     private final String identifier;

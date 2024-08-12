@@ -29,7 +29,7 @@ public class RangedGenericAttack extends AbstractRangedAttackGoal {
         if(ammunition.getItem() instanceof ThrowablePotionItem) {
             ThrownPotion thrownpotion = new ThrownPotion(attacker.level(), attacker);
             thrownpotion.setItem(ammunition);
-            thrownpotion.setXRot(thrownpotion.getXRot() - -20.0F);
+            thrownpotion.setXRot(thrownpotion.getXRot() + 20.0F);
             return thrownpotion;
         }
         return ProjectileUtil.getMobArrow(attacker, ammunition, force);
@@ -65,7 +65,7 @@ public class RangedGenericAttack extends AbstractRangedAttackGoal {
             performAttack(f1);
             this.attackDelay = Mth.floor(f * (float)(this.attackIntervalMax - this.attackIntervalMin) + (float)this.attackIntervalMin);
         } else if (this.attackDelay < 0) {
-            this.attackDelay = Mth.floor(Mth.lerp(Math.sqrt(distanceToTarget) / (double)this.attackRadius, (double)this.attackIntervalMin, (double)this.attackIntervalMax));
+            this.attackDelay = Mth.floor(Mth.lerp(Math.sqrt(distanceToTarget) / (double)this.attackRadius, this.attackIntervalMin, this.attackIntervalMax));
         }
     }
 }

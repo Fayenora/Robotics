@@ -2,12 +2,15 @@ package com.ignis.igrobotics.common.access;
 
 import com.ignis.igrobotics.Reference;
 import com.ignis.igrobotics.Robotics;
+import com.ignis.igrobotics.common.helpers.util.Stable;
 import com.ignis.igrobotics.network.messages.IBufferSerializable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -15,12 +18,13 @@ import java.util.UUID;
  * Manages the access rights to an object implementing the {@link ISecuredObject} interface
  * @author Ignis
  */
+@SuppressWarnings("unused")
 public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSerializable {
 	
 	/** {@link Reference#DEFAULT_UUID} if there is no owner*/
 	protected UUID owner;
 	/** Default permissions are saved under the {@link Reference#DEFAULT_UUID}. In theory, a collision could happen, but the probability approaches 0 */
-	protected HashMap<UUID, Integer> permissions = new HashMap<>();
+	protected HashMap<UUID, EnumSet<EnumPermission>> permissions = new HashMap<>();
 	
 	public AccessConfig() {
 		this(Reference.DEFAULT_UUID);
@@ -38,32 +42,28 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 	public boolean hasPermission(UUID player, EnumPermission permission) {
 		if(player.equals(owner)) return true;
 		if(permissions.containsKey(player)) {
-			return permission.fulfills(permissions.get(player));
+			return permissions.get(player).contains(permission);
 		}
-		return permission.fulfills(permissions.get(Reference.DEFAULT_UUID));
+		return permissions.get(Reference.DEFAULT_UUID).contains(permission);
 	}
 	
-	private int getPermissions(UUID player) {
+	public EnumSet<EnumPermission> getPermissions(UUID player) {
 		if(player != null && permissions.containsKey(player)) {
 			return permissions.get(player);
 		}
 		return getDefaultPermissions();
 	}
 	
-	private void setPermissions(UUID player, int permissions) {
+	private void setPermissions(UUID player, EnumSet<EnumPermission> permissions) {
 		this.permissions.put(player, permissions);
 	}
 	
 	public void addPermission(UUID player, EnumPermission permission) {
-		if(player == null) return; 
-		int currentPermissions = getPermissions(player);
-		setPermissions(player, EnumPermission.combine(currentPermissions, permission));
+		permissions.get(player).add(permission);
 	}
 	
 	public void removePermission(UUID player, EnumPermission permission) {
-		if(player == null) return;
-		int currentPermissions = getPermissions(player);
-		setPermissions(player, EnumPermission.remove(currentPermissions, permission));
+		permissions.get(player).remove(permission);
 	}
 	
 	public void addDefaultPermission(EnumPermission permission) {
@@ -85,7 +85,7 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 		nbt.putUUID("owner", getOwner());
 		CompoundTag permissionNBT = new CompoundTag();
 		for(UUID key : permissions.keySet()) {
-			permissionNBT.putInt(key.toString(), permissions.get(key));
+			permissionNBT.putInt(key.toString(), Stable.encode(permissions.get(key)));
 		}
 		nbt.put("permissions", permissionNBT);
 		return nbt;
@@ -97,7 +97,7 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 		permissions = new HashMap<>();
 		CompoundTag permissionNBT = nbt.getCompound("permissions");
 		for(String key : permissionNBT.getAllKeys()) {
-			permissions.put(UUID.fromString(key), permissionNBT.getInt(key));
+			permissions.put(UUID.fromString(key), Stable.decode(permissionNBT.getInt(key), EnumPermission.class));
 		}
 	}
 
@@ -107,18 +107,17 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 		int size = buffer.readInt();
 		for(int i = 0; i < size; i++) {
 			UUID player = buffer.readUUID();
-			int permissions = buffer.readInt();
-			setPermissions(player, permissions);
+			setPermissions(player, buffer.readEnumSet(EnumPermission.class));
 		}
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUUID(getOwner());
-		buffer.writeInt(getPermissions().size());
-		for(UUID key : getPermissions().keySet()) {
+		buffer.writeInt(permissions.size());
+		for(UUID key : permissions.keySet()) {
 			buffer.writeUUID(key);
-			buffer.writeInt(getPermissions().get(key));
+			buffer.writeEnumSet(getPermissions(key), EnumPermission.class);
 		}
 	}
 	
@@ -129,12 +128,14 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 		}
 		AccessConfig toReturn = new AccessConfig();
 		toReturn.setOwner(getOwner());
-		for(UUID player : this.getPermissions().keySet()) {
+		for(UUID player : permissions.keySet()) {
 			toReturn.permissions.put(player, this.getPermissions(player));
 		}
-		for(UUID player : config.getPermissions().keySet()) {
+		for(UUID player : config.permissions.keySet()) {
 			if(toReturn.permissions.containsKey(player)) {
-				toReturn.permissions.put(player, toReturn.permissions.get(player) | config.getPermissions(player));
+				EnumSet<EnumPermission> combinedPermissions = EnumSet.copyOf(config.getPermissions(player));
+				combinedPermissions.addAll(this.getPermissions(player));
+				toReturn.permissions.put(player, combinedPermissions);
 			} else toReturn.permissions.put(player, config.getPermissions(player));
 		}
 		return toReturn;
@@ -147,12 +148,14 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 		}
 		AccessConfig toReturn = new AccessConfig();
 		toReturn.setOwner(getOwner());
-		for(UUID player : this.getPermissions().keySet()) {
+		for(UUID player : this.permissions.keySet()) {
 			if(config.permissions.containsKey(player)) {
-				toReturn.permissions.put(player, config.getPermissions(player) & this.getPermissions(player));
+				EnumSet<EnumPermission> combinedPermissions = EnumSet.complementOf(config.getPermissions(player));
+				combinedPermissions.addAll(EnumSet.complementOf(this.getPermissions(player)));
+				toReturn.permissions.put(player, EnumSet.complementOf(combinedPermissions));
 			} else toReturn.permissions.put(player, this.getPermissions(player));
 		}
-		for(UUID player : config.getPermissions().keySet()) {
+		for(UUID player : config.permissions.keySet()) {
 			if(this.permissions.containsKey(player)) continue;
 			toReturn.permissions.put(player, config.getPermissions(player));
 		}
@@ -175,12 +178,12 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 		return !owner.equals(Reference.DEFAULT_UUID);
 	}
 	
-	public int getDefaultPermissions() {
+	public EnumSet<EnumPermission> getDefaultPermissions() {
 		return permissions.get(Reference.DEFAULT_UUID);
 	}
-	
-	public HashMap<UUID, Integer> getPermissions() {
-		return new HashMap<>(permissions);
+
+	public Collection<UUID> players() {
+		return permissions.keySet();
 	}
 
 }

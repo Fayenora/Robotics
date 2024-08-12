@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common.content.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.ignis.igrobotics.common.content.blockentity.ChargerBlockEntity;
 import com.ignis.igrobotics.definitions.ModMachines;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -22,8 +23,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Function;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class ChargerBlock extends BaseEntityBlock {
 
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");

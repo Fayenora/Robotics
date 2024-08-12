@@ -18,6 +18,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class StompedUpBlockEntity extends ThrowableProjectile {
 
     private float damage = 4f;
@@ -72,7 +75,6 @@ public class StompedUpBlockEntity extends ThrowableProjectile {
         float f;
         if (this.isInWater()) {
             for (int i = 0; i < 4; ++i) {
-                float f1 = 0.25F;
                 this.level().addParticle(ParticleTypes.BUBBLE, d2 - vec3.x * 0.25D, d0 - vec3.y * 0.25D, d1 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
             }
 
@@ -81,7 +83,7 @@ public class StompedUpBlockEntity extends ThrowableProjectile {
             f = 0.99F;
         }
 
-        this.setDeltaMovement(vec3.scale((double) f));
+        this.setDeltaMovement(vec3.scale(f));
         if (!this.isNoGravity()) {
             Vec3 vec31 = this.getDeltaMovement();
             this.setDeltaMovement(vec31.x, vec31.y - (double) this.getGravity(), vec31.z);

@@ -12,6 +12,7 @@ import com.ignis.igrobotics.common.helpers.util.Lang;
 import com.ignis.igrobotics.common.helpers.util.RenderUtil;
 import com.ignis.igrobotics.definitions.ModItems;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,8 +30,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.List;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
+@MethodsReturnNonnullByDefault
 public class PosSelector extends SelectorElement<GlobalPos> {
 
 	public PosSelector(Selection<GlobalPos> sel, int x, int y) {
@@ -118,8 +121,9 @@ public class PosSelector extends SelectorElement<GlobalPos> {
 		}
 
 		private void updateTextFields() {
-			Level relevantLevel = ServerLifecycleHooks.getCurrentServer().getLevel(selection.get().dimension());
-			if(relevantLevel == null) ServerLifecycleHooks.getCurrentServer().overworld();
+			Level relevantLevel = Objects.requireNonNullElse(
+					ServerLifecycleHooks.getCurrentServer().getLevel(selection.get().dimension()),
+					ServerLifecycleHooks.getCurrentServer().overworld());
 			dimensionSelection.setDim(selection.get().dimension());
 			textFieldX.setValue(Integer.toString(selection.get().pos().getX()));
 			textFieldY.setValue(Integer.toString(selection.get().pos().getY()));

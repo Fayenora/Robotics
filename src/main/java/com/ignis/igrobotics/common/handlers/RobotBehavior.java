@@ -257,7 +257,7 @@ public class RobotBehavior {
     }
 
     public static List<MenuType<?>> possibleMenus(Entity entity) {
-        ArrayList<MenuType<?>> menus = new ArrayList<>();
+        List<MenuType<?>> menus = new ArrayList<>();
         menus.add(ModMenuTypes.ROBOT.get());
         menus.add(ModMenuTypes.ROBOT_INFO.get());
         menus.add(ModMenuTypes.ROBOT_COMMANDS.get());

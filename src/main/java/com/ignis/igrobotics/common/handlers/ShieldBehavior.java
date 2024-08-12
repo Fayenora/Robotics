@@ -46,7 +46,7 @@ public class ShieldBehavior {
         Projectile projectile = event.getProjectile();
         Predicate<Entity> predicate = EntitySelector.NO_SPECTATORS.and(Entity::canBeHitByProjectile);
         List<Entity> list = level.getEntities(projectile, projectile.getBoundingBox().expandTowards(projectile.getDeltaMovement()), predicate);
-        if(list.size() == 0) return;
+        if(list.isEmpty()) return;
         Entity primaryTarget = list.get(0);
         for(Entity ent : list) {
             if(event.getRayTraceResult().distanceTo(ent) < event.getRayTraceResult().distanceTo(primaryTarget)) {

@@ -4,7 +4,6 @@ import com.ignis.igrobotics.common.content.blockentity.StorageBlockEntity;
 import com.ignis.igrobotics.common.content.blocks.MachineBlock;
 import com.ignis.igrobotics.common.content.blocks.StorageBlock;
 import com.ignis.igrobotics.common.helpers.DimensionNavigator;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -35,11 +34,6 @@ public class MoveToBlockGoal extends Goal {
         this.mob = mob;
         navigator = new DimensionNavigator(mob, 16, 16, 1);
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP));
-    }
-
-    public MoveToBlockGoal(Mob mob, BlockPos target) {
-        this(mob);
-        this.blockPos = determineEnterPosition(mob.level().getBlockState(target), GlobalPos.of(mob.level().dimension(), target));
     }
 
     public MoveToBlockGoal(Mob mob, GlobalPos target) {

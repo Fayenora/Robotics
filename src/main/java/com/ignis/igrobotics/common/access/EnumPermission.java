@@ -1,48 +1,27 @@
 package com.ignis.igrobotics.common.access;
 
-public enum EnumPermission {
+import com.ignis.igrobotics.common.helpers.util.Stable;
+
+import java.util.EnumSet;
+
+public enum EnumPermission implements Stable {
 	VIEW(1),
 	INVENTORY(2), 
-	CONFIGURATION(4),
-	COMMANDS(8), 
-	ALLY(16);
+	CONFIGURATION(3),
+	COMMANDS(4),
+	ALLY(5);
 	
-	public static final int DEFAULT_PERMISSIONS = (int) (Math.pow(2, values().length) - 1);
+	public static final EnumSet<EnumPermission> DEFAULT_PERMISSIONS = EnumSet.of(VIEW, INVENTORY);
 	
 	private final int flag;
 	
 	EnumPermission(int flag) {
 		this.flag = flag;
 	}
-	
-	public boolean fulfills(int permissions) {
-		return (permissions | getFlag()) == permissions;
-	}
-	
-	public static int combine(EnumPermission... permissions) {
-		return combine(0, permissions);
-	}
-	
-	public static int combine(int currPermissions, EnumPermission... permissions) {
-		int flag = currPermissions;
-		for(EnumPermission perm : permissions) {
-			flag |= perm.flag;
-		}
-		return flag;
-	}
-	
-	public static int remove(int currPermissions, EnumPermission... permissions) {
-		int flag = currPermissions;
-		for(EnumPermission perm : permissions) {
-			//Set the according bit of the permission to 0; there may be a better way to do this
-			if(perm.fulfills(flag)) {
-				flag -= perm.flag;
-			}
-		}
-		return flag;
-	}
-	
-	public int getFlag() {
+
+	@Override
+	public int getStableId() {
 		return flag;
 	}
 }
+

@@ -27,7 +27,6 @@ import java.util.List;
 public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/computer.png");
-    private static final ResourceLocation sidebar = new ResourceLocation(Robotics.MODID, "gui/computer_sidebar.png");
 
     private final LivingEntity entity;
 
@@ -49,7 +48,6 @@ public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float p_97788_, int p_97789_, int p_97790_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        SpriteRenderer spriteRenderer = SpriteRenderer.createForGui(graphics, RenderTypes.GUI_SPRITES);
 
         graphics.setColor(1, 1, 1, 1);
         graphics.blit(TEXTURE, leftPos, topPos + sidebarYOffset, 48, 0, 17, 40);

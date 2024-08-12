@@ -20,6 +20,9 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class RobotMenu extends BaseMenu {
     public final LivingEntity robot;
 

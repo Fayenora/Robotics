@@ -59,7 +59,7 @@ public class RenderUtil {
         graphics.pose().pushPose();
         float scale = Math.min(scaleY, maxWidth / (float)font.width(text));
         graphics.pose().scale(scale, scaleY, 1);
-        graphics.drawString(Minecraft.getInstance().font, text, (int) (x / scale - font.width(text) / 2), (int) (y / scaleY), color);
+        graphics.drawString(Minecraft.getInstance().font, text, (int) (x / scale - (float) font.width(text) / 2), (int) (y / scaleY), color);
         graphics.pose().popPose();
     }
 

@@ -19,7 +19,6 @@ import com.ignis.igrobotics.network.messages.server.PacketAddCommand;
 import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketOpenRobotMenu;
 import com.ignis.igrobotics.network.messages.server.PacketReleaseFromCommandGroup;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
@@ -47,7 +46,6 @@ public class RobotElement extends ButtonElement {
     IEnergyStorage energy;
 
     private ButtonElement moveHere, powerButton;
-    private EnergyBarElement energyBar;
 
     public RobotElement(RobotView view, int pX, int pY) {
         super(pX, pY, 147, 26);
@@ -60,7 +58,7 @@ public class RobotElement extends ButtonElement {
             }
         });
         removeButton.initSingleTextureLocation(Reference.MISC, 230, 0);
-        Player player = Minecraft.getInstance().player;
+        Player player = Robotics.proxy.getPlayer();
         InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(player, item -> item instanceof CommanderItem);
         int currentGroup = CommanderItem.getID(player.getItemInHand(hand));
         removeButton.setNetworkAction(() -> new PacketReleaseFromCommandGroup(currentGroup, view.getUUID()));
@@ -84,7 +82,7 @@ public class RobotElement extends ButtonElement {
             moveHere = new ButtonElement(getX() + 78, getY() + 4, 17, 17);
             moveHere.initTextureLocation(Reference.MISC, 0, 102);
             moveHere.setTooltip(Lang.localise("button.move.here"));
-            UUID playerUUID = Minecraft.getInstance().player.getUUID();
+            UUID playerUUID = player.getUUID();
             var selectionPlayer = Selection.of(new EntitySearch(playerUUID));
             var selectionFollowRange = Selection.of(DEFAULT_FOLLOW_RANGE);
             moveHere.setNetworkAction(() -> new PacketAddCommand(robot.getId(), new RobotCommand(ModCommands.FOLLOW.get(), List.of(selectionPlayer, selectionFollowRange))));
@@ -105,7 +103,7 @@ public class RobotElement extends ButtonElement {
         addElement(powerButton);
 
         if(energy != null && view.getState() != RobotView.RobotState.OFFLINE) {
-            energyBar = new EnergyBarElement(energy, getX() + 117, getY() + 2, 20);
+            EnergyBarElement energyBar = new EnergyBarElement(energy, getX() + 117, getY() + 2, 20);
             addElement(energyBar);
         } else {
             ButtonElement unknownEnergy = new ButtonElement(getX() + 117, getY() + 2, 13, 19);

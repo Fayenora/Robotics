@@ -36,7 +36,7 @@ public class AssemblerRecipes implements IRecipeSerializer<MachineRecipe<?>> {
         // Pattern
         String pattern = json.get("pattern").getAsString();
 
-        if(pattern.length() == 0)
+        if(pattern.isEmpty())
             throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
         if(pattern.length() > INPUT_SIZE)
             throw new JsonSyntaxException("Invalid pattern: should not exceed " + INPUT_SIZE + " items.");

@@ -40,7 +40,7 @@ public class Perk implements PerkHooks {
 	public static final TextColor DEFAULT_COLOR = TextColor.fromLegacyFormat(ChatFormatting.GOLD);
 	private static int modifierId = 0;
 
-	private record AttributeScalar(int id, int operation, Either<Double, List<Double>> value, Optional<Double> scalar) {
+	protected record AttributeScalar(int id, int operation, Either<Double, List<Double>> value, Optional<Double> scalar) {
 		AttributeScalar(Either<Double, List<Double>> value, int operation, Optional<Double> scalar) {
 			this(modifierId++, operation, value, scalar);
 		}
@@ -53,15 +53,15 @@ public class Perk implements PerkHooks {
 		}
 	}
 
-	private record AttributeEntry(Attribute attribute, List<AttributeScalar> modifiers) {}
+	protected record AttributeEntry(Attribute attribute, List<AttributeScalar> modifiers) {}
 
-	public static final Codec<AttributeScalar> CODEC_SCALAR = RecordCodecBuilder.create(instance -> instance.group(
+	protected static final Codec<AttributeScalar> CODEC_SCALAR = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.either(Codec.DOUBLE, Codec.list(Codec.DOUBLE)).optionalFieldOf("value", Either.left(0d)).forGetter(c -> c.value),
 			Codec.intRange(0, 2).fieldOf("operation").forGetter(c -> c.operation),
 			Codec.DOUBLE.optionalFieldOf("scalar").forGetter(c -> c.scalar)
 	).apply(instance, AttributeScalar::new));
 
-	public static final Codec<AttributeEntry> CODEC_ATTRIBUTE = RecordCodecBuilder.create(instance -> instance.group(
+	protected static final Codec<AttributeEntry> CODEC_ATTRIBUTE = RecordCodecBuilder.create(instance -> instance.group(
 			ForgeRegistries.ATTRIBUTES.getCodec().fieldOf("name").forGetter(c -> c.attribute),
 			Codec.list(CODEC_SCALAR).fieldOf("modifiers").forGetter(c -> c.modifiers)
 	).apply(instance, AttributeEntry::new));
@@ -284,7 +284,7 @@ public class Perk implements PerkHooks {
 		return iconTexture;
 	}
 
-	public List<AttributeEntry> getModifiers() {
+	protected List<AttributeEntry> getModifiers() {
 		return modifiers;
 	}
 

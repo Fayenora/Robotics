@@ -7,6 +7,7 @@ import com.ignis.igrobotics.common.helpers.types.Selection;
 import com.ignis.igrobotics.common.helpers.util.Lang;
 import com.ignis.igrobotics.common.helpers.util.MathUtil;
 import com.ignis.igrobotics.common.helpers.util.RenderUtil;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
+@MethodsReturnNonnullByDefault
 public class EntityTypeSelector extends SelectorElement<EntityType<?>> {
 
 	protected Collection<LivingEntity> options;

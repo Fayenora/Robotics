@@ -20,8 +20,10 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class ChargerBlockEntity extends BlockEntity {
 
     protected EnergyStorage storage;
@@ -34,8 +36,8 @@ public class ChargerBlockEntity extends BlockEntity {
     public static void serverTick(Level level, BlockPos pos, BlockState state, ChargerBlockEntity charger) {
         charger.getCapability(ForgeCapabilities.ENERGY).ifPresent(chargerEnergy -> {
             List<LivingEntity> entitiesToCharge = level.getEntities(EntityFinder.LIVING, new AABB(pos), ent -> ent.getCapability(ForgeCapabilities.ENERGY).isPresent());
-            if(state.getValue(ChargerBlock.ACTIVE) != entitiesToCharge.size() > 0) {
-                BlockState newState = state.setValue(ChargerBlock.ACTIVE, entitiesToCharge.size() > 0);
+            if(state.getValue(ChargerBlock.ACTIVE) == entitiesToCharge.isEmpty()) {
+                BlockState newState = state.setValue(ChargerBlock.ACTIVE, !entitiesToCharge.isEmpty());
                 level.setBlock(pos, newState, 3);
                 setChanged(level, pos, newState);
             }

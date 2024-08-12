@@ -7,11 +7,13 @@ import com.ignis.igrobotics.client.screen.elements.EditBoxInt;
 import com.ignis.igrobotics.common.helpers.types.Selection;
 import com.ignis.igrobotics.common.helpers.util.RenderUtil;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
+@MethodsReturnNonnullByDefault
 public class IntSelector extends SelectorElement<Integer> {
 
 	public IntSelector(Selection<Integer> sel, int x, int y) {

@@ -72,7 +72,7 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     }
 
     private void setDefaultRobot() {
-        if(storedRobot.getEntity().isEmpty()) {
+        if(storedRobot.getEntity().isEmpty() && level != null) {
             RobotEntity robot = new RobotEntity(level);
             robot.getCapability(ModCapabilities.PARTS).ifPresent(IPartBuilt::clear);
             storedRobot.setEntity(robot);
@@ -92,17 +92,17 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     @Override
     @Nullable
-    protected MachineRecipe getRecipe(ItemStack[] inputStacks) {
+    protected MachineRecipe<?> getRecipe(ItemStack[] inputStacks) {
         return canStart() || (isRunning() && !hasCraftedRobotReady()) ? DEFAULT_RECIPE : null;
     }
 
     @Override
-    protected void craftItem(MachineRecipe recipe) {
+    protected void craftItem(MachineRecipe<?> recipe) {
         builtRobot = true;
     }
 
     @Override
-    protected void consumeInputs(MachineRecipe recipe) {
+    protected void consumeInputs(MachineRecipe<?> recipe) {
         //NO-OP: Items are consumed when constructing the robot
     }
 

@@ -92,7 +92,6 @@ public class FactoryInventory extends MachineInventory {
                 }
             });
         }
-        if(factory.getLevel().isClientSide()) return;
     }
 
     public void deriveEntity() {

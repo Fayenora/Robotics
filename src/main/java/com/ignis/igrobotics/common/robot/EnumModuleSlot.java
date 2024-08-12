@@ -23,10 +23,6 @@ public enum EnumModuleSlot implements StringRepresentable {
         this.name = name;
     }
 
-    public int getID() {
-        return this.ordinal();
-    }
-
     public static EnumModuleSlot byId(int id) {
         return values()[id];
     }

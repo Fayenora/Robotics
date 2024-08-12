@@ -18,11 +18,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.client.extensions.common.IClientMobEffectExtensions;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@ParametersAreNonnullByDefault
 public abstract class EffectRenderingRobotScreen<T extends AbstractContainerMenu> extends BaseContainerScreen<T> {
 
     private final LivingEntity entity;

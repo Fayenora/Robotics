@@ -16,6 +16,7 @@ import com.ignis.igrobotics.network.NetworkHandler;
 import com.ignis.igrobotics.network.messages.IPacketDataReceiver;
 import com.ignis.igrobotics.network.messages.server.PacketRequestEntitySearch;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -26,15 +27,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
+@MethodsReturnNonnullByDefault
 public class EntitySelector extends SelectorElement<UUID> implements IPacketDataReceiver {
 
 	/** If a server side search yielded no result(cachedEntity is null), the client still needs to stop asking */
 	private boolean cached = false;
-	protected LivingEntity cachedEntity;
+	@Nullable protected LivingEntity cachedEntity;
 
 	public EntitySelector(Selection<UUID> sel, int x, int y) {
 		super(sel, x, y);

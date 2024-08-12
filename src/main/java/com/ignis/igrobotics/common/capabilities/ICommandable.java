@@ -4,17 +4,15 @@ import com.ignis.igrobotics.common.robot.RobotCommand;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
 @AutoRegisterCapability
 public interface ICommandable extends INBTSerializable<CompoundTag> {
 
-    void setCommands(Collection<RobotCommand> commands);
+    void setCommands(List<RobotCommand> commands);
 
     default void addCommand(RobotCommand command) {
-        Collection<RobotCommand> currentCommands = new HashSet<>(getCommands());
+        List<RobotCommand> currentCommands = getCommands();
         for(RobotCommand c : currentCommands) {
             if(command.equals(c)) return;
         }
@@ -22,7 +20,7 @@ public interface ICommandable extends INBTSerializable<CompoundTag> {
         setCommands(currentCommands);
     }
 
-    Collection<RobotCommand> getCommands();
+    List<RobotCommand> getCommands();
 
     void reapplyCommand(RobotCommand command);
 

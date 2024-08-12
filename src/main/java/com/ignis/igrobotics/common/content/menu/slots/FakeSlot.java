@@ -5,6 +5,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class FakeSlot extends Slot {
     public FakeSlot(int pSlot) {
         super(new SimpleContainer(0), pSlot, 0, 0);

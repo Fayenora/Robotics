@@ -2,6 +2,7 @@ package com.ignis.igrobotics.client.rendering;
 
 import com.ignis.igrobotics.common.content.entity.StompedUpBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -14,6 +15,10 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class StompedBlockRenderer extends EntityRenderer<StompedUpBlockEntity> {
 
     private final BlockRenderDispatcher dispatcher;

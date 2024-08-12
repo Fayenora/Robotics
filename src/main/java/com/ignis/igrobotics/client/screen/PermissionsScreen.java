@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.EnumSet;
 import java.util.UUID;
 
 public class PermissionsScreen extends GuiElement {
@@ -59,9 +60,9 @@ public class PermissionsScreen extends GuiElement {
         addElement(removalButtons);
 
         int row = 0;
-        for(UUID player : config.getPermissions().keySet()) {
+        for(UUID player : config.players()) {
             playerSelectors.addElement(new EntitySelectorWrapper(player, row, 22, 22));
-            addPermissionButtons(row, config.getPermissions().get(player));
+            addPermissionButtons(row, config.getPermissions(player));
             row++;
         }
 
@@ -89,10 +90,9 @@ public class PermissionsScreen extends GuiElement {
         }
     }
 
-    private void addPermissionButtons(int row, int startPermissions) {
-        for(int i = 0; i < EnumPermission.values().length; i++) {
-            EnumPermission permission = EnumPermission.values()[i];
-            boolean access = permission.fulfills(startPermissions);
+    private void addPermissionButtons(int row, EnumSet<EnumPermission> startPermissions) {
+        for(EnumPermission permission : EnumPermission.values()) {
+            boolean access = startPermissions.contains(permission);
 
             ButtonElement button = new ButtonElement(0, 0, 22, 22, access ? 0 : 1, 2, b -> {
                 if(!(b instanceof ButtonElement buttonElement)) return;

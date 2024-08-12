@@ -7,6 +7,7 @@ import com.ignis.igrobotics.common.helpers.types.Tuple;
 import com.ignis.igrobotics.definitions.ModPerks;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+@MethodsReturnNonnullByDefault
 public class PerkMap implements IPerkMap {
 
 	public static final Codec<PerkMap> CODEC = Codec.list(Codec.pair(

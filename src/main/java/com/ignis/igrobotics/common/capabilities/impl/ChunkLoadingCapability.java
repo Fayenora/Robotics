@@ -13,9 +13,7 @@ import java.util.UUID;
 
 public class ChunkLoadingCapability implements IChunkLoader {
 
-    private Entity entity;
-
-    public ChunkLoadingCapability() {}
+    private final Entity entity;
 
     public ChunkLoadingCapability(Entity entity) {
         this.entity = entity;

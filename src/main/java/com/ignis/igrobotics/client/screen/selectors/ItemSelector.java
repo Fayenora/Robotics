@@ -10,6 +10,7 @@ import com.ignis.igrobotics.integration.jei.RoboticsJEIPlugin;
 import com.mojang.blaze3d.platform.InputConstants;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
+@MethodsReturnNonnullByDefault
 public class ItemSelector extends SelectorElement<ItemStack> {
 
 	public ItemSelector(Selection<ItemStack> sel, int x, int y) {

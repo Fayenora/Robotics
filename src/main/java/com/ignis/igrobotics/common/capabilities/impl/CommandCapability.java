@@ -13,10 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class CommandCapability implements ICommandable {
 
@@ -102,7 +99,7 @@ public class CommandCapability implements ICommandable {
      * @param commands to set
      */
     @Override
-    public void setCommands(Collection<RobotCommand> commands) {
+    public void setCommands(List<RobotCommand> commands) {
         clearCommands();
         for(RobotCommand command : commands) {
             this.commands.put(command, command.getGoal(entity));
@@ -123,8 +120,8 @@ public class CommandCapability implements ICommandable {
     }
 
     @Override
-    public Collection<RobotCommand> getCommands() {
-        return commands.keySet();
+    public List<RobotCommand> getCommands() {
+        return new ArrayList<>(commands.keySet());
     }
 
     @Override

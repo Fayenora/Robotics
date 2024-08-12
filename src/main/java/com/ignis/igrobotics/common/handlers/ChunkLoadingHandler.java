@@ -64,7 +64,7 @@ public class ChunkLoadingHandler {
 
         private final ServerLevel world;
         private final Map<ChunkPos, List<UUID>> chunks = new HashMap<>();
-        final LinkedList<Tuple<ChunkPos, UUID>> pending = new LinkedList<>();
+        final Deque<Tuple<ChunkPos, UUID>> pending = new LinkedList<>();
 
         public ChunkTracker(ServerLevel world){
             this.world = world;

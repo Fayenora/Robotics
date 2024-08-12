@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
@@ -120,11 +121,12 @@ public class ShieldCapability implements IShielded {
             if(energy().extractEnergy(ACTIVATION_ENERGY_COST, true) < ACTIVATION_ENERGY_COST) return false;
             energy().extractEnergy(ACTIVATION_ENERGY_COST, false);
         }
-        if(entity.getAttribute(ModAttributes.ENERGY_CONSUMPTION) != null) {
+        AttributeInstance instance = entity.getAttribute(ModAttributes.ENERGY_CONSUMPTION);
+        if(instance != null) {
             if(activation) {
-                entity.getAttribute(ModAttributes.ENERGY_CONSUMPTION).addPermanentModifier(ENERGY_UPKEEP);
+                instance.addPermanentModifier(ENERGY_UPKEEP);
             } else {
-                entity.getAttribute(ModAttributes.ENERGY_CONSUMPTION).removeModifier(ENERGY_UPKEEP);
+                instance.removeModifier(ENERGY_UPKEEP);
             }
         }
         if(activation) {

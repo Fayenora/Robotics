@@ -46,8 +46,8 @@ public class DialogElement extends GuiElement {
     public void addElement(IElement element) {
         super.addElement(element);
         Rectangle thisShape = this.getShape();
-        thisShape.y += thisShape.height * (1 - OPTIONS_PART);
-        thisShape.height *= OPTIONS_PART;
+        thisShape.y += (int) (thisShape.height * (1 - OPTIONS_PART));
+        thisShape.height = (int) (thisShape.height * OPTIONS_PART);
 
         Rectangle[] buttonSpaces = new Rectangle[children().size()];
         int width = thisShape.width / buttonSpaces.length;
@@ -80,7 +80,7 @@ public class DialogElement extends GuiElement {
 
         Rectangle thisShape = this.getShape();
         thisShape.y += 5;
-        thisShape.height *= (1 - OPTIONS_PART);
+        thisShape.height = (int) (thisShape.height * (1 - OPTIONS_PART));
         thisShape.height -= 5;
 
 

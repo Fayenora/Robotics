@@ -9,7 +9,6 @@ import com.ignis.igrobotics.common.capabilities.ModCapabilities;
 import com.ignis.igrobotics.common.content.entity.RobotEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -52,7 +51,7 @@ public class ShieldLayer extends GeoRenderLayer<RobotEntity> {
         Vec3 centerOffset = aabb.getCenter().subtract(animatable.position());
 
         float[] color = animatable.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS).getColor().getTextureDiffuseColors();
-        Vector3f cameraPos = Minecraft.getInstance().player.getEyePosition().toVector3f();
+        Vector3f cameraPos = Robotics.proxy.getPlayer().getEyePosition().toVector3f();
         float strength = shield.getHealth() / shield.getMaxHealth();
 
         poseStack.pushPose();

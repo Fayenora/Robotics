@@ -5,21 +5,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 
 public class RoboticsConfig {
 
-    private static final RoboticsConfig LOCAL = new RoboticsConfig();
-    private static RoboticsConfig SERVER = null;
-
-    public static RoboticsConfig current() {
-        return SERVER != null ? SERVER : LOCAL;
-    }
-
-    public static RoboticsConfig local() {
-        return LOCAL;
-    }
-
-    public static void receiveConfig(RoboticsConfig config) {
-        SERVER = config;
-    }
-
     public static final GeneralConfig general = new GeneralConfig();
     public static final ClientConfig client = new ClientConfig();
 

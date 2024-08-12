@@ -49,8 +49,8 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 
 	SimpleDataManager values();
 
-	default ArrayList<Component> getDisplayString() {
-		ArrayList<Component> tooltip = new ArrayList<>();
+	default List<Component> getDisplayString() {
+		List<Component> tooltip = new ArrayList<>();
 		Multimap<Attribute, AttributeModifier> modifiers = MultimapBuilder.hashKeys().arrayListValues().build();
 		for(Tuple<Perk, Integer> tup : this) {
 			Perk perk = tup.getFirst();
@@ -67,8 +67,8 @@ public interface IPerkMap extends Iterable<Tuple<Perk, Integer>> {
 		return tooltip;
 	}
 
-	static ArrayList<Component> createAttributeTooltip(Multimap<Attribute, AttributeModifier> modifiers) {
-		ArrayList<Component> tooltip = new ArrayList<>();
+	static List<Component> createAttributeTooltip(Multimap<Attribute, AttributeModifier> modifiers) {
+		List<Component> tooltip = new ArrayList<>();
 		for(Attribute attribute : modifiers.keySet()) {
 			double amount = 0;
 			double multiplier = 0;

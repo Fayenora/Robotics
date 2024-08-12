@@ -65,7 +65,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity {
             activeArrows = 0;
             for(int i = 0; i < 4; i++) {
                 if(!getRecipeUsed().getIngredients().get(i).isEmpty()) {
-                    activeArrows += Math.pow(2, i);
+                    activeArrows += (byte) Math.pow(2, i);
                 }
             }
         }

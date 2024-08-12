@@ -70,7 +70,7 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     // Adding & Removing Components
     //////////////////////////////
 
-    public <T extends GuiEventListener & Renderable & NarratableEntry> void addElement(T element) {
+    public <ELEMENT extends GuiEventListener & Renderable & NarratableEntry> void addElement(ELEMENT element) {
         addRenderableWidget(element);
     }
 
@@ -185,12 +185,12 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
 
     @Override
     public boolean hasSubGui() {
-        return subGuis.size() > 0;
+        return !subGuis.isEmpty();
     }
 
     @Override
     public IElement getSubGui() {
-        if(subGuis.size() == 0) return this;
+        if(subGuis.isEmpty()) return this;
         return subGuis.peek();
     }
 

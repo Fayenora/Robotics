@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class MathUtil {
@@ -34,7 +35,7 @@ public class MathUtil {
 	}
 	
 	public static <T> Collection<T> subset(Collection<T> collection, Predicate<T> cond) {
-		ArrayList<T> subset = new ArrayList<>();
+		List<T> subset = new ArrayList<>();
 		for(T t : collection) {
 			if(cond.test(t)) {
 				subset.add(t);

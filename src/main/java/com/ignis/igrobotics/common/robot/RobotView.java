@@ -23,6 +23,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class RobotView implements INBTSerializable<CompoundTag> {
@@ -149,7 +150,7 @@ public class RobotView implements INBTSerializable<CompoundTag> {
 
     public static Collection<RobotView> readViews(FriendlyByteBuf buf) {
         int size = buf.readInt();
-        ArrayList<RobotView> views = new ArrayList<>(size);
+        List<RobotView> views = new ArrayList<>(size);
         for(int i = 0; i < size; i++) {
             RobotView view = new RobotView();
             view.read(buf);

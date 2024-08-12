@@ -32,8 +32,8 @@ public class PerkGenerator extends Perk {
 	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
 		Optional<IEnergyStorage> optionalEnergy = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
 		Optional<IItemHandler> optionalInventory = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
-		if(!entity.getCapability(ForgeCapabilities.ENERGY).isPresent()) return;
-		if(!entity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent()) return;
+		if(optionalEnergy.isEmpty()) return;
+		if(optionalInventory.isEmpty()) return;
 		IEnergyStorage energy = optionalEnergy.get();
 		IItemHandler inventory = optionalInventory.get();
 		values.decrement(COOLDOWN);

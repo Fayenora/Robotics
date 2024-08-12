@@ -122,10 +122,10 @@ public class RangedCrossbowAttack extends AbstractRangedAttackGoal {
         return this.crossbowState == CrossbowState.UNCHARGED;
     }
 
-    enum CrossbowState {
+    protected enum CrossbowState {
         UNCHARGED,
         CHARGING,
         CHARGED,
-        READY_TO_ATTACK;
+        READY_TO_ATTACK
     }
 }

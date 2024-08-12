@@ -118,7 +118,7 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
     /**
      * Note that we cannot test the range condition
      * @param livingEntity the input argument
-     * @return
+     * @return Whether the entity fulfills all criteria of this search
      */
     @Override
     public boolean test(Entity livingEntity) {

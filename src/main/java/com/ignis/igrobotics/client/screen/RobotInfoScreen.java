@@ -26,6 +26,7 @@ import com.ignis.igrobotics.network.messages.server.PacketComponentAction;
 import com.ignis.igrobotics.network.messages.server.PacketSetEntityName;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -43,6 +44,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -51,11 +53,12 @@ import java.util.List;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot_info.png");
     private static final Component OWNER_CAPTION = ComponentUtils.formatList(List.of(Component.translatable("owner"), Component.literal(":")), CommonComponents.EMPTY);
-    public static final List<Attribute> ATTRIBUTES_TO_EXCLUDE = new ArrayList<>();;
+    public static final List<Attribute> ATTRIBUTES_TO_EXCLUDE = new ArrayList<>();
 
     static {
         ATTRIBUTES_TO_EXCLUDE.add(ForgeMod.NAMETAG_DISTANCE.get());
@@ -135,7 +138,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
                 addElement(ownerSelector);
             } else {
                 claimButton = new ButtonElement(leftPos + 76, topPos + 150, 54, 19, Lang.localise("button.claim"), button -> {
-                    access.setOwner(Minecraft.getInstance().player.getUUID());
+                    access.setOwner(Robotics.proxy.getPlayer().getUUID());
                     RobotBehavior.setAccess(WorldAccessData.EnumAccessScope.ROBOT, entity, access);
                     //Reinitialize the gui to get access to buttons / remove the claim button
                     clearWidgets();
@@ -233,7 +236,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     }
 
     private void updateButtonsEnabled() {
-        Player player = Minecraft.getInstance().player;
+        Player player = Robotics.proxy.getPlayer();
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
             boolean configureButtonsActive = access.hasPermission(player, EnumPermission.CONFIGURATION);
             configureButtonsActive = configureButtonsActive && (!RoboticsConfig.general.configShutdown.get() || robot.isActive());
@@ -273,7 +276,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
          DialogElement confirmDialog = new DialogElement(94, 56, Lang.localise("confirm_owner_change", currentSelection.getName())) {
              @Override
              public void onClose() {
-                 if(ownerSelector == null) return;
+                 if(ownerSelector == null || ownerSelector.getOwner() == null) return;
                  if(ownerSelector.getOwner().getUUID().equals(access.getOwner())) return;
                  ownerSelector.setOwner(access.getOwner());
                  super.onClose();
@@ -281,7 +284,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         };
         confirmDialog.initTextureLocation(SelectorElement.TEXTURE, 162, 144);
         ButtonElement confirm = new ButtonElement(0, 0, 22, 22, button -> {
-            if(ownerSelector == null) return;
+            if(ownerSelector == null || ownerSelector.getOwner() == null) return;
             access.setOwner(ownerSelector.getOwner().getUUID());
             RobotBehavior.setAccess(WorldAccessData.EnumAccessScope.ROBOT, entity, access);
             removeSubGui();
@@ -312,6 +315,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
             setSelection(uuid);
         }
 
+        @Nullable
         public LivingEntity getOwner() {
             return cachedEntity;
         }
@@ -324,10 +328,10 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         private static Collection<LivingEntity> getPlayers() {
             //Ensure a safe connection
             ClientPacketListener connection = Minecraft.getInstance().getConnection();
-            if(connection == null || (!Minecraft.getInstance().isLocalServer() && !connection.getConnection().isEncrypted())) return null;
+            if(connection == null || (!Minecraft.getInstance().isLocalServer() && !connection.getConnection().isEncrypted())) return List.of();
 
             Collection<PlayerInfo> networkInfo = connection.getOnlinePlayers();
-            ArrayList<LivingEntity> players = new ArrayList<>();
+            List<LivingEntity> players = new ArrayList<>();
 
             for(PlayerInfo info : networkInfo) {
                 players.add(Robotics.proxy.createFakePlayer(Minecraft.getInstance().level, info.getProfile()).get());

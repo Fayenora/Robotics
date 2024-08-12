@@ -13,11 +13,10 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.*;
 
+@ParametersAreNonnullByDefault
 public class WorldData extends SavedData {
 
     public static final String DATA_NAME = Robotics.MODID + "_data";
@@ -28,7 +27,7 @@ public class WorldData extends SavedData {
 
     private int numberOfCommandGroups = 1; //commandGroup = 0 means no command group
     private final WorldAccessData accessData = new WorldAccessData();
-    private final HashMap<Integer, HashMap<UUID, RobotView>> commandGroups = new HashMap<>();
+    private final Map<Integer, HashMap<UUID, RobotView>> commandGroups = new HashMap<>();
 
     @Override
     public @NotNull CompoundTag save(CompoundTag tag) {
@@ -116,10 +115,6 @@ public class WorldData extends SavedData {
         }
         // TODO Update any information on the robots
         return commandGroups.get(commandGroup).values();
-    }
-
-    public WorldAccessData getAccessConfigData() {
-        return accessData;
     }
 
     public int nextCommandGroupId() {

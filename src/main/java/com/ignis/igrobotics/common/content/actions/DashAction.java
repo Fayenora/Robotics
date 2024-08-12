@@ -3,6 +3,7 @@ package com.ignis.igrobotics.common.content.actions;
 import com.ignis.igrobotics.definitions.ModActions;
 import com.ignis.igrobotics.definitions.ModMobEffects;
 import com.mojang.serialization.Codec;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -12,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
 
+@MethodsReturnNonnullByDefault
 public class DashAction implements IAction {
 
     public enum DashDirection implements StringRepresentable, Function<LivingEntity, Vec3> {

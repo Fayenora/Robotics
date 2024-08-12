@@ -10,6 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class GeneralConfig extends BaseConfig {
@@ -29,9 +30,9 @@ public class GeneralConfig extends BaseConfig {
 
     public Supplier<List<? extends String>> availableCommands;
 
-    public HashMap<String, Supplier<Integer>> energyCapacities;
-    public HashMap<String, Supplier<Double>> energyConsumption;
-    public HashMap<String, Supplier<Double>> processingSpeed;
+    public Map<String, Supplier<Integer>> energyCapacities;
+    public Map<String, Supplier<Double>> energyConsumption;
+    public Map<String, Supplier<Double>> processingSpeed;
 
     public Supplier<Double> fistKnockUp;
     public Supplier<Integer> coalGeneratorRate, solarGeneratorMult, bioGeneratorRate;
