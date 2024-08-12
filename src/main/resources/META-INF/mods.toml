@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[47,)"
+loaderVersion="${loader_version}"
 #issueTrackerURL="https://github.com/mekanism/Mekanism/issues"
 license="MIT"
 
 [[mods]]
     modId="igrobotics"
-    version="${file.jarVersion}"
+    version="${version}"
     displayName="Robotics"
     #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" # Homepage
     logoFile="logo.png" #optional
@@ -16,21 +16,21 @@ license="MIT"
 [[dependencies.igrobotics]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20.1,1.20.2)"
+    versionRange="[1.20.1]"
     side="BOTH"
 [[dependencies.igrobotics]]
     modId="forge"
     mandatory=true
-    versionRange="[47,)"
+    versionRange="${forge_version}"
     side="BOTH"
 [[dependencies.igrobotics]]
     modId="geckolib"
     mandatory=true
-    versionRange="[4.4.0,)"
+    versionRange="${geckolib_version}"
     side="BOTH"
 [[dependencies.igrobotics]]
     modId="computercraft"
     mandatory=false
-    versionRange="[1.110.0,)"
+    versionRange="${cct_version}"
     ordering="NONE"
     side="BOTH"
