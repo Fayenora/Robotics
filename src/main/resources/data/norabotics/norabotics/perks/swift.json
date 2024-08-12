@@ -1,0 +1,17 @@
+{
+  "name": "norabotics:swift",
+  "stackable": true,
+  "displayColor": "aqua",
+  "attributes": [
+    {
+      "name": "minecraft:generic.movement_speed",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 0.01
+        }
+      ]
+    }
+  ]
+}

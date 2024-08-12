@@ -1,0 +1,28 @@
+{
+    "type": "norabotics:assembler",
+    "category": "misc",
+	"pattern": "rwiv",
+    "key": {
+        "r": {
+          "type": "norabotics:counted",
+          "items": {
+            "tag": "forge:dusts/redstone"
+          },
+          "amount": 3
+        }, 
+		"w": {
+            "item": "norabotics:complex_wiring"
+        },
+		"i": {
+            "tag": "forge:ingots/iron"
+        }, 
+		"v": {
+			"item": "norabotics:advanced_circuit"
+		}
+    }, 
+	"energy": 10000,
+	"processing_time": 200,
+    "result": {
+        "item": "norabotics:complex_circuit"
+    }
+}

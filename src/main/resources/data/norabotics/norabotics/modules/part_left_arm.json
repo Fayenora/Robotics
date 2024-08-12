@@ -1,0 +1,8 @@
+{
+  "items": {
+    "tag": "norabotics:part/left_arm"
+  },
+  "slots": [
+    "left_arm"
+  ]
+}

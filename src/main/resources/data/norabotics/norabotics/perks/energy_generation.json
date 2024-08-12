@@ -1,0 +1,16 @@
+{
+  "name": "norabotics:energy_generation",
+  "stackable": true,
+  "attributes": [
+    {
+      "name": "norabotics:robot.energy_consumption",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": -1
+        }
+      ]
+    }
+  ]
+}

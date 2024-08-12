@@ -1,6 +1,0 @@
-{
-  "name": "Commands",
-  "description": "Commands are continuous tasks for a robot to execute. They can be added in a separate tab of the entity gui and are executed in order, meaning the first command is executed until it is $(o)invalid$() after which the second one is executed and so on. Should the first become valid again, it is executed instead",
-  "icon": "igrobotics:commander",
-  "sortnum": 1
-}

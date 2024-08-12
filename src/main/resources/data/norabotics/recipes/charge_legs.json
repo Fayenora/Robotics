@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "i  ",
+    "sis",
+    "  i"
+  ],
+  "key": {
+    "s": {
+      "item": "norabotics:servo_motor"
+    },
+    "i": {
+      "tag": "forge:rods/iron"
+    }
+  },
+  "result": {
+    "item": "norabotics:charge_legs"
+  }
+}

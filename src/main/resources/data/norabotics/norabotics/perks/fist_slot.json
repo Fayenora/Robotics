@@ -1,0 +1,17 @@
+{
+  "name": "norabotics:fist_slot",
+  "displayColor": "white",
+  "stackable": true,
+  "attributes": [
+    {
+      "name": "norabotics:robot.slots.modules.fist",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}

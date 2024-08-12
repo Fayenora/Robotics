@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "tag": "norabotics:part/left_leg"
+    },
+    {
+      "tag": "norabotics:part/right_leg"
+    }
+  ],
+  "perks": [
+    {
+      "name": "norabotics:swift",
+      "level": 13
+    },
+    {
+      "name": "norabotics:feet_slot",
+      "level": 1
+    }
+  ]
+}

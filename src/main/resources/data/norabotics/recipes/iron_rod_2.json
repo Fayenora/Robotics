@@ -1,0 +1,15 @@
+{
+    "type": "norabotics:assembler",
+    "category": "misc",
+	"pattern": " i i",
+    "key": {
+        "i": {
+            "tag": "forge:ingots/iron"
+        }
+    }, 
+	"energy": 10000,
+	"processing_time": 50,
+    "result": {
+        "item": "norabotics:iron_rod"
+    }
+}

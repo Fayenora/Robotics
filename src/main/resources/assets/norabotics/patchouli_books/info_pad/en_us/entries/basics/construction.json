@@ -1,0 +1,20 @@
+{
+  "name": "Construction",
+  "icon": "norabotics:robot_factory",
+  "category": "norabotics:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Constructing a human sized robot - a useful one - is quite a complex and delicate task. While not requiring many materials, the crafting process is rather lengthy. You will need two machines: The assembler and the wire cutter"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "norabotics:assembler",
+      "recipe2": "norabotics:wire_cutter"
+    },
+    {
+      "type": "patchouli:text",
+      "text": ""
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "item": "norabotics:commander"
+  },
+  "pattern": [
+    "   ",
+    "cii",
+    "iwi"
+  ],
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "c": {
+      "item": "norabotics:copper_wire"
+    },
+    "w": {
+      "item": "norabotics:wiring"
+    }
+  }
+}

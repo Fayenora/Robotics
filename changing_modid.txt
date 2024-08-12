@@ -1,0 +1,5 @@
+To change the mod id, simply:
+- Rename all occurences in src/
+- Rename all occurences in build.gradle & gradle.properties
+- Rename the resources & datapack folder for src/main & src/generated
+- Rename src/main/resources/[modid].minins.json

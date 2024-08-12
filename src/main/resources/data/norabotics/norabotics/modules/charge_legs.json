@@ -1,0 +1,17 @@
+{
+  "items": {
+    "item": "norabotics:charge_legs"
+  },
+  "slots" : [
+    "feet"
+  ],
+  "action": {
+    "type": "norabotics:dash",
+    "name": "jump",
+    "force": 1,
+    "impact": 1,
+    "direction": "up"
+  },
+  "cooldown": 5,
+  "energyCost": 5000
+}

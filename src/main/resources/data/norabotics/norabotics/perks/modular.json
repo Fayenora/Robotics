@@ -1,0 +1,17 @@
+{
+  "name": "norabotics:modular",
+  "displayColor": "white",
+  "maxLevel": 1,
+  "attributes": [
+    {
+      "name": "norabotics:robot.slots.modules.core",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}

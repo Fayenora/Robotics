@@ -1,0 +1,16 @@
+{
+  "name": "norabotics:persistent",
+  "stackable": true,
+  "attributes": [
+    {
+      "name": "minecraft:generic.armor_toughness",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}

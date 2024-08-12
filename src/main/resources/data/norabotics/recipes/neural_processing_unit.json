@@ -1,0 +1,25 @@
+{
+    "type": "norabotics:assembler",
+    "category": "misc",
+	"pattern": "wcpc",
+    "key": {
+        "c": {
+            "item": "norabotics:complex_circuit"
+        }, 
+		"w": {
+            "item": "norabotics:complex_wiring"
+        }, 
+		"p": {
+            "type": "norabotics:counted",
+            "items": {
+              "item": "norabotics:perceptron_layer"
+            },
+			"amount": 8
+        }
+    }, 
+	"energy": 1000000,
+	"processing_time": 1000,
+    "result": {
+        "item": "norabotics:neural_processing_unit"
+    }
+}

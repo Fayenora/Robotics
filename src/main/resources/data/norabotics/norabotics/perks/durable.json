@@ -1,0 +1,17 @@
+{
+  "name": "norabotics:durable",
+  "stackable": true,
+  "displayColor": "gray",
+  "attributes": [
+    {
+      "name": "minecraft:generic.armor",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "items": {
+    "item": "norabotics:ender_module"
+  },
+  "slots": [
+    "core"
+  ],
+  "action": "norabotics:teleport",
+  "cooldown": 10,
+  "energyCost": 10000
+}

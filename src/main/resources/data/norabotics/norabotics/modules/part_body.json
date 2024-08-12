@@ -1,0 +1,22 @@
+{
+  "items": {
+    "tag": "norabotics:part/body"
+  },
+  "slots": [
+    "body"
+  ],
+  "perks": [
+    {
+      "name": "norabotics:module_slot",
+      "level": 2
+    },
+    {
+      "name": "norabotics:skin_slot",
+      "level": 1
+    },
+    {
+      "name": "norabotics:reactor_slot",
+      "level": 1
+    }
+  ]
+}

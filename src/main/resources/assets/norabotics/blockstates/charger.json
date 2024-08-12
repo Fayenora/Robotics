@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"active=true": {
+            "model": "norabotics:block/charger_active"
+        },
+        "active=false": {
+            "model": "norabotics:block/charger",
+            "y": 180
+        }
+	}
+}

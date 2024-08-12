@@ -1,0 +1,16 @@
+{
+  "items": {
+    "item": "norabotics:shield_module"
+  },
+  "perks": [
+    {
+      "name": "norabotics:shield",
+      "level": 2
+    }
+  ],
+  "slots": [
+    "core"
+  ],
+  "action": "norabotics:shield",
+  "cooldown": 2
+}

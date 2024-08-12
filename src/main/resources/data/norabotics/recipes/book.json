@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "norabotics:plate_iron"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "item": "norabotics:plate_iron"
+    }
+  ],
+  "result": {
+    "item": "patchouli:guide_book",
+    "nbt": {
+      "patchouli:book": "norabotics:info_pad"
+    }
+  }
+}

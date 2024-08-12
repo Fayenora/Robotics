@@ -1,0 +1,14 @@
+{
+  "items": {
+    "item": "norabotics:battery"
+  },
+  "slots": [
+    "core"
+  ],
+  "perks": [
+    {
+      "level": 2,
+      "name": "norabotics:battery"
+    }
+  ]
+}

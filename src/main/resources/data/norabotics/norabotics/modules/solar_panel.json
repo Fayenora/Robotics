@@ -1,0 +1,15 @@
+{
+  "items": {
+    "item": "norabotics:solar_panel"
+  },
+  "texture": "norabotics:textures/robot/modules/solar_panel.png",
+  "slots": [
+    "skin"
+  ],
+  "perks": [
+    {
+      "level": 1,
+      "name": "norabotics:solar_panel"
+    }
+  ]
+}

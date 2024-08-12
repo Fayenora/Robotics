@@ -1,0 +1,18 @@
+{
+  "name": "norabotics:steady",
+  "stackable": true,
+  "displayColor": "dark_aqua",
+  "maxLevel": 5,
+  "attributes": [
+    {
+      "name": "minecraft:generic.knockback_resistance",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 0.2
+        }
+      ]
+    }
+  ]
+}

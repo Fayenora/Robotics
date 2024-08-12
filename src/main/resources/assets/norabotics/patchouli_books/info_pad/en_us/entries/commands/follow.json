@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.follow.0",
+  "icon": "minecraft:diamond_boots",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Follow an entity matching the query at the given distance. This task is valid if and only if the query currently matches a living entity. "
+    }
+  ]
+}

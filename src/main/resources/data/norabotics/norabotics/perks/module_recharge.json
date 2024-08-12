@@ -1,0 +1,16 @@
+{
+  "name": "norabotics:module_recharge",
+  "displayColor": "white",
+  "attributes": [
+    {
+      "name": "norabotics:robot.module_cooldown",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": -0.15
+        }
+      ]
+    }
+  ]
+}

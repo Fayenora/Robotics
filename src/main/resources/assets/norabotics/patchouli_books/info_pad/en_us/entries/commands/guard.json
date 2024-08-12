@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.defend",
+  "icon": "minecraft:shield",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Defend an entity matching the query by attacking anyone that hurts it, if the robot is in the vicinity. Guarding does not imply that the robot will seek the vicinity of the entity to protect. This task is valid if and only if the query currently matches a living entity. "
+    }
+  ]
+}

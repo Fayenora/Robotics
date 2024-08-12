@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "iwi",
+    "w w",
+    "iwi"
+  ],
+  "key": {
+    "i": {
+      "tag": "forge:ingots/steel"
+    },
+    "w": {
+      "item": "norabotics:copper_wire"
+    }
+  },
+  "result": {
+    "item": "norabotics:assembler"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "   ",
+    "ggg",
+    "pep"
+  ],
+  "key": {
+    "e": {
+      "item": "norabotics:electro_magnet"
+    },
+    "p": {
+      "item": "norabotics:plate_iron"
+    },
+    "g": {
+      "tag": "forge:glass_panes"
+    }
+  },
+  "result": {
+    "item": "norabotics:charger"
+  }
+}

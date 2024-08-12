@@ -1,0 +1,17 @@
+{
+  "name": "Command API",
+  "icon": "norabotics:commander",
+  "category": "norabotics:programming",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "An API giving access to $(l:norabotics:commands)commands$().$(br)$(bold)amount()$() -> amount of selected commands$(br)$(bold)getAvailableCommands()$() -> a list of available commands as strings$(br)$(bold)get()$() -> the list of currently selected $(l:norabotics:programming/command_api#command_object)commands$()$(br)$(bold)remove(i)$() -> the command at index i. Removes it from the active commands$(br)$(bold)add(type, ...)$() - add a command of specified type. See getAvailableCommands for a list of available commands. See $(l:norabotics:programming/command_api#command_object)here$() for argument formats"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Command Object",
+      "anchor": "command_object",
+      "text": "$(bold)getType() -> a string representation of this command's type$()$(br)$(bold)getSelections()$() -> a list of string representations of the argument selections$(break)$(bold)setSelection(i, selection)$() - Set the selection at index i. Parsing rules are:$(li)items, blocks, entity types are looked up with their id, e.g. minecraft:cobblestone$(li)entity searches are cast as searches by name$(li)positions are required to be in the format 'x y z' or '[dimension-id] x y z'"
+    }
+  ]
+}

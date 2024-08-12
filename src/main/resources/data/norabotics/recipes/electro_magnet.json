@@ -1,0 +1,18 @@
+{
+    "type": "norabotics:assembler",
+    "category": "misc",
+	"pattern": "iw w",
+    "key": {
+        "i": {
+            "tag": "forge:rods/iron"
+        }, 
+		"w": {
+            "item": "norabotics:copper_wire"
+        }
+    }, 
+	"energy": 10000,
+	"processing_time": 100,
+    "result": {
+        "item": "norabotics:electro_magnet"
+    }
+}

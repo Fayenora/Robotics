@@ -1,0 +1,11 @@
+{
+  "items": {
+    "item": "norabotics:dash_module"
+  },
+  "slots": [
+    "feet"
+  ],
+  "action": "norabotics:dash",
+  "cooldown": 3,
+  "energyCost": 5000
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Abilities",
+  "description": "A list of abilities provided by modules. These can only be activated through the robot api if ComputerCraft is installed",
+  "icon": "norabotics:shield_module",
+  "sortnum": 3
+}

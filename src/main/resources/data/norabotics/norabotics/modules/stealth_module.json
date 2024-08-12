@@ -1,0 +1,21 @@
+{
+  "items": {
+    "item": "norabotics:stealth_module"
+  },
+  "slots": [
+    "skin"
+  ],
+  "action": {
+    "type": "norabotics:effect",
+    "name": "stealth",
+    "displayColor": "dark_gray",
+    "effects": [
+      {
+        "type": "minecraft:invisibility"
+      }
+    ]
+  },
+  "cooldown": 30,
+  "duration": 10,
+  "energyCost": 100000
+}

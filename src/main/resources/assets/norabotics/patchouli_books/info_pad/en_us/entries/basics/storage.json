@@ -1,0 +1,15 @@
+{
+  "name": "Storage",
+  "icon": "norabotics:robot_storage",
+  "category": "norabotics:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The robot storage provides a way to recharge and store robots for longer periods of time. It also provides the ability to dismantle an already constructed robot. If it receives a redstone signal, it will either automatically eject the robot it currently stores or pick up any robot standing in front of it. "
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "norabotics:robot_storage"
+    }
+  ]
+}

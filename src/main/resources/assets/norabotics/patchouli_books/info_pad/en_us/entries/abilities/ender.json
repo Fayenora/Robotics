@@ -1,0 +1,16 @@
+{
+  "name": "Teleport",
+  "icon": "norabotics:ender_module",
+  "category": "norabotics:abilities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Teleports the robot to a random location within 5 blocks. "
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "norabotics:ender_module",
+      "link_recipe": true
+    }
+  ]
+}

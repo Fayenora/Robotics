@@ -1,0 +1,49 @@
+{
+	"entity.robot.hurt":{
+		"category": "entity",
+		"subtitle": "entity.robot.hurt",
+		"sounds": [ "norabotics:entity/robot/hurt" ]
+	},
+	"entity.robot.death":{
+		"category": "entity",
+		"subtitle": "entity.robot.death",
+		"sounds": [ "norabotics:entity/robot/death" ]
+	}, 
+	"entity.robot.death_active":{
+        "category": "entity",
+        "subtitle": "entity.robot.death",
+        "sounds": [ "norabotics:entity/robot/death_active" ]
+    }, 
+	"entity.robot.kill_command":{
+        "category": "entity",
+        "subtitle": "entity.robot.kill_command",
+        "sounds": [ "norabotics:entity/robot/kill_command" ]
+    },
+
+    "shield.start": {
+          "category": "entity",
+          "subtitle": "shield.start",
+          "sounds": [ "norabotics:shield/up" ]
+    },
+    "shield.impact": {
+      "category": "entity",
+      "subtitle": "shield.start",
+      "sounds": [ "norabotics:shield/impact" ]
+    },
+    "shield.fatal_impact": {
+      "category": "entity",
+      "subtitle": "shield.start",
+      "sounds": [ "norabotics:shield/impact_2" ]
+    },
+    
+    "machine.assembler":{
+        "category": "block",
+        "subtitle": "machine.assembler",
+        "sounds": [{"name": "norabotics:machine/assembler", "stream": true}]
+    }, 
+    "machine.wire_cutter":{
+        "category": "block",
+        "subtitle": "machine.wire_cutter",
+        "sounds": [{"name": "norabotics:machine/wire_cutter", "stream": true}]
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "norabotics:skin_slot",
+  "displayColor": "white",
+  "stackable": true,
+  "attributes": [
+    {
+      "name": "norabotics:robot.slots.modules.skin",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
+}

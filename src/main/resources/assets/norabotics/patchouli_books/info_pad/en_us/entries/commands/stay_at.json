@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.stay",
+  "icon": "minecraft:iron_boots",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Move and stay at a target. Always valid. Use as a lower-priority command to set a home position for the robot to return to. "
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "norabotics:battery",
+  "stackable": true,
+  "attributes": [
+    {
+      "name": "norabotics:robot.energy_capacity",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 500000
+        }
+      ]
+    }
+  ]
+}

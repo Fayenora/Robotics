@@ -1,0 +1,29 @@
+package com.ignis.norabotics.common.content.blocks;
+
+import com.ignis.norabotics.common.content.blockentity.FactoryBlockEntity;
+import com.ignis.norabotics.common.content.blockentity.MachineBlockEntity;
+import com.ignis.norabotics.definitions.ModMachines;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import org.jetbrains.annotations.Nullable;
+
+public class FactoryBlock extends StorageBlock {
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new FactoryBlockEntity(pos, state) : null;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState pState, BlockEntityType<T> type) {
+        if(level.isClientSide()) return null;
+        return createTickerHelper(type, ModMachines.ROBOT_FACTORY.getBlockEntityType(), MachineBlockEntity::serverTick);
+    }
+}

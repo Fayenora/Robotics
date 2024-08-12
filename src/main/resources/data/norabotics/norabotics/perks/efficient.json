@@ -1,0 +1,17 @@
+{
+  "name": "norabotics:efficient",
+  "displayColor": "yellow",
+  "maxLevel": 3,
+  "attributes": [
+    {
+      "name": "norabotics:robot.energy_consumption",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 1,
+          "scalar": -0.20
+        }
+      ]
+    }
+  ]
+}

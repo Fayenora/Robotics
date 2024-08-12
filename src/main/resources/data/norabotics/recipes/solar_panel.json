@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " gs",
+    "gsp",
+    "sp "
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:glass_panes"
+    },
+    "s": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "p": {
+      "item": "norabotics:plate_steel"
+    }
+  },
+  "result": {
+    "item": "norabotics:solar_panel"
+  }
+}

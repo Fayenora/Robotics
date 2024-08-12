@@ -1,0 +1,12 @@
+{
+   "parent": "block/cube",
+   "textures": {
+       "particle": "norabotics:block/machine_bottom",
+	   "down": "norabotics:block/machine_bottom",
+	   "up": "norabotics:block/machine_top",
+	   "north": "norabotics:block/wire_cutter_front_running",
+	   "east": "norabotics:block/machine_bottom",
+	   "south": "norabotics:block/machine_back",
+	   "west": "norabotics:block/machine_bottom"
+   }
+}

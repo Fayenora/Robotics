@@ -1,0 +1,6 @@
+{
+  "name": "Perks",
+  "description": "A list of perks robots can obtain via their parts or modules. More basic perks that only modify attributes are not shown here. ",
+  "icon": "norabotics:gold_right_arm",
+  "sortnum": 2
+}

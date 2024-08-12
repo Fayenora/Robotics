@@ -1,0 +1,16 @@
+{
+  "name": "norabotics:logistician",
+  "displayColor": "light_purple",
+  "attributes": [
+    {
+      "name": "norabotics:robot.logistics_time",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": -0.3
+        }
+      ]
+    }
+  ]
+}

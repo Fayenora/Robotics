@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "tag": "norabotics:part/right_arm"
+    },
+    {
+      "tag": "norabotics:part/left_arm"
+    }
+  ],
+  "perks": [
+    {
+      "name": "norabotics:destructive",
+      "level": 1
+    },
+    {
+      "name": "norabotics:fist_slot",
+      "level": 1
+    }
+  ]
+}

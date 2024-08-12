@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " is",
+    "isp",
+    "sp "
+  ],
+  "key": {
+    "s": {
+      "item": "norabotics:servo_motor"
+    },
+    "i": {
+      "item": "norabotics:plate_iron"
+    },
+    "p": {
+      "item": "norabotics:plate_steel"
+    }
+  },
+  "result": {
+    "item": "norabotics:reinforce_module"
+  }
+}

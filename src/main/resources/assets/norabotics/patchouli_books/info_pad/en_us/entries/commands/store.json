@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.store.0",
+  "icon": "minecraft:chest",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Store the specified item in a container located at the provided coordinates. If the coordinates do not point to a container (anymore), the task becomes invalid. If the robot does not have a matching itemstack in its inventory, the task becomes invalid. If the container is full, the task becomes invalid $(bold)for a time$(), after which the robot will return to the container and re-check it for any space. You can use this in conjunction with $(italic)retrieve$() to transport items between containers. "
+    }
+  ]
+}

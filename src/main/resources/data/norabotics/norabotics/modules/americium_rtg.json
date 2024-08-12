@@ -1,0 +1,14 @@
+{
+  "items": {
+    "item": "nuclearcraft:americium_rtg"
+  },
+  "slots": [
+    "reactor"
+  ],
+  "perks": [
+    {
+      "level": 50,
+      "name": "norabotics:energy_generation"
+    }
+  ]
+}

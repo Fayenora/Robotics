@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "item": "norabotics:advanced_wiring"
+  },
+  "pattern": [
+    " s ",
+    "wrw",
+    " s "
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:comparator"
+    },
+    "s": {
+      "item": "norabotics:silver_wire"
+    },
+	"w": {
+      "item": "norabotics:wiring"
+    }
+  }
+}

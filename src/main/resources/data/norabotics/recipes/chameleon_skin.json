@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " is",
+    "isp",
+    "sp "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:glass_pane"
+    },
+    "s": {
+      "item": "norabotics:plate_silver"
+    },
+    "p": {
+      "item": "norabotics:plate_steel"
+    }
+  },
+  "result": {
+    "item": "norabotics:stealth_module"
+  }
+}

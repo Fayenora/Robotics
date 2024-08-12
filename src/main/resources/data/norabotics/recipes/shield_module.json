@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " p ",
+    "dcd",
+    " p "
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "p": {
+      "item": "norabotics:plate_iron"
+    },
+    "c": {
+      "item": "norabotics:complex_circuit"
+    }
+  },
+  "result": {
+    "item": "norabotics:shield_module"
+  }
+}

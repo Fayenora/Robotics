@@ -1,0 +1,18 @@
+{
+  "items": {
+    "item": "norabotics:fist"
+  },
+  "slots": [
+    "fist"
+  ],
+  "perks": [
+    {
+      "level": 1,
+      "name": "norabotics:fist"
+    },
+    {
+      "level": 3,
+      "name": "norabotics:unarmed_attack"
+    }
+  ]
+}

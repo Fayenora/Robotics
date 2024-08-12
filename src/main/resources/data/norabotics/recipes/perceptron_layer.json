@@ -1,0 +1,18 @@
+{
+    "type": "norabotics:assembler",
+    "category": "misc",
+	"pattern": "cici",
+    "key": {
+        "c": {
+            "item": "norabotics:circuit"
+        }, 
+		"i": {
+            "tag": "forge:nuggets/iron"
+        }
+    }, 
+	"energy": 100000,
+	"processing_time": 500,
+    "result": {
+        "item": "norabotics:perceptron_layer"
+    }
+}

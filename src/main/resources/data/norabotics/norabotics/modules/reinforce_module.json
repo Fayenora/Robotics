@@ -1,0 +1,26 @@
+{
+  "items": {
+    "item": "norabotics:reinforce_module"
+  },
+  "slots": [
+    "skin"
+  ],
+  "action": {
+    "type": "norabotics:effect",
+    "name": "reinforce",
+    "displayColor": "gray",
+    "effects": [
+      {
+        "type": "minecraft:resistance",
+        "amplifier": 2
+      },
+      {
+        "type": "minecraft:slowness",
+        "amplifier": 3
+      }
+    ]
+  },
+  "cooldown": 40,
+  "duration": 15,
+  "energyCost": 100000
+}

@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        "ipi",
+        "btb",
+        "ipi"
+    ],
+    "key": {
+        "i": {
+            "tag": "forge:ingots/steel"
+        },
+        "p": {
+            "item": "minecraft:piston"
+        },
+		"b": {
+            "item": "minecraft:iron_bars"
+        },
+		"t": {
+            "item": "minecraft:iron_trapdoor"
+        }
+    },
+    "result": {
+        "item": "norabotics:wire_cutter"
+    }
+}

@@ -4,7 +4,7 @@ loaderVersion="${loader_version}"
 license="MIT"
 
 [[mods]]
-    modId="igrobotics"
+    modId="norabotics"
     version="${version}"
     displayName="Robotics"
     #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" # Homepage
@@ -13,22 +13,22 @@ license="MIT"
     credits="A huge thanks to the Forge team for making modding so accessible to everyone"
     description=''''''
 
-[[dependencies.igrobotics]]
+[[dependencies.norabotics]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.20.1]"
     side="BOTH"
-[[dependencies.igrobotics]]
+[[dependencies.norabotics]]
     modId="forge"
     mandatory=true
     versionRange="${forge_version}"
     side="BOTH"
-[[dependencies.igrobotics]]
+[[dependencies.norabotics]]
     modId="geckolib"
     mandatory=true
     versionRange="${geckolib_version}"
     side="BOTH"
-[[dependencies.igrobotics]]
+[[dependencies.norabotics]]
     modId="computercraft"
     mandatory=false
     versionRange="${cct_version}"

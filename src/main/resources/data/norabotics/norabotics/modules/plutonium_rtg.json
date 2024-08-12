@@ -1,0 +1,14 @@
+{
+  "items": {
+    "item": "nuclearcraft:plutonium_rtg"
+  },
+  "slots": [
+    "reactor"
+  ],
+  "perks": [
+    {
+      "level": 100,
+      "name": "norabotics:energy_generation"
+    }
+  ]
+}
