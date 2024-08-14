@@ -31,6 +31,8 @@
 
   "death.attack.perkImpact": "%s experienced the impact of a robotic fist accelerated to 100 m/s",
 
+  "effect.norabotics.armor_shred": "Armor Shred",
+
   "norabotics.button.pickup.default": "Currently picking up items",
   "norabotics.button.pickup.area": "Currently picking up items in the area",
   "norabotics.button.pickup.none": "Currently ignoring items",

@@ -1,13 +1,17 @@
 # Test Cases to consider
 
-- Robot follows entity into new dimension
-- Robots can defend themselves
-- Removal of a command implies goal removal
-- Cobblestone generator
+- CCT Functions return correct values
 - Perks
 - Commands
-- Robots search new target after prev target was killed by other means
-- Long distance travel
-- Ranged combat (Potions, Bow, Crossbows)
-- Commands stop on deactivation
-- Commands continue on reactivation
+    - Robots can defend themselves
+    - Robots search new target after prev target was killed by other means
+    - Ranged combat (Potions, Bow, Crossbows)
+    - Commands continue on reactivation
+    - Removal of a command implies goal removal
+    - Commands stop on deactivation
+- Advanced
+    - Robot follows entity into new dimension
+    - Cross dimensional item transport
+    - Cobblestone generator
+    - Long distance travel
+- Modules

@@ -1,4 +1,15 @@
 {
   "name": "norabotics:strength",
-  "internalLogic": true
+  "attributes": [
+    {
+      "name": "generic.attack_damage",
+      "modifiers": [
+        {
+          "value": 0,
+          "operation": 0,
+          "scalar": 1
+        }
+      ]
+    }
+  ]
 }

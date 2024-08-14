@@ -89,7 +89,7 @@ public class RobotModule {
             energyStorage = caster.getCapability(ForgeCapabilities.ENERGY).resolve().get();
             if(energyStorage.getEnergyStored() < modEnergyCost) return false;
         }
-        if(!MinecraftForge.EVENT_BUS.post(new ModuleActivationEvent(caster, this))) return false;
+        if(MinecraftForge.EVENT_BUS.post(new ModuleActivationEvent(caster, this))) return false;
         if(!action.execute(caster, (int) (duration * caster.getAttributeValue(ModAttributes.MODULE_DURATION)))) return false;
         if(modEnergyCost > 0) {
             energyStorage.extractEnergy(modEnergyCost, false);

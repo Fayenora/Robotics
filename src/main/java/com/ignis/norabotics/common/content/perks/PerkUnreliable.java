@@ -1,6 +1,7 @@
 package com.ignis.norabotics.common.content.perks;
 
 
+import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
@@ -18,8 +19,6 @@ import java.util.Random;
 
 public class PerkUnreliable extends Perk {
 
-	private final Random r = new Random();
-
 	public PerkUnreliable(String name) {
 		super(name, 1);
 	}
@@ -31,7 +30,7 @@ public class PerkUnreliable extends Perk {
 		//FIXME: Works, but creates a concurrent modification exception when the last part of any perk is destroyed, as the map is currently iterating over the perks
 		EnumRobotPart toDestroy = null;
 		for(RobotPart part : parts.getBodyParts()) {
-			if(part.getPerks().contains(ModPerks.PERK_UNRELIABLE.get()) && r.nextDouble() < RoboticsConfig.general.unreliableChance.get().floatValue()) {
+			if(part.getPerks().contains(ModPerks.PERK_UNRELIABLE.get()) && Robotics.RANDOM.nextDouble() < RoboticsConfig.general.unreliableChance.get().floatValue()) {
 				toDestroy = part.getPart();
 			}
 		}

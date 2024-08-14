@@ -26,7 +26,9 @@ public class PerkVoidant extends Perk {
             if(effectToRemove.isEmpty()) return super.onDamage(level, robot, dmgSource, damage, values);
             MobEffectInstance e = effectToRemove.get();
             MobEffectInstance copy = new MobEffectInstance(e.getEffect(), e.mapDuration(i -> i - 30 * 20), e.getAmplifier(), e.isAmbient(), e.isVisible(), e.showIcon(), null, e.getFactorData());
-            mob.forceAddEffect(copy, null);
+            if(copy.getDuration() < 0) {
+                mob.removeEffect(copy.getEffect());
+            } else mob.forceAddEffect(copy, null);
         }
         return super.onDamage(level, robot, dmgSource, damage, values);
     }

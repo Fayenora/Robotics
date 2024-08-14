@@ -46,7 +46,6 @@ public class ModPerks {
     public static final RegistryObject<Perk> PERK_SOLAR_PANEL = register("solar_panel", PerkSolarPanel::new);
     public static final RegistryObject<Perk> PERK_UNRELIABLE = register("unreliable", PerkUnreliable::new);
     public static final RegistryObject<Perk> PERK_MASS_PRODUCED = register("mass_produced", PerkMassProduced::new);
-    public static final RegistryObject<Perk> PERK_STRENGTH = register("strength", PerkStrength::new);
     public static final RegistryObject<Perk> PERK_IMPACT = register("impact", PerkImpact::new);
     public static final RegistryObject<Perk> PERK_ROBUST = register("robust", PerkRobust::new);
     public static final RegistryObject<Perk> PERK_LUMINOUS = register("luminous", Perk::new);
