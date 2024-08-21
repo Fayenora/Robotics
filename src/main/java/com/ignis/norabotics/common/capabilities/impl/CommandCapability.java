@@ -8,6 +8,7 @@ import com.ignis.norabotics.common.helpers.types.EntitySearch;
 import com.ignis.norabotics.common.helpers.types.Selection;
 import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.robot.RobotCommand;
+import com.ignis.norabotics.definitions.ModSelectionTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -146,7 +147,7 @@ public class CommandCapability implements ICommandable {
         if(entity.level().isClientSide) return;
         // Register the Entity Predicates of this command to the CommandBehavior
         for(Selection<?> selector : command.getSelectors()) {
-            if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
+            if(selector.getType().equals(ModSelectionTypes.ENTITY_PREDICATE)) {
                 EntitySearch search = (EntitySearch) selector.get();
                 search.addListener(newResult -> {
                     search.setCache(newResult);
@@ -160,7 +161,7 @@ public class CommandCapability implements ICommandable {
     private void onRemoved(RobotCommand command) {
         if(entity.level().isClientSide) return;
         for(Selection<?> selector : command.getSelectors()) {
-            if(selector.getType().equals(SelectionType.ENTITY_PREDICATE)) {
+            if(selector.getType().equals(ModSelectionTypes.ENTITY_PREDICATE)) {
                 EntitySearch search = (EntitySearch) selector.get();
                 CommandBehavior.SEARCHES.remove(entity.level(), search);
             }

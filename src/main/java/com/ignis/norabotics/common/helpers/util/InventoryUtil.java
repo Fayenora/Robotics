@@ -85,6 +85,16 @@ public class InventoryUtil {
 		}
 		return false;
 	}
+
+	public static int count(IItemHandler inventory, Item item) {
+		int count = 0;
+		for(int i = 0; i < inventory.getSlots(); i++) {
+			if(inventory.getStackInSlot(i).getItem().equals(item)) {
+				count += inventory.getStackInSlot(i).getCount();
+			}
+		}
+		return count;
+	}
 	
 	public static boolean areEmpty(ItemStack[] stacks) {
 		for(ItemStack stack : stacks) {

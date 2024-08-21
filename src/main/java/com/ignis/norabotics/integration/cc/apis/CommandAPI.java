@@ -6,6 +6,7 @@ import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.robot.CommandType;
 import com.ignis.norabotics.common.robot.RobotCommand;
 import com.ignis.norabotics.definitions.ModCommands;
+import com.ignis.norabotics.definitions.ModSelectionTypes;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
@@ -65,7 +66,7 @@ public class CommandAPI implements ILuaAPI {
         for(int i = 0; i < Math.min(selectionTypes.size(), selections.size()); i++) {
             String argument = selections.get(i);
             SelectionType<?> reqType = selectionTypes.get(i);
-            if(reqType == SelectionType.POS) {
+            if(reqType == ModSelectionTypes.POS) {
                 if(argument.matches("\\[[A-z:]*/[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
                     // Everything is fine
                 } else if(argument.matches("\\[[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {

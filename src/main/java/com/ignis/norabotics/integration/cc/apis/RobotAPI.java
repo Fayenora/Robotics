@@ -7,6 +7,7 @@ import com.ignis.norabotics.common.helpers.util.StringUtil;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.RobotModule;
 import com.ignis.norabotics.definitions.ModModules;
+import com.ignis.norabotics.definitions.ModSelectionTypes;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -126,12 +127,12 @@ public class RobotAPI implements ILuaAPI {
         if(slotType.isPresent()) {
             try {
                 EnumModuleSlot slot = EnumModuleSlot.valueOf(slotType.get().toUpperCase());
-                return robot.getModules(slot).stream().map(SelectionType.ITEM.stringifier()).toList();
+                return robot.getModules(slot).stream().map(ModSelectionTypes.ITEM.stringifier()).toList();
             } catch(IllegalArgumentException exc) {
                 throw new LuaException("\"" + slotType.get() + "\" is not a valid module slot type. Viable arguments are: " + StringUtil.enumToString(EnumModuleSlot.values()));
             }
         }
-        return getModules().stream().map(SelectionType.ITEM.stringifier()).toList();
+        return getModules().stream().map(ModSelectionTypes.ITEM.stringifier()).toList();
     }
 
     @LuaFunction

@@ -9,6 +9,7 @@ import com.ignis.norabotics.common.helpers.types.EntitySearch;
 import com.ignis.norabotics.common.helpers.types.Selection;
 import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.robot.RobotCommand;
+import com.ignis.norabotics.definitions.ModSelectionTypes;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,7 +68,7 @@ public class CommandBehavior {
         event.getEntity().getCapability(ModCapabilities.COMMANDS).ifPresent(commands -> {
             for(RobotCommand command : commands.getCommands()) {
                 for(Selection<?> selection : command.getSelectors()) {
-                    if(selection.getType().equals(SelectionType.ENTITY_PREDICATE)) {
+                    if(selection.getType().equals(ModSelectionTypes.ENTITY_PREDICATE)) {
                         EntitySearch search = (EntitySearch) selection.get();
                         SEARCHES.remove(event.getLevel(), search);
                     }

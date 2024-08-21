@@ -41,7 +41,7 @@ public class Robotics {
     public static IEventBus EVENT_BUS;
 
     static {
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> SelectionType::loadGuis);
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ModSelectionTypes::loadGuis);
     }
 
     public Robotics() {

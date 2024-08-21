@@ -53,6 +53,10 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         setName(name);
     }
 
+    public EntitySearch(@NotNull EntityType<?> type) {
+        setType(type);
+    }
+
     public EntitySearch(int entityId) {
         setEntityId(entityId);
     }

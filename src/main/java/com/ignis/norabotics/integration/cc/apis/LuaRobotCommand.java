@@ -37,7 +37,7 @@ public class LuaRobotCommand {
         try {
             setSelection(s, selection);
         } catch(Exception e) {
-            throw new LuaException("Unable to set value \"" + selection + "\" for type " + s.getType().identifier() + ". ");
+            throw new LuaException("Unable to set value \"" + selection + "\" for type " + s.getType() + ". ");
         }
         //Don't reapply the command. We don't necessarily know whether it is still part of the active list
         //TODO We definitely DO want to reapply here, figure something out
