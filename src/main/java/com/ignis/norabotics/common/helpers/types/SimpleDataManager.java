@@ -32,4 +32,8 @@ public class SimpleDataManager {
 		return values.get(name);
 	}
 
+	public boolean contains(String name) {
+		return values.containsKey(name);
+	}
+
 }

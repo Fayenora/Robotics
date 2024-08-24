@@ -6,7 +6,6 @@ import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.handlers.CommandBehavior;
 import com.ignis.norabotics.common.helpers.types.EntitySearch;
 import com.ignis.norabotics.common.helpers.types.Selection;
-import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.robot.RobotCommand;
 import com.ignis.norabotics.definitions.ModSelectionTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -77,7 +76,6 @@ public class CommandCapability implements ICommandable {
      * Removes the goal currently provided by given command. Reevaluates the command and applies the goal it provides
      * @param command the command to reapply
      */
-    @Override
     public void reapplyCommand(RobotCommand command) {
         if(entity.level().isClientSide()) return;
         if(!commands.containsKey(command)) return;
@@ -129,18 +127,13 @@ public class CommandCapability implements ICommandable {
     public void removeAllTasks() {
         entity.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
         entity.targetSelector.getRunningGoals().forEach(WrappedGoal::stop);
-        for(Goal.Flag flag : Goal.Flag.values()) {
-            entity.goalSelector.disableControlFlag(flag);
-            entity.targetSelector.disableControlFlag(flag);
-        }
+        entity.goalSelector.removeAllGoals(commands::containsValue);
+        entity.targetSelector.removeAllGoals(commands::containsValue);
     }
 
     @Override
     public void reapplyAllTasks() {
-        for(Goal.Flag flag : Goal.Flag.values()) {
-            entity.goalSelector.enableControlFlag(flag);
-            entity.targetSelector.enableControlFlag(flag);
-        }
+        applyCommands();
     }
 
     private void onApplied(RobotCommand command) {

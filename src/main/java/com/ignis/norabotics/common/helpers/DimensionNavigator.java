@@ -47,7 +47,7 @@ public class DimensionNavigator {
             return mob.getNavigation().moveTo(pos.getX(), pos.getY(), pos.getZ(), speedMod);
         }
         Block portal = getPortalBlock(level.dimensionTypeId());
-        BlockPos portalPos = findNearestBlock(portal);
+        BlockPos portalPos = findNearestBlock(mob.level(), mob.blockPosition(), portal, verticalSearchRange, searchRange);
         if(portalPos == null) return false;
         return mob.getNavigation().moveTo(portalPos.getX(), portalPos.getY(), portalPos.getZ(), speedMod);
     }
@@ -61,16 +61,15 @@ public class DimensionNavigator {
         }
     }
 
-    private BlockPos findNearestBlock(Block block) {
-        BlockPos mobPos = this.mob.blockPosition();
+    public static BlockPos findNearestBlock(Level level, BlockPos source, Block block, int verticalSearchRange, int searchRange) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         for(int k = 0; k <= verticalSearchRange; k = k > 0 ? -k : 1 - k) {
             for(int l = 0; l < searchRange; ++l) {
                 for(int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                     for(int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
-                        pos.setWithOffset(mobPos, i1, k - 1, j1);
-                        if (this.mob.isWithinRestriction(pos) && mob.level().getBlockState(pos).getBlock().equals(block)) {
+                        pos.setWithOffset(source, i1, k - 1, j1);
+                        if (level.getBlockState(pos).getBlock().equals(block)) {
                             return pos;
                         }
                     }

@@ -124,6 +124,7 @@ public class RobotCapability implements IRobot {
         // NOTE Maybe make this fire as an event?
         dataManager.set(ACTIVATED, activation);
 
+        // Alter pickup & chunkloading behavior
         if(!activation) {
             if(RoboticsConfig.general.pickUpShutdown.get() && entity instanceof Mob mob) {
                 mob.setCanPickUpLoot(false);
@@ -135,6 +136,7 @@ public class RobotCapability implements IRobot {
             setPickUpState(getPickUpState());//Reapply the rule the robot had when active (if there is such a rule saved)
         }
 
+        // Stop/Resume commands
         if(commands.isPresent() && entity instanceof Mob mob) {
             if(activation) {
                 mob.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
@@ -146,6 +148,7 @@ public class RobotCapability implements IRobot {
             }
         }
 
+        // Reapply color
         if(parts.isPresent()) {
             if(activation) {
                 parts.get().setTemporaryColor(parts.get().getColor());

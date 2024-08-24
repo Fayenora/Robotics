@@ -101,8 +101,9 @@ public class RobotModule {
     public boolean isOnCooldown(LivingEntity caster) {
         if(!caster.getCapability(ModCapabilities.PERKS).isPresent()) return true;
         IPerkMap perkMap = caster.getCapability(ModCapabilities.PERKS).resolve().get();
+        if(!perkMap.values().contains(action.toString())) return false;
         if(caster.tickCount < perkMap.values().get(action.toString())) return false; // Server was loaded anew -> All perk cooldowns reset
-        return caster.tickCount > perkMap.values().get(action.toString()) + getCooldown() * caster.getAttributeValue(ModAttributes.MODULE_COOLDOWN);
+        return caster.tickCount <= perkMap.values().get(action.toString()) + getCooldown() * caster.getAttributeValue(ModAttributes.MODULE_COOLDOWN);
     }
 
     private void setOnCooldown(LivingEntity caster) {

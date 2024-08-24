@@ -46,8 +46,7 @@ public class StoreGoal extends RetrieveGoal {
 	protected void interactWithContainer(IItemHandler inventory, int ticks) {
 		if(ticks % getTakeItemTime() != 0) return;
 		entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(entityInventory -> {
-			//Start with index 6 to avoid dumping any currently equipped items
-			for(int i = 6; i < entityInventory.getSlots(); i++) {
+			for(int i = 0; i < entityInventory.getSlots(); i++) {
 				ItemStack stack = entityInventory.extractItem(i, Integer.MAX_VALUE, true);
 				if(toTake == null || !stack.getItem().equals(toTake.getItem())) continue;
 

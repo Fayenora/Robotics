@@ -75,6 +75,11 @@ public class MoveToBlockGoal extends Goal {
         this.tryTicks = 0;
     }
 
+    @Override
+    public void stop() {
+        nextStartTick = 0;
+    }
+
     public double acceptedDistance() {
         return 0.3D;
     }

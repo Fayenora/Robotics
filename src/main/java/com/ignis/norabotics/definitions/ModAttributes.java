@@ -58,6 +58,7 @@ public class ModAttributes {
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CAPACITY);
         event.add(ModEntityTypes.ROBOT.get(), ENERGY_CONSUMPTION);
         event.add(ModEntityTypes.ROBOT.get(), STACK_SIZE);
+        event.add(ModEntityTypes.ROBOT.get(), LOGISTICS_TIME);
         event.add(ModEntityTypes.ROBOT.get(), MODULE_COST);
         event.add(ModEntityTypes.ROBOT.get(), MODULE_COOLDOWN);
         event.add(ModEntityTypes.ROBOT.get(), MODULE_DURATION);

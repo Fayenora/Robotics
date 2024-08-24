@@ -76,7 +76,7 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
         // Commence across all other levels
         for(ServerLevel level : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
             if(level.equals(preferredLevel)) continue;
-            double coordinateScale = level.dimensionType().coordinateScale();
+            double coordinateScale = 1 / level.dimensionType().coordinateScale();
             Vec3 searchStart = new Vec3(origin.x, 0, origin.y);
             searchStart = searchStart.scale(coordinateScale).add(0, origin.y, 0);
             result = commenceForLevel(level, searchStart);

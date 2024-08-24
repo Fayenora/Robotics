@@ -22,8 +22,6 @@ public interface ICommandable extends INBTSerializable<CompoundTag> {
 
     List<RobotCommand> getCommands();
 
-    void reapplyCommand(RobotCommand command);
-
     void removeCommand(RobotCommand command);
 
     /**
