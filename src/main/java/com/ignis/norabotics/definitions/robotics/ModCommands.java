@@ -1,4 +1,4 @@
-package com.ignis.norabotics.definitions;
+package com.ignis.norabotics.definitions.robotics;
 
 import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.content.entity.ai.*;

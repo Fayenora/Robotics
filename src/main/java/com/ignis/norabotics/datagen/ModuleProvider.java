@@ -8,7 +8,7 @@ import com.ignis.norabotics.common.robot.EnumRobotMaterial;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotModule;
 import com.ignis.norabotics.definitions.ModItems;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import com.ignis.norabotics.definitions.ModTags;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.MethodsReturnNonnullByDefault;

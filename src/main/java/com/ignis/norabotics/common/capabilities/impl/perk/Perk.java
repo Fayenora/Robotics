@@ -11,7 +11,7 @@ import com.ignis.norabotics.common.capabilities.PerkHooks;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
 import com.ignis.norabotics.common.helpers.util.Lang;
 import com.ignis.norabotics.common.helpers.util.MathUtil;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -66,6 +66,9 @@ public class Perk implements PerkHooks {
 			Codec.list(CODEC_SCALAR).fieldOf("modifiers").forGetter(c -> c.modifiers)
 	).apply(instance, AttributeEntry::new));
 
+	/**
+	 * Codec for serializing and deserializing Perks. Update the wiki entry for data pack writers when updating this.
+	 */
 	public static final Codec<Perk> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.fieldOf("name").forGetter(c -> c.name),
 			ExtraCodecs.POSITIVE_INT.optionalFieldOf("maxLevel", Integer.MAX_VALUE).forGetter(Perk::getMaxLevel),

@@ -12,7 +12,7 @@ import com.ignis.norabotics.common.helpers.util.PosUtil;
 import com.ignis.norabotics.common.helpers.util.RenderUtil;
 import com.ignis.norabotics.common.robot.RobotCommand;
 import com.ignis.norabotics.common.robot.RobotView;
-import com.ignis.norabotics.definitions.ModCommands;
+import com.ignis.norabotics.definitions.robotics.ModCommands;
 import com.ignis.norabotics.definitions.ModMenuTypes;
 import com.ignis.norabotics.network.messages.NetworkInfo;
 import com.ignis.norabotics.network.messages.server.PacketAddCommand;

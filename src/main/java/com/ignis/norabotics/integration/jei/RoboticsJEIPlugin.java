@@ -13,7 +13,7 @@ import com.ignis.norabotics.common.helpers.types.Tuple;
 import com.ignis.norabotics.common.robot.RobotModule;
 import com.ignis.norabotics.definitions.ModBlocks;
 import com.ignis.norabotics.definitions.ModMenuTypes;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import com.ignis.norabotics.integration.cc.ProgrammingScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

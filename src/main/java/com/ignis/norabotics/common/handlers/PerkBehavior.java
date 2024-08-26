@@ -9,7 +9,7 @@ import com.ignis.norabotics.common.helpers.types.Tuple;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
 import com.ignis.norabotics.definitions.ModAttributes;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

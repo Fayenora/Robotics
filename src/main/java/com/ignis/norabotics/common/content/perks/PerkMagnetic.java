@@ -3,7 +3,7 @@ package com.ignis.norabotics.common.content.perks;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;

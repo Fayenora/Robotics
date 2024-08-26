@@ -2,7 +2,7 @@ package com.ignis.norabotics.datagen;
 
 import com.ignis.norabotics.common.robot.EnumRobotMaterial;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.data.PackOutput;
 
 public class ModuleGenerator extends ModuleProvider {

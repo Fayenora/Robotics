@@ -7,7 +7,7 @@ import com.ignis.norabotics.common.capabilities.ModifiableEnergyStorage;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.handlers.ShieldBehavior;
 import com.ignis.norabotics.definitions.ModAttributes;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import com.ignis.norabotics.definitions.ModSounds;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.nbt.CompoundTag;

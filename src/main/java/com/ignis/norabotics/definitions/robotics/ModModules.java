@@ -1,4 +1,4 @@
-package com.ignis.norabotics.definitions;
+package com.ignis.norabotics.definitions.robotics;
 
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.Robotics;

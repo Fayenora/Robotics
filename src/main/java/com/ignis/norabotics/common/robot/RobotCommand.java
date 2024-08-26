@@ -3,7 +3,7 @@ package com.ignis.norabotics.common.robot;
 import com.ignis.norabotics.common.helpers.types.Selection;
 import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.helpers.util.NBTUtil;
-import com.ignis.norabotics.definitions.ModCommands;
+import com.ignis.norabotics.definitions.robotics.ModCommands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;

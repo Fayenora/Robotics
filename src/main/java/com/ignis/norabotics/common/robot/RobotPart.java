@@ -4,7 +4,7 @@ import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.capabilities.IPerkMap;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.definitions.ModItems;
-import com.ignis.norabotics.definitions.ModModules;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;

@@ -4,7 +4,7 @@ import com.ignis.norabotics.common.capabilities.IRobot;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.robot.RobotModule;
-import com.ignis.norabotics.definitions.ModModules;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

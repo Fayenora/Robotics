@@ -2,7 +2,7 @@ package com.ignis.norabotics.common.helpers.types;
 
 import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.client.screen.selectors.*;
-import com.ignis.norabotics.definitions.ModSelectionTypes;
+import com.ignis.norabotics.definitions.robotics.ModSelectionTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

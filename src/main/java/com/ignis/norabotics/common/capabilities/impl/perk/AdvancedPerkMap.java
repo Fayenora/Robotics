@@ -4,7 +4,7 @@ import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.capabilities.IPerkMap;
 import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
 import com.ignis.norabotics.common.helpers.types.Tuple;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;

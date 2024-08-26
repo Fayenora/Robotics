@@ -8,7 +8,7 @@ import com.ignis.norabotics.common.helpers.util.Lang;
 import com.ignis.norabotics.common.helpers.util.PosUtil;
 import com.ignis.norabotics.common.helpers.util.StringUtil;
 import com.ignis.norabotics.common.robot.RobotModule;
-import com.ignis.norabotics.definitions.ModModules;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.definitions.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

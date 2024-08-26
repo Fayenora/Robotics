@@ -8,7 +8,7 @@ import com.ignis.norabotics.common.helpers.types.EntitySearch;
 import com.ignis.norabotics.common.helpers.types.Selection;
 import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
 import com.ignis.norabotics.common.robot.RobotCommand;
-import com.ignis.norabotics.definitions.ModCommands;
+import com.ignis.norabotics.definitions.robotics.ModCommands;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;

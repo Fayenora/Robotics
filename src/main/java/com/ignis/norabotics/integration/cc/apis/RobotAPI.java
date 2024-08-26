@@ -2,12 +2,11 @@ package com.ignis.norabotics.integration.cc.apis;
 
 import com.ignis.norabotics.common.access.EnumPermission;
 import com.ignis.norabotics.common.capabilities.IRobot;
-import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.helpers.util.StringUtil;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.RobotModule;
-import com.ignis.norabotics.definitions.ModModules;
-import com.ignis.norabotics.definitions.ModSelectionTypes;
+import com.ignis.norabotics.definitions.robotics.ModModules;
+import com.ignis.norabotics.definitions.robotics.ModSelectionTypes;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;

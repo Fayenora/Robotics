@@ -7,7 +7,7 @@ import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.capabilities.impl.perk.PerkMap;
 import com.ignis.norabotics.common.content.actions.IAction;
 import com.ignis.norabotics.common.content.events.ModuleActivationEvent;
-import com.ignis.norabotics.definitions.ModActions;
+import com.ignis.norabotics.definitions.robotics.ModActions;
 import com.ignis.norabotics.definitions.ModAttributes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -40,6 +40,9 @@ public class RobotModule {
     public static final Codec<Ingredient> NETWORK_INGREDIENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.list(ItemStack.CODEC).fieldOf("stacks").forGetter(i -> Arrays.asList(i.getItems()))
     ).apply(instance, l -> Ingredient.of(l.stream())));
+    /**
+     * Codec for serializing and deserializing Modules. Update the wiki entry for data pack writers when updating this.
+     */
     public static final Codec<RobotModule> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             INGREDIENT_CODEC.fieldOf("items").forGetter(RobotModule::getItems),
             Codec.list(StringRepresentable.fromEnum(EnumModuleSlot::values)).optionalFieldOf("slots", List.of()).forGetter(c -> c.getViableSlots().stream().toList()),

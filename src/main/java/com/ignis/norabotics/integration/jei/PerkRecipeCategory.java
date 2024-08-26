@@ -5,7 +5,7 @@ import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.helpers.types.Tuple;
 import com.ignis.norabotics.common.helpers.util.Lang;
 import com.ignis.norabotics.common.robot.RobotModule;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;

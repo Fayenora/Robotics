@@ -6,7 +6,7 @@ import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.blockentity.StorageBlockEntity;
 import com.ignis.norabotics.common.content.blocks.StorageBlock;
 import com.ignis.norabotics.definitions.ModBlocks;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;

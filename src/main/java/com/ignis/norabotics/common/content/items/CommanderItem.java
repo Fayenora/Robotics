@@ -17,7 +17,7 @@ import com.ignis.norabotics.common.helpers.util.PosUtil;
 import com.ignis.norabotics.common.robot.RobotCommand;
 import com.ignis.norabotics.common.robot.RobotView;
 import com.ignis.norabotics.definitions.ModBlocks;
-import com.ignis.norabotics.definitions.ModCommands;
+import com.ignis.norabotics.definitions.robotics.ModCommands;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;

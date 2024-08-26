@@ -9,13 +9,11 @@ import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
 import com.ignis.norabotics.common.helpers.util.Lang;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Mob;
-
-import java.util.Random;
 
 public class PerkUnreliable extends Perk {
 

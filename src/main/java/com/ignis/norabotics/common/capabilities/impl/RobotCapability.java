@@ -15,7 +15,7 @@ import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.misc.ModifiableExplosion;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.RobotModule;
-import com.ignis.norabotics.definitions.ModModules;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

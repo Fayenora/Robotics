@@ -1,4 +1,4 @@
-package com.ignis.norabotics.definitions;
+package com.ignis.norabotics.definitions.robotics;
 
 import com.ignis.norabotics.client.screen.selectors.*;
 import com.ignis.norabotics.common.helpers.types.EntitySearch;

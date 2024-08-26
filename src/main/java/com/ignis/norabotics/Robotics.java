@@ -1,10 +1,10 @@
 package com.ignis.norabotics;
 
 import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
-import com.ignis.norabotics.common.helpers.types.SelectionType;
 import com.ignis.norabotics.common.misc.CountedIngredient;
 import com.ignis.norabotics.common.robot.RobotModule;
 import com.ignis.norabotics.definitions.*;
+import com.ignis.norabotics.definitions.robotics.*;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import com.ignis.norabotics.network.NetworkHandler;
 import com.ignis.norabotics.network.proxy.ClientProxy;

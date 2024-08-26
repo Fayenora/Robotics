@@ -9,6 +9,8 @@ import com.ignis.norabotics.common.helpers.types.Tuple;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.robot.*;
 import com.ignis.norabotics.definitions.*;
+import com.ignis.norabotics.definitions.robotics.ModCommands;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;

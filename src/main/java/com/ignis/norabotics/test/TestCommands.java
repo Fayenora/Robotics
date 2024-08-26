@@ -7,7 +7,7 @@ import com.ignis.norabotics.common.helpers.types.EntitySearch;
 import com.ignis.norabotics.common.helpers.types.Tuple;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.robot.RobotCommand;
-import com.ignis.norabotics.definitions.ModCommands;
+import com.ignis.norabotics.definitions.robotics.ModCommands;
 import com.ignis.norabotics.definitions.ModEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;

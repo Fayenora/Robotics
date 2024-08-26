@@ -1,4 +1,4 @@
-package com.ignis.norabotics.definitions;
+package com.ignis.norabotics.definitions.robotics;
 
 import com.google.common.base.Functions;
 import com.ignis.norabotics.Robotics;

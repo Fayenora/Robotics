@@ -7,7 +7,7 @@ import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotMaterial;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
-import com.ignis.norabotics.definitions.ModModules;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

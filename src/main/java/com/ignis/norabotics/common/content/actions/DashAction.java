@@ -1,6 +1,6 @@
 package com.ignis.norabotics.common.content.actions;
 
-import com.ignis.norabotics.definitions.ModActions;
+import com.ignis.norabotics.definitions.robotics.ModActions;
 import com.ignis.norabotics.definitions.ModMobEffects;
 import com.mojang.serialization.Codec;
 import net.minecraft.MethodsReturnNonnullByDefault;

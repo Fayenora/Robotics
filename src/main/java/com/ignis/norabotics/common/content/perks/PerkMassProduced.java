@@ -7,7 +7,7 @@ import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.handlers.PerkBehavior;
 import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
 import com.ignis.norabotics.common.helpers.util.Lang;
-import com.ignis.norabotics.definitions.ModPerks;
+import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
