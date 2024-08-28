@@ -48,6 +48,10 @@ public class MathUtil {
 		return Math.max(min, Math.min((int) value, max));
 	}
 
+	public static float clamp(float min, float value, float max) {
+		return Math.max(min, Math.min(value, max));
+	}
+
 	public static float asymptote(int x, float min, float max) {
 		return (float) ((-((max - min) * Math.exp(-x) - (max - min)/2)) + (max - min)/2);
 	}

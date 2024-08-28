@@ -2,10 +2,7 @@ package com.ignis.norabotics.client;
 
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.Robotics;
-import com.ignis.norabotics.client.rendering.RobotFactoryRenderer;
-import com.ignis.norabotics.client.rendering.RobotRenderer;
-import com.ignis.norabotics.client.rendering.RobotStorageRenderer;
-import com.ignis.norabotics.client.rendering.StompedBlockRenderer;
+import com.ignis.norabotics.client.rendering.*;
 import com.ignis.norabotics.client.screen.*;
 import com.ignis.norabotics.definitions.ModEntityTypes;
 import com.ignis.norabotics.definitions.ModMachines;
@@ -74,6 +71,12 @@ public class ClientSetup {
         EntityRenderers.register(ModEntityTypes.STOMPED_BLOCK.get(), StompedBlockRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_FACTORY.getBlockEntityType(), RobotFactoryRenderer::new);
+        event.registerBlockEntityRenderer(ModMachines.MACHINE_ARM.get(), MachineArmRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(MachineArmModel.LAYER_LOCATION, MachineArmModel::createBodyLayer);
     }
 
     @SubscribeEvent
