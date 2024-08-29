@@ -77,7 +77,11 @@ public class ShieldCapability implements IShielded {
     }
 
     @Override
-    public void recharge() {
+    public void tick() {
+        if(isShielded() && energy().getEnergyStored() <= 0) {
+            setActive(false);
+            return;
+        }
         recharge(RECHARGE_RATE);
     }
 

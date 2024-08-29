@@ -1,6 +1,8 @@
 package com.ignis.norabotics.common.capabilities;
 
-public interface ModifiableInventory {
+import net.minecraftforge.items.IItemHandlerModifiable;
+
+public interface ModifiableInventory extends IItemHandlerModifiable {
 
     void setSize(int size);
 }

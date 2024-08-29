@@ -9,7 +9,7 @@ public interface IShielded extends INBTSerializable<CompoundTag> {
 
     void damage(float damage);
 
-    void recharge();
+    void tick();
 
     void recharge(float health);
 

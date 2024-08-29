@@ -70,7 +70,7 @@ public class ShieldBehavior {
         LivingEntity entity = event.getEntity();
         if(entity.level().isClientSide()) return;
         if(entity.tickCount % 4 != 0) return;
-        entity.getCapability(ModCapabilities.SHIELDED).ifPresent(IShielded::recharge);
+        entity.getCapability(ModCapabilities.SHIELDED).ifPresent(IShielded::tick);
     }
 
 }
