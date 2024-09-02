@@ -1,7 +1,10 @@
 package com.ignis.norabotics.client.rendering;
 
+import au.edu.federation.caliko.FabrikBone3D;
+import au.edu.federation.caliko.FabrikChain3D;
+import au.edu.federation.caliko.FabrikJoint3D;
+import au.edu.federation.utils.Vec3f;
 import com.ignis.norabotics.Robotics;
-import com.ignis.norabotics.common.helpers.util.MathUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -10,9 +13,21 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
 public class MachineArmModel<T extends Entity> extends EntityModel<T> {
+
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Robotics.rl("machine_arm"), "main");
+
+	// Caliko cannot solve for roll -> Solution: the first joint passed into caliko combines the rotation platform and the first arm
+	public static final int JOINT_COUNT = 3;
+	private static final Vec3f X_AXIS = new Vec3f(1, 0, 0);
+	private static final Vec3f Y_AXIS = new Vec3f(0, 1, 0);
+	private static final Vec3f Z_AXIS = new Vec3f(0, 0, 1);
+	private static final int[] ARM_LENGTHS = new int[] {26, 19, 9};
+	private static final Vec3f[] ROTATIONS = new Vec3f[] {Y_AXIS, Z_AXIS, Z_AXIS};
+	public static final Vec3 LOWER_LEFT_CORNER_OFFSET = new Vec3(0.5, 1, 0.5);
+
 	private final ModelPart platform;
 	private final ModelPart first_arm;
 	private final ModelPart rotation_joint_1;
@@ -34,40 +49,76 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
 		PartDefinition platform = partdefinition.addOrReplaceChild("platform", CubeListBuilder.create().texOffs(0, 26).addBox(-5.0F, -6.0F, -5.0F, 10.0F, 2.0F, 10.0F, new CubeDeformation(0.0F))
-				.texOffs(14, 45).addBox(-3.0F, -4.0F, 2.0F, 6.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(14, 38).addBox(-3.0F, -4.0F, -3.0F, 6.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 16.0F, 8.0F));
+				.texOffs(12, 38).addBox(-3.0F, -4.0F, 2.0F, 6.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(30, 26).addBox(-3.0F, -4.0F, -3.0F, 6.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 16.0F, 8.0F));
 
 		PartDefinition first_arm = platform.addOrReplaceChild("first_arm", CubeListBuilder.create().texOffs(36, 34).addBox(-2.0F, -2.0F, -2.0F, 4.0F, 23.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition rotation_joint_1 = first_arm.addOrReplaceChild("rotation_joint_1", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, 21.0F, -2.0F, 4.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition second_arm = rotation_joint_1.addOrReplaceChild("second_arm", CubeListBuilder.create().texOffs(48, 0).addBox(-3.0F, -2.0F, -3.0F, 6.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(30, 32).addBox(-16.0F, 1.0F, 2.0F, 13.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(30, 30).addBox(-16.0F, -2.0F, 2.0F, 13.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(28, 38).addBox(-11.0F, -1.0F, 2.0F, 3.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(48, 10).addBox(-21.0F, -2.0F, 2.0F, 5.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 11).addBox(-3.0F, -2.0F, 2.0F, 6.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(48, 5).addBox(-21.0F, -2.0F, -3.0F, 5.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 31).addBox(-11.0F, -1.0F, -3.0F, 3.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(30, 28).addBox(-16.0F, -2.0F, -3.0F, 13.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(30, 26).addBox(-16.0F, 1.0F, -3.0F, 13.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 25.0F, 0.0F));
+		PartDefinition second_arm = rotation_joint_1.addOrReplaceChild("second_arm", CubeListBuilder.create().texOffs(44, 26).addBox(-2.0F, -3.0F, -3.0F, 4.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(16, 45).addBox(1.0F, 3.0F, 2.0F, 1.0F, 13.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(12, 45).addBox(-2.0F, 3.0F, 2.0F, 1.0F, 13.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(20, 45).addBox(-1.0F, 8.0F, 2.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(48, 6).addBox(-2.0F, 16.0F, 2.0F, 4.0F, 5.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 26).addBox(-2.0F, -3.0F, 2.0F, 4.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(48, 0).addBox(-2.0F, 16.0F, -3.0F, 4.0F, 5.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(8, 11).addBox(-1.0F, 8.0F, -3.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(30, 38).addBox(-2.0F, 3.0F, -3.0F, 1.0F, 13.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(26, 38).addBox(1.0F, 3.0F, -3.0F, 1.0F, 13.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 25.0F, 0.0F));
 
-		PartDefinition joint_3 = second_arm.addOrReplaceChild("joint_3", CubeListBuilder.create().texOffs(0, 38).addBox(-1.0F, -4.0F, -2.0F, 3.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 26).addBox(-1.0F, -7.0F, 0.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
-				.texOffs(12, 0).addBox(-1.0F, -9.0F, 1.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 0).addBox(-1.0F, -6.0F, -2.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 34).addBox(0.0F, -5.0F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-19.0F, 0.0F, 0.0F));
+		PartDefinition joint_3 = second_arm.addOrReplaceChild("joint_3", CubeListBuilder.create().texOffs(0, 38).addBox(-1.0F, -3.0F, -2.0F, 2.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 11).addBox(-1.0F, 4.0F, 0.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
+				.texOffs(12, 0).addBox(0.0F, 7.0F, 1.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 0).addBox(0.0F, 4.0F, -2.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 33).addBox(-1.0F, 4.0F, -2.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 19.0F, 0.0F));
 
 		PartDefinition bb_main = partdefinition.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, 0.0F, -8.0F, 16.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 0.0F, 8.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-	public void setPlatformRotation(float rot1, float rot2, float rot4, float rot5) {
+	public static FabrikChain3D constructDefaultChain() {
+		return constructChain(ROTATIONS);
+	}
+
+	public static FabrikChain3D constructChain(Vec3f[] rotations) {
+		FabrikChain3D chain = new FabrikChain3D("Machine Arm");
+		chain.addBone(new FabrikBone3D(new Vec3f(), rotations[0], ARM_LENGTHS[0]));
+		for(int i = 1; i < JOINT_COUNT; i++) {
+			chain.addConsecutiveBone(rotations[i], ARM_LENGTHS[i]);
+		}
+		FabrikJoint3D joint_2 = new FabrikJoint3D();
+		FabrikJoint3D joint_3 = new FabrikJoint3D();
+		joint_2.setAsLocalHinge(X_AXIS, 180, 180, Y_AXIS);
+		joint_3.setAsLocalHinge(X_AXIS, 180, 180, Y_AXIS);
+		chain.getBone(1).setJoint(joint_2);
+		chain.getBone(2).setJoint(joint_3);
+		return chain;
+	}
+
+	public void setPlatformRotation(FabrikChain3D chain, Vec3f referenceVec) {
+		Vec3f firstRot = chain.getBone(0).getDirectionUV();
+		Vec3f secondRot = chain.getBone(1).getDirectionUV();
+		Vec3f thirdRot = chain.getBone(2).getDirectionUV();
+		referenceVec = referenceVec.cross(Y_AXIS).negate();
+
+		setPlatformRotation(
+				(float) (Math.atan2(firstRot.x, firstRot.z) + Math.toRadians(90)),
+				(float) Math.atan2(Math.sqrt(firstRot.x * firstRot.x + firstRot.z * firstRot.z), firstRot.y),
+                rot(firstRot, secondRot, referenceVec),
+                rot(secondRot, thirdRot, referenceVec));
+	}
+
+	public void setPlatformRotation(float rot1, float rot2, float rot3, float rot4) {
 		platform.yRot = rot1;
-		first_arm.zRot = rot2 < Math.toRadians(180) ? MathUtil.clamp(0, rot2, (float) Math.toRadians(50)) : MathUtil.clamp((float) Math.toRadians(310), rot2, (float) Math.toRadians(360));
-		second_arm.zRot = rot4 < Math.toRadians(180) ? MathUtil.clamp(0, rot4, (float) Math.toRadians(50)) : MathUtil.clamp((float) Math.toRadians(310), rot4, (float) Math.toRadians(360));
-		joint_3.zRot = rot5;
+		first_arm.zRot = rot2;
+		second_arm.zRot = rot3;
+		joint_3.zRot = rot4;
+	}
+
+	public static float rot(Vec3f vec1, Vec3f vec2, Vec3f referenceVec) {
+		return (float) (Math.signum(Vec3f.scalarProduct(referenceVec, vec1.cross(vec2))) * Math.acos(Vec3f.scalarProduct(vec1.normalised(), vec2.normalised())));
 	}
 
 	@Override

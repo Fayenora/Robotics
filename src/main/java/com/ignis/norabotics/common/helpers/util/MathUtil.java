@@ -1,5 +1,8 @@
 package com.ignis.norabotics.common.helpers.util;
 
+import au.edu.federation.utils.Vec3f;
+import net.minecraft.world.phys.Vec3;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +57,10 @@ public class MathUtil {
 
 	public static float asymptote(int x, float min, float max) {
 		return (float) ((-((max - min) * Math.exp(-x) - (max - min)/2)) + (max - min)/2);
+	}
+
+	public static Vec3f of(Vec3 vec) {
+		return new Vec3f((float) vec.x, (float) vec.y, (float) vec.z);
 	}
 
 }
