@@ -69,7 +69,12 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 				.texOffs(0, 11).addBox(-1.0F, 4.0F, 0.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
 				.texOffs(12, 0).addBox(0.0F, 7.0F, 1.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 0).addBox(0.0F, 4.0F, -2.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 33).addBox(-1.0F, 4.0F, -2.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 19.0F, 0.0F));
+				.texOffs(0, 33).addBox(-1.0F, 4.0F, -2.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(20, 52).addBox(-2.0F, -4.0F, -2.0F, 4.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 19.0F, 0.0F));
+
+		PartDefinition claw_1 = joint_3.addOrReplaceChild("claw_1", CubeListBuilder.create().texOffs(0, 49).addBox(-3.0F, -6.0F, -1.0F, 1.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition claw_2 = joint_3.addOrReplaceChild("claw_2", CubeListBuilder.create().texOffs(6, 49).addBox(2.0F, -6.0F, -1.0F, 1.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition bb_main = partdefinition.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, 0.0F, -8.0F, 16.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 0.0F, 8.0F));
 
