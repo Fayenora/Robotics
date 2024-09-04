@@ -27,6 +27,7 @@ public class RobotFactoryRenderer implements BlockEntityRenderer<FactoryBlockEnt
     public void render(FactoryBlockEntity storage, float pPartialTick, PoseStack poseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         if(storage.getEntity().isEmpty()) return;
         Direction facing = storage.getBlockState().getValue(MachineBlock.FACING);
+        poseStack.translate(0, 0.075, 0);
         RobotStorageRenderer.drawRobot(entityRenderer, storage.getEntity().get(), facing, poseStack, pPartialTick, pBufferSource, pPackedLight);
     }
 }
