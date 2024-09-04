@@ -29,6 +29,7 @@ public class MachineArmBlockEntity extends BlockEntity {
     public MachineArmBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModMachines.MACHINE_ARM.get(), pPos, pBlockState);
         chain = MachineArmModel.constructDefaultChain();
+        target = new Vec3f(1, 1, 0);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MachineArmBlockEntity machineArm) {

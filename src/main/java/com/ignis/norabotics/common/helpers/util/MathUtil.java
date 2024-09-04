@@ -1,6 +1,7 @@
 package com.ignis.norabotics.common.helpers.util;
 
 import au.edu.federation.utils.Vec3f;
+import com.ignis.norabotics.common.helpers.types.Tuple;
 import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
@@ -20,6 +21,22 @@ public class MathUtil {
 	 */
 	public static Rectangle downsizeRect(Rectangle rect, int amount) {
 		return new Rectangle(rect.x + amount, rect.y + amount, rect.width - amount * 2, rect.height - amount * 2);
+	}
+
+	public static Tuple<Float, Integer> argmin(float... args) {
+		float currentMin = Float.MAX_VALUE;
+		int currentInd = args.length + 1;
+		for(int i = 0; i < args.length; i++) {
+			if(args[i] < currentMin) {
+				currentMin = args[i];
+				currentInd = i;
+			}
+		}
+		return new Tuple<>(currentMin, currentInd);
+	}
+
+	public static double circularRange(double val, double min, double max) {
+		return (val - min) % (max - min) + min;
 	}
 	
 	public static int standardSearch(int min, int max, Predicate<Integer> condition) {

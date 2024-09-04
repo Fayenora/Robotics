@@ -18,12 +18,10 @@ import net.minecraft.world.phys.Vec3;
 public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Robotics.rl("machine_arm"), "main");
-
-	// Caliko cannot solve for roll -> Solution: the first joint passed into caliko combines the rotation platform and the first arm
 	public static final int JOINT_COUNT = 3;
-	private static final Vec3f X_AXIS = new Vec3f(1, 0, 0);
-	private static final Vec3f Y_AXIS = new Vec3f(0, 1, 0);
-	private static final Vec3f Z_AXIS = new Vec3f(0, 0, 1);
+	public static final Vec3f X_AXIS = new Vec3f(1, 0, 0);
+	public static final Vec3f Y_AXIS = new Vec3f(0, 1, 0);
+	public static final Vec3f Z_AXIS = new Vec3f(0, 0, 1);
 	private static final int[] ARM_LENGTHS = new int[] {26, 19, 9};
 	private static final Vec3f[] ROTATIONS = new Vec3f[] {Y_AXIS, Z_AXIS, Z_AXIS};
 	public static final Vec3 LOWER_LEFT_CORNER_OFFSET = new Vec3(0.5, 1, 0.5);
@@ -90,24 +88,11 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 		}
 		FabrikJoint3D joint_2 = new FabrikJoint3D();
 		FabrikJoint3D joint_3 = new FabrikJoint3D();
-		joint_2.setAsLocalHinge(X_AXIS, 180, 180, Y_AXIS);
-		joint_3.setAsLocalHinge(X_AXIS, 180, 180, Y_AXIS);
+		joint_2.setAsLocalHinge(X_AXIS, 160, 160, Y_AXIS);
+		joint_3.setAsLocalHinge(X_AXIS, 160, 160, Y_AXIS);
 		chain.getBone(1).setJoint(joint_2);
 		chain.getBone(2).setJoint(joint_3);
 		return chain;
-	}
-
-	public void setPlatformRotation(FabrikChain3D chain, Vec3f referenceVec) {
-		Vec3f firstRot = chain.getBone(0).getDirectionUV();
-		Vec3f secondRot = chain.getBone(1).getDirectionUV();
-		Vec3f thirdRot = chain.getBone(2).getDirectionUV();
-		referenceVec = referenceVec.cross(Y_AXIS).negate();
-
-		setPlatformRotation(
-				(float) (Math.atan2(firstRot.x, firstRot.z) + Math.toRadians(90)),
-				(float) Math.atan2(Math.sqrt(firstRot.x * firstRot.x + firstRot.z * firstRot.z), firstRot.y),
-                rot(firstRot, secondRot, referenceVec),
-                rot(secondRot, thirdRot, referenceVec));
 	}
 
 	public void setPlatformRotation(float rot1, float rot2, float rot3, float rot4) {
@@ -117,8 +102,8 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 		joint_3.zRot = rot4;
 	}
 
-	public static float rot(Vec3f vec1, Vec3f vec2, Vec3f referenceVec) {
-		return (float) (Math.signum(Vec3f.scalarProduct(referenceVec, vec1.cross(vec2))) * Math.acos(Vec3f.scalarProduct(vec1.normalised(), vec2.normalised())));
+	public void setPlatformRotation(float[] rotations) {
+		setPlatformRotation(rotations[0], rotations[1], rotations[2], rotations[3]);
 	}
 
 	@Override
