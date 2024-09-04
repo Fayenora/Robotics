@@ -7,6 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+@SuppressWarnings("unused")
 public class ModSounds {
 
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Robotics.MODID);
@@ -20,6 +21,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> SHIELD_UP = register("shield.start");
     public static final RegistryObject<SoundEvent> SHIELD_IMPACT = register("shield.impact");
     public static final RegistryObject<SoundEvent> SHIELD_IMPACT_FATAL = register("shield.fatal_impact");
+    public static final RegistryObject<SoundEvent> INFOPAD_OPEN = register("book_open");
+    public static final RegistryObject<SoundEvent> INFOPAD_FLIP = register("book_flip");
 
     private static RegistryObject<SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Robotics.MODID, name)));

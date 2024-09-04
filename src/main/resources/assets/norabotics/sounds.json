@@ -35,6 +35,16 @@
       "subtitle": "shield.start",
       "sounds": [ "norabotics:shield/impact_2" ]
     },
+    "book_flip": {
+      "category": "player",
+      "sounds": [ "norabotics:book_flip" ],
+      "subtitle": "patchouli.subtitle.book_flip"
+    },
+    "book_open": {
+      "category": "player",
+      "sounds": [{"name": "norabotics:book_open", "volume": 0.2}],
+      "subtitle": "patchouli.subtitle.book_open"
+    },
     
     "machine.assembler":{
         "category": "block",
