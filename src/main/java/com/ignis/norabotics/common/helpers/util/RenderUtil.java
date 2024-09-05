@@ -101,8 +101,38 @@ public class RenderUtil {
     public static void drawEntityOnScreen(GuiGraphics graphics, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity ent, boolean renderNameTag) {
         Component f1 = ent.getCustomName();
         if(!renderNameTag) ent.setCustomName(null);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, posX, posY, scale, mouseX, mouseY, ent);
+        renderEntityInInventoryFollowsMouse(graphics, posX, posY, scale, mouseX, mouseY, ent);
         if(!renderNameTag) ent.setCustomName(f1);
+    }
+
+    public static void renderEntityInInventoryFollowsMouse(GuiGraphics pGuiGraphics, int pX, int pY, int pScale, float pMouseX, float pMouseY, LivingEntity pEntity) {
+        float f = (float)Math.atan((double)(pMouseX / 40.0F));
+        float f1 = (float)Math.atan((double)(pMouseY / 40.0F));
+        renderEntityInInventoryFollowsAngle(pGuiGraphics, pX, pY, pScale, f, f1, pEntity);
+    }
+
+    public static void renderEntityInInventoryFollowsAngle(GuiGraphics pGuiGraphics, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, LivingEntity pEntity) {
+        float f = angleXComponent;
+        float f1 = angleYComponent;
+        Quaternionf quaternionf = (new Quaternionf()).rotateZ((float)Math.PI);
+        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(f1 * 20.0F * ((float)Math.PI / 180F));
+        quaternionf.mul(quaternionf1);
+        float f2 = pEntity.yBodyRot;
+        float f3 = pEntity.getYRot();
+        float f4 = pEntity.getXRot();
+        float f5 = pEntity.yHeadRotO;
+        float f6 = pEntity.yHeadRot;
+        pEntity.yBodyRot = 180.0F + f * 20.0F;
+        pEntity.setYRot(180.0F + f * 40.0F);
+        pEntity.setXRot(-f1 * 20.0F);
+        pEntity.yHeadRot = 180.0F + f * 40.0F;  //ROBOTICS: Manually set head rotation to desired angle as head & body rotations are disconnected for robots
+        pEntity.yHeadRotO = 180.0F + f * 40.0F; //ROBOTICS: Manually set head rotation to desired angle as head & body rotations are disconnected for robots
+        InventoryScreen.renderEntityInInventory(pGuiGraphics, pX, pY, pScale, quaternionf, quaternionf1, pEntity);
+        pEntity.yBodyRot = f2;
+        pEntity.setYRot(f3);
+        pEntity.setXRot(f4);
+        pEntity.yHeadRotO = f5;
+        pEntity.yHeadRot = f6;
     }
 
     public static void drawRotatingEntity(PoseStack posestack1, int posX, int posY, int scale, LivingEntity entity, float angle) {

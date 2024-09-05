@@ -7,7 +7,6 @@ import com.ignis.norabotics.client.screen.elements.SideBarSwitchElement;
 import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.IRobot;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
-import com.ignis.norabotics.common.content.blockentity.EntityLevelStorage;
 import com.ignis.norabotics.common.content.menu.RobotMenu;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
 import com.ignis.norabotics.common.helpers.util.MathUtil;
@@ -34,21 +33,15 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(Robotics.MODID, "textures/gui/robot.png");
 
     private final LivingEntity entity;
-    public final LivingEntity entityToRender;
 
     private IPartBuilt entityParts;
-    private IRobot robot, robotToRender;
+    private IRobot robot;
 
     public RobotScreen(RobotMenu menu, Inventory inv, Component comp) {
         super(menu, inv, menu.robot, comp);
         this.entity = menu.robot;
-        if(EntityLevelStorage.copyEntity(entity).get() instanceof LivingEntity living) {
-            entityToRender = living;
-            entityToRender.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> storage.receiveEnergy(storage.getMaxEnergyStored(), false));
-        } else entityToRender = entity;
         entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> this.entityParts = parts);
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robot = robot);
-        entityToRender.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robotToRender = robot);
         imageHeight = Reference.GUI_ROBOT_DIMENSIONS.height;
     }
 
@@ -73,7 +66,7 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         this.drawHealthBar(graphics, 7, 81, Math.round(entity.getHealth()), Math.round(entity.getMaxHealth()));
         this.drawArmor(graphics, 89, 81, entity.getArmorValue());
 
-        if(entityParts == null || robot == null || robotToRender == null) return;
+        if(entityParts == null || robot == null) return;
 
         graphics.setColor(1, 1, 1, 1);
         if(entityParts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
@@ -86,11 +79,10 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
             this.drawShieldBar(graphics, 7, 81, Math.round(shield.getHealth()), entityParts.getColor().getTextColor());
         });
 
-        robotToRender.setActivation(robot.isActive());
-        if(robotToRender.isActive()) {
-            RenderUtil.drawEntityOnScreen(graphics, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entityToRender);
+        if(robot.isActive()) {
+            RenderUtil.drawEntityOnScreen(graphics, leftPos + 25, topPos + 7, mouseX, mouseY, 30, false, entity);
         } else {
-            RenderUtil.drawInactiveRobot(graphics, leftPos + 25, topPos + 7, 30, entityToRender, false);
+            RenderUtil.drawInactiveRobot(graphics, leftPos + 25, topPos + 7, 30, entity, false);
         }
     }
 
