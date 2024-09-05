@@ -27,6 +27,7 @@ public abstract class AbstractMultiBlockGoal extends Goal {
 
     private int hash;
     private BlockPos nextPos;
+    private boolean valid;
 
     public AbstractMultiBlockGoal(Mob entity, GlobalPos pos1, GlobalPos pos2) {
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
@@ -56,10 +57,8 @@ public abstract class AbstractMultiBlockGoal extends Goal {
             entity.getNavigation().moveTo(pos.getX(), pos.getY(), pos.getZ(), 1);
             return false;
         }
-        if(entity.getLookAngle().distanceTo(Vec3.atCenterOf(pos).subtract(entity.getEyePosition()).normalize()) > 0.1) {
-            entity.getLookControl().setLookAt(Vec3.atCenterOf(pos));
-            return false;
-        }
+        entity.getLookControl().setLookAt(Vec3.atCenterOf(pos));
+        if(!entity.getLookControl().isLookingAtTarget()) return false;
         return operateOnBlock(pos);
     }
 
@@ -101,7 +100,6 @@ public abstract class AbstractMultiBlockGoal extends Goal {
             }
         }
 
-        boolean valid = false;
         //Re-check the area if it changed
         if(recomputedHash != hash) {
             valid = doesAreaContainValidBlocks(level);

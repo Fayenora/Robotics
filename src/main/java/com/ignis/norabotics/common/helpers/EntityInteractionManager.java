@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -117,7 +118,7 @@ public class EntityInteractionManager {
         }
 
         if (!blockstate.isAir() && f >= 1.0F) {
-            this.destroyAndAck(pos, p_215124_, "insta mine");
+            destroyBlock(pos);
         } else {
             if (this.isDestroyingBlock) {
                 //this.fakePlayer.connection.send(new ClientboundBlockUpdatePacket(this.destroyPos, this.level.getBlockState(this.destroyPos)));
@@ -141,7 +142,7 @@ public class EntityInteractionManager {
             if (f1 >= 0.7F) {
                 this.isDestroyingBlock = false;
                 this.level.destroyBlockProgress(mob.getId(), destroyPos, -1);
-                this.destroyAndAck(destroyPos, p_215124_, "destroyed");
+                destroyBlock(destroyPos);
                 return;
             }
 
@@ -157,16 +158,6 @@ public class EntityInteractionManager {
         this.isDestroyingBlock = false;
         this.level.destroyBlockProgress(mob.getId(), destroyPos, -1);
         this.debugLogging(destroyPos, true, destroyProgressStart, "aborted destroying");
-    }
-
-    public void destroyAndAck(BlockPos pos, int p_215118_, String p_215119_) {
-        if (this.destroyBlock(pos)) {
-            this.debugLogging(pos, true, p_215118_, p_215119_);
-        } else {
-            //this.fakePlayer.connection.send(new ClientboundBlockUpdatePacket(p_215117_, this.level.getBlockState(p_215117_)));
-            this.debugLogging(pos, false, p_215118_, p_215119_);
-        }
-
     }
 
     public boolean destroyBlock(BlockPos pos) {

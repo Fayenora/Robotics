@@ -350,6 +350,7 @@ public class TestCommands {
     public static void testBreakSpeed(GameTestHelper helper) {
         RobotEntity robot1 = TestHelpers.setupDefaultRobot(helper);
         RobotEntity robot2 = TestHelpers.setupDefaultRobot(helper);
+        robot1.setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_PICKAXE.getDefaultInstance());
         robot2.setItemSlot(EquipmentSlot.MAINHAND, Items.DIAMOND_PICKAXE.getDefaultInstance());
         robot1.setPos(robot1.position().add(0, 0, 1));
         robot2.setPos(robot2.position().add(0, 0, 7));
@@ -371,6 +372,7 @@ public class TestCommands {
     @GameTest(template = "default", batch = "commands", timeoutTicks = 400)
     public static void testReBreakBlock(GameTestHelper helper) {
         RobotEntity robot = TestHelpers.setupDefaultRobot(helper);
+        robot.setItemSlot(EquipmentSlot.MAINHAND, Items.DIAMOND_PICKAXE.getDefaultInstance());
         BlockPos pos1 = new BlockPos(0, 2, 0);
         GlobalPos globalPos1 = GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(pos1));
         helper.setBlock(pos1, Blocks.AIR);
