@@ -4,6 +4,10 @@ import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.client.rendering.*;
 import com.ignis.norabotics.client.screen.*;
+import com.ignis.norabotics.client.tooltips.ClientItemTooltip;
+import com.ignis.norabotics.client.tooltips.ClientModuleTooltip;
+import com.ignis.norabotics.client.tooltips.ItemTooltip;
+import com.ignis.norabotics.client.tooltips.ModuleTooltip;
 import com.ignis.norabotics.definitions.ModEntityTypes;
 import com.ignis.norabotics.definitions.ModMachines;
 import com.ignis.norabotics.definitions.ModMenuTypes;
@@ -22,6 +26,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -45,7 +50,6 @@ public class ClientSetup {
             MenuScreens.register(ModMenuTypes.WIRE_CUTTER.get(), WireCutterScreen::new);
             MenuScreens.register(ModMenuTypes.ASSEMBLER.get(), AssemblerScreen::new);
             MenuScreens.register(ModMenuTypes.FACTORY.get(), FactoryScreen::new);
-            MenuScreens.register(ModMenuTypes.FACTORY_MODULES.get(), FactoryModulesScreen::new);
             MenuScreens.register(ModMenuTypes.STORAGE.get(), StorageScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT.get(), RobotScreen::new);
             MenuScreens.register(ModMenuTypes.ROBOT_INFO.get(), RobotInfoScreen::new);
@@ -63,6 +67,12 @@ public class ClientSetup {
                 MenuScreens.register(ModMenuTypes.COMPUTER.get(), VProgrammingScreen::new);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void registerClientToolTipTypes(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(ModuleTooltip.class, ClientModuleTooltip::new);
+        event.register(ItemTooltip.class, ClientItemTooltip::new);
     }
 
     @SubscribeEvent

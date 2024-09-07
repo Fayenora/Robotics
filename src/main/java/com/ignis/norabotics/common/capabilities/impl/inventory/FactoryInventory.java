@@ -54,11 +54,11 @@ public class FactoryInventory extends MachineInventory {
      * @return the module type which can fit in the slot
      */
     public static EnumModuleSlot typeFromSlotId(int slot) {
-        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, Reference.MAX_MODULES)];
+        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, Reference.MAX_MODULES) + 6];
     }
 
     public static int typeToSlotId(EnumModuleSlot slotType, int offset) {
-        return slotType.ordinal() * Reference.MAX_MODULES + offset + 6;
+        return (slotType.ordinal() - 6) * Reference.MAX_MODULES + Math.min(Reference.MAX_MODULES - 1, offset) + 6;
     }
 
     @Override
@@ -85,10 +85,8 @@ public class FactoryInventory extends MachineInventory {
             }
         } else if(!factory.getLevel().isClientSide()) {
             living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-                    int startIndex = 6 + slot.ordinal() * Reference.MAX_MODULES;
-                    int endIndex = 6 + (slot.ordinal() + 1) * Reference.MAX_MODULES;
-                    robot.setModules(slot, stacks.subList(startIndex, endIndex));
+                for(EnumModuleSlot slot : EnumModuleSlot.nonPrimaries()) {
+                    robot.setModules(slot, stacks.subList(typeToSlotId(slot, 0), typeToSlotId(slot, Reference.MAX_MODULES)));
                 }
             });
         }

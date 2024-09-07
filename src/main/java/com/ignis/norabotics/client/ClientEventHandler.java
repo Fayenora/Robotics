@@ -1,35 +1,45 @@
 package com.ignis.norabotics.client;
 
 import com.ignis.norabotics.Robotics;
+import com.ignis.norabotics.client.screen.FactoryScreen;
+import com.ignis.norabotics.client.tooltips.ModuleTooltip;
 import com.ignis.norabotics.common.capabilities.impl.EnergyStorage;
 import com.ignis.norabotics.common.content.actions.IAction;
 import com.ignis.norabotics.common.content.items.CommanderItem;
 import com.ignis.norabotics.common.helpers.util.Lang;
 import com.ignis.norabotics.common.helpers.util.PosUtil;
 import com.ignis.norabotics.common.helpers.util.StringUtil;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.RobotModule;
+import com.ignis.norabotics.common.robot.RobotPart;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.definitions.ModSounds;
+import com.ignis.norabotics.integration.config.RoboticsConfig;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -78,6 +88,29 @@ public class ClientEventHandler {
                     StringUtil.getEnergyDisplay(storage.getEnergyStored()) + " / " +
                     StringUtil.getEnergyDisplay(storage.getMaxEnergyStored())).withStyle(ChatFormatting.GOLD));
             event.getToolTip().add(ComponentUtils.formatList(tooltip, Component.literal(": ")));
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderFancyTooltip(RenderTooltipEvent.Color event) {
+        if(Robotics.proxy.getScreen().isEmpty()) return;
+        if(!(Robotics.proxy.getScreen().get() instanceof FactoryScreen)) return;
+        event.setBackgroundStart(FastColor.ARGB32.color(50, 0, 150, 150));
+        event.setBackgroundEnd(FastColor.ARGB32.color(50, FastColor.ARGB32.red(event.getOriginalBackgroundEnd()), FastColor.ARGB32.green(event.getOriginalBackgroundEnd()), FastColor.ARGB32.blue(event.getOriginalBackgroundEnd())));
+        event.setBorderStart(FastColor.ARGB32.color(255, 0, 255, 255));
+        event.setBorderEnd(FastColor.ARGB32.color(255, 0, 255, 255));
+    }
+
+    @SubscribeEvent
+    public static void renderFancyTooltip(RenderTooltipEvent.GatherComponents event) {
+        if(Robotics.proxy.getScreen().isEmpty()) return;
+        if(!(Robotics.proxy.getScreen().get() instanceof FactoryScreen screen)) return;
+
+        RobotPart part = RobotPart.getFromItem(event.getItemStack().getItem());
+        if(part == null) return;
+        Map<EnumModuleSlot, NonNullList<ItemStack>> moduleAssignment = screen.getMenu().getModuleAssignmentOfPart(part.getPart());
+        for(Map.Entry<EnumModuleSlot, NonNullList<ItemStack>> entry : moduleAssignment.entrySet()) {
+            event.getTooltipElements().add(Either.right(new ModuleTooltip(entry.getKey(), entry.getValue())));
         }
     }
 

@@ -33,6 +33,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,10 +55,9 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     private boolean canStart = false;
 
     public FactoryBlockEntity(BlockPos pos, BlockState state) {
-        super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES * EnumModuleSlot.values().length, new int[] {}, new int[] {});
+        super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES * EnumModuleSlot.nonPrimaries().length, new int[] {}, new int[] {});
         storedRobot = new EntityLevelStorage(level, null, this::getBlockPos);
         inventory = new FactoryInventory(this, getContainerSize());
-        inventory.setAllSlotsAccessibleByDefault();
     }
 
     @Override

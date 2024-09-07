@@ -50,16 +50,6 @@ public class RoboticsMenus {
                         new SimpleMenuProvider((id, playerInv, f3) -> new FactoryMenu(id, playerInv, factory), Lang.localise("container.robot_factory")),
                         buf -> buf.writeBlockPos(pos));
             }
-            if(type == ModMenuTypes.FACTORY_MODULES.get()) {
-                factory.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                    NetworkHooks.openScreen(serverPlayer,
-                            new SimpleMenuProvider((id, playerInv, f3) -> new FactoryModulesMenu(id, playerInv, robot.getModuleSlots(), factory), Lang.localise("container.robot_factory.modules")),
-                            buf -> {
-                                buf.writeMap(robot.getModuleSlots(), FriendlyByteBuf::writeEnum, FriendlyByteBuf::writeInt);
-                                buf.writeBlockPos(pos);
-                            });
-                }));
-            }
         }
     }
 
