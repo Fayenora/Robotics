@@ -1,8 +1,11 @@
 package com.ignis.norabotics.common.helpers.util;
 
+import au.edu.federation.caliko.FabrikBone3D;
 import au.edu.federation.utils.Vec3f;
 import com.ignis.norabotics.common.helpers.types.Tuple;
 import net.minecraft.world.phys.Vec3;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -78,6 +81,14 @@ public class MathUtil {
 
 	public static Vec3f of(Vec3 vec) {
 		return new Vec3f((float) vec.x, (float) vec.y, (float) vec.z);
+	}
+
+	public static Vec3 of(Vec3f vec) {
+		return new Vec3(vec.x, vec.y, vec.z);
+	}
+
+	public static Quaternionf getRotation(FabrikBone3D bone) {
+		return new Quaternionf(new AxisAngle4f((float) Math.toRadians(bone.getGlobalPitchDegs()), bone.getDirectionUV().x, bone.getDirectionUV().y, bone.getDirectionUV().z));
 	}
 
 }

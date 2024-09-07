@@ -1,6 +1,5 @@
 package com.ignis.norabotics.common.content.blocks;
 
-import com.ignis.norabotics.common.content.blockentity.ChargerBlockEntity;
 import com.ignis.norabotics.common.content.blockentity.MachineArmBlockEntity;
 import com.ignis.norabotics.definitions.ModMachines;
 import net.minecraft.core.BlockPos;
@@ -9,12 +8,14 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class MachineArmBlock extends BaseEntityBlock {
@@ -44,5 +45,15 @@ public class MachineArmBlock extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
+    public boolean isOcclusionShapeFullBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return false;
+    }
+
+    @Override
+    public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return Block.box(0, 0, 0, 16, 10, 16);
     }
 }
