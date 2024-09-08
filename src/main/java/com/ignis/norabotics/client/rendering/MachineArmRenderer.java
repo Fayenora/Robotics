@@ -15,11 +15,17 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4d;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import static com.ignis.norabotics.client.rendering.MachineArmModel.Y_AXIS;
 
@@ -32,29 +38,90 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
 
     MachineArmModel<Entity> model;
     private float[] currentPose, targetPose;
+    private final ItemRenderer itemRenderer;
 
     public MachineArmRenderer(BlockEntityRendererProvider.Context context) {
         model = new MachineArmModel<>(context.bakeLayer(MachineArmModel.LAYER_LOCATION));
+        itemRenderer = context.getItemRenderer();
     }
 
     @Override
     public void render(MachineArmBlockEntity arm, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         VertexConsumer debug = pBuffer.getBuffer(RenderType.debugLineStrip(5));
         Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vec3 pos = Vec3.atLowerCornerOf(arm.getBlockPos()).subtract(cameraPos).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET.scale(2));
+        Vec3 armBase = Vec3.atLowerCornerOf(arm.getBlockPos()).subtract(cameraPos).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET.scale(2));
         if(arm.getPose() != null && arm.getPose().getNumBones() > 0) {
             targetPose = chainToRotations(arm.getPose(), arm.getTarget());
             if(currentPose == null) currentPose = targetPose;
             moveToPose(currentPose, targetPose);
             model.setPlatformRotation(currentPose);
             for(FabrikBone3D bone : arm.getPose().getChain()) {
-                vertex(debug, pPoseStack.last().pose(), pos, bone.getStartLocation().times(1 / 8f));
-                vertex(debug, pPoseStack.last().pose(), pos, bone.getEndLocation().times(1 / 8f));
+                vertex(debug, pPoseStack.last().pose(), armBase, bone.getStartLocation().times(1 / 8f));
+                vertex(debug, pPoseStack.last().pose(), armBase, bone.getEndLocation().times(1 / 8f));
             }
         }
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutout(MACHINE_ARM_TEXTURE));
-        model.renderToBuffer(pPoseStack, vertexconsumer, LevelRenderer.getLightColor(arm.getLevel(), arm.getBlockPos().above()), pPackedOverlay, 1, 1, 1, 1);
+        int light = LevelRenderer.getLightColor(arm.getLevel(), arm.getBlockPos().above());
+        model.renderToBuffer(pPoseStack, vertexconsumer, light, pPackedOverlay, 1, 1, 1, 1);
+
+        // Item
+        FabrikBone3D lastBone = arm.getPose().getBone(arm.getPose().getNumBones() - 1);
+        Vec3f endEffector = arm.getPose().getEffectorLocation().minus(lastBone.getEndLocation().minus(lastBone.getStartLocation()).times(2));
+        Vec3 itemOffset = MathUtil.of(endEffector).scale(1 / 16d).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET);
+        BlockPos roughItemPos = BlockPos.containing(Vec3.atLowerCornerOf(arm.getBlockPos()).add(itemOffset));
+        int itemLight = LevelRenderer.getLightColor(arm.getLevel(), roughItemPos);
+
+        Vector3f origin = new Vector3f(0, 0, 0);
+        Vector3f currentTranslation = new Vector3f(0, 0, 0);
+        pPoseStack.pushPose();
+        //pPoseStack.last().pose().getColumn(3, origin);
+        pPoseStack.translate(MachineArmModel.LOWER_LEFT_CORNER_OFFSET.x, MachineArmModel.LOWER_LEFT_CORNER_OFFSET.y, MachineArmModel.LOWER_LEFT_CORNER_OFFSET.z);
+        pPoseStack.last().pose().getColumn(3, currentTranslation);
+        //rotateCoordinateSystem(pPoseStack, (float) Math.toRadians(90), (float) Math.toRadians(180), 0, origin, origin);
+        pPoseStack.mulPoseMatrix(forwardKinematics(currentPose, MachineArmModel.ARM_LENGTHS));
+        pPoseStack.last().pose().getColumn(3, currentTranslation);
+        rotateCoordinateSystem(pPoseStack, 0, (float) Math.toRadians(180), (float) Math.toRadians(90), origin, origin);
+        Robotics.LOGGER.debug("Rotations: {}, {}, {}, {}", currentPose[0], currentPose[1], currentPose[2], currentPose[3]);
+        Robotics.LOGGER.debug("Wanted: x: {}, y: {}, z: {}", itemOffset.x, itemOffset.y, itemOffset.z);
+        Robotics.LOGGER.debug("Current: x: {}, y: {}, z: {}", pPoseStack.last().pose().m30(), pPoseStack.last().pose().m31(), pPoseStack.last().pose().m32());
+        itemRenderer.renderStatic(arm.getGrabbedItem(), ItemDisplayContext.GROUND, itemLight, pPackedOverlay, pPoseStack, pBuffer, arm.getLevel(), 0);
+        pPoseStack.popPose();
     }
+
+    private void rotateCoordinateSystem(PoseStack poseStack, float x, float y, float z, Vector3f origin, Vector3f current) {
+        poseStack.rotateAround(new Quaternionf().rotateXYZ(x, y, z), origin.sub(current).x, origin.sub(current).y, origin.sub(current).z);
+    }
+
+    private Matrix4f forwardKinematics(float[] rotations, int[] lengths) {
+        return denavitHartenberger((float) (currentPose[0]), (float) Math.toRadians(-90), 0, 0).mul(
+                denavitHartenberger((float) (Math.toRadians(90) - currentPose[1]), 0, MachineArmModel.ARM_LENGTHS[0] / 16f, 0)).mul(
+                denavitHartenberger(currentPose[2], 0, MachineArmModel.ARM_LENGTHS[1] / 16f, 0)).mul(
+                denavitHartenberger(currentPose[3], 0, MachineArmModel.ARM_LENGTHS[2] / 16f, 0)
+        );
+    }
+
+    /**
+     *
+     * @param theta angle about previous z from old x to new x
+     * @param r length of the common normal. Assuming a revolute joint, this is the radius about previous z.
+     * @param d offset along previous z to the common normal
+     * @param alpha angle about common normal, from old z axis to new z axis
+     * @see <a href="https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters">Denavit Hartenberg Paramters</a>
+     * @return Denavit-Hartenberger matrix for this joint
+     */
+    private static Matrix4f denavitHartenberger(float theta, float alpha, float d, float r) {
+        double cosTheta = Math.cos(theta);
+        double sinTheta = Math.sin(theta);
+        double cosAlpha = Math.cos(alpha);
+        double sinAlpha = Math.sin(alpha);
+
+        return new Matrix4f(new Matrix4d(
+                cosTheta, -sinTheta * cosAlpha, sinTheta * sinAlpha, r * cosTheta,
+                sinTheta, cosTheta * cosAlpha, -cosTheta * sinAlpha, r * sinTheta,
+                0, sinAlpha, cosAlpha, d,
+                0, 0, 0, 1)).transpose();
+    }
+
 
     private void vertex(VertexConsumer vertexConsumer, Matrix4f pose, Vec3 base, Vec3f pos) {
         vertexConsumer.vertex(pose, (float) base.x + pos.x, (float) base.y + pos.y, (float) base.z + pos.z).color(1f, 0, 0, 0).endVertex();

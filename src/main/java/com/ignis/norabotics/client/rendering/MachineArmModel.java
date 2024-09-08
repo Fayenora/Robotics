@@ -22,7 +22,7 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 	public static final Vec3f X_AXIS = new Vec3f(1, 0, 0);
 	public static final Vec3f Y_AXIS = new Vec3f(0, 1, 0);
 	public static final Vec3f Z_AXIS = new Vec3f(0, 0, 1);
-	private static final int[] ARM_LENGTHS = new int[] {26, 19, 9};
+	public static final int[] ARM_LENGTHS = new int[] {26, 19, 9};
 	private static final Vec3f[] ROTATIONS = new Vec3f[] {Y_AXIS, Z_AXIS, Z_AXIS};
 	public static final Vec3 LOWER_LEFT_CORNER_OFFSET = new Vec3(0.5, 1, 0.5);
 
