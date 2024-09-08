@@ -171,6 +171,13 @@ public class MachineArmBlockEntity extends BlockEntity {
         return grabbedItem;
     }
 
+    public void dropGrabbedItem() {
+        // TODO Drop from arm end if it is calculated correctly
+        Vec3 pos = Vec3.atBottomCenterOf(getBlockPos());
+        InventoryUtil.dropItem(getLevel(), pos.x, pos.y, pos.z, getGrabbedItem());
+        grabbedItem = ItemStack.EMPTY;
+    }
+
     private static BlockPos findNearestFactory(Level level, BlockPos source, int verticalSearchRange, int searchRange) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         Block factory = ModBlocks.ROBOT_FACTORY.get();

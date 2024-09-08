@@ -27,6 +27,7 @@ public class InventoryUtil {
 	}
 
 	public static void dropItem(Level level, double x, double y, double z, ItemStack stack) {
+		if(stack.isEmpty()) return;
 		ItemEntity item = new ItemEntity(level, x, y, z, stack);
 		item.setDefaultPickUpDelay();
 
