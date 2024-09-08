@@ -4,11 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +51,9 @@ public class DimensionNavigator {
         Block portal = getPortalBlock(level.dimensionTypeId());
         BlockPos portalPos = findNearestBlock(mob.level(), mob.blockPosition(), portal, verticalSearchRange, searchRange);
         if(portalPos == null) return false;
-        return mob.getNavigation().moveTo(portalPos.getX(), portalPos.getY(), portalPos.getZ(), speedMod);
+        PathNavigation navigator = mob.getNavigation();
+        Vec3 portalCenter = Vec3.atCenterOf(portalPos);
+        return navigator.moveTo(navigator.createPath(portalCenter.x, portalCenter.y, portalCenter.z, 0), speedMod);
     }
 
     private Block getPortalBlock(ResourceKey<DimensionType> targetDimension) {
