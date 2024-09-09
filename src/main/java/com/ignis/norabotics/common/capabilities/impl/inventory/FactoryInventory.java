@@ -63,7 +63,7 @@ public class FactoryInventory extends MachineInventory {
 
     @Override
     public void setStackInSlot(int index, @NotNull ItemStack stack) {
-        if(factory.hasCraftedRobotReady()) return;
+        if(factory.isRunningOrFinished()) return;
         super.setStackInSlot(index, stack);
     }
 
@@ -101,25 +101,25 @@ public class FactoryInventory extends MachineInventory {
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction face) {
-        if(factory.hasCraftedRobotReady()) return false;
+        if(factory.isRunningOrFinished()) return false;
         return super.canTakeItemThroughFace(slot, stack, face);
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction face) {
-        if(factory.hasCraftedRobotReady()) return false;
+        if(factory.isRunningOrFinished()) return false;
         return super.canPlaceItemThroughFace(slot, stack, face);
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if(factory.hasCraftedRobotReady()) return stack;
+        if(factory.isRunningOrFinished()) return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if(factory.hasCraftedRobotReady()) return ItemStack.EMPTY;
+        if(factory.isRunningOrFinished()) return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 }

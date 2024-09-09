@@ -15,6 +15,7 @@ import com.ignis.norabotics.definitions.ModMachines;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -30,11 +31,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,6 +53,8 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     private boolean builtRobot;
     /** Tells the client whether it can press the start button */
     private boolean canStart = false;
+
+    private BlockPos weldingArmPositive, weldingArmNegative;
 
     public FactoryBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.ROBOT_FACTORY, pos, state, 6 + Reference.MAX_MODULES * EnumModuleSlot.nonPrimaries().length, new int[] {}, new int[] {});
@@ -78,6 +80,21 @@ public class FactoryBlockEntity extends MachineBlockEntity {
             robot.getCapability(ModCapabilities.PARTS).ifPresent(IPartBuilt::clear);
             storedRobot.setEntity(robot);
         }
+    }
+
+    public boolean assignWeldingArm(BlockPos pos) {
+        Direction.Axis orthogonal = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getClockWise().getAxis();
+        BlockPos relative = pos.subtract(getBlockPos());
+        if(orthogonal.choose(relative.getX(), relative.getY(), relative.getZ()) < 0) {
+            if(weldingArmNegative == null || !(level.getBlockEntity(weldingArmNegative) instanceof MachineArmBlockEntity)) {
+                weldingArmNegative = pos;
+                return true;
+            }
+        } else if(weldingArmPositive == null || !(level.getBlockEntity(weldingArmPositive) instanceof MachineArmBlockEntity)) {
+            weldingArmPositive = pos;
+            return true;
+        }
+        return pos.equals(weldingArmPositive) || pos.equals(weldingArmNegative);
     }
 
     ////////////////////
@@ -202,6 +219,10 @@ public class FactoryBlockEntity extends MachineBlockEntity {
 
     public boolean hasCraftedRobotReady() {
         return builtRobot;
+    }
+
+    public boolean isRunningOrFinished() {
+        return isRunning() || hasCraftedRobotReady();
     }
 
     @Override

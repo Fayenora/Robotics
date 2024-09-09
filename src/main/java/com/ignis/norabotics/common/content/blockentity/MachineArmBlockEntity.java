@@ -3,6 +3,7 @@ package com.ignis.norabotics.common.content.blockentity;
 import au.edu.federation.caliko.FabrikBone3D;
 import au.edu.federation.caliko.FabrikChain3D;
 import au.edu.federation.utils.Vec3f;
+import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.client.rendering.MachineArmModel;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.helpers.util.MathUtil;
@@ -28,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -44,6 +44,10 @@ import static com.ignis.norabotics.client.rendering.MachineArmModel.constructCha
 
 public class MachineArmBlockEntity extends BlockEntity {
 
+    public static final List<WeldingPath> WELDING_PATHS = List.of(
+            WeldingPath.of(new Vec3(0.2, 1.3, 0.2), new Vec3(0.2, 1.5, 0.2), new Vec3(0.2, 1.5, -0.2), new Vec3(0.2, 1.3, -0.2))
+    );
+
     final Vec3 rotationBase;
     final AABB seekRadius;
 
@@ -51,6 +55,9 @@ public class MachineArmBlockEntity extends BlockEntity {
     Vec3f target;
     ItemStack grabbedItem = ItemStack.EMPTY;
     MachineArmState state = MachineArmState.IDLE;
+    BlockPos nearestFactoryPos;
+    WeldingPath currentWeldingPath;
+    private long time, lastAnimationStart;
 
     public MachineArmBlockEntity(BlockPos pos, BlockState pBlockState) {
         super(ModMachines.MACHINE_ARM.get(), pos, pBlockState);
@@ -58,27 +65,58 @@ public class MachineArmBlockEntity extends BlockEntity {
         target = new Vec3f(1, 1, 0);
         rotationBase = Vec3.atLowerCornerOf(pos).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET);
         seekRadius = new AABB(pos).inflate(4, 0, 4).expandTowards(0, 4, 0).expandTowards(0, -1, 0);
+        nearestFactoryPos = BlockPos.ZERO;
+        lastAnimationStart = -1;
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MachineArmBlockEntity machineArm) {
-        if(machineArm.getGrabbedItem().isEmpty()) {
+        FactoryBlockEntity factory = machineArm.nearestFactory();
+        if(factory != null && factory.isRunning() && factory.assignWeldingArm(pos)) {
+            // Play welding animation
+            machineArm.weld();
+        } else if(machineArm.getGrabbedItem().isEmpty()) {
+            // Pick up Modules in the area
             List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, machineArm.seekRadius, i -> ModModules.isModule(i.getItem()));
             Optional<ItemEntity> closest = items.stream().min((i1, i2) -> (int) (i2.distanceToSqr(machineArm.rotationBase) - i1.distanceToSqr(machineArm.rotationBase)));
             if(closest.isEmpty()) return;
             machineArm.tryPickingUpItem(closest.get());
         } else {
-            BlockPos nearestFactory = findNearestFactory(level, pos, 5, 5);
-            if(nearestFactory == null) return;
-            machineArm.tryDroppingOfItemAt(nearestFactory);
+            // Drop off modules at factories
+            if(factory == null || factory.isRunningOrFinished()) return;
+            machineArm.tryDroppingOfItemAt(machineArm.nearestFactoryPos);
         }
     }
 
+    private void weld() {
+        if(time++ % 100 == 0 && lastAnimationStart == -1) {
+            currentWeldingPath = chooseWeldingPath(nearestFactoryPos);
+            lastAnimationStart = time;
+            state = MachineArmState.WELDING;
+        } else if(level != null && currentWeldingPath != null) {
+            Vec3 target = currentWeldingPath.lerp(time, lastAnimationStart);
+            if(moveToTargetVec(target) && currentWeldingPath.isFinished(time, lastAnimationStart)) {
+                state = MachineArmState.IDLE;
+                currentWeldingPath = null;
+                lastAnimationStart = -1;
+            }
+        }
+    }
+
+    private WeldingPath chooseWeldingPath(BlockPos factoryPos) {
+        WeldingPath path = WELDING_PATHS.get(Robotics.RANDOM.nextInt(WELDING_PATHS.size()));
+        Direction factoryOrientation = level.getBlockState(factoryPos).getValue(BlockStateProperties.HORIZONTAL_FACING);
+        path = path.rotateToDirection(factoryOrientation);
+        path = path.offset(factoryPos);
+        return path;
+    }
+
     private void tryPickingUpItem(ItemEntity item) {
-        state = MachineArmState.PICKING_ITEM;
+        state = MachineArmState.PICKING_UP_ITEM;
         if(moveToTargetVec(item.onGround() ? item.position() : item.position().add(item.getDeltaMovement()))) {
             grabbedItem = item.getItem();
             level.playSound(null, target.x, target.y, target.z, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1, 1);
             item.kill();
+            state = MachineArmState.HOLDING_ITEM;
         }
     }
 
@@ -102,6 +140,7 @@ public class MachineArmBlockEntity extends BlockEntity {
                 ItemStack remainder = InventoryUtil.insert(i, grabbedItem, false);
                 if(remainder.getCount() != grabbedItem.getCount()) level.playSound(null, target.x, target.y, target.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.BLOCKS, 1, 1);
                 grabbedItem = remainder;
+                state = grabbedItem.isEmpty() ? MachineArmState.IDLE : MachineArmState.HOLDING_ITEM;
             });
         }
     }
@@ -111,7 +150,15 @@ public class MachineArmBlockEntity extends BlockEntity {
         chain.solveForTarget(this.target);
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         setChanged();
-        return getPose().getEffectorLocation().approximatelyEquals(this.target, 1);
+        return getPose().getEffectorLocation().approximatelyEquals(this.target, 1.5f);
+    }
+
+    private FactoryBlockEntity nearestFactory() {
+        if(level == null || nearestFactoryPos == null) return null;
+        if(level.getBlockEntity(nearestFactoryPos) instanceof FactoryBlockEntity factory) return factory;
+        nearestFactoryPos = findNearestFactory(level, getBlockPos(), 5, 5);
+        if(nearestFactoryPos != null && level.getBlockEntity(nearestFactoryPos) instanceof FactoryBlockEntity factory) return factory;
+        return null;
     }
 
     private CompoundTag saveChain(CompoundTag tag) {
@@ -194,13 +241,13 @@ public class MachineArmBlockEntity extends BlockEntity {
                 }
             }
         }
-
         return null;
     }
 
     public enum MachineArmState {
         IDLE,
-        PICKING_ITEM,
+        PICKING_UP_ITEM,
+        HOLDING_ITEM,
         WELDING
     }
 }
