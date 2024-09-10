@@ -12,6 +12,7 @@ import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
 import com.ignis.norabotics.definitions.ModBlocks;
 import com.ignis.norabotics.definitions.ModMachines;
+import com.ignis.norabotics.definitions.ModParticles;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,6 +36,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +44,7 @@ import java.util.Optional;
 import static com.ignis.norabotics.client.rendering.MachineArmModel.JOINT_COUNT;
 import static com.ignis.norabotics.client.rendering.MachineArmModel.constructChain;
 
+@ParametersAreNonnullByDefault
 public class MachineArmBlockEntity extends BlockEntity {
 
     public static final List<WeldingPath> WELDING_PATHS = List.of(
@@ -70,36 +73,63 @@ public class MachineArmBlockEntity extends BlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MachineArmBlockEntity machineArm) {
+        MachineArmState newState = machineArm.state;
         FactoryBlockEntity factory = machineArm.nearestFactory();
         if(factory != null && factory.isRunning() && factory.assignWeldingArm(pos)) {
             // Play welding animation
             machineArm.weld();
         } else if(machineArm.getGrabbedItem().isEmpty()) {
+            newState = MachineArmState.IDLE;
             // Pick up Modules in the area
             List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, machineArm.seekRadius, i -> ModModules.isModule(i.getItem()));
             Optional<ItemEntity> closest = items.stream().min((i1, i2) -> (int) (i2.distanceToSqr(machineArm.rotationBase) - i1.distanceToSqr(machineArm.rotationBase)));
-            if(closest.isEmpty()) return;
-            machineArm.tryPickingUpItem(closest.get());
+            if(closest.isPresent()) {
+                newState = machineArm.tryPickingUpItem(closest.get());
+            }
         } else {
+            newState = MachineArmState.IDLE;
             // Drop off modules at factories
-            if(factory == null || factory.isRunningOrFinished()) return;
-            machineArm.tryDroppingOfItemAt(machineArm.nearestFactoryPos);
+            if(factory != null && !factory.isRunningOrFinished()) {
+                newState = machineArm.tryDroppingOfItemAt(machineArm.nearestFactoryPos);
+            }
+        }
+
+        if(newState != machineArm.state) {
+            machineArm.state = newState;
+            machineArm.sync();
+        }
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, MachineArmBlockEntity machineArm) {
+        if(machineArm.getState() == MachineArmState.WELDING) {
+            Vec3 vec = machineArm.getEffectorLocation();
+            level.addParticle(ModParticles.FLARE.get(), vec.x, vec.y, vec.z, 0, 0, 0);
+            for(int i = 0; i < 16; i++) {
+                level.addParticle(ModParticles.SPARK.get(), vec.x, vec.y, vec.z, Robotics.RANDOM.nextGaussian(), Robotics.RANDOM.nextGaussian(), Robotics.RANDOM.nextGaussian());
+            }
         }
     }
 
     private void weld() {
-        if(time++ % 100 == 0 && lastAnimationStart == -1) {
+        if(time++ % 300 == 0 && lastAnimationStart == -1) {
             currentWeldingPath = chooseWeldingPath(nearestFactoryPos);
             lastAnimationStart = time;
             state = MachineArmState.WELDING;
+            sync();
         } else if(level != null && currentWeldingPath != null) {
             Vec3 target = currentWeldingPath.lerp(time, lastAnimationStart);
             if(moveToTargetVec(target) && currentWeldingPath.isFinished(time, lastAnimationStart)) {
                 state = MachineArmState.IDLE;
                 currentWeldingPath = null;
                 lastAnimationStart = -1;
+                sync();
             }
         }
+    }
+
+    public void sync() {
+        this.level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        setChanged();
     }
 
     private WeldingPath chooseWeldingPath(BlockPos factoryPos) {
@@ -110,21 +140,21 @@ public class MachineArmBlockEntity extends BlockEntity {
         return path;
     }
 
-    private void tryPickingUpItem(ItemEntity item) {
-        state = MachineArmState.PICKING_UP_ITEM;
+    private MachineArmState tryPickingUpItem(ItemEntity item) {
         if(moveToTargetVec(item.onGround() ? item.position() : item.position().add(item.getDeltaMovement()))) {
             grabbedItem = item.getItem();
             level.playSound(null, target.x, target.y, target.z, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1, 1);
             item.kill();
-            state = MachineArmState.HOLDING_ITEM;
+            return MachineArmState.HOLDING_ITEM;
         }
+        return MachineArmState.PICKING_UP_ITEM;
     }
 
-    private void tryDroppingOfItemAt(BlockPos pos) {
+    private MachineArmState tryDroppingOfItemAt(BlockPos pos) {
         BlockEntity tile = level.getBlockEntity(pos);
-        if(!(tile instanceof FactoryBlockEntity factory)) return;
+        if(!(tile instanceof FactoryBlockEntity)) return MachineArmState.IDLE;
         RobotPart robotPart = RobotPart.getFromItem(grabbedItem.getItem());
-        if(robotPart == null && !ModModules.isModule(grabbedItem)) return;
+        if(robotPart == null && !ModModules.isModule(grabbedItem)) return MachineArmState.IDLE;
         Direction dir = level.getBlockState(pos).getValue(BlockStateProperties.HORIZONTAL_FACING);
         Vector3f offset = switch(robotPart == null ? EnumRobotPart.BODY : robotPart.getPart()) {
             case HEAD -> new Vector3f(0, 1.7f, 0);
@@ -140,16 +170,15 @@ public class MachineArmBlockEntity extends BlockEntity {
                 ItemStack remainder = InventoryUtil.insert(i, grabbedItem, false);
                 if(remainder.getCount() != grabbedItem.getCount()) level.playSound(null, target.x, target.y, target.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.BLOCKS, 1, 1);
                 grabbedItem = remainder;
-                state = grabbedItem.isEmpty() ? MachineArmState.IDLE : MachineArmState.HOLDING_ITEM;
             });
         }
+        return grabbedItem.isEmpty() ? MachineArmState.IDLE : MachineArmState.HOLDING_ITEM;
     }
 
     private boolean moveToTargetVec(Vec3 target) {
         this.target = MathUtil.of(target.subtract(rotationBase).scale(16));
         chain.solveForTarget(this.target);
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
-        setChanged();
+        sync();
         return getPose().getEffectorLocation().approximatelyEquals(this.target, 1.5f);
     }
 
@@ -169,6 +198,7 @@ public class MachineArmBlockEntity extends BlockEntity {
         tag.put("rotations", list);
         tag.put("target", NBTUtil.serializeVec(target));
         tag.put("grabbed", grabbedItem.serializeNBT());
+        tag.putByte("state", state.getId());
         return tag;
     }
 
@@ -187,6 +217,7 @@ public class MachineArmBlockEntity extends BlockEntity {
         chain = constructChain(rotations);
         target = NBTUtil.deserializeVec(tag.getList("target", Tag.TAG_FLOAT));
         grabbedItem = ItemStack.of(tag.getCompound("grabbed"));
+        state = MachineArmState.byId(tag.getByte("state"));
         super.load(tag);
     }
 
@@ -212,6 +243,10 @@ public class MachineArmBlockEntity extends BlockEntity {
 
     public Vec3f getTarget() {
         return target;
+    }
+
+    public Vec3 getEffectorLocation() {
+        return MathUtil.of(chain.getEffectorLocation()).scale(1 / 16d).add(rotationBase);
     }
 
     public ItemStack getGrabbedItem() {
@@ -244,10 +279,30 @@ public class MachineArmBlockEntity extends BlockEntity {
         return null;
     }
 
+    public MachineArmState getState() {
+        return state;
+    }
+
     public enum MachineArmState {
-        IDLE,
-        PICKING_UP_ITEM,
-        HOLDING_ITEM,
-        WELDING
+        IDLE((byte) 0),
+        PICKING_UP_ITEM((byte) 1),
+        HOLDING_ITEM((byte) 2),
+        WELDING((byte) 3);
+
+        private byte id;
+        MachineArmState(byte id) {
+            this.id = id;
+        }
+
+        public byte getId() {
+            return id;
+        }
+
+        public static MachineArmState byId(byte id) {
+            for(MachineArmState state : values()) {
+                if(state.getId() == id) return state;
+            }
+            return IDLE;
+        }
     }
 }

@@ -31,7 +31,7 @@ public class MachineArmBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState pState, BlockEntityType<T> type) {
-        if(level.isClientSide()) return null;
+        if(level.isClientSide()) return createTickerHelper(type, ModMachines.MACHINE_ARM.get(), MachineArmBlockEntity::clientTick);
         return createTickerHelper(type, ModMachines.MACHINE_ARM.get(), MachineArmBlockEntity::serverTick);
     }
 

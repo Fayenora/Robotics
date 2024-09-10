@@ -3,6 +3,8 @@ package com.ignis.norabotics.client;
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.client.rendering.*;
+import com.ignis.norabotics.client.rendering.particles.FlareParticle;
+import com.ignis.norabotics.client.rendering.particles.SparkParticles;
 import com.ignis.norabotics.client.screen.*;
 import com.ignis.norabotics.client.tooltips.ClientItemTooltip;
 import com.ignis.norabotics.client.tooltips.ClientModuleTooltip;
@@ -11,6 +13,7 @@ import com.ignis.norabotics.client.tooltips.ModuleTooltip;
 import com.ignis.norabotics.definitions.ModEntityTypes;
 import com.ignis.norabotics.definitions.ModMachines;
 import com.ignis.norabotics.definitions.ModMenuTypes;
+import com.ignis.norabotics.definitions.ModParticles;
 import com.ignis.norabotics.integration.cc.ProgrammingScreen;
 import com.ignis.norabotics.integration.cc.vanilla.VProgrammingScreen;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -27,6 +30,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -87,6 +91,12 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(MachineArmModel.LAYER_LOCATION, MachineArmModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.SPARK.get(), SparkParticles.SparkProvider::new);
+        event.registerSpriteSet(ModParticles.FLARE.get(), FlareParticle.FlareProvider::new);
     }
 
     @SubscribeEvent

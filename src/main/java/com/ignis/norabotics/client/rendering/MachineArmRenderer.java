@@ -16,19 +16,23 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix4d;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.ignis.norabotics.client.rendering.MachineArmModel.Y_AXIS;
 
+@ParametersAreNonnullByDefault
+@OnlyIn(Dist.CLIENT)
 public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEntity> {
 
     public static final ResourceLocation MACHINE_ARM_TEXTURE = Robotics.rl("textures/machine_arm/texture.png");
@@ -37,7 +41,7 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
     private static final int color = FastColor.ARGB32.color(255, 155, 0, 0);
 
     MachineArmModel<Entity> model;
-    private float[] currentPose, targetPose;
+    private float[] currentPose;
     private final ItemRenderer itemRenderer;
 
     public MachineArmRenderer(BlockEntityRendererProvider.Context context) {
@@ -47,24 +51,32 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
 
     @Override
     public void render(MachineArmBlockEntity arm, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        VertexConsumer debug = pBuffer.getBuffer(RenderType.debugLineStrip(5));
-        Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vec3 armBase = Vec3.atLowerCornerOf(arm.getBlockPos()).subtract(cameraPos).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET.scale(2));
+        // Arm Movement
         if(arm.getPose() != null && arm.getPose().getNumBones() > 0) {
-            targetPose = chainToRotations(arm.getPose(), arm.getTarget());
-            if(currentPose == null) currentPose = targetPose;
+            float[] targetPose = chainToRotations(arm.getPose(), arm.getTarget(), arm.getState() == MachineArmBlockEntity.MachineArmState.PICKING_UP_ITEM);
+            if (currentPose == null) currentPose = targetPose;
             moveToPose(currentPose, targetPose);
             model.setPlatformRotation(currentPose);
+        }
+
+        // Debug Lines
+        if(Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes() && arm.getPose() != null && arm.getPose().getNumBones() > 0) {
+            VertexConsumer debug = pBuffer.getBuffer(RenderType.debugLineStrip(5));
+            Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+            Vec3 armBase = Vec3.atLowerCornerOf(arm.getBlockPos()).subtract(cameraPos).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET.scale(2));
             for(FabrikBone3D bone : arm.getPose().getChain()) {
                 vertex(debug, pPoseStack.last().pose(), armBase, bone.getStartLocation().times(1 / 8f));
                 vertex(debug, pPoseStack.last().pose(), armBase, bone.getEndLocation().times(1 / 8f));
             }
         }
+
+        // Model
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutout(MACHINE_ARM_TEXTURE));
         int light = LevelRenderer.getLightColor(arm.getLevel(), arm.getBlockPos().above());
         model.renderToBuffer(pPoseStack, vertexconsumer, light, pPackedOverlay, 1, 1, 1, 1);
 
         // Item
+        /*
         FabrikBone3D lastBone = arm.getPose().getBone(arm.getPose().getNumBones() - 1);
         Vec3f endEffector = arm.getPose().getEffectorLocation().minus(lastBone.getEndLocation().minus(lastBone.getStartLocation()).times(2));
         Vec3 itemOffset = MathUtil.of(endEffector).scale(1 / 16d).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET);
@@ -86,6 +98,7 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
         Robotics.LOGGER.debug("Current: x: {}, y: {}, z: {}", pPoseStack.last().pose().m30(), pPoseStack.last().pose().m31(), pPoseStack.last().pose().m32());
         itemRenderer.renderStatic(arm.getGrabbedItem(), ItemDisplayContext.GROUND, itemLight, pPackedOverlay, pPoseStack, pBuffer, arm.getLevel(), 0);
         pPoseStack.popPose();
+         */
     }
 
     private void rotateCoordinateSystem(PoseStack poseStack, float x, float y, float z, Vector3f origin, Vector3f current) {
@@ -128,7 +141,7 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
         vertexConsumer.vertex(pose, (float) base.x + pos.x, (float) base.y + pos.y, (float) base.z + pos.z).color(color).endVertex();
     }
 
-    private float[] chainToRotations(FabrikChain3D chain, Vec3f referenceVec) {
+    private float[] chainToRotations(FabrikChain3D chain, Vec3f referenceVec, boolean invertEffector) {
         Vec3f firstRot = chain.getBone(0).getDirectionUV();
         Vec3f secondRot = chain.getBone(1).getDirectionUV();
         Vec3f thirdRot = chain.getBone(2).getDirectionUV();
@@ -139,7 +152,7 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
                 (float) (Math.atan2(firstRot.x, firstRot.z) + Math.toRadians(90)),
                 (float) Math.atan2(Math.sqrt(firstRot.x * firstRot.x + firstRot.z * firstRot.z), firstRot.y),
                 rot(firstRot, secondRot, referenceVec),
-                rot(secondRot, thirdRot, referenceVec)
+                invertEffector ? (float) (Math.toRadians(180) + rot(secondRot, thirdRot, referenceVec)) : rot(secondRot, thirdRot, referenceVec)
         };
     }
 
