@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+// TODO Break blocks with different hands, depending whether one is golding the right tool
 public class BreakBlocksGoal extends AbstractMultiBlockGoal {
 
     private final EntityInteractionManager interactionManager;

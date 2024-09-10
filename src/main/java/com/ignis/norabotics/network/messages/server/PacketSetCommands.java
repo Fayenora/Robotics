@@ -28,7 +28,7 @@ public class PacketSetCommands implements IMessage {
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(entityId);
         CompoundTag nbt = new CompoundTag();
-        RobotCommand.writeToNBT(nbt, commands); //TODO: Optimize
+        RobotCommand.writeToNBT(nbt, commands); //NOTE: NBT is suboptimal here, but sufficient as this packet is not created as often
         buf.writeNbt(nbt);
     }
 
