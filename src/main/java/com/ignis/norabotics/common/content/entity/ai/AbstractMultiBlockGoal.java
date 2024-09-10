@@ -1,5 +1,6 @@
 package com.ignis.norabotics.common.content.entity.ai;
 
+import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.capabilities.CommandApplyException;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
 import com.ignis.norabotics.common.helpers.DimensionNavigator;
@@ -53,11 +54,17 @@ public abstract class AbstractMultiBlockGoal extends Goal {
     protected abstract boolean operateOnBlock(BlockPos pos);
 
     public boolean moveAndOperateOnBlock(BlockPos pos) {
+        Vec3 center = Vec3.atCenterOf(pos);
+        if(entity.distanceToSqr(center) < 1.5) {
+            Vec3 stepAway = entity.position().offsetRandom(entity.getRandom(), 0.01f).subtract(center).multiply(1, 0, 1).normalize().scale(1.5).add(entity.position());
+            entity.getNavigation().moveTo(stepAway.x, stepAway.y, stepAway.z, 1);
+            return false;
+        }
         if(!RobotBehavior.canReach(entity, pos)) {
             entity.getNavigation().moveTo(pos.getX(), pos.getY(), pos.getZ(), 1);
             return false;
         }
-        entity.getLookControl().setLookAt(Vec3.atCenterOf(pos));
+        entity.getLookControl().setLookAt(center);
         if(!entity.getLookControl().isLookingAtTarget()) return false;
         return operateOnBlock(pos);
     }

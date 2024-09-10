@@ -416,6 +416,17 @@ public class TestCommands {
     }
 
     @PrefixGameTestTemplate(false)
+    @GameTest(template = "duel", batch = "commands")
+    public static void testPlaceBlockOnSelf(GameTestHelper helper) {
+        RobotEntity robot = TestHelpers.setupDefaultRobot(helper);
+        robot.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Blocks.DIAMOND_BLOCK));
+        BlockPos pos1 = new BlockPos(1, 2, 1);
+        GlobalPos globalPos1 = GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(pos1));
+        TestHelpers.addCommand(robot, ModCommands.PLACE.get(), globalPos1, globalPos1);
+        helper.succeedWhenBlockPresent(Blocks.DIAMOND_BLOCK, pos1);
+    }
+
+    @PrefixGameTestTemplate(false)
     @GameTest(template = "default", batch = "commands")
     public static void testRePlaceBlock(GameTestHelper helper) {
         RobotEntity robot = TestHelpers.setupDefaultRobot(helper);
