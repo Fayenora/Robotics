@@ -3,8 +3,8 @@
 	"texture_size": [128, 128],
 	"render_type": "cutout",
 	"textures": {
-		"particle": "norabotics:block/robot_factory",
-		"2": "norabotics:block/robot_factory"
+		"particle": "norabotics:block/robot_storage",
+		"2": "norabotics:block/robot_storage"
 	},
 	"elements": [
 		{

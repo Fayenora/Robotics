@@ -3,5 +3,13 @@
   "landing_text": "Construction and handling manual for the humanoid robot model T-800, distributed by ",
   "creative_tab": "norabotics:items",
   "use_resource_pack": true,
+  "show_progress": false,
+  "open_sound": "norabotics:book_open",
+  "flip_sound": "norabotics:book_flip",
+  "model": "norabotics:info_pad",
+  "book_texture": "norabotics:textures/gui/book.png",
+  "nameplate_color": "ffa70e",
+  "link_color": "da8b00",
+  "link_hover_color": "c66c00",
   "i18n": true
 }

@@ -1,5 +1,6 @@
 {
   "name": "norabotics:corrodable",
+  "maxLevel": 1,
   "displayColor": "#9a3300",
   "internalLogic": true
 }

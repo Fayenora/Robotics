@@ -6,6 +6,7 @@ import com.ignis.norabotics.common.helpers.util.Lang;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -18,7 +19,11 @@ public class PerkSolarPanel extends Perk {
 	
 	@Override
 	public void onEntityUpdate(int level, Mob entity, SimpleDataManager values) {
+		float f = entity.level().getSunAngle(1.0F);
+		float f1 = f < (float)Math.PI ? 0.0F : ((float)Math.PI * 2F);
+		f += (f1 - f) * 0.2F;
 		int skylight = entity.level().getBrightness(LightLayer.SKY, entity.blockPosition().above()) - entity.level().getSkyDarken();
+		skylight = Mth.clamp(Math.round((float)skylight * Mth.cos(f)), 0, 15);
 		int energy_gain = skylight * RoboticsConfig.general.solarGeneratorMult.get() * level;
 		entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
 			energy.receiveEnergy(energy_gain, false);

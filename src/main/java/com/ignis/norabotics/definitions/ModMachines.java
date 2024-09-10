@@ -37,6 +37,7 @@ public class ModMachines {
 
     public static final RegistryObject<BlockEntityType<ChargerBlockEntity>> CHARGER = registerBlockEntity("charger", ChargerBlockEntity::new, ModBlocks.CHARGER);
     public static final RegistryObject<BlockEntityType<RedstoneIntegrator>> REDSTONE_INTEGRATOR = registerBlockEntity("redstone_integrator", RedstoneIntegrator::new, ModBlocks.REDSTONE_INTEGRATOR);
+    public static final RegistryObject<BlockEntityType<MachineArmBlockEntity>> MACHINE_ARM = registerBlockEntity("machine_arm", MachineArmBlockEntity::new, ModBlocks.MACHINE_ARM);
 
     public static final RegistryObject<RecipeSerializer> COMMANDERCOPY_RECIPE = RECIPE_SERIALIZERS.register("crafting_special_commandercloning", () -> new SimpleCraftingRecipeSerializer<>(CommanderCopyRecipe::new));
 

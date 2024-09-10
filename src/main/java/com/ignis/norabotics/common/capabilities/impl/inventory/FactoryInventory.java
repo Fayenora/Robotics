@@ -54,16 +54,16 @@ public class FactoryInventory extends MachineInventory {
      * @return the module type which can fit in the slot
      */
     public static EnumModuleSlot typeFromSlotId(int slot) {
-        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, Reference.MAX_MODULES)];
+        return EnumModuleSlot.values()[Math.floorDiv(slot - 6, Reference.MAX_MODULES) + 6];
     }
 
     public static int typeToSlotId(EnumModuleSlot slotType, int offset) {
-        return slotType.ordinal() * Reference.MAX_MODULES + offset + 6;
+        return (slotType.ordinal() - 6) * Reference.MAX_MODULES + Math.min(Reference.MAX_MODULES - 1, offset) + 6;
     }
 
     @Override
     public void setStackInSlot(int index, @NotNull ItemStack stack) {
-        if(factory.hasCraftedRobotReady()) return;
+        if(factory.isRunningOrFinished()) return;
         super.setStackInSlot(index, stack);
     }
 
@@ -85,10 +85,8 @@ public class FactoryInventory extends MachineInventory {
             }
         } else if(!factory.getLevel().isClientSide()) {
             living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-                    int startIndex = 6 + slot.ordinal() * Reference.MAX_MODULES;
-                    int endIndex = 6 + (slot.ordinal() + 1) * Reference.MAX_MODULES;
-                    robot.setModules(slot, stacks.subList(startIndex, endIndex));
+                for(EnumModuleSlot slot : EnumModuleSlot.nonPrimaries()) {
+                    robot.setModules(slot, stacks.subList(typeToSlotId(slot, 0), typeToSlotId(slot, Reference.MAX_MODULES)));
                 }
             });
         }
@@ -103,25 +101,25 @@ public class FactoryInventory extends MachineInventory {
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction face) {
-        if(factory.hasCraftedRobotReady()) return false;
+        if(factory.isRunningOrFinished()) return false;
         return super.canTakeItemThroughFace(slot, stack, face);
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction face) {
-        if(factory.hasCraftedRobotReady()) return false;
+        if(factory.isRunningOrFinished()) return false;
         return super.canPlaceItemThroughFace(slot, stack, face);
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if(factory.hasCraftedRobotReady()) return stack;
+        if(factory.isRunningOrFinished()) return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if(factory.hasCraftedRobotReady()) return ItemStack.EMPTY;
+        if(factory.isRunningOrFinished()) return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 }

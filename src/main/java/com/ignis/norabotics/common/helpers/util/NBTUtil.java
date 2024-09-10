@@ -1,17 +1,28 @@
 package com.ignis.norabotics.common.helpers.util;
 
+import au.edu.federation.utils.Vec3f;
 import com.ignis.norabotics.common.robot.EnumRobotMaterial;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.ByteArrayTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class NBTUtil {
+
+    public static ListTag serializeVec(Vec3f vec) {
+        ListTag vecTag = new ListTag();
+        vecTag.add(FloatTag.valueOf(vec.x));
+        vecTag.add(FloatTag.valueOf(vec.y));
+        vecTag.add(FloatTag.valueOf(vec.z));
+        return vecTag;
+    }
+
+    public static Vec3f deserializeVec(ListTag tag) {
+        return new Vec3f(tag.getFloat(0), tag.getFloat(1), tag.getFloat(2));
+    }
 
     public static Tag serializeParts(RobotPart[] parts) {
         if(parts.length != 6) throw new IllegalArgumentException();

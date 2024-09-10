@@ -25,7 +25,7 @@ public class PerkUnreliable extends Perk {
 	public float onDamage(int level, Mob robot, DamageSource dmgSource, float damage, SimpleDataManager values) {
 		IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS);
 		
-		//FIXME: Works, but creates a concurrent modification exception when the last part of any perk is destroyed, as the map is currently iterating over the perks
+		//FIXME: Works, but creates a concurrent modification exception when the last part of any perk is destroyed, as the map is currently iterating over the perks while calling this very function
 		EnumRobotPart toDestroy = null;
 		for(RobotPart part : parts.getBodyParts()) {
 			if(part.getPerks().contains(ModPerks.PERK_UNRELIABLE.get()) && Robotics.RANDOM.nextDouble() < RoboticsConfig.general.unreliableChance.get().floatValue()) {

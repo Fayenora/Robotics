@@ -1,8 +1,7 @@
 package com.ignis.norabotics.common.capabilities;
 
-import net.minecraftforge.items.IItemHandlerModifiable;
-
-public interface ModifiableInventory extends IItemHandlerModifiable {
+@Deprecated
+public interface ModifiableInventory {
 
     void setSize(int size);
 }

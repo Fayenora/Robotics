@@ -26,6 +26,8 @@ plugins {
 
 apply plugin: 'org.spongepowered.mixin'
 
+jarJar.enable()
+
 version = "${robotics_version}"
 group = 'com.ignis.norabotics'
 archivesBaseName = 'norabotics'
@@ -156,6 +158,11 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
+    maven {
+        name = "LocalHost"
+        allowInsecureProtocol = true
+        url = "http://localhost:8080/releases"
+    }
     maven {  // Geckolib
         url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
     }
@@ -179,6 +186,11 @@ dependencies {
 
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 
+    jarJar("au.edu.federation.caliko:caliko:1.3.8") {
+        jarJar.ranged(it, "[1.3.0,1.4.0]")
+    }
+    minecraftLibrary "au.edu.federation.caliko:caliko:1.3.8"
+  
     // JEI
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))

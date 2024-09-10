@@ -15,6 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
@@ -26,6 +27,7 @@ public class InventoryUtil {
 	}
 
 	public static void dropItem(Level level, double x, double y, double z, ItemStack stack) {
+		if(stack.isEmpty()) return;
 		ItemEntity item = new ItemEntity(level, x, y, z, stack);
 		item.setDefaultPickUpDelay();
 
@@ -209,6 +211,12 @@ public class InventoryUtil {
 			toReturn[i] = stack.copy();
 		}
 		return toReturn;
+	}
+
+	public static <E> NonNullList<E> toNonNullList(List<E> collection) {
+		NonNullList<E> nonNullList = NonNullList.createWithCapacity(collection.size());
+        nonNullList.addAll(collection);
+		return nonNullList;
 	}
 
 }
