@@ -309,6 +309,7 @@
   "block.norabotics.robot_factory": "Robot Factory",
   "block.norabotics.robot_storage": "Robot Storage",
   "block.norabotics.charger": "Charger",
+  "block.norabotics.machine_arm": "Factory Arm",
 
   "item.norabotics.iron_plate": "Iron Plate",
   "item.norabotics.gold_plate": "Gold Plate",

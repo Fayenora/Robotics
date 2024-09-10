@@ -23,7 +23,10 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 	public static final Vec3f Y_AXIS = new Vec3f(0, 1, 0);
 	public static final Vec3f Z_AXIS = new Vec3f(0, 0, 1);
 	public static final int[] ARM_LENGTHS = new int[] {26, 19, 9};
-	private static final Vec3f[] ROTATIONS = new Vec3f[] {Y_AXIS, Z_AXIS, Z_AXIS};
+	private static final Vec3f[] ROTATIONS = new Vec3f[] {
+			new Vec3f(0, 1, 1),
+			new Vec3f(0, 0, -1),
+			new Vec3f(0, -1, -1)};
 	public static final Vec3 LOWER_LEFT_CORNER_OFFSET = new Vec3(0.5, 1, 0.5);
 
 	private final ModelPart platform;
@@ -65,7 +68,7 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 				.texOffs(30, 38).addBox(-2.0F, 3.0F, -3.0F, 1.0F, 13.0F, 1.0F, new CubeDeformation(0.0F))
 				.texOffs(26, 38).addBox(1.0F, 3.0F, -3.0F, 1.0F, 13.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 25.0F, 0.0F));
 
-		PartDefinition joint_3 = second_arm.addOrReplaceChild("joint_3", CubeListBuilder.create().texOffs(0, 38).addBox(-1.0F, -3.0F, -2.0F, 2.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
+		PartDefinition joint_3 = second_arm.addOrReplaceChild("joint_3", CubeListBuilder.create().texOffs(0, 38).addBox(-1.0F, -2.0F, -2.0F, 2.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 11).addBox(-1.0F, 4.0F, 0.0F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
 				.texOffs(12, 0).addBox(0.0F, 7.0F, 1.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 0).addBox(0.0F, 4.0F, -2.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
