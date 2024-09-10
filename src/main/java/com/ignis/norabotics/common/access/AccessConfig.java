@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -20,6 +21,11 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSerializable {
+
+	public static final AccessConfig ALL_PERMISSIONS = new AccessConfig();
+	static {
+		ALL_PERMISSIONS.permissions.put(Reference.DEFAULT_UUID, EnumSet.allOf(EnumPermission.class));
+	}
 	
 	/** {@link Reference#DEFAULT_UUID} if there is no owner*/
 	protected UUID owner;

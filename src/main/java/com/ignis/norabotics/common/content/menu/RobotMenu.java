@@ -1,6 +1,7 @@
 package com.ignis.norabotics.common.content.menu;
 
 import com.ignis.norabotics.Reference;
+import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.ModifiableEnergyStorage;
 import com.ignis.norabotics.common.content.menu.slots.CustomSlot;
@@ -24,10 +25,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class RobotMenu extends BaseMenu {
+
     public final LivingEntity robot;
+    public final AccessConfig access = new AccessConfig();
 
     public RobotMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv, inv.player.level().getEntity(extraData.readInt()));
+        access.read(extraData);
     }
 
     public RobotMenu(int id, Inventory playerInv, Entity entity) {

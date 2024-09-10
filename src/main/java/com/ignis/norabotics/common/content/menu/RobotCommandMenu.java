@@ -1,5 +1,6 @@
 package com.ignis.norabotics.common.content.menu;
 
+import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.robot.RobotCommand;
 import com.ignis.norabotics.definitions.ModMenuTypes;
@@ -15,12 +16,14 @@ import org.jetbrains.annotations.NotNull;
 public class RobotCommandMenu extends AbstractContainerMenu {
 
     public final LivingEntity robot;
+    public final AccessConfig access = new AccessConfig();
 
     public RobotCommandMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv.player.level().getEntity(extraData.readInt()));
         robot.getCapability(ModCapabilities.COMMANDS).ifPresent(commands -> {
             commands.setCommands(RobotCommand.readFromNBT(extraData.readNbt()));
         });
+        access.read(extraData);
     }
 
     public RobotCommandMenu(int id, Entity entity) {

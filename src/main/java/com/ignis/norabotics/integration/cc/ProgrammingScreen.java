@@ -8,8 +8,6 @@ import com.ignis.norabotics.definitions.ModMenuTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dan200.computercraft.client.gui.AbstractComputerScreen;
 import dan200.computercraft.client.gui.widgets.TerminalWidget;
-import dan200.computercraft.client.render.RenderTypes;
-import dan200.computercraft.client.render.SpriteRenderer;
 import dan200.computercraft.shared.computer.inventory.AbstractComputerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -40,7 +38,7 @@ public class ProgrammingScreen extends AbstractComputerScreen<ProgrammingMenu> {
     @Override
     protected void init() {
         super.init();
-        SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.COMPUTER.get(), RobotBehavior.possibleMenus(entity), leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
+        SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.COMPUTER.get(), RobotBehavior.possibleMenus(entity), menu.access, leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
         sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
         addRenderableWidget(sidebar);
     }

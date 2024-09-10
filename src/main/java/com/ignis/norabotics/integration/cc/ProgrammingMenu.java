@@ -1,5 +1,6 @@
 package com.ignis.norabotics.integration.cc;
 
+import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.definitions.ModMenuTypes;
 import com.ignis.norabotics.integration.cc.vanilla.IProgrammingMenu;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
@@ -12,16 +13,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.function.Predicate;
 
 public class ProgrammingMenu extends ComputerMenuWithoutInventory implements IProgrammingMenu {
 
     public final LivingEntity robot;
+    public final AccessConfig access = new AccessConfig();
 
     public ProgrammingMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         super((MenuType<ProgrammingMenu>) ModMenuTypes.COMPUTER.get(), id, inv, new ComputerContainerData(extraData));
         this.robot = (LivingEntity) inv.player.level().getEntity(extraData.readInt());
+        this.access.read(extraData);
     }
 
     public ProgrammingMenu(int id, Inventory player, Entity robot, Predicate<Player> canUse, ServerComputer computer) {

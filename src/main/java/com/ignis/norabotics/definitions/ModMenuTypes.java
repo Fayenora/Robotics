@@ -13,6 +13,10 @@ import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
+import java.util.Optional;
 
 public class ModMenuTypes {
 
@@ -35,5 +39,10 @@ public class ModMenuTypes {
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<? extends AbstractContainerMenu>> registerCompatMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));
+    }
+
+    @Nullable
+    public static RegistryObject<MenuType<?>> of(MenuType<?> menuType) {
+        return MENU_TYPES.getEntries().stream().filter(m -> m.get().equals(menuType)).findFirst().get();
     }
 }

@@ -48,7 +48,7 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
     @Override
     protected void init() {
         super.init();
-        SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.ROBOT.get(), RobotBehavior.possibleMenus(entity), leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
+        SideBarSwitchElement sidebar = new SideBarSwitchElement(ModMenuTypes.ROBOT.get(), RobotBehavior.possibleMenus(entity), menu.access, leftPos + imageWidth - 1, topPos + 3, 18, 17, entity.getId());
         sidebar.initTextureLocation(SideBarSwitchElement.DEFAULT_TEXTURE);
         addElement(sidebar);
         entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {

@@ -3,7 +3,9 @@ package com.ignis.norabotics.client.screen.elements;
 import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.client.screen.base.GuiElement;
 import com.ignis.norabotics.client.screen.base.IGuiTexturable;
+import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
+import com.ignis.norabotics.common.handlers.RoboticsMenus;
 import com.ignis.norabotics.network.NetworkHandler;
 import com.ignis.norabotics.network.messages.server.PacketOpenRobotMenu;
 import net.minecraft.core.BlockPos;
@@ -30,6 +32,10 @@ public class SideBarSwitchElement extends GuiElement {
     int[] textureRows;
 
     public SideBarSwitchElement(MenuType<?> currentMenu, List<MenuType<?>> possibleMenus, int x, int y, int width, int height, int entityId) {
+        this(currentMenu, possibleMenus, AccessConfig.ALL_PERMISSIONS, x, y, width, height, entityId);
+    }
+
+    public SideBarSwitchElement(MenuType<?> currentMenu, List<MenuType<?>> possibleMenus, AccessConfig permissions, int x, int y, int width, int height, int entityId) {
         this(currentMenu, possibleMenus, x, y, width, height);
 
         for(int i = 0; i < possibleMenus.size(); i++) {
@@ -43,6 +49,7 @@ public class SideBarSwitchElement extends GuiElement {
                     NetworkHandler.sendToServer(new PacketOpenRobotMenu(possibleMenus.get(Math.floorDiv(getY() - y, height)), entityId));
                 }
             };
+            if(!RoboticsMenus.hasRequiredPermissions(permissions, Robotics.proxy.getPlayer(), possibleMenus.get(i))) button.setEnabled(false);
 
             addElement(button);
         }
