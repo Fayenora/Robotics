@@ -1,12 +1,11 @@
 package com.ignis.norabotics.client.rendering;
 
-import java.util.concurrent.ConcurrentMap;
-
 import com.google.common.collect.MapMaker;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * A helper class for loading and accessing JSON models not directly used by any blocks or items.

@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.Collection;
 import java.util.EnumSet;

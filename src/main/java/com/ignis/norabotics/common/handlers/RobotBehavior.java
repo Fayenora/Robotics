@@ -12,7 +12,6 @@ import com.ignis.norabotics.common.capabilities.impl.inventory.RobotInventory;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.content.entity.ai.AbstractRangedAttackGoal;
 import com.ignis.norabotics.common.content.entity.ai.RetrieveGoal;
-import com.ignis.norabotics.common.helpers.RoboticsMenus;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotMaterial;

@@ -3,7 +3,6 @@ package com.ignis.norabotics.common.handlers;
 import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.WorldData;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
-import com.ignis.norabotics.common.capabilities.ModifiableInventory;
 import com.ignis.norabotics.common.content.blockentity.FactoryBlockEntity;
 import com.ignis.norabotics.common.content.blockentity.MachineArmBlockEntity;
 import com.ignis.norabotics.common.content.blockentity.StorageBlockEntity;

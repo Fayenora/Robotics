@@ -2,10 +2,10 @@ package com.ignis.norabotics.client.screen;
 
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.Robotics;
-import com.ignis.norabotics.client.tooltips.ItemTooltip;
 import com.ignis.norabotics.client.screen.base.BaseContainerScreen;
 import com.ignis.norabotics.client.screen.elements.ButtonElement;
 import com.ignis.norabotics.client.screen.elements.EnergyBarElement;
+import com.ignis.norabotics.client.tooltips.ItemTooltip;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.blockentity.FactoryBlockEntity;
 import com.ignis.norabotics.common.content.menu.FactoryMenu;
@@ -34,8 +34,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @ParametersAreNonnullByDefault
 public class FactoryScreen extends BaseContainerScreen<FactoryMenu> {

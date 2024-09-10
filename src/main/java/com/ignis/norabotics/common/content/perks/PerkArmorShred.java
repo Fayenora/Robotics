@@ -4,7 +4,6 @@ import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
 import com.ignis.norabotics.definitions.ModMobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

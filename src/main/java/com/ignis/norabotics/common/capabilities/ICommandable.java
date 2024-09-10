@@ -4,6 +4,7 @@ import com.ignis.norabotics.common.robot.RobotCommand;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
+
 import java.util.List;
 
 @AutoRegisterCapability
