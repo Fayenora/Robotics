@@ -2,6 +2,7 @@ package com.ignis.norabotics.common.content.menu;
 
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.common.access.AccessConfig;
+import com.ignis.norabotics.common.access.EnumPermission;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.ModifiableEnergyStorage;
 import com.ignis.norabotics.common.content.menu.slots.CustomSlot;
@@ -93,10 +94,14 @@ public class RobotMenu extends BaseMenu {
     public void clicked(int p_150400_, int p_150401_, ClickType p_150402_, Player player) {
         for(Slot slot : slots) {
             if(slot instanceof CustomSlot customSlot) {
-                customSlot.setInteractable(player.distanceToSqr(robot) < 64);
+                customSlot.setInteractable(isInteractable(player));
             }
         }
         super.clicked(p_150400_, p_150401_, p_150402_, player);
+    }
+
+    public boolean isInteractable(Player player) {
+        return access.hasPermission(player, EnumPermission.INVENTORY) && player.distanceToSqr(robot) < 64;
     }
 
     @Override

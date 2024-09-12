@@ -246,6 +246,9 @@
   "norabotics.selector.entity.useCommander": "Search your inventory for any Command Tools that selected an entity",
   "norabotics.selector.entity.useSelf": "Select yourself",
   "norabotics.selector.entity.confirm": "Confirm",
+  "norabotics.selector.spEntity.useCommander": "Search your inventory for any Command Tools that selected an entity",
+  "norabotics.selector.spEntity.useSelf": "Select yourself",
+  "norabotics.selector.spEntity.confirm": "Confirm",
 
   "item.norabotics.circuit": "Circuitry",
   "item.norabotics.complex_circuit": "Complex Circuitry",
@@ -306,7 +309,7 @@
   "block.norabotics.assembler": "Assembler",
   "block.norabotics.wire_cutter": "Wire Cutter",
   "block.norabotics.compressor": "Compressor",
-  "block.norabotics.robot_factory": "Robot Factory",
+  "block.norabotics.robot_factory": "Robot Factory Pedestal",
   "block.norabotics.robot_storage": "Robot Storage",
   "block.norabotics.charger": "Charger",
   "block.norabotics.machine_arm": "Factory Arm",

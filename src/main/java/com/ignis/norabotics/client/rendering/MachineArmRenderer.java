@@ -41,7 +41,6 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
     private static final int color = FastColor.ARGB32.color(255, 155, 0, 0);
 
     MachineArmModel<Entity> model;
-    private float[] currentPose;
     private final ItemRenderer itemRenderer;
 
     public MachineArmRenderer(BlockEntityRendererProvider.Context context) {
@@ -51,12 +50,13 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
 
     @Override
     public void render(MachineArmBlockEntity arm, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+        pPoseStack.pushPose();
         // Arm Movement
         if(arm.getPose() != null && arm.getPose().getNumBones() > 0) {
             float[] targetPose = chainToRotations(arm.getPose(), arm.getTarget(), arm.getState() == MachineArmBlockEntity.MachineArmState.PICKING_UP_ITEM);
-            if (currentPose == null) currentPose = targetPose;
-            moveToPose(currentPose, targetPose);
-            model.setPlatformRotation(currentPose);
+            if (arm.currentPose == null) arm.currentPose = targetPose;
+            moveToPose(arm.currentPose, targetPose);
+            model.setPlatformRotation(arm.currentPose);
         }
 
         // Debug Lines
@@ -74,6 +74,7 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutout(MACHINE_ARM_TEXTURE));
         int light = LevelRenderer.getLightColor(arm.getLevel(), arm.getBlockPos().above());
         model.renderToBuffer(pPoseStack, vertexconsumer, light, pPackedOverlay, 1, 1, 1, 1);
+        pPoseStack.popPose();
 
         // Item
         /*
@@ -106,10 +107,10 @@ public class MachineArmRenderer implements BlockEntityRenderer<MachineArmBlockEn
     }
 
     private Matrix4f forwardKinematics(float[] rotations, int[] lengths) {
-        return denavitHartenberger((float) (currentPose[0]), (float) Math.toRadians(-90), 0, 0).mul(
-                denavitHartenberger((float) (Math.toRadians(90) - currentPose[1]), 0, MachineArmModel.ARM_LENGTHS[0] / 16f, 0)).mul(
-                denavitHartenberger(currentPose[2], 0, MachineArmModel.ARM_LENGTHS[1] / 16f, 0)).mul(
-                denavitHartenberger(currentPose[3], 0, MachineArmModel.ARM_LENGTHS[2] / 16f, 0)
+        return denavitHartenberger((float) (rotations[0]), (float) Math.toRadians(-90), 0, 0).mul(
+                denavitHartenberger((float) (Math.toRadians(90) - rotations[1]), 0, MachineArmModel.ARM_LENGTHS[0] / 16f, 0)).mul(
+                denavitHartenberger(rotations[2], 0, MachineArmModel.ARM_LENGTHS[1] / 16f, 0)).mul(
+                denavitHartenberger(rotations[3], 0, MachineArmModel.ARM_LENGTHS[2] / 16f, 0)
         );
     }
 

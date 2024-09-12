@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
@@ -103,23 +104,23 @@ public class MachineArmModel<T extends Entity> extends EntityModel<T> {
 		return chain;
 	}
 
-	public void setPlatformRotation(float rot1, float rot2, float rot3, float rot4) {
+	public void setPlatformRotation(float[] rotations) {
+		setupAnim(null, rotations[0], rotations[1], rotations[2], rotations[3], 0);
+	}
+
+	@Override
+	public void setupAnim(Entity entity, float rot1, float rot2, float rot3, float rot4, float headPitch) {
 		platform.yRot = rot1;
 		first_arm.zRot = rot2;
 		second_arm.zRot = rot3;
 		joint_3.zRot = rot4;
 	}
 
-	public void setPlatformRotation(float[] rotations) {
-		setPlatformRotation(rotations[0], rotations[1], rotations[2], rotations[3]);
-	}
-
-	@Override
-	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
-
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		poseStack.pushPose();
 		platform.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 		bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		poseStack.popPose();
 	}
 }

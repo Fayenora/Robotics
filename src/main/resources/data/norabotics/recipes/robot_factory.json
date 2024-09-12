@@ -2,20 +2,16 @@
     "type": "minecraft:crafting_shaped",
     "category": "misc",
     "pattern": [
-        "bcb",
-        "asa",
-        "bcb"
+        "   ",
+        " c ",
+        "bsb"
     ],
     "key": {
         "b": {
             "item": "norabotics:plate_iron"
         },
-		"a": {
-            "item": "minecraft:anvil", 
-			"data": 0
-        }, 
 		"s": {
-            "item": "norabotics:robot_storage"
+            "item": "norabotics:battery"
         },
 		"c": {
             "item": "norabotics:complex_circuit"

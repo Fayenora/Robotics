@@ -48,10 +48,11 @@ import static com.ignis.norabotics.client.rendering.MachineArmModel.constructCha
 @ParametersAreNonnullByDefault
 public class MachineArmBlockEntity extends BlockEntity {
 
-    public static final int TIME_BETWEEN_WELDING_ANIMATIONS = 200;
-    public static final List<WeldingPath> WELDING_PATHS = List.of(
-            WeldingPath.of(new Vec3(0.2, 1.3, 0.2), new Vec3(0.2, 1.5, 0.2), new Vec3(0.2, 1.5, -0.2), new Vec3(0.2, 1.3, -0.2))
-    );
+    public static final int AVG_TIME_BETWEEN_WELDING_ANIMATIONS = 150;
+    public static final WeldingPath ARM = WeldingPath.of(new Vec3(0.22, 1.3, 0.24), new Vec3(0.22, 1.5, 0.24), new Vec3(0.22, 1.5, -0.24), new Vec3(0.22, 1.3, -0.24));
+    public static final WeldingPath LEG = WeldingPath.of(new Vec3(0.28, 0.7, 0.28), new Vec3(0.28, 0.7, -0.28));
+    public static final WeldingPath HEAD = WeldingPath.of(new Vec3(-0.25, 1.55, 0.25), new Vec3(0.25, 1.55, 0.25), new Vec3(0.25, 1.55, -0.25), new Vec3(-0.25, 1.55, -0.25));
+    public static final List<WeldingPath> WELDING_PATHS = List.of(ARM, LEG, HEAD);
 
     final Vec3 rotationBase;
     final AABB seekRadius;
@@ -63,23 +64,30 @@ public class MachineArmBlockEntity extends BlockEntity {
     BlockPos nearestFactoryPos;
     WeldingPath currentWeldingPath;
     private long time, lastAnimationStart;
+    private int animationDuration;
+    public float[] currentPose; // used client side only
 
     public MachineArmBlockEntity(BlockPos pos, BlockState pBlockState) {
         super(ModMachines.MACHINE_ARM.get(), pos, pBlockState);
         chain = MachineArmModel.constructDefaultChain();
         target = new Vec3f(1, 1, 0);
         rotationBase = Vec3.atLowerCornerOf(pos).add(MachineArmModel.LOWER_LEFT_CORNER_OFFSET);
-        seekRadius = new AABB(pos).inflate(4, 0, 4).expandTowards(0, 4, 0).expandTowards(0, -1, 0);
+        seekRadius = new AABB(pos).inflate(3, 0, 3).expandTowards(0, 3, 0).expandTowards(0, -1, 0);
         nearestFactoryPos = BlockPos.ZERO;
+        animationDuration = AVG_TIME_BETWEEN_WELDING_ANIMATIONS;
         lastAnimationStart = -1;
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MachineArmBlockEntity machineArm) {
         MachineArmState newState = machineArm.state;
         FactoryBlockEntity factory = machineArm.nearestFactory();
-        if(factory != null && factory.isRunning() && factory.assignWeldingArm(pos)) {
+
+        if(factory != null && factory.isRunning()) {
+            Direction.AxisDirection armSide = factory.assignWeldingArm(pos);
             // Play welding animation
-            newState = machineArm.weld();
+            if(armSide != null) {
+                newState = machineArm.weld(armSide);
+            }
         } else if(machineArm.getGrabbedItem().isEmpty()) {
             newState = MachineArmState.IDLE;
             // Pick up Modules in the area
@@ -112,14 +120,16 @@ public class MachineArmBlockEntity extends BlockEntity {
         }
     }
 
-    private MachineArmState weld() {
-        if(time++ % TIME_BETWEEN_WELDING_ANIMATIONS == 0 && lastAnimationStart == -1) {
-            currentWeldingPath = chooseWeldingPath(nearestFactoryPos);
+    private MachineArmState weld(Direction.AxisDirection armSide) {
+        if(time++ % animationDuration == 0 && lastAnimationStart == -1) {
+            currentWeldingPath = chooseWeldingPath(nearestFactoryPos, armSide);
             lastAnimationStart = time;
+            animationDuration = Math.max(120, (int) (AVG_TIME_BETWEEN_WELDING_ANIMATIONS * (Robotics.RANDOM.nextGaussian() + 1)));
             return MachineArmState.WELDING;
         } else if(level != null && currentWeldingPath != null) {
             Vec3 target = currentWeldingPath.lerp(time, lastAnimationStart);
-            if(moveToTargetVec(target) && currentWeldingPath.isFinished(time, lastAnimationStart)) {
+            moveToTargetVec(target);
+            if(currentWeldingPath.isFinished(time, lastAnimationStart)) {
                 currentWeldingPath = null;
                 lastAnimationStart = -1;
                 return MachineArmState.IDLE;
@@ -134,10 +144,12 @@ public class MachineArmBlockEntity extends BlockEntity {
         setChanged();
     }
 
-    private WeldingPath chooseWeldingPath(BlockPos factoryPos) {
+    private WeldingPath chooseWeldingPath(BlockPos factoryPos, Direction.AxisDirection armSide) {
         WeldingPath path = WELDING_PATHS.get(Robotics.RANDOM.nextInt(WELDING_PATHS.size()));
         Direction factoryOrientation = level.getBlockState(factoryPos).getValue(BlockStateProperties.HORIZONTAL_FACING);
-        path = path.rotateToDirection(factoryOrientation);
+        Direction normedOrientation = Direction.fromAxisAndDirection(factoryOrientation.getAxis(), Direction.AxisDirection.POSITIVE);
+        Direction orientationForArm = armSide == Direction.AxisDirection.NEGATIVE ? normedOrientation : normedOrientation.getOpposite();
+        path = path.rotateToDirection(orientationForArm);
         path = path.offset(factoryPos);
         return path;
     }
@@ -181,7 +193,7 @@ public class MachineArmBlockEntity extends BlockEntity {
         this.target = MathUtil.of(target.subtract(rotationBase).scale(16));
         chain.solveForTarget(this.target);
         sync();
-        return getPose().getEffectorLocation().approximatelyEquals(this.target, 1.5f);
+        return getPose().getEffectorLocation().approximatelyEquals(this.target, 2);
     }
 
     private FactoryBlockEntity nearestFactory() {

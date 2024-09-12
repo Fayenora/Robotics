@@ -119,6 +119,7 @@ public class EntitySelector extends SelectorElement<UUID> implements IPacketData
 				NetworkHandler.sendToServer(new PacketRequestEntitySearch(EntitySelector.this.getParentGuiPath(), new EntitySearch(textField.getValue())));
 				getBaseGui().removeSubGui();
 			});
+			buttonConfirm.setTooltip(Lang.localise("selector.spEntity.confirm"));
 			buttonSelect.initTextureLocation(Reference.MISC, 0, 187);
 			buttonSelf.initTextureLocation(Reference.MISC, 0, 0);
 			buttonConfirm.initTextureLocation(Reference.MISC, 0, 170);

@@ -53,7 +53,7 @@ public class ScrollableElement extends GuiElement {
      * @param index the index of the element to be removed
      */
     private void internalRemove(int index) {
-        if(index > children().size()) return;
+        if(index >= children().size()) return;
         children().remove(index);
         for(int i = index; i < children().size(); i++) {
             alignElement(i);

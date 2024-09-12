@@ -82,19 +82,22 @@ public class FactoryBlockEntity extends MachineBlockEntity {
         }
     }
 
-    public boolean assignWeldingArm(BlockPos pos) {
+    @Nullable
+    public Direction.AxisDirection assignWeldingArm(BlockPos pos) {
+        if(pos.equals(weldingArmPositive)) return Direction.AxisDirection.POSITIVE;
+        if(pos.equals(weldingArmNegative)) return Direction.AxisDirection.NEGATIVE;
         Direction.Axis orthogonal = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getClockWise().getAxis();
         BlockPos relative = pos.subtract(getBlockPos());
         if(orthogonal.choose(relative.getX(), relative.getY(), relative.getZ()) < 0) {
             if(weldingArmNegative == null || !(level.getBlockEntity(weldingArmNegative) instanceof MachineArmBlockEntity)) {
                 weldingArmNegative = pos;
-                return true;
+                return Direction.AxisDirection.NEGATIVE;
             }
         } else if(weldingArmPositive == null || !(level.getBlockEntity(weldingArmPositive) instanceof MachineArmBlockEntity)) {
             weldingArmPositive = pos;
-            return true;
+            return Direction.AxisDirection.POSITIVE;
         }
-        return pos.equals(weldingArmPositive) || pos.equals(weldingArmNegative);
+        return null;
     }
 
     ////////////////////

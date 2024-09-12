@@ -14,23 +14,22 @@ public class LookDownGoal extends Goal {
 	public LookDownGoal(Mob entity) {
 		setFlags(EnumSet.of(Flag.LOOK, Flag.TARGET, Flag.MOVE, Flag.JUMP));
 		this.entity = entity;
-		idealLookVector = Vec3.directionFromRotation(-45, entity.getYHeadRot());
+		idealLookVector = Vec3.directionFromRotation(45, entity.getYHeadRot());
 	}
 
 	@Override
 	public boolean canUse() {
-		return canContinueToUse();
+		return true;
 	}
 	
 	@Override
 	public boolean canContinueToUse() {
-		Vec3 current = entity.getLookAngle();
-		return current.distanceTo(idealLookVector) > 0.1;
+		return true;
 	}
 	
 	@Override
 	public void tick() {
-		entity.getLookControl().setLookAt(idealLookVector);
+		entity.getLookControl().setLookAt(entity.getEyePosition().add(idealLookVector));
 	}
 
 	@Override

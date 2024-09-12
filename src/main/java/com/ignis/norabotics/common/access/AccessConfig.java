@@ -60,14 +60,18 @@ public class AccessConfig implements INBTSerializable<CompoundTag>, IBufferSeria
 	}
 	
 	private void setPermissions(UUID player, EnumSet<EnumPermission> permissions) {
+		if(player == null) return;
 		this.permissions.put(player, permissions);
 	}
 	
 	public void addPermission(UUID player, EnumPermission permission) {
+		if(player == null) return;
+		if(!permissions.containsKey(player)) permissions.put(player, permissions.get(Reference.DEFAULT_UUID).clone());
 		permissions.get(player).add(permission);
 	}
 	
 	public void removePermission(UUID player, EnumPermission permission) {
+		if(!permissions.containsKey(player)) return;
 		permissions.get(player).remove(permission);
 	}
 	
