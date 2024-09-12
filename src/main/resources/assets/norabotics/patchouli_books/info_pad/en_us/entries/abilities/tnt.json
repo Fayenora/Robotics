@@ -1,0 +1,16 @@
+{
+  "name": "Self-Destruct",
+  "icon": "minecraft:tnt",
+  "category": "norabotics:abilities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The robot swells like a creeper and explodes, destroying itself in a large explosion. "
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:tnt",
+      "link_recipe": true
+    }
+  ]
+}

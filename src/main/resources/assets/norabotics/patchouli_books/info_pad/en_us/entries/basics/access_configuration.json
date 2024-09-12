@@ -1,0 +1,25 @@
+{
+  "name": "Access Rights",
+  "icon": "norabotics:perceptron_layer",
+  "category": "norabotics:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Access from other players to the robot can be tweaked. When opening the access management screen, the user will be confronted with a screen similar to the picture on the right. In the top row, the different permissions are listed: $(li)$(l)View: $()the permission to view any gui displaying information about the robot"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "norabotics:textures/book/permissions.png"
+      ]
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)$(l)Inventory: $()the permission to access the robot's inventory$(li)$(l)Configuration: $()the permission to alter configurations: chunk loading, item pickup and sounds$(li)$(l)Commands: $()permission to deactivate the robot and perform any task with them$(li)$(l)Ally: $()access to the access management screen. The one who constructed the robot will always stay the robots owner, unless they transfer permission manually. "
+    },
+    {
+      "type": "patchouli:text",
+      "text": "By default all players other than the owner have the right to view and access the inventory of the robot. This is indicated by the second row and can be changed freely. <br>Additionally specific rules for specific players can be added by clicking the blue '+' and typing a players name. If they are not on the server it may take a while to load them in. They can then be given custom permissions. For all purposes the specific permissions of a player apply to them instead of the default ones. "
+    }
+  ]
+}

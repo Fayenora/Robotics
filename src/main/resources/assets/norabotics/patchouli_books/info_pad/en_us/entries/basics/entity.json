@@ -6,11 +6,20 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Model Name: T-800<br>Base Durability: 12.0<br>Base Attack Damage: 0<br>Base Attack Speed: 1<br>AI: Turing-complete programming interface<br><br>As most robots, the T-800 does not require air and is immune to poisonous substances. They do not recover from damages themselves and have to be repaired with a metal plating matching the material of the corpus. One plating will restore 2.5 hearts. "
+      "text": "Model Name: T-800<br>Base Durability: 4.0<br>Base Attack Damage: 0<br>Base Attack Speed: 1<br>AI: Turing-complete programming interface<br>Description: As most robots, the T-800 does not require air and is immune to poisonous substances. Continued operation requires 100 RF/t. "
     },
     {
       "type": "patchouli:entity",
       "entity": "norabotics:robot{ForgeCaps:{'norabotics:parts':{color:17, parts:[I; 1, 1, 1, 1, 1, 1]}}}"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "They do not recover from damages themselves and have to be repaired with a metal plating matching the material of the corpus. One plating will restore 2.5 hearts. "
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "norabotics:plate_iron,norabotics:plate_gold,norabotics:plate_copper,norabotics:plate_diamond,norabotics:plate_steel,norabotics:plate_netherite",
+      "link_recipe": true
     }
   ]
 }

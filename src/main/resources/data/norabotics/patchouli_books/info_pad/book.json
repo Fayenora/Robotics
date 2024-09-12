@@ -1,6 +1,6 @@
 {
   "name": "Info Pad",
-  "landing_text": "Construction and handling manual for the humanoid robot model T-800, distributed by ",
+  "landing_text": "Construction and handling manual for the humanoid robot model T-800, as distributed by Noraboritcs Inc.™",
   "creative_tab": "norabotics:items",
   "use_resource_pack": true,
   "show_progress": false,

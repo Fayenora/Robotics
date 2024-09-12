@@ -18,7 +18,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "When shift-right-clicking a robot, the robot is added to this command-tool's group. By right clicking in the air to open the command interface, all robots of this group can be accessed from anywhere (as long as they are loaded). Item transactions are only possible over short distances. The group of a command tool can be copied to another command tool by crafting them together. They will also share robots to be added and removed in the future. "
+      "text": "When shift-right-clicking a robot, the robot is added to this command-tool's group. By right clicking in the air to open the command interface, all robots of this group can be accessed from anywhere (as long as they are loaded). Item transactions are only possible over short distances. <br>The group of a command tool can be copied to another command tool by crafting them together. They will also share robots to be added and removed in the future. "
     }
   ]
 }

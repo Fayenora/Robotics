@@ -1,5 +1,5 @@
 {
-  "name": "Inventory API",
+  "name": "inventory",
   "icon": "minecraft:chest",
   "category": "norabotics:programming",
   "pages": [

@@ -1,11 +1,11 @@
 {
-  "name": "Robot API",
+  "name": "robot",
   "icon": "norabotics:iron_head",
   "category": "norabotics:programming",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "An API giving access to the various capabilities of a robot.$(br)$(bold)deactivate()$() -> deactivates the robot$(br)$(bold)getEnergy()$() -> current energy$(br)$(bold)getMaxEnergy()$() -> max energy$(br)$(bold)getHealth()$() -> current health$(br)$(bold)getAttribute(attribute)$() -> value of an attribute. See $(l:https://minecraft.fandom.com/wiki/Attribute#Attributes)here$() or call $(n)getValidAttributes()$() for a list of valid attributes$(br)$(bold)getValidAttributes()$() -> valid attributes for $(n)getAttribute(attribute)$()$(br)$(bold)getEffects()$() -> $(l:norabotics:programming/robot_api#effect_object)effects$() currently affecting the robot$(br)$(bold)hasAccess(player, permission)$() -> whether the player has the permission. Call for a list of valid permissions"
+      "text": "An API giving access to the various capabilities of a robot.$(br)$(bold)deactivate()$() -> deactivates the robot$(br)$(bold)getEnergy()$() -> current energy$(br)$(bold)getMaxEnergy()$() -> max energy$(br)$(bold)getHealth()$() -> current health$(br)$(bold)getAttribute(attribute)$() -> value of an attribute. See $(l:https://minecraft.fandom.com/wiki/Attribute#Attributes)here$() or call $(n)getValidAttributes()$() for a list of valid attributes$(br)$(bold)getValidAttributes()$() -> valid attributes for $(n)getAttribute(attribute)$()$(br)$(bold)getEffects()$() -> $(l:norabotics:programming/robot_api#effect_object)effects$() currently affecting the robot$(br)$(bold)hasAccess(player, permission)$() -> whether the player has the permission. Call for valid arguments"
     },
     {
       "type": "patchouli:text", 

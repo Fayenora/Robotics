@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Constructing a human sized robot - a useful one - is quite a complex and delicate task. While not requiring many materials, the crafting process is rather lengthy. You will need two machines: The assembler and the wire cutter"
+      "text": "Constructing a human sized robot - a useful one - is quite a complex and delicate task. While not requiring many materials, the crafting process is rather lengthy. Two machines are required for constructing the parts: The assembler and the wire cutter. "
     },
     {
       "type": "patchouli:crafting",
@@ -14,7 +14,16 @@
     },
     {
       "type": "patchouli:text",
-      "text": ""
+      "text": "The user is referred to JEI for robot part recipes. Note not a full set of parts, but only a leg, a body and a head are required. It is recommended to set up an automated crafting system in order handle all steps of process elegantly and avoid unexpected costs. <br>Once all parts are gathered, assembly can begin.  For construction, a robot factory, as well as at least one factory arm are required. "
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "norabotics:robot_factory",
+      "recipe2": "norabotics:machine_arm"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Place both machines in vicinity of each of other. Simply drop any robot parts as well as modules in the vicinity and the machine arm will place them on the factory pedestal. The process can be started in the gui of the factory pedestal. <br>Once the build process is finished, name the robot, choose a color and hit 'Create'"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "Sensor API",
+  "name": "sensors",
   "icon": "norabotics:camera_unit",
   "category": "norabotics:programming",
   "pages": [
