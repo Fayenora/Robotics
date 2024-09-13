@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class RobotAPI implements ILuaAPI {
@@ -41,7 +42,7 @@ public class RobotAPI implements ILuaAPI {
         this.energyStorage = energyStorage;
     }
 
-    @LuaFunction
+    @LuaFunction(mainThread = true)
     public final void deactivate() {
         robot.setActivation(false);
     }
@@ -149,7 +150,9 @@ public class RobotAPI implements ILuaAPI {
         }
         RobotModule module = ModModules.get(moduleItem);
         if(module == null) return false;
-        return module.activate(entity);
+        AtomicBoolean success = new AtomicBoolean(false);
+        environment.getMainThreadMonitor().runWork(() -> success.set(module.activate(entity)));
+        return success.get();
     }
 
     private List<ItemStack> getModules() {

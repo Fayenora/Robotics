@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Model Name: T-800<br>Base Durability: 4.0<br>Base Attack Damage: 0<br>Base Attack Speed: 1<br>AI: Turing-complete programming interface<br>Description: As most robots, the T-800 does not require air and is immune to poisonous substances. Continued operation requires 100 RF/t. "
+      "text": "Model Name: T-800<br>Base Durability: 4.0<br>Base Attack Damage: 0<br>Base Attack Speed: 1<br>AI: Turing-complete programming interface<br>Description: As most robots, the T-800 does not require air and is immune to poisonous substances. Continued operation requires 30 RF/t. "
     },
     {
       "type": "patchouli:entity",

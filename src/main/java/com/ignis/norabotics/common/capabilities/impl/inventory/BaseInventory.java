@@ -1,6 +1,5 @@
 package com.ignis.norabotics.common.capabilities.impl.inventory;
 
-import com.ignis.norabotics.common.capabilities.ModifiableInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Containers;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-public class BaseInventory extends ItemStackHandler implements ModifiableInventory {
+public class BaseInventory extends ItemStackHandler {
 
 	private Level world;
 	private final Supplier<BlockPos> pos;

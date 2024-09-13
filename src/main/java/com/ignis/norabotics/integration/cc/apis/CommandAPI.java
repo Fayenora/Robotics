@@ -1,5 +1,6 @@
 package com.ignis.norabotics.integration.cc.apis;
 
+import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.capabilities.ICommandable;
 import com.ignis.norabotics.common.helpers.types.Selection;
 import com.ignis.norabotics.common.helpers.types.SelectionType;
@@ -7,7 +8,6 @@ import com.ignis.norabotics.common.robot.CommandType;
 import com.ignis.norabotics.common.robot.RobotCommand;
 import com.ignis.norabotics.definitions.robotics.ModCommands;
 import com.ignis.norabotics.definitions.robotics.ModSelectionTypes;
-import com.ignis.norabotics.integration.config.RoboticsConfig;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -56,6 +56,7 @@ public class CommandAPI implements ILuaAPI {
         sel2.ifPresent(selections::add);
         sel3.ifPresent(selections::add);
         sel4.ifPresent(selections::add);
+        if(!type.contains(":")) type = Robotics.MODID + ":" + type;
         CommandType commandType = ModCommands.REGISTRY.get().getValue(new ResourceLocation(type));
         if(commandType == null) {
             throw new LuaException(type + " is not a valid command type. See getAvailableCommands for a list of viable commands");
@@ -66,16 +67,7 @@ public class CommandAPI implements ILuaAPI {
         for(int i = 0; i < Math.min(selectionTypes.size(), selections.size()); i++) {
             String argument = selections.get(i);
             SelectionType<?> reqType = selectionTypes.get(i);
-            if(reqType == ModSelectionTypes.POS) {
-                if(argument.matches("\\[[A-z:]*/[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
-                    // Everything is fine
-                } else if(argument.matches("\\[[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
-                    argument = "[minecraft:dimension/" + argument.split("\\[")[1].trim();
-                } else if(argument.matches("\\s*-?+\\d*\\s-?+\\d*\\s-?+\\d*\\s*")) {
-                    argument = "[minecraft:dimension/minecraft:overworld] " + argument.trim();
-                } else throw new LuaException("Position argument does not match required format 'x y z' or '[dimension-id] x y z'");
-            }
-            Object obj = reqType.parse(argument);
+            Object obj = parseArg(reqType, argument);
             if(obj == null) {
                 throw new LuaException("Could not parse " + selections.get(i) + " as " + selectionTypes.get(i).toString());
             }
@@ -86,9 +78,22 @@ public class CommandAPI implements ILuaAPI {
         commands.addCommand(command);
     }
 
+    private Object parseArg(SelectionType<?> reqType, String arg) throws LuaException {
+        if(reqType == ModSelectionTypes.POS) {
+            if(arg.matches("\\[[A-z:]*/[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
+                // Everything is fine
+            } else if(arg.matches("\\[[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
+                arg = "[minecraft:dimension/" + arg.split("\\[")[1].trim();
+            } else if(arg.matches("\\s*-?+\\d*\\s-?+\\d*\\s-?+\\d*\\s*")) {
+                arg = "[minecraft:dimension/minecraft:overworld] " + arg.trim();
+            } else throw new LuaException("Position argument does not match required format 'x y z' or '[dimension-id] x y z'");
+        }
+        return reqType.parse(arg);
+    }
+
     @LuaFunction
     public final List<? extends String> getAvailableCommands() {
-        return RoboticsConfig.general.availableCommands.get();
+        return ModCommands.REGISTRY.get().getKeys().stream().map(ResourceLocation::toString).toList();
     }
 
     @Override
