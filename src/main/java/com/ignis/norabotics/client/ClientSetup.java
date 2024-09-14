@@ -18,6 +18,7 @@ import com.ignis.norabotics.integration.cc.ProgrammingScreen;
 import com.ignis.norabotics.integration.cc.vanilla.VProgrammingScreen;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -28,10 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.event.RegisterShadersEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -86,6 +84,13 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_FACTORY.getBlockEntityType(), RobotFactoryRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.MACHINE_ARM.get(), MachineArmRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerRecipeCategories(RegisterRecipeBookCategoriesEvent event) {
+        // Avoids log dumps
+        event.registerRecipeCategoryFinder(ModMachines.ASSEMBLER.getRecipeType(), r -> RecipeBookCategories.UNKNOWN);
+        event.registerRecipeCategoryFinder(ModMachines.WIRE_CUTTER.getRecipeType(), r -> RecipeBookCategories.UNKNOWN);
     }
 
     @SubscribeEvent

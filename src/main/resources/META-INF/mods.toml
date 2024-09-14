@@ -11,7 +11,9 @@ license="MIT"
     logoFile="logo.png" #optional
     authors="Renora Io"
     credits="A huge thanks to the Forge team for making modding so accessible to everyone"
-    description=''''''
+    description='''
+    Robotics add customizable and programmable robots to Minecraft.
+    '''
 
 [[dependencies.norabotics]]
     modId="minecraft"
