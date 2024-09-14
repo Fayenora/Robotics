@@ -21,14 +21,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = Robotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
 
     public static final Attribute ENERGY_CAPACITY = register("robot.energy_capacity", 1000000, 0, Double.MAX_VALUE, true);
     public static final Attribute ENERGY_CONSUMPTION = register("robot.energy_consumption", 30, -Double.MAX_VALUE, Double.MAX_VALUE, false);
-    public static final List<Attribute> MODIFIER_SLOTS = new ArrayList<>(EnumModuleSlot.values().length);
+    public static final Map<EnumModuleSlot, Attribute> MODIFIER_SLOTS = new HashMap<>(EnumModuleSlot.values().length);
     public static final Attribute STACK_SIZE = register("robot.stack_size", 1, 0, 6, true); // Multiplier value -> more is better
     public static final Attribute LOGISTICS_TIME = register("robot.logistics_time", 1, 0.2, 10, false); // Time multiplier for logistics operations -> less is better
     public static final Attribute MODULE_COST = register("robot.module_cost", 1, 0, 10, false); // Cost multiplier -> less is better
@@ -38,7 +40,7 @@ public class ModAttributes {
 
     static {
         for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
-            MODIFIER_SLOTS.add(register("robot.slots.modules." + slotType.name().toLowerCase(), slotType.isPrimary() ? 1 : 0, 0, Reference.MAX_MODULES, false));
+            MODIFIER_SLOTS.put(slotType, register("robot.slots.modules." + slotType.name().toLowerCase(), slotType.isPrimary() ? 1 : 0, 0, Reference.MAX_MODULES, true));
         }
     }
 
@@ -62,7 +64,7 @@ public class ModAttributes {
         event.add(ModEntityTypes.ROBOT.get(), MODULE_COST);
         event.add(ModEntityTypes.ROBOT.get(), MODULE_COOLDOWN);
         event.add(ModEntityTypes.ROBOT.get(), MODULE_DURATION);
-        for(Attribute attribute : MODIFIER_SLOTS) {
+        for(Attribute attribute : MODIFIER_SLOTS.values()) {
             event.add(ModEntityTypes.ROBOT.get(), attribute);
         }
     }
@@ -98,14 +100,6 @@ public class ModAttributes {
 
 		//Server side attributes
 		if(entity.level().isClientSide()) return;
-
-		if(MODIFIER_SLOTS.contains(instance.getAttribute())) {
-            entity.getCapability(ModCapabilities.PARTS).ifPresent(robot -> {
-                String[] nameComponents = instance.getAttribute().getDescriptionId().split("\\.");
-                EnumModuleSlot slotType = EnumModuleSlot.valueOf(nameComponents[nameComponents.length - 1].toUpperCase());
-                robot.setMaxBodyParts(slotType, (int) instance.getValue());
-            });
-		}
 
         if(instance.getAttribute().equals(STACK_SIZE)) {
             entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {

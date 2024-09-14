@@ -16,6 +16,7 @@ import com.ignis.norabotics.definitions.ModSounds;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -97,7 +98,7 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if(!getCapability(ModCapabilities.PARTS).isPresent()) return InteractionResult.PASS;
+        if(!getCapability(ModCapabilities.PARTS).isPresent() || level().isClientSide) return InteractionResult.PASS;
         IPartBuilt parts = getCapability(ModCapabilities.PARTS).resolve().get();
         EnumRobotMaterial repairMaterial = parts.materialForSlot(EnumModuleSlot.BODY);
         RegistryObject<Item> repairItem = ModItems.PLATES.get(repairMaterial);
@@ -109,11 +110,30 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
             return InteractionResult.CONSUME;
         }
         RobotPart part = RobotPart.getFromItem(stack.getItem());
-        if(part != null && !parts.hasBodyPart(part.getPart().toModuleSlot())) {
+        if(part != null && (!parts.hasBodyPart(part.getPart().toModuleSlot()) || player.isCreative())) {
             if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
             parts.setBodyPart(part);
             playSound(SoundEvents.ANVIL_USE);
+            return InteractionResult.CONSUME;
         }
+        if(ModModules.isModule(stack) && player.isCreative()) {
+            RobotModule module = ModModules.get(stack);
+            for(EnumModuleSlot slot : module.getViableSlots()) {
+                NonNullList<ItemStack> items = parts.getBodyParts(slot);
+                NonNullList<ItemStack> copy = NonNullList.withSize(items.size(), ItemStack.EMPTY);
+                int i = 0;
+                if(items.isEmpty()) return InteractionResult.PASS;
+                while(i < items.size() && !items.get(i).isEmpty()) {
+                    copy.set(i++, items.get(i));
+                }
+                copy.set(i, stack);
+                parts.setBodyParts(slot, copy);
+                playSound(SoundEvents.ANVIL_USE);
+                break;
+            }
+            return InteractionResult.CONSUME;
+        }
+
         return InteractionResult.PASS;
     }
 

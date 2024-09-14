@@ -107,7 +107,7 @@ public class FactoryMenu extends BaseMenu {
         IPerkMap perks = ModModules.get(stack).getPerks();
         Map<EnumModuleSlot, Integer> moduleSlotsAsAddedBy = new HashMap<>();
         Map<Attribute, AttributeInstance> map = new HashMap<>();
-        for(Attribute attr : ModAttributes.MODIFIER_SLOTS) {
+        for(Attribute attr : ModAttributes.MODIFIER_SLOTS.values()) {
             AttributeInstance inst = new AttributeInstance(attr, i -> {});
             inst.setBaseValue(0);
             map.put(attr, inst);

@@ -62,7 +62,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     static {
         ATTRIBUTES_TO_EXCLUDE.add(ForgeMod.NAMETAG_DISTANCE.get());
         ATTRIBUTES_TO_EXCLUDE.add(Attributes.FOLLOW_RANGE);
-        ATTRIBUTES_TO_EXCLUDE.addAll(ModAttributes.MODIFIER_SLOTS);
+        ATTRIBUTES_TO_EXCLUDE.addAll(ModAttributes.MODIFIER_SLOTS.values());
     }
 
     private final LivingEntity entity;

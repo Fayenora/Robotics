@@ -33,6 +33,7 @@ public class PerkBehavior {
     @SubscribeEvent
     public static void onPerkChange(PerkChangeEvent event) {
         LivingEntity entity = event.getEntity();
+        if(entity.level().isClientSide) return;
         @SuppressWarnings("unchecked")
         AttributeSupplier defaults = DefaultAttributes.getSupplier((EntityType<? extends LivingEntity>) entity.getType());
         AttributeMap tempAttributeMap = new AttributeMap(defaults);

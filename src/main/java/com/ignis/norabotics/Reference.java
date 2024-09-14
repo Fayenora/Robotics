@@ -54,7 +54,7 @@ public class Reference {
 		ATTRIBUTE_COLORS.put(ModAttributes.MODULE_COST, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
 		ATTRIBUTE_COLORS.put(ModAttributes.MODULE_COOLDOWN, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
 		ATTRIBUTE_COLORS.put(ModAttributes.MODULE_DURATION, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
-		for(Attribute attribute : ModAttributes.MODIFIER_SLOTS) {
+		for(Attribute attribute : ModAttributes.MODIFIER_SLOTS.values()) {
 			ATTRIBUTE_COLORS.put(attribute, TextColor.fromLegacyFormat(ChatFormatting.WHITE));
 		}
 		ATTRIBUTE_COLORS.put(ModAttributes.INVENTORY_SLOTS, TextColor.fromLegacyFormat(ChatFormatting.RED));

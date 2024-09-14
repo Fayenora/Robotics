@@ -41,7 +41,14 @@ import java.util.Map;
 
 public class RoboticsMenus {
 
-    public static final List<Attribute> UNNECESSARY_INFO = ModAttributes.MODIFIER_SLOTS.subList(EnumModuleSlot.HEAD.ordinal(), EnumModuleSlot.CORE.ordinal());
+    public static final List<Attribute> UNNECESSARY_INFO = List.of(
+            ModAttributes.MODIFIER_SLOTS.get(EnumModuleSlot.HEAD),
+            ModAttributes.MODIFIER_SLOTS.get(EnumModuleSlot.BODY),
+            ModAttributes.MODIFIER_SLOTS.get(EnumModuleSlot.LEFT_ARM),
+            ModAttributes.MODIFIER_SLOTS.get(EnumModuleSlot.LEFT_LEG),
+            ModAttributes.MODIFIER_SLOTS.get(EnumModuleSlot.RIGHT_ARM),
+            ModAttributes.MODIFIER_SLOTS.get(EnumModuleSlot.RIGHT_LEG)
+    );
     public static final Map<RegistryObject<? extends MenuType<?>>, EnumSet<EnumPermission>> REQUIRED_PERMISSIONS = new HashMap<>();
     static {
         REQUIRED_PERMISSIONS.put(ModMenuTypes.ROBOT, EnumSet.of(EnumPermission.VIEW));

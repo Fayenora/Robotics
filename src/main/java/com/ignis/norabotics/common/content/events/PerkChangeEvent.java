@@ -5,6 +5,7 @@ import com.ignis.norabotics.common.capabilities.impl.PartsCapability;
 import com.ignis.norabotics.common.capabilities.impl.RobotCapability;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.RobotPart;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -12,7 +13,7 @@ import net.minecraftforge.eventbus.api.Event;
 
 /**
  *  PerkChangeEvent is fired whenever the perks of a robot change <br>
- *  The event is fired whenever a part about the robot changes in {@link PartsCapability#setBodyPart(RobotPart)} or {@link RobotCapability#setModule(EnumModuleSlot, int, ItemStack)}
+ *  The event is fired whenever a part about the robot changes in {@link PartsCapability#setBodyParts(EnumModuleSlot, NonNullList)}}
  *  <br>
  *  This event is not {@link Cancelable}.<br>
  *  <br>

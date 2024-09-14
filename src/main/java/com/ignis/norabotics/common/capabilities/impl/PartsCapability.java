@@ -8,6 +8,7 @@ import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.content.events.PerkChangeEvent;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.robot.*;
+import com.ignis.norabotics.definitions.ModAttributes;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.core.NonNullList;
@@ -73,6 +74,7 @@ public class PartsCapability implements IPartBuilt {
 				setModule(slot, i, stacks.get(i)); //Load modules in directly to avoid them going under the maximum and discarded
 			}
 		}
+		entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));
 	}
 
 	@Override
@@ -80,7 +82,7 @@ public class PartsCapability implements IPartBuilt {
 		if(slotType.isPrimary()) {
 			return NonNullList.of(ItemStack.EMPTY, RobotPart.get(EnumRobotPart.valueOf(slotType), materialForSlot(slotType)).getItemStack(1));
 		}
-		return modules.get(slotType);
+		return InventoryUtil.toNonNullList(modules.get(slotType).subList(0, getMaxBodyParts(slotType)));
 	}
 
 	@Override
@@ -100,7 +102,7 @@ public class PartsCapability implements IPartBuilt {
 
 	@Override
 	public int getMaxBodyParts(EnumModuleSlot slotType) {
-		return moduleSlots.get(slotType);
+		return (int) entity.getAttributeValue(ModAttributes.MODIFIER_SLOTS.get(slotType));
 	}
 
 	@Override
