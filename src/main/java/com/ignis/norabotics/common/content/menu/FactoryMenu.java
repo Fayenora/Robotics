@@ -116,8 +116,8 @@ public class FactoryMenu extends BaseMenu {
         for(Tuple<Perk, Integer> tup : perks) {
             tempAttrMap.addTransientAttributeModifiers(tup.getFirst().getAttributeModifiers(tup.getSecond()));
         }
-        for(int i = 0; i < ModAttributes.MODIFIER_SLOTS.size(); i++) {
-            moduleSlotsAsAddedBy.put(EnumModuleSlot.byId(i), (int) tempAttrMap.getValue(ModAttributes.MODIFIER_SLOTS.get(i)));
+        for(EnumModuleSlot slotType : ModAttributes.MODIFIER_SLOTS.keySet()) {
+            moduleSlotsAsAddedBy.put(slotType, (int) tempAttrMap.getValue(ModAttributes.MODIFIER_SLOTS.get(slotType)));
         }
         return moduleSlotsAsAddedBy;
     }
