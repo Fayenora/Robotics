@@ -1,6 +1,5 @@
 package com.ignis.norabotics.common.capabilities.impl;
 
-import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.common.WorldData;
 import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.common.capabilities.ICommandable;
@@ -10,14 +9,8 @@ import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.content.entity.ai.LookDownGoal;
 import com.ignis.norabotics.common.content.entity.ai.PickupGoal;
-import com.ignis.norabotics.common.content.events.PerkChangeEvent;
-import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.misc.ModifiableExplosion;
-import com.ignis.norabotics.common.robot.EnumModuleSlot;
-import com.ignis.norabotics.common.robot.RobotModule;
-import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,11 +19,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -46,9 +37,8 @@ public class RobotCapability implements IRobot {
     protected final SynchedEntityData dataManager;
     private AccessConfig access = new AccessConfig();
 
-    private final Map<EnumModuleSlot, NonNullList<ItemStack>> modules = new HashMap<>();
 
-    private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
+
     private static final EntityDataAccessor<Boolean> ACTIVATED = RobotEntity.ACTIVATED;
     private static final EntityDataAccessor<Boolean> MUTED = RobotEntity.MUTED;
     private static final EntityDataAccessor<Integer> LOAD_CHUNK = RobotEntity.LOAD_CHUNK;
@@ -63,11 +53,7 @@ public class RobotCapability implements IRobot {
     public RobotCapability(Mob entity) {
         this.entity = entity;
         this.dataManager = entity.getEntityData();
-        for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
-            modules.put(slotType, NonNullList.withSize(0, ItemStack.EMPTY));
-        }
 
-        dataManager.define(RENDER_OVERLAYS, 0);
         dataManager.define(ACTIVATED, true);
         dataManager.define(MUTED, false);
         dataManager.define(LOAD_CHUNK, 0);
@@ -79,11 +65,7 @@ public class RobotCapability implements IRobot {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            InventoryUtil.saveAllItems(nbt, modules.get(slot), slot.name());
-        }
         nbt.putBoolean("active", isActive());
-        nbt.putInt("overlays", dataManager.get(RENDER_OVERLAYS));
         nbt.putBoolean("muted", isMuffled());
         nbt.putInt("load_chunks", getChunkLoadingState());
         nbt.putInt("pickup_state", getPickUpState());
@@ -94,11 +76,7 @@ public class RobotCapability implements IRobot {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            setModules(slot, InventoryUtil.loadAllItems(nbt, slot.name()));
-        }
         setActivation(nbt.getBoolean("active"));
-        dataManager.set(RENDER_OVERLAYS, nbt.getInt("overlays"));
         setMuffled(nbt.getBoolean("muted"));
         setChunkLoading(nbt.getInt("load_chunks"));
         setPickUpState(nbt.getInt("pickup_state"));
@@ -156,87 +134,6 @@ public class RobotCapability implements IRobot {
                 parts.get().setTemporaryColor(DyeColor.GRAY);
             }
         }
-    }
-
-    @Override
-    public boolean hasModule(RobotModule module) {
-        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            if(hasModule(slot, module)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasModule(EnumModuleSlot slot, RobotModule module) {
-        for(ItemStack stack : modules.get(slot)) {
-            if(module.getItems().test(stack)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public NonNullList<ItemStack> getModules(EnumModuleSlot slotType) {
-        return modules.get(slotType);
-    }
-
-    @Override
-    public void setModules(EnumModuleSlot slotType, List<ItemStack> items) {
-        for(int i = 0; i < Math.min(items.size(), modules.get(slotType).size()); i++) {
-            setModule(slotType, i, items.get(i));
-        }
-        entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));
-    }
-
-    private void setModule(EnumModuleSlot slotType, int slot, ItemStack item) {
-        if(modules.get(slotType).size() < slot) return;
-        if(!modules.get(slotType).get(slot).isEmpty()) {
-            RobotModule oldModule = ModModules.get(modules.get(slotType).get(slot));
-            entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.diff(oldModule.getPerks()));
-            if(oldModule.hasOverlay()) {
-                int overlayId = ModModules.getOverlayID(oldModule);
-                removeRenderLayer(overlayId);
-            }
-        }
-        modules.get(slotType).set(slot, item);
-        if(!item.isEmpty()) {
-            RobotModule module = ModModules.get(item);
-            entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> perks.merge(module.getPerks()));
-            if(module.hasOverlay()) {
-                int overlayId = ModModules.getOverlayID(module);
-                addRenderLayer(overlayId);
-            }
-        }
-    }
-
-    @Override
-    public void setMaxModules(EnumModuleSlot slotType, int amount) {
-        if(amount == modules.get(slotType).size()) return;
-        //Remove and drop any modules occupying slots to be discarded
-        for(int i = amount; i < modules.get(slotType).size(); i++) {
-            ItemStack oldModule = modules.get(slotType).get(i);
-            if(oldModule.isEmpty()) continue;
-            setModule(slotType, i, ItemStack.EMPTY);
-            InventoryUtil.dropItem(entity, oldModule);
-        }
-        NonNullList<ItemStack> list = NonNullList.withSize(amount, ItemStack.EMPTY);
-        for(int i = 0; i < Math.min(amount, modules.get(slotType).size()); i++) {
-            list.set(i, modules.get(slotType).get(i));
-        }
-        modules.put(slotType, list);
-
-        entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));
-    }
-
-    @Override
-    public Map<EnumModuleSlot, Integer> getModuleSlots() {
-        Map<EnumModuleSlot, Integer> sizes = new HashMap<>();
-        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            sizes.put(slot, modules.get(slot).size());
-        }
-        return sizes;
     }
 
     @Override
@@ -298,24 +195,6 @@ public class RobotCapability implements IRobot {
     @Override
     public boolean isMuffled() {
         return dataManager.get(MUTED);
-    }
-
-    public void addRenderLayer(int id) {
-        if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return;
-        int currentOverlays = dataManager.get(RENDER_OVERLAYS);
-        this.dataManager.set(RENDER_OVERLAYS, currentOverlays | (1 << id));
-    }
-
-    public void removeRenderLayer(int id) {
-        if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return;
-        int currentOverlays = dataManager.get(RENDER_OVERLAYS);
-        this.dataManager.set(RENDER_OVERLAYS, currentOverlays & ~(1 << id));
-    }
-
-    @Override
-    public boolean hasRenderLayer(int id) {
-        if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return false;
-        return ((dataManager.get(RENDER_OVERLAYS) >> id) & 1) == 1;
     }
 
     @Override

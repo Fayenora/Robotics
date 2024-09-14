@@ -7,6 +7,7 @@ import com.ignis.norabotics.common.content.blockentity.IMuffleable;
 import com.ignis.norabotics.common.content.blockentity.StorageBlockEntity;
 import com.ignis.norabotics.common.content.blocks.MachineBlock;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.RobotPart;
 import com.ignis.norabotics.network.messages.IMessage;
 import com.ignis.norabotics.network.messages.NetworkInfo;
@@ -14,6 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -87,8 +89,10 @@ public class PacketComponentAction implements IMessage {
                 if (blockEntity instanceof StorageBlockEntity storage) {
                     Vec3 pos = Vec3.atCenterOf(data.getAsPos()).relative(blockEntity.getBlockState().getValue(MachineBlock.FACING), 0.6);
                     storage.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                        for(RobotPart part : parts.getBodyParts()) {
-                            InventoryUtil.dropItem(level, pos.x, pos.y, pos.z, part.getItemStack(1));
+                        for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
+                            for(ItemStack stack : parts.getBodyParts(slotType)) {
+                                InventoryUtil.dropItem(level, pos.x, pos.y, pos.z, stack);
+                            }
                         }
                     }));
                     storage.clearEntity();

@@ -7,13 +7,17 @@ import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.helpers.types.SimpleDataManager;
 import com.ignis.norabotics.common.helpers.util.Lang;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
+import com.ignis.norabotics.common.robot.RobotModule;
 import com.ignis.norabotics.common.robot.RobotPart;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.definitions.robotics.ModPerks;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
 
 public class PerkUnreliable extends Perk {
 
@@ -26,12 +30,15 @@ public class PerkUnreliable extends Perk {
 		IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS);
 		
 		//FIXME: Works, but creates a concurrent modification exception when the last part of any perk is destroyed, as the map is currently iterating over the perks while calling this very function
-		EnumRobotPart toDestroy = null;
-		for(RobotPart part : parts.getBodyParts()) {
-			if(part.getPerks().contains(ModPerks.PERK_UNRELIABLE.get()) && Robotics.RANDOM.nextDouble() < RoboticsConfig.general.unreliableChance.get().floatValue()) {
-				toDestroy = part.getPart();
-			}
-		}
+		EnumModuleSlot toDestroy = null;
+        for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
+            for(ItemStack stack : parts.getBodyParts(slotType)) {
+                RobotModule module = ModModules.get(stack);
+                if(module.getPerks().contains(ModPerks.PERK_UNRELIABLE.get()) && Robotics.RANDOM.nextDouble() < RoboticsConfig.general.unreliableChance.get().floatValue()) {
+                    toDestroy = slotType;
+                }
+            }
+        }
 		if(toDestroy != null) {
 			parts.destroyBodyPart(toDestroy);
 		}

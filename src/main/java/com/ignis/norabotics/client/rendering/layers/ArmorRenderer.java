@@ -1,6 +1,7 @@
 package com.ignis.norabotics.client.rendering.layers;
 
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -44,10 +45,10 @@ public class ArmorRenderer<T extends LivingEntity & GeoAnimatable> extends ItemA
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         animatable.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-            hasLeftArm = parts.hasBodyPart(EnumRobotPart.LEFT_ARM);
-            hasRightArm = parts.hasBodyPart(EnumRobotPart.RIGHT_ARM);
-            hasLeftLeg = parts.hasBodyPart(EnumRobotPart.LEFT_LEG);
-            hasRightLeg = parts.hasBodyPart(EnumRobotPart.RIGHT_LEG);
+            hasLeftArm = parts.hasBodyPart(EnumModuleSlot.LEFT_ARM);
+            hasRightArm = parts.hasBodyPart(EnumModuleSlot.RIGHT_ARM);
+            hasLeftLeg = parts.hasBodyPart(EnumModuleSlot.LEFT_LEG);
+            hasRightLeg = parts.hasBodyPart(EnumModuleSlot.RIGHT_LEG);
         });
         super.preRender(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
     }

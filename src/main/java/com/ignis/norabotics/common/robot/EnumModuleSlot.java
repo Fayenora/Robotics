@@ -31,6 +31,10 @@ public enum EnumModuleSlot implements StringRepresentable {
         return values()[id];
     }
 
+    public int getId() {
+        return ordinal();
+    }
+
     @Override
     public String toString() {
         return name;

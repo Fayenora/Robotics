@@ -1,15 +1,16 @@
 package com.ignis.norabotics.common.capabilities.impl;
 
+import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.IPerkMap;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.content.events.PerkChangeEvent;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
-import com.ignis.norabotics.common.robot.EnumRobotMaterial;
-import com.ignis.norabotics.common.robot.EnumRobotPart;
-import com.ignis.norabotics.common.robot.RobotPart;
+import com.ignis.norabotics.common.robot.*;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,22 +22,32 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PartsCapability implements IPartBuilt {
 
 	LivingEntity entity;
 	SynchedEntityData dataManager;
-	
+
+	private static final EntityDataAccessor<Integer> RENDER_OVERLAYS = RobotEntity.RENDER_OVERLAYS;
 	private static final EntityDataAccessor<Integer> COLOR = RobotEntity.COLOR;
 	private static final EntityDataAccessor<Integer>[] BODY_PARTS = RobotEntity.BODY_PARTS;
-	
-	public static final EnumRobotPart[] PARTS = EnumRobotPart.values();
+
+	private final Map<EnumModuleSlot, NonNullList<ItemStack>> modules = new HashMap<>();
+	private final Map<EnumModuleSlot, Integer> moduleSlots = new HashMap<>();
 	
 	public PartsCapability() {}
 	
 	public PartsCapability(LivingEntity entity) {
 		this.entity = entity;
 		this.dataManager = entity.getEntityData();
+		for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
+			modules.put(slotType, NonNullList.withSize(slotType.isPrimary() ? 1 : Reference.MAX_MODULES, ItemStack.EMPTY));
+			moduleSlots.put(slotType, slotType.isPrimary() ? 1 : 0);
+		}
 
+		dataManager.define(RENDER_OVERLAYS, 0);
 		dataManager.define(COLOR, 0);
 		for (EntityDataAccessor<Integer> bodyPart : BODY_PARTS) {
 			dataManager.define(bodyPart, EnumRobotMaterial.NONE.getID());
@@ -47,85 +58,117 @@ public class PartsCapability implements IPartBuilt {
 	public CompoundTag serializeNBT() {
 		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("color", this.dataManager.get(COLOR));
-		nbt.putIntArray("parts", getMaterials());
+		for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+			InventoryUtil.saveAllItems(nbt, modules.get(slot), slot.name());
+		}
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		setMaterials(nbt.getIntArray("parts"));
 		dataManager.set(COLOR, nbt.getInt("color"));
-	}
-
-	@Override
-	public RobotPart[] getBodyParts() {
-		RobotPart[] parts = new RobotPart[PARTS.length];
-		for(int i = 0; i < parts.length; i++) {
-			parts[i] = getBodyPart(PARTS[i]);
+		for(EnumModuleSlot slot : EnumModuleSlot.values()) {
+			NonNullList<ItemStack> stacks = InventoryUtil.loadAllItems(nbt, slot.name());
+			for(int i = 0; i < stacks.size(); i++) {
+				setModule(slot, i, stacks.get(i)); //Load modules in directly to avoid them going under the maximum and discarded
+			}
 		}
-		return parts;
 	}
 
 	@Override
-	public RobotPart getBodyPart(EnumRobotPart part) {
-		return RobotPart.get(part, EnumRobotMaterial.byId(this.dataManager.get(BODY_PARTS[part.getID()])));
-	}
-
-	@Override
-	public void setBodyPart(RobotPart part) {
-		if(!entity.getCapability(ModCapabilities.PERKS).isPresent()) {
-			this.dataManager.set(BODY_PARTS[part.getPart().getID()], part.getMaterial().getID());
-			return;
+	public NonNullList<ItemStack> getBodyParts(EnumModuleSlot slotType) {
+		if(slotType.isPrimary()) {
+			return NonNullList.of(ItemStack.EMPTY, RobotPart.get(EnumRobotPart.valueOf(slotType), materialForSlot(slotType)).getItemStack(1));
 		}
-		
+		return modules.get(slotType);
+	}
+
+	@Override
+	public void setBodyParts(EnumModuleSlot slotType, NonNullList<ItemStack> components) {
+		int min = Math.min(components.size(), modules.get(slotType).size());
+		int max = Math.min(getMaxBodyParts(slotType), Math.max(components.size(), modules.get(slotType).size()));
+		if(max < min) return;
+		for(int i = min; i < max; i++) {
+			InventoryUtil.dropItem(entity, modules.get(slotType).get(i));
+			setModule(slotType, i, ItemStack.EMPTY);
+		}
+		for(int i = 0; i < min; i++) {
+			setModule(slotType, i, components.get(i));
+		}
+		entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));
+	}
+
+	@Override
+	public int getMaxBodyParts(EnumModuleSlot slotType) {
+		return moduleSlots.get(slotType);
+	}
+
+	@Override
+	public void setMaxBodyParts(EnumModuleSlot slotType, int size) {
+		moduleSlots.put(slotType, size);
+	}
+
+	@Override
+	public EnumRobotMaterial materialForSlot(EnumModuleSlot slotType) {
+		if(!slotType.isPrimary()) return EnumRobotMaterial.NONE;
+		return EnumRobotMaterial.byId(dataManager.get(BODY_PARTS[EnumRobotPart.valueOf(slotType).getID()]));
+	}
+
+	private void setModule(EnumModuleSlot slotType, int slot, ItemStack item) {
+		if(modules.get(slotType).size() < slot) return;
 		IPerkMap perkMap = entity.getCapability(ModCapabilities.PERKS).orElse(ModCapabilities.NO_PERKS);
-		
-		//Remove perks from previous part
-		RobotPart current = getBodyPart(part.getPart());
-		perkMap.diff(current.getPerks());
-		
-		this.dataManager.set(BODY_PARTS[part.getPart().getID()], part.getMaterial().getID());
-		
-		//Apply perks from new part
-		RobotPart newPart = getBodyPart(part.getPart());
-		perkMap.merge(newPart.getPerks());
-		MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perkMap));
+		NonNullList<ItemStack> moduleList = modules.get(slotType);
+
+		// Remove perks & render layers from previous part
+		if(ModModules.isModule(moduleList.get(slot))) {
+			RobotModule oldModule = ModModules.get(moduleList.get(slot));
+			perkMap.diff(oldModule.getPerks());
+			if(oldModule.hasOverlay()) {
+				int overlayId = ModModules.getOverlayID(oldModule);
+				removeRenderLayer(overlayId);
+			}
+		}
+
+		// Set the module
+		modules.get(slotType).set(slot, item);
+		RobotPart robotPart = RobotPart.getFromItem(item.getItem());
+		if(robotPart != null) { // Tell the data manager & with it the client
+			this.dataManager.set(BODY_PARTS[robotPart.getPart().getID()], robotPart.getMaterial().getID());
+		}
+
+		// Apply perks & render layers of the new part
+		if(ModModules.isModule(item)) {
+			RobotModule newModule = ModModules.get(item);
+			perkMap.merge(newModule.getPerks());
+			if(newModule.hasOverlay()) {
+				int overlayId = ModModules.getOverlayID(newModule);
+				addRenderLayer(overlayId);
+			}
+		}
 	}
 
 	@Override
-	public void destroyBodyPart(EnumRobotPart part) {
+	public void destroyBodyPart(EnumModuleSlot part) {
 		if(!RoboticsConfig.general.limbDestruction.get()) return;
-		RobotPart robotPart = getBodyPart(part);
-		InventoryUtil.dropItem(entity.level(), entity.position().x, entity.position().y, entity.position().z, robotPart.getItemStack(1));
+		modules.get(part).forEach(i -> InventoryUtil.dropItem(entity, i));
 		entity.playSound(SoundEvents.ANVIL_FALL, 1, 1);
-		setBodyPart(part, EnumRobotMaterial.NONE);
+		setBodyParts(part, NonNullList.withSize(getMaxBodyParts(part), ItemStack.EMPTY));
 
 		//Drop any held items, if an arm got destroyed
-		if(part == EnumRobotPart.RIGHT_ARM || part == EnumRobotPart.LEFT_ARM) {
-			EquipmentSlot slot = Boolean.logicalXor(part == EnumRobotPart.RIGHT_ARM, entity.getMainArm() == HumanoidArm.RIGHT) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+		if(part == EnumModuleSlot.RIGHT_ARM || part == EnumModuleSlot.LEFT_ARM) {
+			EquipmentSlot slot = Boolean.logicalXor(part == EnumModuleSlot.RIGHT_ARM, entity.getMainArm() == HumanoidArm.RIGHT) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
 			InventoryUtil.dropItem(entity.level(), entity.position().x, entity.position().y, entity.position().z, entity.getItemBySlot(slot));
 			entity.setItemSlot(slot, ItemStack.EMPTY);
 		}
 
-		if(part == EnumRobotPart.BODY || !(hasBodyPart(EnumRobotPart.LEFT_LEG) || hasBodyPart(EnumRobotPart.RIGHT_LEG))) {
+		if(!isValid()) {
 			entity.kill();
 		}
 	}
-	
-	private void setMaterials(int[] materials) {
-		for(int i = 0; i < materials.length; i++) {
-			setBodyPart(PARTS[i], EnumRobotMaterial.byId(materials[i]));
-		}
-	}
-	
-	private int[] getMaterials() {
-		RobotPart[] parts = getBodyParts();
-		int[] materials = new int[parts.length];
-		for(int i = 0; i < parts.length; i++) {
-			materials[i] = parts[i].getMaterial().getID();
-		}
-		return materials;
-	}
+
+	/////////////////////
+	// Colors
+	/////////////////////
 
 	@Override
 	public void setColor(DyeColor color) {
@@ -145,5 +188,27 @@ public class PartsCapability implements IPartBuilt {
 	@Override
 	public DyeColor getTemporaryColor() {
 		return DyeColor.byId(Math.floorDiv(dataManager.get(COLOR), DyeColor.values().length) & 15);
+	}
+
+	/////////////////////
+	// Render Layers
+	/////////////////////
+
+	public void addRenderLayer(int id) {
+		if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return;
+		int currentOverlays = dataManager.get(RENDER_OVERLAYS);
+		this.dataManager.set(RENDER_OVERLAYS, currentOverlays | (1 << id));
+	}
+
+	public void removeRenderLayer(int id) {
+		if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return;
+		int currentOverlays = dataManager.get(RENDER_OVERLAYS);
+		this.dataManager.set(RENDER_OVERLAYS, currentOverlays & ~(1 << id));
+	}
+
+	@Override
+	public boolean hasRenderLayer(int id) {
+		if(id >= Reference.MAX_RENDER_LAYERS || id < 0) return false;
+		return ((dataManager.get(RENDER_OVERLAYS) >> id) & 1) == 1;
 	}
 }

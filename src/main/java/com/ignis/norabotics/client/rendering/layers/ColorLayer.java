@@ -3,6 +3,7 @@ package com.ignis.norabotics.client.rendering.layers;
 import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotMaterial;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
@@ -32,12 +33,11 @@ public class ColorLayer extends GeoRenderLayer<RobotEntity> {
         if(robot.isInvisible()) return;
         IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS);
 
-        RobotPart limb = parts.getBodyPart(part);
+        EnumRobotMaterial material = parts.materialForSlot(part.toModuleSlot());
 
-        if(limb.getMaterial() == EnumRobotMaterial.NONE) {
-            return;
-        }
+        if(material == EnumRobotMaterial.NONE) return;
 
+        RobotPart limb = RobotPart.get(part, material);
         ResourceLocation texture = limb.getColorResourceLocation(parts.getTemporaryColor());
         RenderType armorRenderType = RenderType.entityCutoutNoCull(texture);
 

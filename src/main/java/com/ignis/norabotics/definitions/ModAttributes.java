@@ -38,7 +38,7 @@ public class ModAttributes {
 
     static {
         for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
-            MODIFIER_SLOTS.add(register("robot.slots.modules." + slotType.name().toLowerCase(), 0, 0, Reference.MAX_MODULES, false));
+            MODIFIER_SLOTS.add(register("robot.slots.modules." + slotType.name().toLowerCase(), slotType.isPrimary() ? 1 : 0, 0, Reference.MAX_MODULES, false));
         }
     }
 
@@ -100,10 +100,10 @@ public class ModAttributes {
 		if(entity.level().isClientSide()) return;
 
 		if(MODIFIER_SLOTS.contains(instance.getAttribute())) {
-            entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
+            entity.getCapability(ModCapabilities.PARTS).ifPresent(robot -> {
                 String[] nameComponents = instance.getAttribute().getDescriptionId().split("\\.");
                 EnumModuleSlot slotType = EnumModuleSlot.valueOf(nameComponents[nameComponents.length - 1].toUpperCase());
-                robot.setMaxModules(slotType, (int) instance.getValue());
+                robot.setMaxBodyParts(slotType, (int) instance.getValue());
             });
 		}
 

@@ -1,6 +1,7 @@
 package com.ignis.norabotics.integration.cc;
 
 import com.ignis.norabotics.common.capabilities.ICommandable;
+import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.IRobot;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.integration.cc.apis.CommandAPI;
@@ -33,11 +34,12 @@ public class EntityComputer extends ServerComputer {
             addAPI(new SensorAPI(getAPIEnvironment(), mob));
         }
         Optional<IRobot> robot = entity.getCapability(ModCapabilities.ROBOT).resolve();
+        Optional<IPartBuilt> parts = entity.getCapability(ModCapabilities.PARTS).resolve();
         Optional<IItemHandler> items = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
         Optional<IEnergyStorage> energy = entity.getCapability(ForgeCapabilities.ENERGY).resolve();
         Optional<ICommandable> commands = entity.getCapability(ModCapabilities.COMMANDS).resolve();
-        if(robot.isPresent() && energy.isPresent()) {
-            addAPI(new RobotAPI(getAPIEnvironment(), entity, robot.get(), energy.get()));
+        if(robot.isPresent() && energy.isPresent() && parts.isPresent()) {
+            addAPI(new RobotAPI(getAPIEnvironment(), entity, robot.get(), energy.get(), parts.get()));
         }
         if(commands.isPresent()) {
             addAPI(new CommandAPI(getAPIEnvironment(), commands.get()));

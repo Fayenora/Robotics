@@ -3,12 +3,14 @@ package com.ignis.norabotics.common.capabilities.impl.inventory;
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.blockentity.FactoryBlockEntity;
+import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotMaterial;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.common.robot.RobotPart;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -54,10 +56,12 @@ public class FactoryInventory extends MachineInventory {
      * @return the module type which can fit in the slot
      */
     public static EnumModuleSlot typeFromSlotId(int slot) {
+        if(slot < 6) return EnumModuleSlot.byId(slot);
         return EnumModuleSlot.values()[Math.floorDiv(slot - 6, Reference.MAX_MODULES) + 6];
     }
 
     public static int typeToSlotId(EnumModuleSlot slotType, int offset) {
+        if(slotType.isPrimary()) return slotType.getId() + (offset > 0 ? 1 : 0);
         return (slotType.ordinal() - 6) * Reference.MAX_MODULES + Math.min(Reference.MAX_MODULES - 1, offset) + 6;
     }
 
@@ -74,22 +78,9 @@ public class FactoryInventory extends MachineInventory {
     }
 
     private void deriveEntity(int slotIndex) {
-        if(factory.getEntity().isEmpty() || !(factory.getEntity().get() instanceof LivingEntity living)) return;
-        if(slotIndex < 6) {
-            EnumRobotPart part = EnumRobotPart.byId(slotIndex);
-            if(!getStackInSlot(slotIndex).isEmpty()) {
-                RobotPart robotPart = RobotPart.getFromItem(getStackInSlot(slotIndex).getItem());
-                factory.setRobotPart(part, robotPart == null ? EnumRobotMaterial.NONE : robotPart.getMaterial());
-            } else {
-                factory.setRobotPart(part, EnumRobotMaterial.NONE);
-            }
-        } else if(!factory.getLevel().isClientSide()) {
-            living.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> {
-                for(EnumModuleSlot slot : EnumModuleSlot.nonPrimaries()) {
-                    robot.setModules(slot, stacks.subList(typeToSlotId(slot, 0), typeToSlotId(slot, Reference.MAX_MODULES)));
-                }
-            });
-        }
+        EnumModuleSlot slotType = typeFromSlotId(slotIndex);
+        NonNullList<ItemStack> relevantItems = InventoryUtil.toNonNullList(stacks.subList(typeToSlotId(slotType, 0), typeToSlotId(slotType, Reference.MAX_MODULES)));
+        factory.setRobotParts(slotType, relevantItems);
     }
 
     public void deriveEntity() {

@@ -1,6 +1,7 @@
 package com.ignis.norabotics.integration.cc.apis;
 
 import com.ignis.norabotics.common.access.EnumPermission;
+import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.IRobot;
 import com.ignis.norabotics.common.helpers.util.StringUtil;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
@@ -34,12 +35,14 @@ public class RobotAPI implements ILuaAPI {
     private final LivingEntity entity;
     private final IRobot robot;
     private final IEnergyStorage energyStorage;
+    private final IPartBuilt parts;
 
-    public RobotAPI(IAPIEnvironment environment, LivingEntity entity, IRobot robot, IEnergyStorage energyStorage) {
+    public RobotAPI(IAPIEnvironment environment, LivingEntity entity, IRobot robot, IEnergyStorage energyStorage, IPartBuilt parts) {
         this.environment = environment;
         this.entity = entity;
         this.robot = robot;
         this.energyStorage = energyStorage;
+        this.parts = parts;
     }
 
     @LuaFunction(mainThread = true)
@@ -127,7 +130,7 @@ public class RobotAPI implements ILuaAPI {
         if(slotType.isPresent()) {
             try {
                 EnumModuleSlot slot = EnumModuleSlot.valueOf(slotType.get().toUpperCase());
-                return robot.getModules(slot).stream().map(ModSelectionTypes.ITEM.stringifier()).toList();
+                return parts.getBodyParts(slot).stream().map(ModSelectionTypes.ITEM.stringifier()).toList();
             } catch(IllegalArgumentException exc) {
                 throw new LuaException("\"" + slotType.get() + "\" is not a valid module slot type. Viable arguments are: " + StringUtil.enumToString(EnumModuleSlot.values()));
             }
@@ -141,7 +144,7 @@ public class RobotAPI implements ILuaAPI {
         if(slotType.isPresent()) {
             try {
                 EnumModuleSlot moduleSlot = EnumModuleSlot.valueOf(slotType.get().toUpperCase());
-                moduleItem = robot.getModules(moduleSlot).get(slot - 1);
+                moduleItem = parts.getBodyParts(moduleSlot).get(slot - 1);
             } catch(IllegalArgumentException exc) {
                 throw new LuaException("\"" + slotType.get() + "\" is not a valid module slot type. Viable arguments are: " + StringUtil.enumToString(EnumModuleSlot.values()));
             }
@@ -158,7 +161,7 @@ public class RobotAPI implements ILuaAPI {
     private List<ItemStack> getModules() {
         List<ItemStack> concatenatedModules = new ArrayList<>();
         for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-            concatenatedModules.addAll(robot.getModules(slot));
+            concatenatedModules.addAll(parts.getBodyParts(slot));
         }
         return concatenatedModules;
     }

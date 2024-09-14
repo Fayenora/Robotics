@@ -32,12 +32,11 @@ public class LimbLayer extends GeoRenderLayer<RobotEntity> {
         if(robot.isInvisible()) return;
         IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).orElse(ModCapabilities.NO_PARTS);
 
-        RobotPart limb = parts.getBodyPart(part);
+        EnumRobotMaterial material = parts.materialForSlot(part.toModuleSlot());
 
-        if(limb.getMaterial() == EnumRobotMaterial.NONE) {
-            return;
-        }
+        if(material == EnumRobotMaterial.NONE) return;
 
+        RobotPart limb = RobotPart.get(part, material);
         ResourceLocation texture = limb.getLimbResourceLocation();
         RenderType armorRenderType = RenderType.entityCutoutNoCull(texture);
 

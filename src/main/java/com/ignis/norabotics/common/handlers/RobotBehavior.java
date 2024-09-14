@@ -5,6 +5,7 @@ import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.common.access.EnumPermission;
 import com.ignis.norabotics.common.access.WorldAccessData;
+import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.IRobot;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.impl.EnergyStorage;
@@ -14,8 +15,6 @@ import com.ignis.norabotics.common.content.entity.ai.AbstractRangedAttackGoal;
 import com.ignis.norabotics.common.content.entity.ai.RetrieveGoal;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
-import com.ignis.norabotics.common.robot.EnumRobotMaterial;
-import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.definitions.ModAttributes;
 import com.ignis.norabotics.definitions.ModMenuTypes;
 import com.ignis.norabotics.definitions.ModSounds;
@@ -156,18 +155,11 @@ public class RobotBehavior {
         Entity entity = event.getEntity();
         // Drop Inventory
         if(event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-            entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot ->
-                    entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
-                        if(inventory instanceof RobotInventory robotInv) {
-                            robotInv.dropItems();
-                        }
-                        for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-                            for(ItemStack stack : robot.getModules(slot)) {
-                                InventoryUtil.dropItem(entity, stack);
-                            }
-                        }
-                    })
-            );
+            entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(inventory -> {
+                if(inventory instanceof RobotInventory robotInv) {
+                    robotInv.dropItems();
+                }
+            });
         }
         // Close any open containers
         if(entity instanceof Mob mob && mob.getCapability(ModCapabilities.COMMANDS).isPresent()) {
@@ -239,14 +231,7 @@ public class RobotBehavior {
                 mob.setDropChance(slot, 0); //We do this manually to not randomly damage anything!
             }
         }
-        //If the robot has no body parts, initialize with iron
-        entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-            if(!parts.hasAnyBodyPart()) {
-                for(EnumRobotPart part : EnumRobotPart.values()) {
-                    parts.setBodyPart(part, EnumRobotMaterial.IRON);
-                }
-            }
-        });
+        entity.getCapability(ModCapabilities.PARTS).ifPresent(IPartBuilt::onCreation);
         entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
                 if(!(energy instanceof EnergyStorage storage)) return;
                 storage.setEnergy(Integer.MAX_VALUE);

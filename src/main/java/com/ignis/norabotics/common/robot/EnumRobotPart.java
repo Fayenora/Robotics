@@ -41,4 +41,15 @@ public enum EnumRobotPart {
             case RIGHT_LEG -> EnumModuleSlot.RIGHT_LEG;
         };
     }
+
+    public static EnumRobotPart valueOf(EnumModuleSlot slot) {
+        return switch (slot) {
+            case HEAD -> EnumRobotPart.HEAD;
+            case LEFT_ARM -> EnumRobotPart.LEFT_ARM;
+            case LEFT_LEG -> EnumRobotPart.LEFT_LEG;
+            case RIGHT_ARM -> EnumRobotPart.RIGHT_ARM;
+            case RIGHT_LEG -> EnumRobotPart.RIGHT_LEG;
+            default -> EnumRobotPart.BODY;
+        };
+    }
 }

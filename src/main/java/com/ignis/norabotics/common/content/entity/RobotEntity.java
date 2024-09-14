@@ -9,12 +9,11 @@ import com.ignis.norabotics.common.content.entity.ai.RangedGenericAttack;
 import com.ignis.norabotics.common.content.entity.ai.ReachAcrossDimensionGoal;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
 import com.ignis.norabotics.common.helpers.util.InventoryUtil;
-import com.ignis.norabotics.common.robot.EnumRobotMaterial;
-import com.ignis.norabotics.common.robot.EnumRobotPart;
-import com.ignis.norabotics.common.robot.RobotPart;
+import com.ignis.norabotics.common.robot.*;
 import com.ignis.norabotics.definitions.ModEntityTypes;
 import com.ignis.norabotics.definitions.ModItems;
 import com.ignis.norabotics.definitions.ModSounds;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -38,6 +37,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -99,17 +99,17 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if(!getCapability(ModCapabilities.PARTS).isPresent()) return InteractionResult.PASS;
         IPartBuilt parts = getCapability(ModCapabilities.PARTS).resolve().get();
-        EnumRobotMaterial repairMaterial = parts.getBodyPart(EnumRobotPart.BODY).getMaterial();
-        Item repairItem = ModItems.PLATES.get(repairMaterial).get();
+        EnumRobotMaterial repairMaterial = parts.materialForSlot(EnumModuleSlot.BODY);
+        RegistryObject<Item> repairItem = ModItems.PLATES.get(repairMaterial);
         ItemStack stack = player.getItemInHand(hand);
-        if(stack.getItem().equals(repairItem) && getHealth() < getMaxHealth()) {
+        if(repairItem != null && stack.getItem().equals(repairItem.get()) && getHealth() < getMaxHealth()) {
             if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
             setHealth(getHealth() + 5);
             playSound(SoundEvents.ANVIL_USE);
             return InteractionResult.CONSUME;
         }
         RobotPart part = RobotPart.getFromItem(stack.getItem());
-        if(part != null && !parts.hasBodyPart(part.getPart())) {
+        if(part != null && !parts.hasBodyPart(part.getPart().toModuleSlot())) {
             if(!player.isCreative()) stack.setCount(stack.getCount() - 1);
             parts.setBodyPart(part);
             playSound(SoundEvents.ANVIL_USE);

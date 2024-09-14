@@ -6,9 +6,9 @@ import com.ignis.norabotics.common.capabilities.impl.perk.Perk;
 import com.ignis.norabotics.common.content.events.ModuleActivationEvent;
 import com.ignis.norabotics.common.content.events.PerkChangeEvent;
 import com.ignis.norabotics.common.helpers.types.Tuple;
-import com.ignis.norabotics.common.robot.EnumRobotPart;
-import com.ignis.norabotics.common.robot.RobotPart;
+import com.ignis.norabotics.common.robot.*;
 import com.ignis.norabotics.definitions.ModAttributes;
+import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.definitions.robotics.ModPerks;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -50,19 +51,20 @@ public class PerkBehavior {
 
     @SubscribeEvent
     public static void onDayChange(TickEvent.ServerTickEvent event) {
-        if(0 == event.getServer().overworld().dayTime()) {
-            for(ServerLevel level : event.getServer().getAllLevels()) {
-                for(Entity entity : level.getAllEntities()) {
-                    entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                        for(EnumRobotPart part : EnumRobotPart.values()) {
-                            if(Math.random() > CORROSION_CHANCE_PER_DAY) continue;
-                            RobotPart robotPart = parts.getBodyPart(part);
-                            if(robotPart.getPerks().contains(ModPerks.PERK_CORRODABLE.get())) {
-                                parts.setBodyPart(part, robotPart.getMaterial().getWeatheredMaterial());
+        if(0 != event.getServer().overworld().dayTime()) return;
+        for(ServerLevel level : event.getServer().getAllLevels()) {
+            for(Entity entity : level.getAllEntities()) {
+                entity.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                    for(EnumModuleSlot slot : EnumModuleSlot.primaries()) {
+                        if(Math.random() > CORROSION_CHANCE_PER_DAY) continue;
+                        EnumRobotMaterial material = parts.materialForSlot(slot);
+                        for(ItemStack stack : parts.getBodyParts(slot)) {
+                            if(ModModules.get(stack).getPerks().contains(ModPerks.PERK_CORRODABLE.get())) {
+                                parts.setBodyPart(EnumRobotPart.valueOf(slot), material.getWeatheredMaterial());
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
         }
     }

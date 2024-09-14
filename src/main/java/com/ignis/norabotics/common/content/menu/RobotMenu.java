@@ -6,6 +6,7 @@ import com.ignis.norabotics.common.access.EnumPermission;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.capabilities.ModifiableEnergyStorage;
 import com.ignis.norabotics.common.content.menu.slots.CustomSlot;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.definitions.ModMenuTypes;
 import com.ignis.norabotics.network.container.SyncableInt;
@@ -58,10 +59,10 @@ public class RobotMenu extends BaseMenu {
             }
 
             robot.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                if(parts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
+                if(parts.hasBodyPart(EnumModuleSlot.RIGHT_ARM)) {
                     this.addSlot(new CustomSlot(handler, 0, 77, 44)); //Mainhand
                 }
-                if(parts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
+                if(parts.hasBodyPart(EnumModuleSlot.LEFT_ARM)) {
                     this.addSlot(new CustomSlot(handler, 1, 77, 62)); //Offhand
                 }
             });

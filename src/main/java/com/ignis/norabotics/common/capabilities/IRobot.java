@@ -3,18 +3,12 @@ package com.ignis.norabotics.common.capabilities;
 import com.ignis.norabotics.Reference;
 import com.ignis.norabotics.common.access.AccessConfig;
 import com.ignis.norabotics.common.access.EnumPermission;
-import com.ignis.norabotics.common.robot.EnumModuleSlot;
-import com.ignis.norabotics.common.robot.RobotModule;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -27,18 +21,6 @@ public interface IRobot extends INBTSerializable<CompoundTag> {
     boolean isActive();
 
     void setActivation(boolean active);
-
-    boolean hasModule(RobotModule module);
-
-    NonNullList<ItemStack> getModules(EnumModuleSlot slotType);
-
-    void setModules(EnumModuleSlot slotType, List<ItemStack> items);
-
-    void setMaxModules(EnumModuleSlot slotType, int amount);
-
-    Map<EnumModuleSlot, Integer> getModuleSlots();
-
-    boolean hasRenderLayer(int id);
 
     void setOwner(UUID newOwner);
 

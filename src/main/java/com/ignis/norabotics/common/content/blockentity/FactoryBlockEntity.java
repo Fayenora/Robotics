@@ -9,13 +9,12 @@ import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.content.menu.FactoryMenu;
 import com.ignis.norabotics.common.content.recipes.MachineRecipe;
 import com.ignis.norabotics.common.robot.EnumModuleSlot;
-import com.ignis.norabotics.common.robot.EnumRobotMaterial;
-import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.definitions.ModMachines;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -148,8 +147,8 @@ public class FactoryBlockEntity extends MachineBlockEntity {
     // Robot Logic
     ////////////////////
 
-    public void setRobotPart(EnumRobotPart part, EnumRobotMaterial material) {
-        storedRobot.setRobotPart(part, material);
+    public void setRobotParts(EnumModuleSlot slotType, NonNullList<ItemStack> components) {
+        storedRobot.setRobotParts(slotType, components);
     }
 
     public void setRobot(RobotEntity robot) {

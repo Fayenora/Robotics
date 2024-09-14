@@ -12,6 +12,7 @@ import com.ignis.norabotics.common.robot.*;
 import com.ignis.norabotics.definitions.robotics.ModCommands;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.effect.MobEffect;
@@ -91,7 +92,7 @@ public class TestHelpers {
                 EnumSet<EnumModuleSlot> slots = module.getViableSlots();
                 if(slots.isEmpty()) continue;
                 EnumModuleSlot slot = slots.iterator().next();
-                robot.getCapability(ModCapabilities.ROBOT).ifPresent(r -> r.setModules(slot, List.of(stack)));
+                robot.getCapability(ModCapabilities.PARTS).ifPresent(r -> r.setBodyParts(slot, NonNullList.of(ItemStack.EMPTY, stack)));
                 return;
             }
         }
@@ -118,9 +119,9 @@ public class TestHelpers {
 
     static void activateAction(GameTestHelper helper, RobotEntity entity, String action) {
         helper.runAfterDelay(1, () -> {
-            entity.getCapability(ModCapabilities.ROBOT).ifPresent(r -> {
+            entity.getCapability(ModCapabilities.PARTS).ifPresent(r -> {
                 for(EnumModuleSlot slot : EnumModuleSlot.values()) {
-                    for(ItemStack stack : r.getModules(slot)) {
+                    for(ItemStack stack : r.getBodyParts(slot)) {
                         RobotModule module = ModModules.get(stack);
                         if(module != null && module.getAction().toString().equals(action)) {
                             module.activate(entity);

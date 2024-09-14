@@ -12,6 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Logic behind a robot part (not the item) as the combination of a {@link EnumRobotPart specific part of the robot} and a {@link EnumRobotMaterial material}. <br>
  * To retrieve an instance, use {@link #get(EnumRobotPart, EnumRobotMaterial)}
@@ -25,10 +28,17 @@ public class RobotPart {
 	
 	private final EnumRobotPart part;
 	private final EnumRobotMaterial material;
+	private final ResourceLocation limbResourceLocation;
+	private final Map<DyeColor, ResourceLocation> colorResourceLocations;
 	
 	private RobotPart(EnumRobotPart part, EnumRobotMaterial material) {
 		this.part = part;
 		this.material = material;
+		this.limbResourceLocation = new ResourceLocation(PARTS_PATH + material.getName() + "/" + part.getName() + ".png");
+		this.colorResourceLocations = new HashMap<>();
+		for(DyeColor color : DyeColor.values()) {
+			colorResourceLocations.put(color, new ResourceLocation(COLORS_PATH + color.getName() + "/" + part.getName() + ".png"));
+		}
 	}
 	
 	public EnumRobotMaterial getMaterial() {
@@ -70,11 +80,11 @@ public class RobotPart {
 	 */
 
 	public ResourceLocation getLimbResourceLocation() {
-		return new ResourceLocation(PARTS_PATH + material.getName() + "/" + part.getName() + ".png");
+		return limbResourceLocation;
 	}
 	
 	public ResourceLocation getColorResourceLocation(DyeColor color) {
-		return new ResourceLocation(COLORS_PATH + color.getName() + "/" + part.getName() + ".png");
+		return colorResourceLocations.get(color);
 	}
 
 	@Override

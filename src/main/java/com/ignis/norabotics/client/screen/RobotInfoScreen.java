@@ -11,7 +11,6 @@ import com.ignis.norabotics.common.access.EnumPermission;
 import com.ignis.norabotics.common.access.WorldAccessData;
 import com.ignis.norabotics.common.capabilities.IRobot;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
-import com.ignis.norabotics.common.content.blockentity.EntityLevelStorage;
 import com.ignis.norabotics.common.content.menu.RobotInfoMenu;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
 import com.ignis.norabotics.common.helpers.types.Selection;
@@ -66,9 +65,9 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         ATTRIBUTES_TO_EXCLUDE.addAll(ModAttributes.MODIFIER_SLOTS);
     }
 
-    private final LivingEntity entity, entityToRender;
+    private final LivingEntity entity;
     private final AccessConfig access;
-    private IRobot robot, robotToRender;
+    private IRobot robot;
 
     public ButtonElement pickUpButton;
     public ButtonElement chunkLoadingToggle;
@@ -82,12 +81,7 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
     public RobotInfoScreen(RobotInfoMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, menu.robot, title);
         this.entity = menu.robot;
-        if(EntityLevelStorage.copyEntity(entity).get() instanceof LivingEntity living) {
-            entityToRender = living;
-            entityToRender.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> storage.receiveEnergy(storage.getMaxEnergyStored(), false));
-        } else entityToRender = entity;
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robot = robot);
-        entityToRender.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> this.robotToRender = robot);
         this.access = menu.access;
         imageWidth = Reference.GUI_COMMANDER_DIMENSIONS.width;
         imageHeight = Reference.GUI_COMMANDER_DIMENSIONS.height;
@@ -191,11 +185,10 @@ public class RobotInfoScreen extends EffectRenderingRobotScreen<RobotInfoMenu> {
         int entity_size = 55;
         if(!hasSubGui()) {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            robotToRender.setActivation(robot.isActive());
-            if(robotToRender.isActive()) {
-                RenderUtil.drawEntityOnScreen(graphics, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entityToRender, false);
+            if(robot.isActive()) {
+                RenderUtil.drawEntityOnScreen(graphics, leftPos + (imageWidth / 2) + 15, topPos + (imageHeight / 2) + entity_size, entity_size, 0, 0, entity, false);
             } else {
-                RenderUtil.drawInactiveRobot(graphics, leftPos + (imageWidth / 2) - 32, topPos + 22, entity_size, entityToRender, false);
+                RenderUtil.drawInactiveRobot(graphics, leftPos + (imageWidth / 2) - 32, topPos + 22, entity_size, entity, false);
             }
         }
     }

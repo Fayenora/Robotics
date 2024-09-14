@@ -11,6 +11,7 @@ import com.ignis.norabotics.common.content.menu.RobotMenu;
 import com.ignis.norabotics.common.handlers.RobotBehavior;
 import com.ignis.norabotics.common.helpers.util.MathUtil;
 import com.ignis.norabotics.common.helpers.util.RenderUtil;
+import com.ignis.norabotics.common.robot.EnumModuleSlot;
 import com.ignis.norabotics.common.robot.EnumRobotPart;
 import com.ignis.norabotics.definitions.ModMenuTypes;
 import com.ignis.norabotics.integration.config.RoboticsConfig;
@@ -69,10 +70,10 @@ public class RobotScreen extends EffectRenderingRobotScreen<RobotMenu> {
         if(entityParts == null || robot == null) return;
 
         graphics.setColor(1, 1, 1, 1);
-        if(entityParts.hasBodyPart(EnumRobotPart.RIGHT_ARM)) {
+        if(entityParts.hasBodyPart(EnumModuleSlot.RIGHT_ARM)) {
             graphics.blit(Reference.MISC, leftPos + 76, topPos + 43, 238, 0, 18, 18);
         }
-        if(entityParts.hasBodyPart(EnumRobotPart.LEFT_ARM)) {
+        if(entityParts.hasBodyPart(EnumModuleSlot.LEFT_ARM)) {
             graphics.blit(Reference.MISC, leftPos + 76, topPos + 61, 238, 0, 18, 18);
         }
         entity.getCapability(ModCapabilities.SHIELDED).ifPresent(shield -> {

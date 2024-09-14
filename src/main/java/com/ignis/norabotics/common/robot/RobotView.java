@@ -5,33 +5,32 @@ import com.ignis.norabotics.common.WorldData;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.blockentity.StorageBlockEntity;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
-import com.ignis.norabotics.common.helpers.util.NBTUtil;
+import com.ignis.norabotics.common.helpers.util.InventoryUtil;
 import com.ignis.norabotics.common.helpers.util.PosUtil;
 import com.ignis.norabotics.network.messages.EntityByteBufUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class RobotView implements INBTSerializable<CompoundTag> {
 
     private UUID uuid;
     private String name;
     private DyeColor color;
-    private RobotPart[] parts;
+    private Map<EnumModuleSlot, NonNullList<ItemStack>> parts = new HashMap<>();
     private boolean active;
     private GlobalPos lastKnownPosition;
     private RobotState state = RobotState.IN_WORLD;
@@ -45,7 +44,9 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         this.name = entity.getDisplayName().getString();
         entity.getCapability(ModCapabilities.PARTS).ifPresent(partCap -> {
             this.color = partCap.getColor();
-            this.parts = partCap.getBodyParts();
+            for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
+                this.parts.put(slotType, partCap.getBodyParts(slotType));
+            }
         });
         entity.getCapability(ModCapabilities.ROBOT).ifPresent(robot -> active = robot.isActive());
         this.lastKnownPosition = GlobalPos.of(entity.level().dimension(), entity.blockPosition());
@@ -88,8 +89,8 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         robot.setCustomName(Component.literal(name));
         robot.getCapability(ModCapabilities.PARTS).ifPresent(partCaps -> {
             partCaps.setColor(color);
-            for (RobotPart part : parts) {
-                partCaps.setBodyPart(part);
+            for (EnumModuleSlot slotType : parts.keySet()) {
+                partCaps.setBodyParts(slotType, parts.get(slotType));
             }
         });
         robot.getCapability(ModCapabilities.ROBOT).ifPresent(robotics -> robotics.setActivation(active));
@@ -108,7 +109,11 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         tag.putUUID("uuid", uuid);
         tag.putString("name", name);
         tag.putInt("color", color.getId());
-        tag.put("parts", NBTUtil.serializeParts(parts));
+        CompoundTag partTag = new CompoundTag();
+        for(EnumModuleSlot slotType : parts.keySet()) {
+            InventoryUtil.saveAllItems(partTag, parts.get(slotType), slotType.toString());
+        }
+        tag.put("parts", partTag);
         tag.putBoolean("active", active);
         tag.putByte("state", (byte) state.ordinal());
         tag.put("pos", PosUtil.writePos(lastKnownPosition));
@@ -120,7 +125,10 @@ public class RobotView implements INBTSerializable<CompoundTag> {
         uuid = nbt.getUUID("uuid");
         name = nbt.getString("name");
         color = DyeColor.byId(nbt.getInt("color"));
-        parts = NBTUtil.deserializeParts(nbt.get("parts"));
+        CompoundTag partTag = nbt.getCompound("parts");
+        for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
+            parts.put(slotType, InventoryUtil.loadAllItems(partTag, slotType.toString()));
+        }
         active = nbt.getBoolean("active");
         state = RobotState.values()[nbt.getByte("state")];
         lastKnownPosition = PosUtil.readPos(nbt.getCompound("pos"));

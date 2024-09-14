@@ -1,6 +1,6 @@
 package com.ignis.norabotics.client.rendering.layers;
 
-import com.ignis.norabotics.common.capabilities.IRobot;
+import com.ignis.norabotics.common.capabilities.IPartBuilt;
 import com.ignis.norabotics.common.capabilities.ModCapabilities;
 import com.ignis.norabotics.common.content.entity.RobotEntity;
 import com.ignis.norabotics.common.robot.RobotModule;
@@ -25,10 +25,10 @@ public class ModuleRenderLayer extends GeoRenderLayer<RobotEntity> {
     @Override
     public void render(PoseStack poseStack, RobotEntity robot, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if(robot.isInvisible()) return;
-        if(robot.getCapability(ModCapabilities.ROBOT).resolve().isEmpty()) return;
-        IRobot robotics = robot.getCapability(ModCapabilities.ROBOT).resolve().get();
+        if(robot.getCapability(ModCapabilities.PARTS).resolve().isEmpty()) return;
+        IPartBuilt parts = robot.getCapability(ModCapabilities.PARTS).resolve().get();
 
-        if(!robotics.hasRenderLayer(layerId)) return;
+        if(!parts.hasRenderLayer(layerId)) return;
         RobotModule module = ModModules.byOverlayID(layerId);
         RenderType armorRenderType = RenderType.entityCutoutNoCull(module.getOverlay());
 
