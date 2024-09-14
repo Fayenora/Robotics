@@ -193,7 +193,7 @@ public class MachineArmBlockEntity extends BlockEntity {
         this.target = MathUtil.of(target.subtract(rotationBase).scale(16));
         chain.solveForTarget(this.target);
         sync();
-        return getPose().getEffectorLocation().approximatelyEquals(this.target, 2);
+        return getPose().getEffectorLocation().approximatelyEquals(this.target, 3f);
     }
 
     private FactoryBlockEntity nearestFactory() {

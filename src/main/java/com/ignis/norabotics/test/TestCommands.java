@@ -145,7 +145,8 @@ public class TestCommands {
     public static void testDefend(GameTestHelper helper) {
         Tuple<RobotEntity, RobotEntity> robots = TestHelpers.setupDuel(helper);
         RobotEntity protector = TestHelpers.createIronRobot(helper.getLevel());
-        protector.setPos(protector.position().add(0, 0, 6));
+        protector.setPos(robots.first.position().add(0, 0, 6));
+        helper.getLevel().addFreshEntity(protector);
         TestHelpers.addCommand(protector, ModCommands.DEFEND.get(), new EntitySearch(robots.first.getUUID()));
         TestHelpers.succeedOnDamaged(helper, robots.second, "Defend command did not make robot damage the attacker");
     }
@@ -163,7 +164,7 @@ public class TestCommands {
     public static void testFollow(GameTestHelper helper) {
         RobotEntity follower = TestHelpers.setupDefaultRobot(helper);
         RobotEntity leader = TestHelpers.setupDefaultRobot(helper);
-        TestHelpers.addCommand(leader, ModCommands.STAY.get(), GlobalPos.of(helper.getLevel().dimension(), BlockPos.containing(helper.absoluteVec(new Vec3(1.5, 2, 6.5)))));
+        TestHelpers.addCommand(leader, ModCommands.STAY.get(), GlobalPos.of(helper.getLevel().dimension(), BlockPos.containing(helper.absoluteVec(new Vec3(1.5, 2, 9.5)))));
         TestHelpers.addCommand(follower, ModCommands.FOLLOW.get(), new EntitySearch(leader.getUUID()), 1);
         helper.succeedWhen(() -> {
             if(follower.getBlockZ() < helper.absolutePos(new BlockPos(0, 0, 3)).getZ()) throw new GameTestAssertException("Robot did not follow other robot");
@@ -389,11 +390,11 @@ public class TestCommands {
     @GameTest(template = "duel", batch = "commands")
     public static void testPlace(GameTestHelper helper) {
         RobotEntity robot = TestHelpers.setupDefaultRobot(helper);
-        robot.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Blocks.DIAMOND_BLOCK, 3));
+        robot.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Blocks.DIAMOND_BLOCK, 4));
         BlockPos pos1 = new BlockPos(1, 3, 3);
         BlockPos pos2 = new BlockPos(1, 4, 4);
-        GlobalPos globalPos1 = GlobalPos.of(helper.getLevel().dimension(), pos1);
-        GlobalPos globalPos2 = GlobalPos.of(helper.getLevel().dimension(), pos2);
+        GlobalPos globalPos1 = GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(pos1));
+        GlobalPos globalPos2 = GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(pos2));
         TestHelpers.addCommand(robot, ModCommands.PLACE.get(), globalPos1, globalPos2);
         helper.succeedWhen(() -> {
             for(int i = 0; i < 2; i++) {
@@ -435,7 +436,7 @@ public class TestCommands {
         GlobalPos globalPos1 = GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(pos1));
         TestHelpers.addCommand(robot, ModCommands.PLACE.get(), globalPos1, globalPos1);
         helper.runAfterDelay(20, () -> {
-            helper.setBlock(helper.relativePos(globalPos1.pos()), Blocks.AIR);
+            helper.setBlock(pos1, Blocks.AIR);
         });
         helper.runAfterDelay(30, () -> {
             helper.succeedWhenBlockPresent(Blocks.DIAMOND_BLOCK, pos1);
