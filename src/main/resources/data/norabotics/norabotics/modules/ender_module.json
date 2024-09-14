@@ -6,6 +6,6 @@
     "core"
   ],
   "action": "norabotics:teleport",
-  "cooldown": 10,
+  "cooldown": 20,
   "energyCost": 10000
 }

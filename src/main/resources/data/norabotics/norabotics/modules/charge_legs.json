@@ -12,6 +12,6 @@
     "impact": 1,
     "direction": "up"
   },
-  "cooldown": 5,
+  "cooldown": 100,
   "energyCost": 5000
 }

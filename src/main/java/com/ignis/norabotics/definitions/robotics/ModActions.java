@@ -32,7 +32,7 @@ public class ModActions {
 
     public static final Codec<MobEffectInstance> EFFECT_CODEC = RecordCodecBuilder.create(builder -> builder.group(
             ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("type").forGetter(MobEffectInstance::getEffect),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 30).forGetter(MobEffectInstance::getDuration),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 30 * 20).forGetter(MobEffectInstance::getDuration),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("amplifier", 0).forGetter(MobEffectInstance::getAmplifier),
             MapCodec.unit(false).forGetter(MobEffectInstance::isAmbient),
             Codec.BOOL.optionalFieldOf("visible", true).forGetter(MobEffectInstance::isVisible)

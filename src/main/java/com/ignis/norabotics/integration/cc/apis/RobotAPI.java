@@ -9,10 +9,12 @@ import com.ignis.norabotics.common.robot.RobotModule;
 import com.ignis.norabotics.definitions.robotics.ModModules;
 import com.ignis.norabotics.definitions.robotics.ModSelectionTypes;
 import dan200.computercraft.api.lua.ILuaAPI;
+import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.apis.IAPIEnvironment;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -138,12 +140,16 @@ public class RobotAPI implements ILuaAPI {
         return getModules().stream().map(ModSelectionTypes.ITEM.stringifier()).toList();
     }
 
-    @LuaFunction
-    public final boolean activate(int slot, Optional<String> slotType) throws LuaException {
+    @LuaFunction(mainThread = true)
+    public final boolean activate(ILuaContext context, int slot, Optional<String> slotType) throws LuaException {
         ItemStack moduleItem;
         if(slotType.isPresent()) {
             try {
                 EnumModuleSlot moduleSlot = EnumModuleSlot.valueOf(slotType.get().toUpperCase());
+                NonNullList<ItemStack> components = parts.getBodyParts(moduleSlot);
+                if(components.size() <= slot - 1) {
+                    throw new LuaException("Index " + (slot - 1) + " is out of bounds");
+                }
                 moduleItem = parts.getBodyParts(moduleSlot).get(slot - 1);
             } catch(IllegalArgumentException exc) {
                 throw new LuaException("\"" + slotType.get() + "\" is not a valid module slot type. Viable arguments are: " + StringUtil.enumToString(EnumModuleSlot.values()));
@@ -153,9 +159,7 @@ public class RobotAPI implements ILuaAPI {
         }
         RobotModule module = ModModules.get(moduleItem);
         if(module == null) return false;
-        AtomicBoolean success = new AtomicBoolean(false);
-        environment.getMainThreadMonitor().runWork(() -> success.set(module.activate(entity)));
-        return success.get();
+        return module.activate(entity);
     }
 
     private List<ItemStack> getModules() {

@@ -15,7 +15,7 @@
       }
     ]
   },
-  "cooldown": 30,
-  "duration": 10,
+  "cooldown": 500,
+  "duration": 600,
   "energyCost": 100000
 }

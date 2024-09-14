@@ -6,6 +6,6 @@
     "feet"
   ],
   "action": "norabotics:dash",
-  "cooldown": 3,
+  "cooldown": 40,
   "energyCost": 5000
 }

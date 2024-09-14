@@ -1,8 +1,14 @@
 package com.ignis.norabotics.common.content.actions;
 
+import com.ignis.norabotics.Robotics;
 import com.ignis.norabotics.definitions.robotics.ModActions;
+import com.ignis.norabotics.network.NetworkHandler;
+import com.ignis.norabotics.network.messages.client.PacketSetEntityEffects;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -31,7 +37,7 @@ public class MobEffectAction implements IAction {
             return false;
         }
         for(MobEffectInstance effect : effects) {
-            caster.addEffect(new MobEffectInstance(effect.getEffect(), effect.getAmplifier(), duration, false, false, true));
+            caster.addEffect(new MobEffectInstance(effect.getEffect(), duration, effect.getAmplifier(), false, false, true));
         }
         return true;
     }
