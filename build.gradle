@@ -29,7 +29,7 @@ apply plugin: 'org.spongepowered.mixin'
 jarJar.enable()
 
 version = "${robotics_version}"
-group = 'com.ignis.norabotics'
+group = 'com.io.norabotics'
 archivesBaseName = 'norabotics'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
