@@ -33,6 +33,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -133,6 +134,10 @@ public class RobotEntity extends PathfinderMob implements GeoEntity {
                 playSound(SoundEvents.ANVIL_USE);
                 break;
             }
+            return InteractionResult.sidedSuccess(level().isClientSide);
+        }
+        if(stack.getItem() instanceof DyeItem dye && player.isCreative()) {
+            parts.setColor(dye.getDyeColor());
             return InteractionResult.sidedSuccess(level().isClientSide);
         }
 

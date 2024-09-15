@@ -71,7 +71,7 @@ public class PartsCapability implements IPartBuilt {
 		for(EnumModuleSlot slot : EnumModuleSlot.values()) {
 			NonNullList<ItemStack> stacks = InventoryUtil.loadAllItems(nbt, slot.name());
 			for(int i = 0; i < stacks.size(); i++) {
-				setModule(slot, i, stacks.get(i)); //Load modules in directly to avoid them going under the maximum and discarded
+				setModule(slot, i, stacks.get(i)); //Load modules in directly to avoid them going under the maximum and get discarded
 			}
 		}
 		entity.getCapability(ModCapabilities.PERKS).ifPresent(perks -> MinecraftForge.EVENT_BUS.post(new PerkChangeEvent(entity, perks)));

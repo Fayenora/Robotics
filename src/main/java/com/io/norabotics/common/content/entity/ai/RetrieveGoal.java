@@ -110,6 +110,7 @@ public class RetrieveGoal extends Goal {
 	@Override
 	public void stop() {
 		//NOTE: {@link RobotBehavior} handles the case the entity dies while having the container opened
+		// TODO The player might have removed the task
 		if(taskFinished || entity.isDeadOrDying()) {
 			closeContainer();
 		}
