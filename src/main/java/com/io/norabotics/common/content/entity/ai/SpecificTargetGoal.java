@@ -39,11 +39,9 @@ public class SpecificTargetGoal extends TargetGoal {
 			idleTicks = 0;
 			if(isViableTarget(result) && result instanceof LivingEntity living) {
 				targetMob = living;
-				return true;
 			}
-			return isViableTarget(targetMob);
 		}
-		return true;
+		return isViableTarget(targetMob);
 	}
 
 	private boolean isViableTarget(Entity entity) {

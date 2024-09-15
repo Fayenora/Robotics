@@ -233,7 +233,7 @@ public class CommanderItem extends Item {
                 return;
             }
         }
-        mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, globalPos));
+        mob.goalSelector.addGoal(7, new QuickMoveToBlock(mob, globalPos));
         RobotBehavior.playAggressionSound(mob);
     }
 
@@ -257,7 +257,7 @@ public class CommanderItem extends Item {
         Optional<Entity> spawnedEntity = storage.exitStorage();
         if(spawnedEntity.isEmpty()) return false;
         if(spawnedEntity.get() instanceof Mob mob) {
-            mob.goalSelector.addGoal(2, new QuickMoveToBlock(mob, to));
+            mob.goalSelector.addGoal(7, new QuickMoveToBlock(mob, to));
         }
         if(spawnedEntity.get() instanceof RobotEntity robot) {
             RobotBehavior.playAggressionSound(robot);
