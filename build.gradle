@@ -202,10 +202,11 @@ dependencies {
     // Patchouli
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}-FORGE")
 
-    // Mekanism at runtime
-    runtimeOnly(fg.deobf("curse.maven:mekanism-268560:5125665"))
-    // Item Tags at runtime
-    runtimeOnly(fg.deobf("curse.maven:tagtooltips-899941:4687165"))
+    // Runtime Mods
+    runtimeOnly(fg.deobf("curse.maven:tagtooltips-899941:4687165")) // Item Tags
+    runtimeOnly(fg.deobf("curse.maven:mekanism-268560:5662583")) // Mekanism
+    runtimeOnly(fg.deobf("curse.maven:cofh-core-69162:5374122")) //CoFH Core
+    runtimeOnly(fg.deobf("curse.maven:thermal-foundation-222880:5443583")) // Thermal Foundation
 
     testImplementation(platform('org.junit:junit-bom:5.9.3'))
     testImplementation('org.junit.jupiter:junit-jupiter')
