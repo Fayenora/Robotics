@@ -33,7 +33,7 @@ public class TestMisc {
         helper.spawnItem(ModItems.MATERIALS.get(EnumRobotMaterial.STEEL).get(EnumRobotPart.LEFT_ARM).get(), 3, 3, 1);
         helper.spawnItem(ModItems.MATERIALS.get(EnumRobotMaterial.STEEL).get(EnumRobotPart.LEFT_LEG).get(), 3, 3, 1);
         helper.spawnItem(ModItems.MATERIALS.get(EnumRobotMaterial.STEEL).get(EnumRobotPart.RIGHT_LEG).get(), 5, 3, 1);
-        helper.spawnItem(ModItems.MODULE_STEALTH.get(), 3, 2, 3);
+        helper.spawnItem(ModItems.MODULE_STEALTH.get(), 3, 3, 1);
         BlockEntity be = helper.getBlockEntity(new BlockPos(3, 2, 1));
         if(!(be instanceof FactoryBlockEntity factory)) throw new GameTestAssertException("Did not find factory");
         helper.runAfterDelay(10, () -> factory.startMachine(0));

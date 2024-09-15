@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "The user is referred to JEI for robot part recipes. Note not a full set of parts, but only a leg, a body and a head are required. It is recommended to set up an automated crafting system in order handle all steps of process elegantly and avoid unexpected costs. <br>Once all parts are gathered, assembly can begin.  For construction, a robot factory, as well as at least one factory arm are required. "
+      "text": "The user is referred to JEI for robot part recipes. Note not a full set of parts, but only a leg, a body and a head are required. It is recommended to set up an automated crafting system in order handle all steps of the process elegantly and avoid unexpected costs. <br>Once all parts are gathered, assembly can begin.  For construction, a robot factory, as well as at least one factory arm are required. "
     },
     {
       "type": "patchouli:crafting",

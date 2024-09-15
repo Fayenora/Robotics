@@ -8,9 +8,7 @@ import com.io.norabotics.common.robot.CommandType;
 import com.io.norabotics.common.robot.RobotCommand;
 import com.io.norabotics.definitions.robotics.ModCommands;
 import com.io.norabotics.definitions.robotics.ModSelectionTypes;
-import dan200.computercraft.api.lua.ILuaAPI;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.lua.LuaFunction;
+import dan200.computercraft.api.lua.*;
 import dan200.computercraft.core.apis.IAPIEnvironment;
 import net.minecraft.resources.ResourceLocation;
 
@@ -38,8 +36,8 @@ public class CommandAPI implements ILuaAPI {
         return commands.getCommands().stream().map(LuaRobotCommand::new).toList().toArray(new LuaRobotCommand[0]);
     }
 
-    @LuaFunction
-    public final LuaRobotCommand remove(int index) throws LuaException {
+    @LuaFunction(mainThread = true)
+    public final LuaRobotCommand remove(ILuaContext context, int index) throws LuaException {
         RobotCommand[] commands1 = commands.getCommands().toArray(new RobotCommand[0]);
         if(index <= 0 || index > commands1.length) {
             throw new LuaException("Index " + index + " out of bounds for length " + commands1.length + ". ");
@@ -49,8 +47,8 @@ public class CommandAPI implements ILuaAPI {
         return new LuaRobotCommand(command);
     }
 
-    @LuaFunction
-    public final void add(String type, Optional<String> sel1, Optional<String> sel2, Optional<String> sel3, Optional<String> sel4) throws LuaException {
+    @LuaFunction(mainThread = true)
+    public final void add(ILuaContext context, String type, Optional<String> sel1, Optional<String> sel2, Optional<String> sel3, Optional<String> sel4) throws LuaException {
         List<String> selections = new ArrayList<>();
         sel1.ifPresent(selections::add);
         sel2.ifPresent(selections::add);
@@ -80,13 +78,11 @@ public class CommandAPI implements ILuaAPI {
 
     private Object parseArg(SelectionType<?> reqType, String arg) throws LuaException {
         if(reqType == ModSelectionTypes.POS) {
-            if(arg.matches("\\[[A-z:]*/[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
-                // Everything is fine
-            } else if(arg.matches("\\[[A-z:]*]\\s-?+\\d*\\s-?+\\d*\\s-?+\\d*")) {
-                arg = "[minecraft:dimension/" + arg.split("\\[")[1].trim();
-            } else if(arg.matches("\\s*-?+\\d*\\s-?+\\d*\\s-?+\\d*\\s*")) {
+            if(arg.matches("[A-z:]*\\s-?+\\d+\\s-?+\\d+\\s-?+\\d+")) {
+                arg = "[minecraft:dimension/" + ResourceLocation.tryParse(arg.split("\\s+")[0]) + "] " + arg.trim().replaceFirst("\\S*\\s+", "");
+            } else if(arg.matches("\\s*-?+\\d+\\s-?+\\d+\\s-?+\\d+\\s*")) {
                 arg = "[minecraft:dimension/minecraft:overworld] " + arg.trim();
-            } else throw new LuaException("Position argument does not match required format 'x y z' or '[dimension-id] x y z'");
+            } else throw new LuaException("Position argument does not match required format 'x y z' or 'dimension-id x y z'");
         }
         return reqType.parse(arg);
     }

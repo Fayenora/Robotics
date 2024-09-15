@@ -53,6 +53,7 @@ public class DimensionNavigator {
         if(portalPos == null) return false;
         PathNavigation navigator = mob.getNavigation();
         Vec3 portalCenter = Vec3.atCenterOf(portalPos);
+        mob.setPortalCooldown(0);
         return navigator.moveTo(navigator.createPath(portalCenter.x, portalCenter.y, portalCenter.z, 0), speedMod);
     }
 

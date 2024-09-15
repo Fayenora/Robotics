@@ -25,7 +25,7 @@ public class PosUtil {
         ResourceLocation registry = ResourceLocation.tryParse(resourceKey.split("/")[0]);
         ResourceLocation location = ResourceLocation.tryParse(resourceKey.split("/")[1]);
         BlockPos pos = BlockPos.ZERO;
-        Object[] list = Arrays.stream(string.split("\\D")).filter(Predicate.not(String::isBlank)).map(Integer::parseInt).toArray();
+        Object[] list = Arrays.stream(string.replaceFirst("\\s*\\[.*]", "").split("\\s+")).filter(Predicate.not(String::isBlank)).map(Integer::parseInt).toArray();
         if(list.length >= 3 && list[0] instanceof Integer && list[1] instanceof Integer && list[2] instanceof Integer) {
             pos = new BlockPos((Integer) list[0], (Integer) list[1], (Integer) list[2]);
         }

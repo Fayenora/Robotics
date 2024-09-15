@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(li)positions are required to be in the format 'x y z' or '[dimension-id] x y z'"
+      "text": "$(li)positions are required to be in the format 'x y z' or 'dimension-id x y z'. The Vanilla dimension ids are: overworld, the_nether & the_end. You can find out the id of the dimension you are currently in by hitting F3. "
     }
   ]
 }

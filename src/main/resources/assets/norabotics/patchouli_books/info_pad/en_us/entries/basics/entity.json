@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:entity",
-      "entity": "norabotics:robot{ForgeCaps:{'norabotics:parts':{color:17, parts:[I; 1, 1, 1, 1, 1, 1]}}}"
+      "entity": "norabotics:robot{ForgeCaps:{'norabotics:parts':{color:17, head:[{}]}}}"
     },
     {
       "type": "patchouli:text",

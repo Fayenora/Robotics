@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +39,7 @@ import java.lang.ref.WeakReference;
 public class EntityInteractionManager {
 
     protected ServerLevel level;
-    private final Mob mob;
+    private Mob mob;
     protected final WeakReference<Player> fakePlayer;
     private boolean isDestroyingBlock;
     private int destroyProgressStart;
@@ -58,6 +59,7 @@ public class EntityInteractionManager {
 
     public boolean dig(BlockPos pos, Direction side) {
         ++this.gameTicks;
+        Mob mob = mob();
         mob.swing(mob.getUsedItemHand());
 
         if(!destroyPos.equals(pos) || !isDestroyingBlock) {
@@ -66,7 +68,7 @@ public class EntityInteractionManager {
 
         BlockState state = level.getBlockState(pos);
 
-        if(incrementDestroyProgress(state, pos, destroyProgressStart) >= 1) {
+        if(incrementDestroyProgress(state, pos, destroyProgressStart, mob.getId()) >= 1) {
             destroyBlock(destroyPos);
             destroyPos = BlockPos.ZERO;
             this.isDestroyingBlock = false;
@@ -77,12 +79,12 @@ public class EntityInteractionManager {
         return false;
     }
 
-    private float incrementDestroyProgress(BlockState state, BlockPos pos, int startTime) {
+    private float incrementDestroyProgress(BlockState state, BlockPos pos, int startTime, int entityId) {
         int i = this.gameTicks - startTime;
         float f = state.getDestroyProgress(this.fakePlayer.get(), level, pos) * (float)(i + 1);
         int j = (int)(f * 10.0F);
         if (j != this.lastSentState) {
-            this.level.destroyBlockProgress(mob.getId(), pos, j);
+            this.level.destroyBlockProgress(entityId, pos, j);
             this.lastSentState = j;
         }
 
@@ -93,6 +95,7 @@ public class EntityInteractionManager {
     }
 
     public void startDestroyingBlock(BlockPos pos, Direction side, int p_215124_) {
+        Mob mob = mob();
         PlayerInteractEvent.LeftClickBlock event = ForgeHooks.onLeftClickBlock(fakePlayer.get(), pos, side, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK);
         if (event.isCanceled() || event.getResult() == net.minecraftforge.eventbus.api.Event.Result.DENY) {
             return;
@@ -140,7 +143,7 @@ public class EntityInteractionManager {
             float f1 = blockstate1.getDestroyProgress(fakePlayer.get(), level, destroyPos) * (float)(j + 1);
             if (f1 >= 0.7F) {
                 this.isDestroyingBlock = false;
-                this.level.destroyBlockProgress(mob.getId(), destroyPos, -1);
+                this.level.destroyBlockProgress(mob().getId(), destroyPos, -1);
                 destroyBlock(destroyPos);
                 return;
             }
@@ -155,11 +158,12 @@ public class EntityInteractionManager {
 
     public void cancelDestroyingBlock() {
         this.isDestroyingBlock = false;
-        this.level.destroyBlockProgress(mob.getId(), destroyPos, -1);
+        this.level.destroyBlockProgress(mob().getId(), destroyPos, -1);
         this.debugLogging(destroyPos, true, destroyProgressStart, "aborted destroying");
     }
 
     public boolean destroyBlock(BlockPos pos) {
+        Mob mob = mob();
         if(!ForgeHooks.canEntityDestroy(level, pos, mob)) return false;
         BlockState blockstate = this.level.getBlockState(pos);
         int exp = ForgeHooks.onBlockBreakEvent(level, gameType, (ServerPlayer) fakePlayer.get(), pos);
@@ -275,5 +279,14 @@ public class EntityInteractionManager {
 
     public void setLevel(ServerLevel p_9261_) {
         this.level = p_9261_;
+    }
+
+    private Mob mob() {
+        if(!this.mob.isRemoved()) return mob;
+        Entity entity = EntityFinder.getEntity(level, mob.getUUID());
+        if(entity instanceof Mob mob) {
+            this.mob = mob;
+        }
+        return mob;
     }
 }

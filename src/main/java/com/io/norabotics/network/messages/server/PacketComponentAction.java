@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
 
 public class PacketComponentAction implements IMessage {
@@ -88,13 +89,20 @@ public class PacketComponentAction implements IMessage {
             case ACTION_DISMANTLE_ROBOT -> {
                 if (blockEntity instanceof StorageBlockEntity storage) {
                     Vec3 pos = Vec3.atCenterOf(data.getAsPos()).relative(blockEntity.getBlockState().getValue(MachineBlock.FACING), 0.6);
-                    storage.getEntity().ifPresent(ent -> ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
-                        for(EnumModuleSlot slotType : EnumModuleSlot.values()) {
-                            for(ItemStack stack : parts.getBodyParts(slotType)) {
-                                InventoryUtil.dropItem(level, pos.x, pos.y, pos.z, stack);
+                    storage.getEntity().ifPresent(ent -> {
+                        ent.getCapability(ModCapabilities.PARTS).ifPresent(parts -> {
+                            for (EnumModuleSlot slotType : EnumModuleSlot.values()) {
+                                for (ItemStack stack : parts.getBodyParts(slotType)) {
+                                    InventoryUtil.dropItem(level, pos.x, pos.y, pos.z, stack);
+                                }
                             }
-                        }
-                    }));
+                        });
+                        ent.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(items -> {
+                            for(int i = 0; i < items.getSlots(); i++) {
+                                InventoryUtil.dropItem(level, pos.x, pos.y, pos.z, items.getStackInSlot(i));
+                            }
+                        });
+                    });
                     storage.clearEntity();
                 }
             }
