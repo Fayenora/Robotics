@@ -134,9 +134,8 @@ public class PartsCapability implements IPartBuilt {
 		// Set the module
 		modules.get(slotType).set(slot, item);
 		RobotPart robotPart = RobotPart.getFromItem(item.getItem());
-		if(robotPart != null) { // Tell the data manager & with it the client
-			this.dataManager.set(BODY_PARTS[robotPart.getPart().getID()], robotPart.getMaterial().getID());
-		}
+		EnumRobotMaterial material = robotPart != null ? robotPart.getMaterial() : EnumRobotMaterial.NONE;
+		this.dataManager.set(BODY_PARTS[EnumRobotPart.valueOf(slotType).getID()], material.getID()); // Tell the data manager & with it the client
 
 		// Apply perks & render layers of the new part
 		if(ModModules.isModule(item)) {
