@@ -1,8 +1,8 @@
 ![](logo.png)
 ![Static Badge](https://img.shields.io/badge/Version-1.0-134a5d?style=for-the-badge)
-![Static Badge](https://img.shields.io/badge/-Modrinth-555555?style=for-the-badge&logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2F)
-![Static Badge](https://img.shields.io/badge/-CurseForge-555555?style=for-the-badge&logo=curseforge)
-![Static Badge](https://img.shields.io/badge/-Github-555555?style=for-the-badge&logo=github&link=https%3A%2F%2Fgithub.com%2F)
+[![Static Badge](https://img.shields.io/badge/-Modrinth-555555?style=for-the-badge&logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2F)](https://modrinth.com/project/robotics)
+[![Static Badge](https://img.shields.io/badge/-CurseForge-555555?style=for-the-badge&logo=curseforge)](https://legacy.curseforge.com/minecraft/mc-mods/robotized)
+[![Static Badge](https://img.shields.io/badge/-Github-555555?style=for-the-badge&logo=github&link=https%3A%2F%2Fgithub.com%2F)](https://github.com/Fayenora/Robotics)
 
 
 Robotics is a Forge mod for Minecraft 1.20.1. Look on Curse Forge or Modrinth for a proper showcase!
@@ -10,13 +10,9 @@ Robotics is a Forge mod for Minecraft 1.20.1. Look on Curse Forge or Modrinth fo
 ### Dependencies
 
 - Required: [GeckoLib](https://modrinth.com/mod/geckolib)
-- Optional: [Just Enough Items](https://modrinth.com/mod/jei)
-  - provides in-game recipe lookup. Some features will not work without it
-- Optional: [CC: Tweaked](https://modrinth.com/mod/cc-tweaked)
-  - a significant part of the features depends on this, although the mod is very much playable without
-- Optional: [Patchouli](https://modrinth.com/mod/patchouli)
-  - provides in-game documentation
-
+- Optional: [Just Enough Items](https://modrinth.com/mod/jei) provides in-game recipe lookup. Some features will not work without it
+- Optional: [CC: Tweaked](https://modrinth.com/mod/cc-tweaked) a significant part of the features depends on this, although the mod is very much playable without
+- Optional: [Patchouli](https://modrinth.com/mod/patchouli) provides in-game documentation
 
 ### Credits
 - <a href="https://www.textstudio.com/">Title font generated with textstudio</a>
