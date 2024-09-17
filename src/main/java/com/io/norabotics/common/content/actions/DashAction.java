@@ -18,7 +18,8 @@ public class DashAction implements IAction {
 
     public enum DashDirection implements StringRepresentable, Function<LivingEntity, Vec3> {
         LOOK(Entity::getLookAngle),
-        UP(living -> new Vec3(0, 1, 0));
+        UP(living -> new Vec3(0, 1, 0)),
+        DOWN(living -> new Vec3(0, -1, 0));
 
         private final Function<LivingEntity, Vec3> dir;
 
