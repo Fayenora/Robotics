@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:entity",
-      "entity": "norabotics:robot{ForgeCaps:{'norabotics:parts':{color:17, head:[{}]}}}"
+      "entity": "norabotics:robot{ForgeCaps:{'norabotics:parts':{color:16, HEAD:[{Slot:0b,id:'norabotics:iron_head',Count:1b}], BODY:[{Slot:0b,id:'norabotics:iron_body',Count:1b}], LEFT_ARM:[{Slot:0b,id:'norabotics:iron_left_arm',Count:1b}], RIGHT_ARM:[{Slot:0b,id:'norabotics:iron_right_arm',Count:1b}], LEFT_LEG:[{Slot:0b,id:'norabotics:iron_left_leg',Count:1b}], RIGHT_LEG:[{Slot:0b,id:'norabotics:iron_right_leg',Count:1b}]}}}"
     },
     {
       "type": "patchouli:text",
