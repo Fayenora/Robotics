@@ -50,7 +50,7 @@ public class FollowGoal extends Goal {
     @Override
 	public boolean canUse() {
         if(idleTicks++ >= Reference.TICKS_UNTIL_SEARCHING_AGAIN || !isViableTarget(followingEntityCache)) {
-            Entity result = followingEntity.commence((ServerLevel) entity.level(), entity.position());
+            Entity result = followingEntity.commence(entity);
             idleTicks = 0;
             if(isViableTarget(result) && result instanceof LivingEntity living) {
                 followingEntityCache = living;

@@ -35,7 +35,7 @@ public class SpecificTargetGoal extends TargetGoal {
 	@Override
 	public boolean canUse() {
 		if(idleTicks++ >= Reference.TICKS_UNTIL_SEARCHING_AGAIN || !isViableTarget(targetMob)) {
-			Entity result = target.commence((ServerLevel) mob.level(), mob.position());
+			Entity result = target.commence(mob);
 			idleTicks = 0;
 			if(isViableTarget(result) && result instanceof LivingEntity living) {
 				targetMob = living;

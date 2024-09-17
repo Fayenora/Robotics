@@ -69,9 +69,20 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
      */
     @Nullable
     public Entity commence(ServerLevel preferredLevel, Vec3 origin) {
+        return commence(preferredLevel, origin, null);
+    }
+
+    /**
+     * Commence the entity search across all levels
+     * @param preferredLevel used to determine the result in case multiple entities come into question
+     * @param origin used to determine the result in case multiple entities come into question
+     * @return an entity matching the search, if one was found
+     */
+    @Nullable
+    private Entity commence(ServerLevel preferredLevel, Vec3 origin, @Nullable Entity ignore) {
         if(cache != null && cache.isAlive()) return cache;
         // Commence a search across the preferred level
-        Entity result = commenceForLevel(preferredLevel, origin);
+        Entity result = commenceForLevel(preferredLevel, origin, ignore);
         if(result != null) return result;
         // Commence across all other levels
         for(ServerLevel level : ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
@@ -79,12 +90,23 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
             double coordinateScale = 1 / level.dimensionType().coordinateScale();
             Vec3 searchStart = new Vec3(origin.x, 0, origin.y);
             searchStart = searchStart.scale(coordinateScale).add(0, origin.y, 0);
-            result = commenceForLevel(level, searchStart);
+            result = commenceForLevel(level, searchStart, ignore);
             if(result != null) return result;
         }
         // Commence a player search
         result = commenceForPlayer(preferredLevel);
         return result;
+    }
+
+    /**
+     * Commence the entity search across all levels
+     * @param source the entity working as a starting point for the search. This entity itself will never be matched. It's level is searched first
+     * @return an entity matching the search, if one was found
+     */
+    @Nullable
+    public Entity commence(Entity source) {
+        if(!(source.level() instanceof ServerLevel serverLevel)) return null;
+        return commence(serverLevel, source.position(), source);
     }
 
     /**
@@ -94,13 +116,14 @@ public class EntitySearch implements Predicate<Entity>, IBufferSerializable, INB
      * @return an entity matching the search, if one was found
      */
     @Nullable
-    private Entity commenceForLevel(ServerLevel level, Vec3 origin) {
+    private Entity commenceForLevel(ServerLevel level, Vec3 origin, @Nullable Entity ignore) {
+        int id = ignore == null ? -1 : ignore.getId();
         if(flags.contains(SearchFlags.UUID) && uuid != null) return level.getEntity(uuid);
         if(flags.contains(SearchFlags.ID)) return level.getEntity(entityId);
-        if(flags.containsAll(List.of(SearchFlags.TYPE, SearchFlags.RANGE))) return EntityFinder.getClosestTo(level, origin, type, range, this);
-        if(flags.contains(SearchFlags.TYPE)) return EntityFinder.getClosestTo(level, origin, type, this);
-        if(flags.contains(SearchFlags.RANGE)) return EntityFinder.getClosestTo(level, origin, range, this);
-        if(!flags.isEmpty()) return EntityFinder.getClosestTo(level, origin, this);
+        if(flags.containsAll(List.of(SearchFlags.TYPE, SearchFlags.RANGE))) return EntityFinder.getClosestTo(level, origin, type, range, this.and(e -> e.getId() != id));
+        if(flags.contains(SearchFlags.TYPE)) return EntityFinder.getClosestTo(level, origin, type, this.and(e -> e.getId() != id));
+        if(flags.contains(SearchFlags.RANGE)) return EntityFinder.getClosestTo(level, origin, range, this.and(e -> e.getId() != id));
+        if(!flags.isEmpty()) return EntityFinder.getClosestTo(level, origin, this.and(e -> e.getId() != id));
         return null;
     }
 
