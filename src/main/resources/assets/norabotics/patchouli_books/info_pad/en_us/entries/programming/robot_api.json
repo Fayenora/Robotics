@@ -2,6 +2,7 @@
   "name": "robot",
   "icon": "norabotics:iron_head",
   "category": "norabotics:programming",
+  "flag": "mod:computercraft",
   "pages": [
     {
       "type": "patchouli:text",

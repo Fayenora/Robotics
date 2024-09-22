@@ -2,6 +2,7 @@
   "name": "sensors",
   "icon": "norabotics:camera_unit",
   "category": "norabotics:programming",
+  "flag": "mod:computercraft",
   "pages": [
     {
       "type": "patchouli:text",

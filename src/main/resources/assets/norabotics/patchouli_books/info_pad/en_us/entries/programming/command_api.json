@@ -2,6 +2,7 @@
   "name": "robot_commands",
   "icon": "norabotics:commander",
   "category": "norabotics:programming",
+  "flag": "mod:computercraft",
   "pages": [
     {
       "type": "patchouli:text",

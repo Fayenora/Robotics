@@ -2,6 +2,7 @@
   "name": "inventory",
   "icon": "minecraft:chest",
   "category": "norabotics:programming",
+  "flag": "mod:computercraft",
   "pages": [
     {
       "type": "patchouli:text",

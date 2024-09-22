@@ -2,6 +2,7 @@
   "name": "Computercraft",
   "icon": "computercraft:computer_normal",
   "category": "norabotics:programming",
+  "flag": "mod:computercraft",
   "priority": true,
   "pages": [
     {
