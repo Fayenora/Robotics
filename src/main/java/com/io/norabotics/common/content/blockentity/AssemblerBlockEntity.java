@@ -26,11 +26,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity {
     public AssemblerBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.ASSEMBLER, pos, state, 5, new int[]{0, 1, 2, 3}, new int[]{4});
         inventory.setOutputSlots(4);
-        inventory.setDefaultAccessibleSlots(4);
-        inventory.setValidSlotsForFace(Direction.UP, 0, 4);
-        inventory.setValidSlotsForFace(Direction.WEST, 1, 4);
-        inventory.setValidSlotsForFace(Direction.DOWN, 2, 4);
-        inventory.setValidSlotsForFace(Direction.EAST, 3, 4);
+        inventory.setAllSlotsAccessibleByDefault();
     }
 
     @Override

@@ -39,13 +39,12 @@ public class MachineInventory extends BaseInventory {
     }
 
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction face) {
-        if(face != null && outputSlots.contains(slot)) {
-            return false;
-        }
+        if(face != null && outputSlots.contains(slot)) return false;
         return isItemValid(slot, stack) && IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
     }
 
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction face) {
+        if(face != null && !outputSlots.contains(slot)) return false;
         return IntStream.of(getSlotsForFace(face)).anyMatch(x -> x == slot);
     }
 

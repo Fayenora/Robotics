@@ -22,8 +22,7 @@ public class WireCutterBlockEntity extends MachineBlockEntity {
     public WireCutterBlockEntity(BlockPos pos, BlockState state) {
         super(ModMachines.WIRE_CUTTER, pos, state, 3, new int[] {0, 1}, new int[] {2});
         inventory.setOutputSlots(2);
-        inventory.setDefaultAccessibleSlots(0, 2);
-        inventory.setValidSlotsForFace(Direction.UP, 1, 2);
+        inventory.setAllSlotsAccessibleByDefault();
     }
 
     @Override
