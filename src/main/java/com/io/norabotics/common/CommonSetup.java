@@ -25,9 +25,13 @@ public class CommonSetup {
         if(!allLivingEntities.isEmpty() && event.getLevel().equals(allLivingEntities.get(EntityType.CREEPER).level())) return;
         if(!(event.getLevel() instanceof Level level)) return;
         for(EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
-            Entity entity = type.create(level);
-            if(entity instanceof LivingEntity living) {
-                allLivingEntities.put(type, living);
+            try {
+                Entity entity = type.create(level);
+                if(entity instanceof LivingEntity living) {
+                    allLivingEntities.put(type, living);
+                }
+            } catch(Exception e) {
+                Robotics.LOGGER.info("Unable to initialize entity {}. It will not show up in type selection", type.getDescription());
             }
         }
     }
