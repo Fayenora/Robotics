@@ -1,5 +1,5 @@
 ![](logo.png)
-![Static Badge](https://img.shields.io/badge/Version-1.0-134a5d?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.modrinth.com%2Fv2%2Fproject%2Frobotics%2Fversion&query=%24%5B0%5D.version_number&style=for-the-badge&color=134a5d&label=Version)
 [![Static Badge](https://img.shields.io/badge/-Modrinth-555555?style=for-the-badge&logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2F)](https://modrinth.com/project/robotics)
 [![Static Badge](https://img.shields.io/badge/-CurseForge-555555?style=for-the-badge&logo=curseforge)](https://legacy.curseforge.com/minecraft/mc-mods/robotized)
 [![Static Badge](https://img.shields.io/badge/-Github-555555?style=for-the-badge&logo=github&link=https%3A%2F%2Fgithub.com%2F)](https://github.com/Fayenora/Robotics)

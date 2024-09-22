@@ -7,6 +7,7 @@ import com.io.norabotics.common.capabilities.impl.inventory.FactoryInventory;
 import com.io.norabotics.common.capabilities.impl.perk.Perk;
 import com.io.norabotics.common.content.blockentity.FactoryBlockEntity;
 import com.io.norabotics.common.content.menu.slots.CustomSlot;
+import com.io.norabotics.common.helpers.types.TempAttrMap;
 import com.io.norabotics.common.helpers.types.Tuple;
 import com.io.norabotics.common.helpers.util.InventoryUtil;
 import com.io.norabotics.common.robot.EnumModuleSlot;
@@ -112,7 +113,7 @@ public class FactoryMenu extends BaseMenu {
             inst.setBaseValue(0);
             map.put(attr, inst);
         }
-        AttributeMap tempAttrMap = new AttributeMap(new AttributeSupplier(map));
+        TempAttrMap tempAttrMap = new TempAttrMap(new AttributeSupplier(map));
         for(Tuple<Perk, Integer> tup : perks) {
             tempAttrMap.addTransientAttributeModifiers(tup.getFirst().getAttributeModifiers(tup.getSecond()));
         }

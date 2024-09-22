@@ -199,14 +199,16 @@ dependencies {
     implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cct_version}")
     // Geckolib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
-    // Patchouli
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}-FORGE")
 
     // Runtime Mods
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}-FORGE") // Patchouli
     runtimeOnly(fg.deobf("curse.maven:tagtooltips-899941:4687165")) // Item Tags
     runtimeOnly(fg.deobf("curse.maven:mekanism-268560:5662583")) // Mekanism
     runtimeOnly(fg.deobf("curse.maven:cofh-core-69162:5374122")) //CoFH Core
     runtimeOnly(fg.deobf("curse.maven:thermal-foundation-222880:5443583")) // Thermal Foundation
+    runtimeOnly(fg.deobf("curse.maven:placebo-283644:5414631")) // Placebo
+    runtimeOnly(fg.deobf("curse.maven:apothic-attributes-898963:5634071")) // Apothic Attributes
+    runtimeOnly(fg.deobf("curse.maven:applied-energistics-2-223794:5641282")) // Applied Energistics
 
     testImplementation(platform('org.junit:junit-bom:5.9.3'))
     testImplementation('org.junit.jupiter:junit-jupiter')

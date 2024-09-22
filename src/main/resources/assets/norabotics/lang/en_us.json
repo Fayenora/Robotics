@@ -185,8 +185,8 @@
   "norabotics.perk.reflective": "Reflective",
   "norabotics.perk.stacked": "Stacked",
   "norabotics.perk.thermal_conductivity": "Thermal Conductivity",
-  "norabotics.perk.voidant": "Voidant",
-  "norabotics.perk.connexiom": "Connexiom",
+  "norabotics.perk.voidant": "[WIP] Voidant",
+  "norabotics.perk.connexiom": "[WIP] Connexiom",
 
   "norabotics.perk.desc": "Increases the stats of the robot: ",
   "norabotics.perk.robust.desc": "Every damage the robot receives is reduced by %s * [Level]",

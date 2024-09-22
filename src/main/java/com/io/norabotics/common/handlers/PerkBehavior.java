@@ -5,6 +5,7 @@ import com.io.norabotics.common.capabilities.ModCapabilities;
 import com.io.norabotics.common.capabilities.impl.perk.Perk;
 import com.io.norabotics.common.content.events.ModuleActivationEvent;
 import com.io.norabotics.common.content.events.PerkChangeEvent;
+import com.io.norabotics.common.helpers.types.TempAttrMap;
 import com.io.norabotics.common.helpers.types.Tuple;
 import com.io.norabotics.common.robot.*;
 import com.io.norabotics.definitions.ModAttributes;
@@ -36,14 +37,14 @@ public class PerkBehavior {
         if(entity.level().isClientSide) return;
         @SuppressWarnings("unchecked")
         AttributeSupplier defaults = DefaultAttributes.getSupplier((EntityType<? extends LivingEntity>) entity.getType());
-        AttributeMap tempAttributeMap = new AttributeMap(defaults);
+        TempAttrMap tempAttributeMap = new TempAttrMap(defaults);
         for(Tuple<Perk, Integer> tup : event.getPerks()) {
             tempAttributeMap.addTransientAttributeModifiers(tup.getFirst().getAttributeModifiers(tup.getSecond()));
         }
         //Copy the values to the actual attribute map
-        for(Attribute attribute : ForgeRegistries.ATTRIBUTES.getValues()) {
+        for(Attribute attribute : tempAttributeMap.getAttributes()) {
             AttributeInstance instance = entity.getAttributes().getInstance(attribute);
-            if(tempAttributeMap.hasAttribute(attribute) && instance != null) {
+            if(instance != null) {
                 instance.setBaseValue(tempAttributeMap.getValue(attribute));
                 ModAttributes.onAttributeChanged(entity, instance);
             }
