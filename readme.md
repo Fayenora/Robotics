@@ -20,4 +20,4 @@ Robotics is a Forge mod for Minecraft 1.20.1. Look on Curse Forge or Modrinth fo
 - The [Caliko Library](https://github.com/FedUni/caliko) provides the Java implementation of the Inverse Kinematics algorithm used to control the factory arms
 - Some textures are recolors of other people's work:
   - Arms & Legs by [Robotics Parts](https://www.curseforge.com/minecraft/mc-mods/roboticparts)
-  - The robot texture was a minecraft skin uploaded to minecraftskins.com. Despite vehement searching I cannot find it again anywhere on the internet. Reach out if you have any pointers!
+  - Full credit for the robot textures to sixfootblue, originally uploaded [here](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/skins/1218784-the-prototypes-free-robot-skins)
