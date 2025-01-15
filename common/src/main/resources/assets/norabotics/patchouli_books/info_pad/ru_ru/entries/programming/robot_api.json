@@ -1,0 +1,22 @@
+{
+  "name": "Робот",
+  "icon": "norabotics:iron_head",
+  "category": "norabotics:programming",
+  "flag": "mod:computercraft",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "API предоставляет доступ к различным возможностям робота$(br).$(bold)deactivate()$() -> отключает робота.$(br)$(bold)getEnergy()$() -> текущая энергия$(br).$(bold)getMaxEnergy()$() -> максимальное количество энергии.$(br)$(bold)getHealth()$() -> текущее здоровье$(br).$(bold)getAttribute(attribute)$() -> значение атрибута. Список действительных атрибутов можно найти $(l:https://minecraft.fandom.com/wiki/Attribute#Attributes)здесь$() или вызовите $(n)getValidAttributes()$().$(br)$(bold)getValidAttributes()$() -> действительные атрибуты для $(n)getAttribute(attribute)$().$(br)$(bold)getEffects()$() -> $(l:norabotics:programming/robot_api#effect_object)эффекты$(), эффекты, что в данный момент действуют на робота$(br).$(bold)hasAccess(player, permission)$() -> есть ли у игрока права. Вызов действительных аргументов:"
+    },
+    {
+      "type": "patchouli:text", 
+      "text": "$(br)$(bold)getModules(slotType)$() -> модули робота, прилагаемого типа слота. Список вызова подходящих типов слота:$(br)$(bold)activate(i, slotType)$() -> был ли активирован модуль в слоте i, прилагаемого типа слота$(br).$(bold)getPickupState()$() -> состояние подбора предметов роботом$(br).$(bold)setPickupState(state)$() -> устанавливает состояние подбора предметов роботом$(br).$(bold)isChunkLoadingActive()$() -> состояние загрузки чанка роботом$(br).$(bold)setChunkLoadingState(state)$() -> устанавливает роботу состояние загрузки чанка$(br).$(bold)isMuffled()$() -> заглушен ли робот$(br).$(bold)setMuffled(muffle)$() -> заглушить/разглушить робота$(br).$(bold)getCommandGroup()$() -> группа команд робота.$(br)$(bold)getOwner()$() -> владелец робота."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Объект эффекта",
+      "anchor": "effect_object",
+      "text": "$(bold)getType()$() -> тип эффекта.$(br)$(bold)getAmplifier()$() -> усилитель эффекта. Обратите внимание, что усилители начинаются на 0$(br)$(bold)getDuration()$() -> продолжительность эффекта в мс."
+    }
+  ]
+}

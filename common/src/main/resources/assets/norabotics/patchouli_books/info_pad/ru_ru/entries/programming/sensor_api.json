@@ -1,0 +1,18 @@
+{
+  "name": "Датчики",
+  "icon": "norabotics:camera_unit",
+  "category": "norabotics:programming",
+  "flag": "mod:computercraft",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "API предоставляет доступ к датчикам робота.$(br)$(bold)getBrightness()$() -> целое число от 0 до 15 — указывает уровень освещения местоположения робота.$(br)$(bold)getSeenEntities()$() -> список всех записей  $(l:norabotics:programming/sensor_api#entity_object)объектов сущностей$(), которые робот может видеть в данный момент."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Объект сущность",
+      "anchor": "entity_object",
+      "text": "$(bold)getName()$() -> название сущности.$()$(br)$(bold)getUUID()$() -> 	УУИД сущности.$(br)$(bold)getType()$() -> тип сущности в виде строки."
+    }
+  ]
+}

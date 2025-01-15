@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.place.0",
+  "icon": "minecraft:cobblestone",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Помещает блоки основной рукой. Заполнение рамки измеряется двумя координатами. Эта задача считается действительной при условии, что робот держит блок в основной руке."
+    }
+  ]
+}

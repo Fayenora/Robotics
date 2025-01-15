@@ -1,0 +1,12 @@
+{
+  "name": "Инвентарь",
+  "icon": "minecraft:chest",
+  "category": "norabotics:programming",
+  "flag": "mod:computercraft",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "API предоставляет доступ к инвентарю робота.$(bold)getItem(i, detail)$() -> описание предмета в слоте для предмета в i. Задайте detail на значение true предоставляется более подробная информация.$(br)$(bold)switchSlots(i, j)$() — меняет местами предметы в слоте i и j."
+    }
+  ]
+}

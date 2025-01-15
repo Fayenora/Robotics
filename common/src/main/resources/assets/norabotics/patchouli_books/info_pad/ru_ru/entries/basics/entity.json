@@ -1,0 +1,25 @@
+{
+	"name": "Т-800",
+	"icon": "norabotics:iron_head",
+	"category": "norabotics:basics",
+	"priority": true,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Наименование модели: Т-800<br>Базовые характеристики:<br>Прочность: 4.0.<br>Урон атаки: 0.<br>Скорость атаки: 1.<br>Искусственный интеллект: Полный программный интерфейс по Тьюрингу.<br>Описание: Т-800, как и большинство роботов, не нуждается в воздухе и обладает устойчивостью к ядовитым существам. Для работы в круглосуточном режиме требуется энергия в объёме 30 RF за такт."
+		},
+		{
+			"type": "patchouli:entity",
+			"entity": "norabotics:robot{ForgeCaps:{'norabotics:parts':{color:16, HEAD:[{Slot:0b,id:'norabotics:iron_head',Count:1b}], BODY:[{Slot:0b,id:'norabotics:iron_body',Count:1b}], LEFT_ARM:[{Slot:0b,id:'norabotics:iron_left_arm',Count:1b}], RIGHT_ARM:[{Slot:0b,id:'norabotics:iron_right_arm',Count:1b}], LEFT_LEG:[{Slot:0b,id:'norabotics:iron_left_leg',Count:1b}], RIGHT_LEG:[{Slot:0b,id:'norabotics:iron_right_leg',Count:1b}]}}}"
+		},
+		{
+			"type": "patchouli:text",
+			"text": "Не восстанавливают повреждения самостоятельно, однако их можно отремонтировать, используя металлическую обшивку, подходящую по материалу корпуса. Одна обшивка восстанавливает 2.5 сердечка здоровья."
+		},
+		{
+			"type": "patchouli:spotlight",
+			"item": "norabotics:plate_iron, norabotics:plate_gold, norabotics:plate_copper, norabotics:plate_diamond, norabotics:plate_steel, norabotics:plate_netherite",
+			"link_recipe": true
+		}
+	]
+}

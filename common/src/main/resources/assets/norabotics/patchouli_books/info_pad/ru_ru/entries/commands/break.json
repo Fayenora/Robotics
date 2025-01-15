@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.break.0",
+  "icon": "minecraft:diamond_pickaxe",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Разрушает блоки в рамке, измеряемой двумя координатами, используя предмет в основной руке. Эта задача $(bold)всегда$() действительная."
+    }
+  ]
+}

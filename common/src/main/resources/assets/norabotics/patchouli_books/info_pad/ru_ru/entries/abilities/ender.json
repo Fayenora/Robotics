@@ -1,0 +1,16 @@
+{
+  "name": "Телепорт",
+  "icon": "norabotics:ender_module",
+  "category": "norabotics:abilities",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Телепортирует робота в случайное местоположение в пределах 5 блоков."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "norabotics:ender_module",
+      "link_recipe": true
+    }
+  ]
+}

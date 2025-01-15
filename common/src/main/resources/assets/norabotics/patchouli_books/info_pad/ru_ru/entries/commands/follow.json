@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.follow.0",
+  "icon": "minecraft:diamond_boots",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Следует за сущностью в соответствии с запросом на данном расстоянии. Эта задача действительна лишь тогда, когда текущий запрос соответствует живому существу."
+    }
+  ]
+}

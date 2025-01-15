@@ -1,0 +1,26 @@
+{
+  "name": "Команды робота",
+  "icon": "norabotics:commander",
+  "category": "norabotics:programming",
+  "flag": "mod:computercraft",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "API предоставляет доступ к $(l:norabotics:commands)командам$().$(br)$(bold)amount()$() -> количество выбранных команд.$(br)$(bold)getAvailableCommands()$() -> список доступных команд в виде строк.$(br)$(bold)get()$() -> перечень текущих выбранных $(l:norabotics:programming/command_api#command_object)команд$().$(br)$(bold)remove(i)$() -> удаляет команду с индексом i из активного списка."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)add(type, ...)$() — добавляет команду указанного типа. Для получения доступных типов используйте getAvailableCommands. Обратитесь $(l:norabotics:programming/command_api#command_object)сюда$() на предмет формата аргументов."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Объект команды",
+      "anchor": "command_object",
+      "text": "$(bold)getType() -> строковое представление типа данной команды$().$(br)$(bold)getSelections()$() -> список строк, представляющих выбранные аргументы$(break).$(bold)setSelection(i, selection)$() — устанавливает выбор на индексе i. Синтаксические правила:$(li)типы «items», «blocks», «entity» ищутся по их ID, напр.: поиск объекта minecraft:cobblestone$(li)преобразуется в запросы по названию."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)позиции должны быть в формате «x y z» или «dimension-id x y z». Идентификаторы ванильных измерений: «overworld», «the_nether» и «the_end». Текущее измерение можно определить, нажав клавишу F3."
+    }
+  ]
+}

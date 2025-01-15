@@ -1,0 +1,11 @@
+{
+  "name": "norabotics.command.stay",
+  "icon": "minecraft:iron_boots",
+  "category": "norabotics:commands",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Идёт и останавливается у место назначения. Всегда действительная. Используется в качестве низкоприоритетной команды для установки исходной позиции для возвращения."
+    }
+  ]
+}
