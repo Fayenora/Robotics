@@ -83,7 +83,6 @@ public class ClientSetup {
         EntityRenderers.register(ModEntityTypes.STOMPED_BLOCK.get(), StompedBlockRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_STORAGE.getBlockEntityType(), RobotStorageRenderer::new);
         event.registerBlockEntityRenderer(ModMachines.ROBOT_FACTORY.getBlockEntityType(), RobotFactoryRenderer::new);
-        event.registerBlockEntityRenderer(ModMachines.MACHINE_ARM.get(), MachineArmRenderer::new);
     }
 
     @SubscribeEvent
